@@ -704,6 +704,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             };
 
             self.emaasAppheaderGlobalNavMenuBeforeOpen = function(){
+                aboutBoxComponentRegister();
                 if(!self.renderEmaasAppheaderGlobalNavMenu()){
                     self.renderEmaasAppheaderGlobalNavMenu(true);
                     $('#emaasAppheaderGlobalNavMenuId').ojMenu("refresh");
@@ -715,40 +716,43 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var vmPath = "uifwk/js/widgets/navlinks/js/navigation-links";
 
             //Parameters for navigation links ko component
-            self.navLinksKocParams = {
-                navLinksNeedRefresh: self.navLinksNeedRefresh,
-                userName: self.userName,
-                tenantName: self.tenantName,
-                nlsStrings: nls,
-                appMap: appMap,
-                app: appProperties,
-                appDashboard: appMap[appIdDashboard],
-                appTenantManagement: appMap[appIdTenantManagement],
-                appEventUI: appMap[appIdEventUI],
-                sessionTimeoutWarnDialogId: self.sessionTimeoutWarnDialogId
-            };
-            //Register a Knockout component for navigation links
-            if (!ko.components.isRegistered('df-oracle-nav-links') && self.navLinksVisible) {
-                ko.components.register("df-oracle-nav-links", {
-                    viewModel: {require: vmPath},
-                    template: {require: 'text!' + templatePath}
-                });
+            function navLinksComponentRegister() {
+                self.navLinksKocParams = {
+                    navLinksNeedRefresh: self.navLinksNeedRefresh,
+                    userName: self.userName,
+                    tenantName: self.tenantName,
+                    nlsStrings: nls,
+                    appMap: appMap,
+                    app: appProperties,
+                    appDashboard: appMap[appIdDashboard],
+                    appTenantManagement: appMap[appIdTenantManagement],
+                    appEventUI: appMap[appIdEventUI],
+                    sessionTimeoutWarnDialogId: self.sessionTimeoutWarnDialogId
+                };
+                //Register a Knockout component for navigation links
+                if (!ko.components.isRegistered('df-oracle-nav-links') && self.navLinksVisible) {
+                    ko.components.register("df-oracle-nav-links", {
+                        viewModel: {require: vmPath},
+                        template: {require: 'text!' + templatePath}
+                    });
+                }
             }
 
             //Parameters for about dialog ko component
-            self.aboutBoxKocParams = {
-                id: self.aboutBoxId,
-                nlsStrings: nls};
-            //Register a Knockout component for about box
-            var aboutTemplatePath = "uifwk/js/widgets/aboutbox/html/aboutbox.html";
-            var aboutVmPath = "uifwk/js/widgets/aboutbox/js/aboutbox";
-            if (!ko.components.isRegistered('df-oracle-about-box')) {
-                ko.components.register("df-oracle-about-box", {
-                    viewModel: {require: aboutVmPath},
-                    template: {require: 'text!' + aboutTemplatePath}
-                });
+            function aboutBoxComponentRegister() {
+                self.aboutBoxKocParams = {
+                    id: self.aboutBoxId,
+                    nlsStrings: nls};
+                //Register a Knockout component for about box
+                var aboutTemplatePath = "uifwk/js/widgets/aboutbox/html/aboutbox.html";
+                var aboutVmPath = "uifwk/js/widgets/aboutbox/js/aboutbox";
+                if (!ko.components.isRegistered('df-oracle-about-box')) {
+                    ko.components.register("df-oracle-about-box", {
+                        viewModel: {require: aboutVmPath},
+                        template: {require: 'text!' + aboutTemplatePath}
+                    });
+                }
             }
-
             //Parameters for time selector
             if (params.timeSelectorParams) {
                 self.timeSelectorParams = params.timeSelectorParams;
@@ -780,6 +784,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
              * Navigation links button click handler
              */
             self.linkMenuHandler = function (event, item) {
+                navLinksComponentRegister();
                 self.navLinksNeedRefresh(true);
                 self.navLinksImmediateLoading(true);
                 $("#links_menu").slideToggle('normal');
