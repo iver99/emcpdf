@@ -305,21 +305,21 @@ a:hover {
         margin-left: auto;
         margin-right: auto;
         float: none;
-        width: 550px;
-        min-width: 550px;
-        max-width: 550px;
+        //width: 550px;
+        //min-width: 550px;
+        //max-width: 550px;
     }
     .dbs-filter-panel-sm {
     width: 35%; }
-    .dbs-tiles-panel-sm {
-    width: 65%; }
+    //.dbs-tiles-panel-sm {
+    //width: 65%; }
 }
 
 @media print and (orientation: landscape), screen and (min-width: 890px) {
-    .dbs-filter-panel-md {
-    width: 20%; }
-    .dbs-tiles-panel-md {
-    width: 80%; }
+    //.dbs-filter-panel-md {
+    //width: 20%; }
+    //.dbs-tiles-panel-md {
+    //width: 80%; }
     .dbs-rbtns-panel-md {
         padding-right: 13px;
     }
@@ -327,16 +327,17 @@ a:hover {
     margin-left: auto;
     margin-right: auto;
     float: none;
-    width: 850px;
-    min-width: 850px;
-    max-width: 850px;}
+    //width: 850px;
+    //min-width: 850px;
+    //max-width: 850px;
+    }
 }
 
 @media print and (orientation: landscape), screen and (min-width: 1240px) {
-    .dbs-filter-panel-lg {
-    width: 16%; }
-    .dbs-tiles-panel-lg {
-    width: 84%; }
+    //.dbs-filter-panel-lg {
+    //width: 16%; }
+    //.dbs-tiles-panel-lg {
+    //width: 84%; }
     .dbs-rbtns-panel-lg {
         padding-right: 10px;
     }
@@ -344,16 +345,17 @@ a:hover {
     margin-left: auto;
     margin-right: auto;
     float: none;
-    width: 1203px;
-    min-width: 1203px;
-    max-width: 1203px;}
+    //width: 1203px;
+    //min-width: 1203px;
+    //max-width: 1203px;
+    }
 }
 
 @media print and (orientation: landscape), screen and (min-width: 1580px) {
     .dbs-filter-panel-xsl {
     width: 13%; }
-    .dbs-tiles-panel-xsl {
-    width: 87%; }
+    //.dbs-tiles-panel-xsl {
+    //width: 87%; }
     .dbs-rbtns-panel-xsl {
         padding-right: 10px;
     }
@@ -363,7 +365,8 @@ a:hover {
     float: none;
     //width: 1545px;
     //min-width: 1545px;
-    max-width: 1545px;}
+    //max-width: 1545px;
+    }
 }
 
 @media print and (orientation: landscape), screen and (min-width: 1940px) {
@@ -484,6 +487,6 @@ a:hover {
     color: #333; 
 }
 
-.dbs-main-large-width {
+/*.dbs-main-large-width {
     width: 1545px;
-}
+}*/

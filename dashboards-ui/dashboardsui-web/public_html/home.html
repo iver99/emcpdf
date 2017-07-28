@@ -45,8 +45,8 @@
                         <div class="main-content-area main-content-area-sm main-content-area-md main-content-area-lg main-content-area-xsl main-content-area-xl">
                             <div id="dhometab" class="dbs-tab-container">
                                 <div class="oj-row oj-cols-nopad" style="max-width: none;">
-                                    <div id="filterpanel" class="dbs-filter-panel-sm  dbs-filter-panel-md dbs-filter-panel-lg dbs-filter-panel-xsl dbs-filter-panel-xl oj-col" style="max-width: 220px;">
-                                            <!-- filter panel start-->
+                                    <!-- <div id="filterpanel" class="dbs-filter-panel-sm  dbs-filter-panel-md dbs-filter-panel-lg dbs-filter-panel-xsl dbs-filter-panel-xl oj-col" style="max-width: 220px;">
+                                            <!-- filter panel start-- >
                                             <div style="padding: 10px; padding-top: 10px;">
                                                 <div style="margin-bottom: 20px;" data-bind="visible: isMobileDevice() !== true">
                                                     <button id="cbtn" 
@@ -62,40 +62,40 @@
                                                 <div data-bind="visible: filter.showServiceFilter">
                                                     <label id="servicecblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_LABEL')" ></label>
                                                     <div id="servicecb" aria-controls="dtabhomesc" aria-labelledby="servicecblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: filter.serviceFilter, optionChange: null}">
-                                                        <!-- ko foreach: filter.serviceFilterItems -->
+                                                        <!-- ko foreach: filter.serviceFilterItems -- >
                                                         <span class="oj-choice-row" data-bind="visible: $data.visible !== false">
                                                             <input type="checkbox" name="services" data-bind=" attr: {value: $data.value, id: $data.id}">
                                                             <label data-bind="text: $data.label, attr: {for: $data.id}"></label>
                                                         </span>
-                                                        <!-- /ko -->
+                                                        <!-- /ko -- >
                                                     </div>
                                                 </div>
                                                 <br/>
                                                 <div>
                                                     <label id="creatorcblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_LABEL')"></label>
                                                     <div id="creatorcb" aria-controls="dtabhomesc" aria-labelledby="creatorcblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: filter.creatorFilter, optionChange: null}">
-                                                        <!-- ko foreach: filter.creatorFilterItems -->
+                                                        <!-- ko foreach: filter.creatorFilterItems -- >
                                                         <span class="oj-choice-row" data-bind="visible: $data.visible !== false">
                                                             <input type="checkbox" name="services" data-bind=" attr: {value: $data.value, id: $data.id}">
                                                             <label data-bind="text: $data.label, attr: {for: $data.id}"></label>
                                                         </span>
-                                                        <!-- /ko -->
+                                                        <!-- /ko -- >
                                                     </div>
                                                 </div>
                                                 <br/>
                                                 <label id="favoritescblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_FAVORITES_LABEL')"></label>
                                                 <div id="favoritescb" aria-controls="dtabhomesc" aria-labelledby="favoritescblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: filter.favoritesFilter, optionChange: null}">
-                                                        <!-- ko foreach: filter.favoritesFilterItems -->
+                                                        <!-- ko foreach: filter.favoritesFilterItems -- >
                                                         <span class="oj-choice-row" data-bind="visible: $data.visible !== false">
                                                             <input type="checkbox" name="services" data-bind=" attr: {value: $data.value, id: $data.id}">
                                                             <label data-bind="text: $data.label, attr: {for: $data.id}"></label>
                                                         </span>
-                                                        <!-- /ko -->
+                                                        <!-- /ko -- >
                                                 </div>
                                             </div>
-                                            <!-- filter panel end-->
-                                    </div>
-                                    <div class="dashboard-picker dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; min-height: 600px; padding-left: 10px; margin-bottom: 50px;"
+                                            <!-- filter panel end-- >
+                                    </div> -->
+                                    <div class="dashboard-picker dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="padding-top: 10px; min-height: 600px; padding-left: 20px; padding-right: 20px; margin-bottom: 50px;"
                                          data-bind="component: {
                                             name: 'df-oracle-dashboard-list',
                                             params: $data

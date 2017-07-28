@@ -1,7 +1,8 @@
     <!-- Home toolbar start -->
     <div aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 5px" data-testapiversion="1.17.0">
-        <button style=" margin-right: 5px;" data-bind="visible: (isMobileDevice() !== true && isDashboardSet === true), attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, 
+        <button style=" margin-right: 5px;" data-bind="visible: (isMobileDevice() !== true), attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, 
                                          ojComponent: { component:'ojButton', rootAttributes: {'class': 'dbs-home-blue-button'}, label: getNlsString('DBS_HOME_CREATE_BTN_LABEL'),disabled: zdtStatus}"></button>
+        <span role="separator" class="oj-toolbar-separator" style="margin-bottom: 4px;" data-bind="visible: (isMobileDevice() !== true) && isDashboardSet !== true"></span>
         <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-3 oj-xl-6">
             <input class="dbs-sinput" id="dbs-sinput" type="text" name="searchInput"
                data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
@@ -18,6 +19,15 @@
         </span>
 
         <span class="oj-md-float-end" style=" padding-right: 10px;">
+            <label class="oj-label-inline" data-bind="attr: { 'for': filterById }, text: getNlsString('DBS_HOME_SELECT_SORT_BY_LABEL')"></label>
+            <select aria-controls="dtabhomesc" data-bind="attr: { 'id': filterById }, ojComponent: {component: 'ojSelect', minimumResultsForSearch: 20, value: filterBy, optionChange: $component.handleFilterByChanged, 
+                                                   rootAttributes: {style:'width: 15em; max-width:20em', class: 'dsb-sortcb'}}">
+                <option value="allnofilter" data-bind="text: 'All (No filter)'"></option>
+                <option value="myfavorites" data-bind="text: 'My Favorites'"></option>
+                <option value="otheropt" data-bind="text: 'Me'"></option>
+                <option value="oracleopt" data-bind="text: 'Oracle'"></option>
+                <option value="shareopt" data-bind="text: 'Others'"></option>
+            </select>
             <label class="oj-label-inline" data-bind="attr: { 'for': sortById }, text: getNlsString('DBS_HOME_SELECT_SORT_BY_LABEL')"></label>
             <select aria-controls="dtabhomesc" data-bind="attr: { 'id': sortById }, ojComponent: {component: 'ojSelect', minimumResultsForSearch: 20, value: sortBy, optionChange: $component.handleSortByChanged, 
                                                    rootAttributes: {style:'width: 15em; max-width:20em', class: 'dsb-sortcb'}}">

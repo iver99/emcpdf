@@ -593,6 +593,10 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                 self.sortBy([_option]);
             }
         };
+        
+        self.handleFilterByChanged = function(context, valueParam) {
+            
+        };
 
         self.handleSortByChanged = function (context, valueParam) {
             var _preValue = valueParam.previousValue, _value = valueParam.value, _ts = self.dashboardsTS();
