@@ -155,6 +155,11 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         };
 
     }
+    
+    function getUrlParam(name) {
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(window.location.search);
+        return results === null ? "" : results[1];
+    };
 
     function ViewModel(predata, parentElementId, defaultFilters, dashboardSetItem, isSet) {
 
@@ -193,7 +198,10 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         self.isMobileDevice = ko.observable( (new mbu()).isSmallDevice );
         self.currentDashboardSetItem=dashboardSetItem;
         self.dashboardInTabs=ko.observable(false);
+        self.filterFromUrl = ko.observable(false);
 
+        var filterSelection = "allnofilter";
+        
         if (predata !== null)
         {
             self.filter = predata.getDashboardsFilter({'prefUtil' : self.prefUtil,
@@ -206,12 +214,24 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                     }
                 }
             });
+            
+            filterSelection = getUrlParam("filter");
+            if(filterSelection && filterSelection.trim().length>0) {
+                filterSelection = "allnofilter";
+                self.filterFromUrl(true);
+            }else {
+                if(self.filter.filter) {
+                    filterSelection = self.filter.filter;
+                }else {
+                    filterSelection = "allnofilter";
+                }
+            }
         }
         else
         {
             self.filter = null;
-        }        
-        
+        }
+                                
         if (localStorage.deleteHomeDbd ==='true') {
             dfu.showMessage({
                 type: 'info',
@@ -236,6 +256,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
+        self.filterById = self.parentElementId+'filtercb';
+        self.filterBy = ko.observable([filterSelection]);
         self.sortById = self.parentElementId+'sortcb';
         self.sortBy = ko.observable(['default']);
         self.createDashboardModel = new createDashboardDialogModel();
@@ -595,7 +617,23 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         };
         
         self.handleFilterByChanged = function(context, valueParam) {
-            
+            var _value = valueParam.value;
+            if(valueParam.option === "value") {
+                if(_value === "allnofilter") {
+                    self.filter.serviceFilter([]);
+                    self.filter.creatorFilter([]);
+                    self.filter.favoritesFilter([]);
+                }else if(_value === "favorites") {
+                    self.filter.serviceFilter([]);
+                    self.filter.creatorFilter([]);
+                    self.filter.favoritesFilter(["favorites"]);
+                }else {
+                    self.filter.serviceFilter([]);
+                    self.filter.creatorFilter([_value]);
+                    self.filter.favoritesFilter([]);
+                }
+                self.filter.saveFilter();
+            }
         };
 
         self.handleSortByChanged = function (context, valueParam) {
@@ -778,12 +816,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         var self = this;
         self.preferences = undefined;
         self.sApplications = undefined;
-
-        var getUrlParam = function(name) {
-            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(window.location.search);
-            return results === null ? "" : results[1];
-        };
-
+        
         self.getDashboardsFilter = function (options) {
             var _options = options || {}, _filterPref = self.getDashboardsFilterPref(), _filterUrlParam=getUrlParam("filter");
             if (_filterUrlParam && _filterUrlParam.trim().length > 0)
@@ -794,6 +827,22 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
             else
             {
                 _options['saveFilterPref'] = true;
+                //Convert multi filters in DB to 1 filter
+                //If there is only 1 filter apart from service filters, use this filter
+                //If there is more than 1 filters apart from service filters, treat it as no filter
+                var _serviceFilters = ["apm", "ita", "la", "ocs", "sec"];
+                var _initFilters = _filterPref ? _filterPref.split(",") : [];
+                var _tmpFilters = [];
+                for(var i=0; i<_initFilters.length; i++) {
+                    if(_serviceFilters.indexOf(_initFilters[i]) === -1) {
+                        _tmpFilters.push(_initFilters[i]);
+                    }
+                }
+                if(_tmpFilters.length === 1) {
+                    _filterPref = _tmpFilters[0];
+                }else {
+                    _filterPref = null;
+                }
             }
             if (_filterPref && _filterPref.trim().slice(0, 1) === '{')
             {
