@@ -613,15 +613,12 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
             var _value = valueParam.value;
             if(valueParam.option === "value") {
                 if(_value === "allnofilter") {
-                    self.filter.serviceFilter([]);
                     self.filter.creatorFilter([]);
                     self.filter.favoritesFilter([]);
                 }else if(_value === "favorites") {
-                    self.filter.serviceFilter([]);
                     self.filter.creatorFilter([]);
                     self.filter.favoritesFilter(["favorites"]);
                 }else {
-                    self.filter.serviceFilter([]);
                     self.filter.creatorFilter([_value]);
                     self.filter.favoritesFilter([]);
                 }
