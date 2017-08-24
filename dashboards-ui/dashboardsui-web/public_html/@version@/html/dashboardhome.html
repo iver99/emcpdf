@@ -3,7 +3,7 @@
         <button style=" margin-right: 5px;" data-bind="visible: (isMobileDevice() !== true), attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, 
                                          ojComponent: { component:'ojButton', rootAttributes: {'class': 'dbs-home-blue-button'}, label: getNlsString('DBS_HOME_CREATE_BTN_LABEL'),disabled: zdtStatus}"></button>
         <span role="separator" class="oj-toolbar-separator" style="margin-bottom: 4px;" data-bind="visible: (isMobileDevice() !== true) && isDashboardSet !== true"></span>
-        <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-3 oj-xl-6">
+        <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-3 oj-xl-3">
             <input class="dbs-sinput" id="dbs-sinput" type="text" name="searchInput"
                data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
                           ,dbsTypeAhead: {response: searchResponse, acceptInput: acceptInput, selfSearchStart: typeaheadSearchStart, busyElement: '#dhometab', busyClassName: 'busy', source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
@@ -21,8 +21,8 @@
         <span class="oj-md-float-end" style=" padding-right: 15px;">
             <!-- ko if: !isDashboardSet -->
             <label class="oj-label-inline" data-bind="attr: { 'for': filterById }, text: getNlsString('DBS_HOME_SELECT_FILTER_BY_LABEL')"></label>
-            <select aria-controls="dtabhomesc" data-bind="attr: { 'id': filterById }, ojComponent: {component: 'ojSelect', disabled: filterFromUrl(), minimumResultsForSearch: 20, value: filterBy, optionChange: $component.handleFilterByChanged, 
-                                                   rootAttributes: {style:'width: 10em; max-width:15em; margin-right: 30px;', class: 'dsb-filtercb'}}">
+            <select aria-controls="dtabhomesc" data-bind="attr: { 'id': filterById }, ojComponent: {component: 'ojSelect', minimumResultsForSearch: 20, value: filterBy, optionChange: $component.handleFilterByChanged, 
+                                                   rootAttributes: {style:'width: 20em; max-width:15em; margin-right: 30px; height: 32px; max-height: 32px;', class: 'dsb-filtercb'}}">
                 <option value="allnofilter" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_ALL')"></option>
                 <option value="favorites" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_FAVORITES')"></option>
                 <option value="me" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_ME')"></option>

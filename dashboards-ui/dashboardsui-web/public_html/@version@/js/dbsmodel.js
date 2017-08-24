@@ -198,9 +198,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         self.isMobileDevice = ko.observable( (new mbu()).isSmallDevice );
         self.currentDashboardSetItem=dashboardSetItem;
         self.dashboardInTabs=ko.observable(false);
-        self.filterFromUrl = ko.observable(false);
 
-        var filterSelection = "allnofilter";
+        var filterSelection;
         
         if (predata !== null)
         {
@@ -215,16 +214,10 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                 }
             });
             
-            filterSelection = getUrlParam("filter");
-            if(filterSelection && filterSelection.trim().length>0) {
-                filterSelection = "allnofilter";
-                self.filterFromUrl(true);
+            if(self.filter.filter) {
+                filterSelection = self.filter.filter;
             }else {
-                if(self.filter.filter) {
-                    filterSelection = self.filter.filter;
-                }else {
-                    filterSelection = "allnofilter";
-                }
+                filterSelection = "allnofilter";
             }
         }
         else
@@ -257,7 +250,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
         self.filterById = self.parentElementId+'filtercb';
-        self.filterBy = ko.observable([filterSelection]);
+        self.filterBy = ko.observable(filterSelection);
         self.sortById = self.parentElementId+'sortcb';
         self.sortBy = ko.observable(['default']);
         self.createDashboardModel = new createDashboardDialogModel();
@@ -827,21 +820,16 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
             else
             {
                 _options['saveFilterPref'] = true;
-                //Convert multi filters in DB to 1 filter
-                //If there is only 1 filter apart from service filters, use this filter
-                //If there is more than 1 filters apart from service filters, treat it as no filter
-                var _serviceFilters = ["apm", "ita", "la", "ocs", "sec"];
-                var _initFilters = _filterPref ? _filterPref.split(",") : [];
-                var _tmpFilters = [];
-                for(var i=0; i<_initFilters.length; i++) {
-                    if(_serviceFilters.indexOf(_initFilters[i]) === -1) {
-                        _tmpFilters.push(_initFilters[i]);
+                //Use saved filters if it is only 1 filter
+                var _serviceFilters = ["apm", "la", "ita", "ocs", "sec"];
+                if(_filterPref) {
+                    if(_filterPref.split(",").length > 1) {
+                        _filterPref = null;
+                    }else if(_filterPref.split(",").length === 1) {
+                        if(_serviceFilters.indexOf(_filterPref) !== -1) {
+                            _filterPref = null;
+                        }
                     }
-                }
-                if(_tmpFilters.length === 1) {
-                    _filterPref = _tmpFilters[0];
-                }else {
-                    _filterPref = null;
                 }
             }
             if (_filterPref && _filterPref.trim().slice(0, 1) === '{')
