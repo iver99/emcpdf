@@ -45,6 +45,19 @@ ext.emaasRegistryClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsm
 dependencies { 
 	 compile configurations.testNG
        compile project(':dashboards-sdk')
+         compile getProjectArtifact('log4j-core')   
+        compile getProjectArtifact('log4j-api')   
+        compile getProjectArtifact('wls-api')   
+        compile getProjectArtifact('registry-lookup-client')   
+        compile getProjectArtifact('registry-client')   
+        compile getProjectArtifact('emaas-platform-tenant-sdk')   
+        compile getProjectArtifact('jackson-core')   
+        compile getProjectArtifact('jackson-databind')   
+        compile getProjectArtifact('jackson-annotations')   
+        compile getProjectArtifact('wlfullclient') 
+        compile getProjectArtifact('registry-lookup-client')  
+        compile getProjectArtifact('jmockit')   
+        /*
         compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
         compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0'){ transitive = false }
@@ -65,8 +78,8 @@ dependencies {
 	testCompile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13') { transitive = false }
 	testCompile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13') { transitive = false }
 	testCompile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
-//	testCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){transitive=false }
-	compile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+//	testCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){transitive=false }  */
+//	compile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 } 
 
 build.dependsOn integTestJar

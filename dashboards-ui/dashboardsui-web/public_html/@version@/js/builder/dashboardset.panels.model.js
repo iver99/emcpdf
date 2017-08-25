@@ -100,10 +100,16 @@ define([
                     var _isIncludingDbsHome=self.selectedDashboardInst().type === "new";
                     if (!_isIncludingDbsHome) {
                         resetContainerScroll();
+                        var _dashboard = self.selectedDashboardInst();
+                        var $b = _dashboard.$b;
+                        var tilesView = $b.getDashboardTilesView();
+                        tilesView.disableMovingTransition();
+                        $b.triggerEvent($b.EVENT_DASHBOARD_INIT_FIRST_RESIZE, "Init first resize when tab selected");
+                        $b.triggerBuilderResizeEvent("Resize and re-render after tab selected");
+                        tilesView.enableMovingTransition();
                         setTimeout(function() {
                             $(window).trigger("resize");
                         }, 200);
-                        var _dashboard = self.selectedDashboardInst();
                         self.loadRightPanelModel(_dashboard.toolBarModel,_dashboard.tilesViewModel,_dashboard.$b);
                     }else{
                         var $target =$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId);

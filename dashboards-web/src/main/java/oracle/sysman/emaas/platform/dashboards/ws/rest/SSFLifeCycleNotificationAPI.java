@@ -1,19 +1,20 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
-import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.ssfnotification.SSFLifeCycleNotifyEntity;
-import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
-import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonValue;
-import org.codehaus.jettison.json.JSONObject;
+import java.io.IOException;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
+
+import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.ssfnotification.SSFLifeCycleNotifyEntity;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Created by guochen on 3/16/17.
@@ -47,8 +48,7 @@ public class SSFLifeCycleNotificationAPI extends APIBase {
 			SSFLifeCycleNotifyEntity ssflcne = getJsonUtil().fromJson(data.toString(), SSFLifeCycleNotifyEntity.class);
 			// only care about the SSSF up lifecycle. This will clear the dashboard-api side OOB widget cache
 			if (ssflcne != null && SSFLifeCycleNotifyEntity.SSFNotificationType.UP.equals(ssflcne.getType())) {
-				CacheUtil.clearCacheGroup(CacheConstants.CACHES_OOB_DASHBOARD_SAVEDSEARCH_CACHE);
-				LOGGER.info("Cached OOB widget data now is cleaned after getting notification from SSF side");
+			    // TODO do something
 				return Response.status(Response.Status.NO_CONTENT).build();
 			}
 			return Response.status(Response.Status.FORBIDDEN).build();

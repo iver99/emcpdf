@@ -120,15 +120,11 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		search(driver, dashboardName);
 		if (DASHBOARDS_GRID_VIEW.equals(view)) {
 			gridView(driver);
-			driver.takeScreenShot();
-			driver.savePageToFile();
 			deleteDashboardInGrid(driver, dashboardName);
 		}
 
 		if (DASHBOARDS_LIST_VIEW.equals(view)) {
 			listView(driver);
-			driver.takeScreenShot();
-			driver.savePageToFile();
 			deleteDashboardInList(driver, dashboardName);
 		}
 		driver.takeScreenShot();
@@ -568,9 +564,10 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		
 		driver.getLogger().info("Click Sort icon");
 		actions.moveToElement(tableSort).click().perform();
-		driver.takeScreenShot();		
-		
 		driver.waitForServer();	
+		driver.takeScreenShot();		
+		driver.savePageToFile();
+		
 	}
 
 	/* (non-Javadoc)

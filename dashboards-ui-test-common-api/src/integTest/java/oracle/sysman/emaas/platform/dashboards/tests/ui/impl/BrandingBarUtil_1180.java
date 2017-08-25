@@ -90,7 +90,18 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		for (WebElement nav : webd_menuitem) {
 			if (nav.getText().trim().equals(menuitem) && nav.isDisplayed() && isElementEnabled(driver, nav)) {
 				isExisted = true;
-				nav.click();
+				boolean viewportScreenshot = false;
+				try {
+					nav.click();
+				}
+				catch (Exception e) {
+					viewportScreenshot = true;
+					throw e;
+				}
+				finally {
+					driver.capturePageState(viewportScreenshot);
+				}
+
 				WaitUtil.waitForPageFullyLoaded(driver);
 				driver.getLogger().info("clickMenuItem has click on the given menu item: " + menuitem);
 				break;
@@ -138,8 +149,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 	{
 		if (!isHamburgerMenuDisplayed(driver)) {
 			driver.click("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS);
-			driver.takeScreenShot();
-			driver.savePageToFile();
+
 		}
 		return driver.getText("css=" + DashBoardPageId_1180.HAMBURGERMENU_CURRENTHEADER_CSS);
 	}
@@ -149,14 +159,12 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 	{
 		if (!isHamburgerMenuDisplayed(driver)) {
 			driver.click("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS);
-			driver.takeScreenShot();
-			driver.savePageToFile();
+
 		}
 
 		if (driver.isDisplayed("css=" + DashBoardPageId_1180.HAMBURGERMENU_PREVIOUSICON_CSS)) {
 			driver.click("css=" + DashBoardPageId_1180.HAMBURGERMENU_PREVIOUSICON_CSS);
-			driver.takeScreenShot();
-			driver.savePageToFile();
+
 		}
 		else {
 			throw new NoSuchElementException("goBackToParentMenu: 'goBackToParentMenu'icon is not found");
@@ -591,8 +599,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
 			//verify if current menu is rootmenu
-			while(!isRootMenu(driver))
-			{
+			while (!isRootMenu(driver)) {
 				driver.getLogger().info("Current menu is not root menu, need to back to parent menu");
 				goBackToParentMenu(driver);
 			}
@@ -631,8 +638,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			HBGMenuItem = cloudServiceLinkToHamburgerMenuItem(driver, cloudServiceLinkName);
 			driver.getLogger().info("Start to visit cloud service link from hambuger menu. Link name: " + HBGMenuItem);
 			//verify if current menu is rootmenu
-			while(!isRootMenu(driver))
-			{
+			while (!isRootMenu(driver)) {
 				driver.getLogger().info("Current menu is not root menu, need to back to parent menu");
 				goBackToParentMenu(driver);
 			}
@@ -659,8 +665,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		//check if hamburger menu icon exist
 		if (isHamburgerMenuEnabled(driver)) {
 			//verify if current menu is rootmenu
-			while(!isRootMenu(driver))
-			{
+			while (!isRootMenu(driver)) {
 				driver.getLogger().info("Current menu is not root menu, need to back to parent menu");
 				goBackToParentMenu(driver);
 			}
@@ -706,8 +711,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		if (isHamburgerMenuEnabled(driver)) {
 			driver.getLogger().info("Start to visit menu : " + visualAnalyzerLinkName + "from hamburger menu");
 			//verify if current menu is rootmenu
-			while(!isRootMenu(driver))
-			{
+			while (!isRootMenu(driver)) {
 				driver.getLogger().info("Current menu is not root menu, need to back to parent menu");
 				goBackToParentMenu(driver);
 			}
@@ -721,7 +725,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		else {
 			//the branding bar
 			driver.getLogger()
-			.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
+					.info("Start to visit visual analyzer link from branding bar. Link name: " + visualAnalyzerLinkName);
 			visitApplicationLink(driver, "va", visualAnalyzerLinkName);
 		}
 		driver.getLogger().info("visitApplicationVisualAnalyzer ended");
@@ -736,8 +740,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			//click the menu "Dashboards" in hamburger menu
 			driver.getLogger().info("[visitDashboardHome] start to visit 'Dashboards' menu in hamburger menu.");
 			//verify if current menu is rootmenu
-			while(!isRootMenu(driver))
-			{
+			while (!isRootMenu(driver)) {
 				driver.getLogger().info("Current menu is not root menu, need to back to parent menu");
 				goBackToParentMenu(driver);
 			}
@@ -760,8 +763,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			//check the 'My Favorite' options in filter options in Dashboard home page
 			driver.getLogger().info("[visitMyFavorites] start to visit 'My Favorites' link in home page.");
 			//verify if current menu is rootmenu
-			while(!isRootMenu(driver))
-			{
+			while (!isRootMenu(driver)) {
 				driver.getLogger().info("Current menu is not root menu, need to back to parent menu");
 				goBackToParentMenu(driver);
 			}
@@ -787,8 +789,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			//click the menu "Home" in hamburger menu
 			driver.getLogger().info("[visitMyHome] start to visit 'Home' link from hamburger menu.");
 			//verify if current menu is rootmenu
-			while(!isRootMenu(driver))
-			{
+			while (!isRootMenu(driver)) {
 				driver.getLogger().info("Current menu is not root menu, need to back to parent menu");
 				goBackToParentMenu(driver);
 			}
@@ -892,16 +893,14 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			return false;
 		}
 	}
-	
+
 	private boolean isRootMenu(WebDriver driver)
 	{
-		if(driver.isDisplayed("css=" + DashBoardPageId_1180.HAMBURGERMENU_PREVIOUSICON_CSS))
-		{
+		if (driver.isDisplayed("css=" + DashBoardPageId_1180.HAMBURGERMENU_PREVIOUSICON_CSS)) {
 			driver.getLogger().info("Current Menu is not root menu");
-			return false;			
+			return false;
 		}
-		else
-		{
+		else {
 			driver.getLogger().info("Current Menu is root menu");
 			return true;
 		}

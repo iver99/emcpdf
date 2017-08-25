@@ -60,6 +60,8 @@ public class DashboardErrorConstants
 
 	public static final Integer DASHBOARD_COMMON_SECURITY_ERROR_CODE = 30000;
 	public static final Integer NOT_SUPPORT_DELETE_SYSTEM_DASHBOARD_ERROR_CODE = 30001;
+	public static final Integer NOT_SUPPORT_CREATE_SYSTEM_DASHBOARD_ERROR_CODE = 30002;
+	public static final Integer NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR_CODE = 30003;
 
 	// important: don't assign value larger than this value to dashboard security errors
 	public static final Integer DASHBOARD_SECURITY_MAX_ERROR_CODE = 39999;

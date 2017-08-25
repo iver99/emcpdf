@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,7 +27,7 @@ import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstancesComparedData;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstanceData;
-
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 /**
  * @author guochen
  */
@@ -92,7 +91,7 @@ public class DashboardCountsComparator extends AbstractComparator
 	 * @param ze1
 	 * @param ze2
 	 */
-	private InstancesComparedData<CountsEntity> compareInstancesCounts(String key1, LookupClient client1, CountsEntity ze1,
+	public InstancesComparedData<CountsEntity> compareInstancesCounts(String key1, LookupClient client1, CountsEntity ze1,
 			String key2, LookupClient client2, CountsEntity ze2)
 	{
 		CountsEntity differentCountsForInstance1 = new CountsEntity();
@@ -123,8 +122,8 @@ public class DashboardCountsComparator extends AbstractComparator
 			logger.info("All counts from both instances (instance \"{}\" and instance \"{}\") match!", key1,
 					key2);
 		}
-		InstanceData<CountsEntity> instance1 = new InstanceData<CountsEntity>(key1, client1, differentCountsForInstance1,0);
-		InstanceData<CountsEntity> instance2 = new InstanceData<CountsEntity>(key2, client2, differentCountsForInstance2,0);
+		InstanceData<CountsEntity> instance1 = new InstanceData<CountsEntity>(key1, client1, differentCountsForInstance1);
+		InstanceData<CountsEntity> instance2 = new InstanceData<CountsEntity>(key2, client2, differentCountsForInstance2);
 		InstancesComparedData<CountsEntity> cd = new InstancesComparedData<CountsEntity>(instance1, instance2);
 		return cd;
 	}
@@ -141,15 +140,18 @@ public class DashboardCountsComparator extends AbstractComparator
 			return null;
 		}
 		logger.info("lookup link is {}", lk.getHref());
-		String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
+		//String response = new TenantSubscriptionUtil.RestClient().get(lk.getHref(), tenantId, userTenant);
+		
+		
+		RestClient rc = RestClientProxy.getRestClient();
+		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
+		//rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
+		
+		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
+		//String response = rc.get(lk.getHref(),tenantId,new String(authToken));
+		String response = rc.get(lk.getHref(),tenantId,new String(authToken));
 		logger.info("Checking sync reponse. Response is " + response);
 		
-		/*RestClient rc = RestClientProxy.getRestClient();
-		rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME,tenantId);
-		rc.setHeader(RestClient.X_REMOTE_USER,userTenant);
-		char[] authToken = LookupManager.getInstance().getAuthorizationToken();
-		String response = rc.get(lk.getHref(),tenantId,new String(authToken));
-		*/
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		CountsEntity ze = ju.fromJson(response, CountsEntity.class);
 		if (ze == null) {

@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import java.util.concurrent.ExecutorService;
 
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -21,6 +22,8 @@ import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.thread.MetadataRefreshRunnable;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.thread.NlsRefreshRunnable;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.thread.OobRefreshRunnable;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,27 +40,33 @@ public class MetadataRefreshAPI extends APIBase
     @PUT
     @Path("oob/{serviceName}")
     public Response refreshOOB(@PathParam("serviceName") String serviceName) {
-        LOGGER.info("Starting a new thread for fresh {} OOB.", serviceName);
+        infoInteractionLogAPIIncomingCall("Dashbaord API", "Service call to [PUT] /v1/refresh/oob/{}", serviceName);
         MetadataRefreshRunnable oobRunnable = new OobRefreshRunnable();
         oobRunnable.setServiceName(serviceName);
         ExecutorService pool = ParallelThreadPool.getThreadPool();
         pool.submit(oobRunnable);
-//        Thread thread = new Thread(oobRunnable, "Refresh " + serviceName + " OOB.");
-//        thread.start();
         return Response.ok().build();
     }
     
     @PUT
     @Path("nls/{serviceName}")
     public Response refreshNLS(@PathParam("serviceName") String serviceName) {
-        LOGGER.info("Starting a new thread for fresh {} resource bundles.", serviceName);
+        infoInteractionLogAPIIncomingCall("Dashbaord API", "Service call to [PUT] /v1/refresh/nls/{}", serviceName);
         MetadataRefreshRunnable nlsRunnable = new NlsRefreshRunnable();
         nlsRunnable.setServiceName(serviceName);
         ExecutorService pool = ParallelThreadPool.getThreadPool();
         pool.submit(nlsRunnable);
-//        Thread thread = new Thread(nlsRunnable, "Refresh " + serviceName + " resource bundles.");
-//        thread.start();
         return Response.ok().build();
+    }
+    
+    @POST
+    @Path("widgetcache")
+    public Response expireOOBWidgetCache(String fromService) {
+        infoInteractionLogAPIIncomingCall("Dashbaord API", "Service call to [POST] /v1/refresh/widgetcache from {}", fromService);
+        // This will clear the dashboard-api side OOB widget cache
+        CacheUtil.clearCacheGroup(CacheConstants.CACHES_OOB_DASHBOARD_SAVEDSEARCH_CACHE);
+        LOGGER.info("Cached OOB widget data now is cleaned after getting notification from SSF side");
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
 }

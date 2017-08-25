@@ -10,7 +10,7 @@ apply plugin: 'war'
 apply plugin: 'eclipse-wtp'
 apply plugin: 'compass'
 
-def jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
+def jsversion = project.ext.getServiceVersion('DashboardService-ui')
 //def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 def versionPathElement = jsversion + "-"+ rootProject.ext.get("appTimeStamp")
 

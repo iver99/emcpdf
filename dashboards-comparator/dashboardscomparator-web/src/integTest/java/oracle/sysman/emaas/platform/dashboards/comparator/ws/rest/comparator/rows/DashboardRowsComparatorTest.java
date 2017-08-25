@@ -6,21 +6,32 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 import java.util.concurrent.atomic.AtomicReference;
 
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.emInternalSDK.rproxy.lookup.CloudLookupException;
-import oracle.sysman.emInternalSDK.rproxy.lookup.CloudLookups;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.config.ClientConfig;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LoadBalancer;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTException;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import mockit.Deencapsulation;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
+import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardSetRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardTileParamsRowEntity;
@@ -28,6 +39,7 @@ import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.row
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardUserOptionsRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.PreferenceRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.TableRowsEntity;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 @Test(groups = { "s1" })
 public class DashboardRowsComparatorTest
 {
@@ -35,6 +47,19 @@ public class DashboardRowsComparatorTest
 	private static final String DASHBOARD1_OPTIONS = "options1";
 	private static final String CREATION_DATE = "2016-07-21 07:37:48.060864";
 	private static final String LAST_MODIFICATION_DATE = "2016-07-25 07:37:48.060864";
+	
+	@Mocked
+	AbstractComparator abstractComparator;
+	@Mocked
+	LookupClient client1;
+	@Mocked
+	LookupClient client2;
+	@Mocked
+	RestClient restClient;
+	@Mocked
+	RestClientProxy proxy;
+	@Mocked
+	LookupManager lookupManager;
 
 	// @formatter:off
 	private static final String JSON_RESPONSE_DATA_TABLE="{"
@@ -116,15 +141,24 @@ public class DashboardRowsComparatorTest
 	// @formatter:on
 
 	@Test
-	public void testCompareInstancesData() throws IOException
+	public void testCompareInstancesData() throws IOException, ZDTException
 	{
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
 		DashboardRowsComparator drc = new DashboardRowsComparator();
 		TableRowsEntity tre1 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
 				JSON_RESPONSE_DATA_TABLE);
 		TableRowsEntity tre2 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
 				JSON_RESPONSE_DATA_TABLE);
 		InstancesComparedData<TableRowsEntity> cd = Deencapsulation.invoke(drc, "compareInstancesData",
-				new InstanceData<TableRowsEntity>(null,null, tre1,0), new InstanceData<TableRowsEntity>(null, null,tre2,0));
+				new InstanceData<TableRowsEntity>(null,null, tre1), new InstanceData<TableRowsEntity>(null, null,tre2));
 		// the 2 instances have the same data, so there is no difference from the compared result
 		TableRowsEntity result1 = cd.getInstance1().getData();
 		TableRowsEntity result2 = cd.getInstance1().getData();
@@ -209,8 +243,8 @@ public class DashboardRowsComparatorTest
 				JsonUtil.buildNormalMapper().toJson(tre1));
 		tre2 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
 				JsonUtil.buildNormalMapper().toJson(tre2));
-		cd = Deencapsulation.invoke(drc, "compareInstancesData", new InstanceData<TableRowsEntity>(null,null, tre1,0),
-				new InstanceData<TableRowsEntity>(null, null,tre2,0));
+		cd = Deencapsulation.invoke(drc, "compareInstancesData", new InstanceData<TableRowsEntity>(null,null, tre1),
+				new InstanceData<TableRowsEntity>(null, null,tre2));
 		result1 = cd.getInstance1().getData();
 		result2 = cd.getInstance2().getData();
 		Assert.assertEquals(result1.getEmsDashboard().get(0), dre1);
@@ -231,8 +265,17 @@ public class DashboardRowsComparatorTest
 	}
 
 	@Test
-	public void testRetrieveRowsEntityFromJsonForSingleInstance() throws IOException
+	public void testRetrieveRowsEntityFromJsonForSingleInstance() throws IOException, ZDTException
 	{
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
 		DashboardRowsComparator drc = new DashboardRowsComparator();
 		TableRowsEntity tre = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
 				JSON_RESPONSE_DATA_TABLE);
@@ -268,32 +311,204 @@ public class DashboardRowsComparatorTest
 	}
 
 	@Test
-	public void testCompare(@Mocked final ClientConfig clientConfig, @Mocked final LoadBalancer loadBalancer, @Mocked final CloudLookups cloudLookups, @Mocked LookupClient lookupClient) throws ZDTException, CloudLookupException, NoSuchFieldException, IllegalAccessException {
-		final HashMap<String, LookupClient> instances1 = new HashMap<String, LookupClient>();
-		List<String> urls = new ArrayList<>();
-		AtomicReference<List<String>> atomicReference = new AtomicReference<>();
-		atomicReference.set(urls);
-		urls.add("url1");
-		urls.add("url2");
-		LookupClient lookupClient1 = new LookupClient(clientConfig/*,urls,loadBalancer*/);
-//		lookupClient1.serviceUrls.set(urls);
-//		new Deencapsulation().
-//		Class clazz = lookupClient1.getClass();
-//		Field field = clazz.getDeclaredField("serviceUrls");
-//		field.setAccessible(true);
-//		field.set("serviceUrls", atomicReference);
-		instances1.put("key1", lookupClient1);
-		instances1.put("key2", lookupClient1);
-		new Expectations(){
-			{
-				cloudLookups.getCloudLookupClients();
-				result = instances1;
-
-			}
-		};
-		String tenantId="1000";
-		String userTenant = "tenant.user";
-		DashboardRowsComparator dashboardRowsComparator = new DashboardRowsComparator();
-		dashboardRowsComparator.compare(tenantId, userTenant);
+	public void testsaveComparatorStatus() throws Exception {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+		DashboardRowsComparator drc = new DashboardRowsComparator();
+		drc.saveComparatorStatus("tenantId", "userTenant", null, null);
 	}
+	
+	@Test
+	public void testSyncForInstance() throws Exception {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+        DashboardRowsComparator drc = new DashboardRowsComparator();
+		drc.syncForInstance("tenantId", "userTenant", null, "full","date");
+	}
+	
+	@Test
+	public void testRetrieveCountsForSingleInstance() throws IOException, Exception {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+		DashboardRowsComparator drc = new DashboardRowsComparator();
+		drc.retrieveCountsForSingleInstance("", "", null, "");
+	}
+	
+	@Test
+	public void testCombineRowEntity() throws ZDTException {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+		DashboardRowsComparator drc = new DashboardRowsComparator();
+		List<TableRowsEntity> rowEntityList =  new ArrayList<TableRowsEntity>();
+		TableRowsEntity entity = new TableRowsEntity();
+    	List<DashboardRowEntity> dashboards = new ArrayList<DashboardRowEntity>();
+    	dashboards.add(new DashboardRowEntity());
+    	List<DashboardSetRowEntity> dashboardSets = new ArrayList<DashboardSetRowEntity>();
+    	dashboardSets.add(new DashboardSetRowEntity());
+    	List<DashboardTileRowEntity> tiles = new ArrayList<DashboardTileRowEntity>();
+    	tiles.add(new DashboardTileRowEntity());
+    	List<DashboardTileParamsRowEntity> tileParams = new ArrayList<DashboardTileParamsRowEntity>();
+    	tileParams.add(new DashboardTileParamsRowEntity());
+    	List<DashboardUserOptionsRowEntity> userOptions = new ArrayList<DashboardUserOptionsRowEntity>();
+    	userOptions.add(new DashboardUserOptionsRowEntity());
+    	List<PreferenceRowEntity> preference = new ArrayList<PreferenceRowEntity>();
+    	preference.add(new PreferenceRowEntity());
+    	entity.setEmsDashboard(dashboards);
+    	entity.setEmsDashboardSet(dashboardSets);
+    	entity.setEmsDashboardTile(tiles);
+    	entity.setEmsDashboardTileParams(tileParams);
+    	entity.setEmsDashboardUserOptions(userOptions);
+    	entity.setEmsPreference(preference);
+    	rowEntityList.add(entity);
+    	drc.combineRowEntity(rowEntityList);
+	}
+	
+	@Test
+	public void testRetrieveTenants() throws Exception {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+		DashboardRowsComparator drc = new DashboardRowsComparator();
+		drc.retrieveTenants("", "", null);
+	}
+	
+	
+	@Test
+	public void testretrieveSyncStatusForOmcInstance() throws Exception {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+		DashboardRowsComparator drc = new DashboardRowsComparator();
+		drc.retrieveSyncStatusForOmcInstance(null, null);
+	}
+	
+	@Test 
+	public void testretrieveComparatorStatusForOmcInstance(@Mocked final LookupManager lookup) throws Exception {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+		final String anyResponse = "";
+		final RestClient anyRestClient = new RestClient();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+    	    	proxy.getRestClient();
+    	    	result = anyRestClient;
+    	    	lookupManager.getInstance();
+    	    	result = lookup;
+    	    	lookup.getAuthorizationToken();
+    	    	result = new char[10];
+    	    	anyRestClient.get(anyString, anyString, anyString);
+   	    	    result = anyResponse;
+            }
+        };
+		DashboardRowsComparator drc = new DashboardRowsComparator();
+		drc.retrieveComparatorStatusForOmcInstance(null, null);
+	}
+	
+	@Test
+	 public void testCompare() throws ZDTException, JSONException {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+		final JSONObject obj = new JSONObject();
+		JSONArray array = new JSONArray();
+		array.put(123456);
+		obj.put("client1", array);
+		obj.put("client2", array);
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+		DashboardRowsComparator drc = new DashboardRowsComparator();
+	
+		drc.compare(null, null, null, "2017-05-27", false, "tenant");
+		drc.compare(null, null, null, "2017-05-27", false, null);
+	}
+	
+	@Test
+	public void testcountForComparedRows() throws ZDTException {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+        DashboardRowsComparator drc = new DashboardRowsComparator();
+		TableRowsEntity entity = new TableRowsEntity();
+		entity.setEmsDashboard(null);
+		entity.setEmsDashboardSet(null);
+		entity.setEmsDashboardTile(null);
+		entity.setEmsDashboardTileParams(null);
+		entity.setEmsDashboardUserOptions(null);
+		drc.countForComparedRows(entity);
+	}
+	
+	@Test
+	public void testGetterSetter() throws ZDTException {
+		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
+    	new Expectations(){
+            {
+                abstractComparator.getOMCInstances();
+                result = lookupEntry;
+    			lookupEntry.put("omc1",client1);
+    	    	lookupEntry.put("omc2",client2);
+            }
+        };
+        DashboardRowsComparator drc = new DashboardRowsComparator();
+      
+        drc.getKey2();
+        drc.getKey1();
+     
+        drc.getClient1();
+        drc.getClient2();
+        
+	}
+
 }

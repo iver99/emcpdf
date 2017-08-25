@@ -95,6 +95,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 		}
 		driver.getWebDriver().findElement(By.xpath(eleXpath)).click();
 		driver.takeScreenShot();
+		driver.savePageToFile();
 	}
 
 	/* (non-Javadoc)

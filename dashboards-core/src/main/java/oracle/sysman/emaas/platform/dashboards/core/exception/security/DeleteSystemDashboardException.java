@@ -20,7 +20,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 public class DeleteSystemDashboardException extends DashboardException
 {
 	private static final long serialVersionUID = 5123899685789229699L;
-	private static final String NOT_SUPPORT_DELETE_SYSTEM_DASHBOARD_ERROR = "NOT_SUPPORT_DELETE_SYSTEM_DASHBOARD_ERROR";
+	private static final String NOT_SUPPORT_DELETE_SYSTEM_DASHBOARD_ERROR = CommonSecurityException.NOT_SUPPORT_DELETE_SYSTEM_DASHBOARD_ERROR;
 
 	/**
 	 * Constructs a new <code>DeleteSystemDashboardException</code>

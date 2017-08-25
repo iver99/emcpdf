@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.webutils.metadata;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -92,13 +93,13 @@ public class MetadataRetriever
     public List<EmsResourceBundle> getResourceBundleByService(String serviceName) throws CommonFunctionalException {
         if(!APPLICATION_MAP.containsKey(serviceName)) {
             LOGGER.info("Dashboard hasn't supported {} to refresh its resource bundles.", serviceName);
-            return null;
+            return Collections.emptyList();
         }
         LOGGER.info("Retrieve Resource Bundle Files from : {}", serviceName);
         VersionedLink link = RegistryLookupUtil.getServiceInternalLink(serviceName, DEFAULT_NLS_REL);
         if(link == null) {
             LOGGER.warn("{} has not provided {} for fetching resource bundle files", serviceName, DEFAULT_NLS_REL);
-            return null;
+            return Collections.emptyList();
         }
         RestClient rc = new RestClient();
         rc.setHeader(X_USER_IDENTITY_DOMAIN_NAME_HEADER, TENANT_CLOUD_SERVICES);
@@ -107,10 +108,9 @@ public class MetadataRetriever
         List<EmsResourceBundle> rbList = new ArrayList<EmsResourceBundle>();
         try {
             rbList = jUtil.fromJsonToList(response, EmsResourceBundle.class);
-        } catch (IOException e) {
-            LOGGER.error("Error when fetching resource bundle files from {} : {}", serviceName, e.getLocalizedMessage());
-            throw new CommonFunctionalException("Error when fetching resource bundle files from " + serviceName + " : "
-                    + e.getLocalizedMessage());
+        } catch (NullPointerException | IOException convertException) {
+            throw new CommonFunctionalException("Fail to convert resource bundle files from " + serviceName + " : "
+                    + convertException.getLocalizedMessage());
         }
         return setDefaultResourceBundleValue(rbList, serviceName);
     }
@@ -121,7 +121,7 @@ public class MetadataRetriever
      * @return
      */
     private List<EmsResourceBundle> setDefaultResourceBundleValue(List<EmsResourceBundle> rbList, String serviceName) {
-        if(rbList != null || serviceName != null) {
+        if(rbList != null && serviceName != null) {
             for(EmsResourceBundle rb : rbList) {
                 rb.setServiceName(APPLICATION_MAP.get(serviceName).getJsonValue());
                 // set default country code
@@ -148,13 +148,13 @@ public class MetadataRetriever
     public List<Dashboard> getOobDashboardsByService(String serviceName) throws CommonFunctionalException {
         if(!APPLICATION_MAP.containsKey(serviceName)) {
             LOGGER.info("Dashboard hasn't supported {} to refresh its OOB Dashboards.", serviceName);
-            return null;
+            return Collections.emptyList();
         }
         LOGGER.info("Retrieve OOB Dashbaords from : {}", serviceName);
         VersionedLink link = RegistryLookupUtil.getServiceInternalLink(serviceName, DEFAULT_OOB_REL);
         if(link == null) {
             LOGGER.warn("{} has not provided {} for fetching OOB Dashboards", serviceName, DEFAULT_OOB_REL);
-            return null;
+            return Collections.emptyList();
         }
         RestClient rc = new RestClient();
         rc.setHeader(X_USER_IDENTITY_DOMAIN_NAME_HEADER, TENANT_CLOUD_SERVICES);
@@ -163,9 +163,9 @@ public class MetadataRetriever
         List<Dashboard> oobList = new ArrayList<Dashboard>();
         try {
             oobList = jUtil.fromJsonToList(response, Dashboard.class);
-        } catch (IOException e) {
-            LOGGER.error("Error when converting OOB Dashbaord: " + e.getLocalizedMessage());
-            throw new CommonFunctionalException("Error when converting OOB Dashbaord: " + e.getLocalizedMessage());
+        } catch (NullPointerException | IOException convertException) {
+            throw new CommonFunctionalException("Fail to convert OOB Dashbaord from " + serviceName + " : "
+                    + convertException.getLocalizedMessage());
         }
         return setDefaultOobValue(oobList, serviceName);
     }
@@ -177,7 +177,7 @@ public class MetadataRetriever
      * @return
      */
     private List<Dashboard> setDefaultOobValue(List<Dashboard> oobList, String serviceName) {
-        if(oobList != null && !oobList.isEmpty()) {
+        if(oobList != null && !oobList.isEmpty() && serviceName != null) {
             for(Dashboard oob : oobList) {
                 oob.setOwner(ORACLE);
                 oob.setLastModifiedBy(ORACLE);

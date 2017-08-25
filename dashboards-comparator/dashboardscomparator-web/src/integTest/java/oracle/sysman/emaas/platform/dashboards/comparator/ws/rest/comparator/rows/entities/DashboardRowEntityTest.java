@@ -234,10 +234,11 @@ public class DashboardRowEntityTest
 	private CountsEntity countsEntity;
 	@Test
 	public void testCountsEntity(){
-		countsEntity = new CountsEntity(1L,1L,1L);
+		countsEntity = new CountsEntity(1L,1L,1L,2L,3L,4L);
 		countsEntity.setCountOfDashboards(1L);
 		countsEntity.setCountOfUserOptions(1L);
 		countsEntity.setCountOfPreference(1L);
+		
 
 		countsEntity.getCountOfDashboards();
 		countsEntity.getCountOfUserOptions();

@@ -225,8 +225,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.clear("css=" + TimeSelectorUIControls.sEndDateInput);
 		webd.sendKeys("css=" + TimeSelectorUIControls.sEndDateInput, endDate);
 		webd.click("css=" + TimeSelectorUIControls.sEndDateInput);
-		webd.takeScreenShot();
-                webd.savePageToFile();
+
 
 //		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
 //			try {

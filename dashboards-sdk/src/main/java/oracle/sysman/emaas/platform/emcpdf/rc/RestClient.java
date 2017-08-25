@@ -185,16 +185,20 @@ public class RestClient {
         return null;
     }
 
+    public Object post(String url, String tenant, String auth){
+        return post(url, null, tenant, auth);
+    }
+
     public Object post(String url, Object requestEntity, String tenant, String auth)
     {
         if (StringUtil.isEmpty(url)) {
             LOGGER.error("Unable to post to an empty URL for requestEntity: \"{}\", tenant: \"{}\"", requestEntity, tenant);
             return null;
         }
-        if (requestEntity == null || "".equals(requestEntity)) {
+        /*if (requestEntity == null || "".equals(requestEntity)) {
             LOGGER.error("Unable to post an empty request entity");
             return null;
-        }
+        }*/
 
         /*ClientConfig cc = new DefaultClientConfig();
 //        cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
@@ -226,7 +230,16 @@ public class RestClient {
                     builder.header(key, value);
                 }
             }
-            return builder.post(requestEntity.getClass(), requestEntity);
+            if(requestEntity == null) {
+                builder.post();
+                LOGGER.info("RestClient is sending POST request without input, will return null...");
+                itrLogger.info("RestClient is sending POST request without input, will return null...");
+                return null;
+            } else {
+                LOGGER.info("Restclient is sending POST request with input...");
+                itrLogger.info("Restclient is sending POST request with input...");
+                return builder.post(requestEntity.getClass(), requestEntity);
+            }
         }catch(UniformInterfaceException e){
             LOGGER.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
             itrLogger.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);

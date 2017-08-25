@@ -81,9 +81,9 @@ task onboardTenant << {
     if (tenantIdInternal == null || tenantIdInternal.equals("null")) {
         throw new GradleException("Failed to load tenant id")
     }
-    if(!isTenantOnboarded(smUrl, authToken, TENANT_FOR_QUERY)) {
-        throw new GradleException("The tenantId [" + TENANT_FOR_QUERY + "] has not been onboard yet" )
-    }
+//    if(!isTenantOnboarded(smUrl, authToken, TENANT_FOR_QUERY)) {
+//        throw new GradleException("The tenantId [" + TENANT_FOR_QUERY + "] has not been onboard yet" )
+//    }
 
     // Activate the tenant
     println "Activate tenant " + TENANT_FOR_QUERY

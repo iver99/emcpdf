@@ -93,7 +93,7 @@ public class WidgetSelectorUtil_171 extends WidgetSelectorUtil_Version implement
 	{
 		driver.getLogger().info("(Internal method) closeDialog started");
 		driver.click(DashBoardPageId.WIDGET_SELECTOR_CLOSE_BTN_LOCATOR);
-		driver.takeScreenShot();
+
 		driver.waitForNotElementPresent(DashBoardPageId.WIDGET_SELECTOR_CLOSE_BTN_LOCATOR);
 
 		driver.getLogger().info("(Internal method) closeDialog completed");

@@ -12,7 +12,7 @@
   <!-- <listener>
     <listener-class>oracle.sysman.emSDK.emaas.authz.listener.AuthorizationListener</listener-class>
   </listener> -->
-  <filter>
+ <!-- <filter>
     <filter-name>CORS.filter</filter-name>
     <filter-class>oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.DashboardsComparatorCORSFilter</filter-class>
   </filter>
@@ -21,7 +21,7 @@
     <url-pattern>/*</url-pattern>
     <dispatcher>FORWARD</dispatcher>
     <dispatcher>REQUEST</dispatcher>
-  </filter-mapping>
+  </filter-mapping> -->
 	<security-constraint>
 	  <web-resource-collection>
 	    <web-resource-name>secure-pages</web-resource-name>

@@ -36,12 +36,18 @@ import javax.persistence.EntityTransaction;
 public class TableRowsSynchronizer {
     private static final Logger logger = LogManager.getLogger(TableRowsSynchronizer.class);
 
-    public String sync(EntityManager em, TableRowsEntity data) {
+    public String sync(TableRowsEntity data) {
         if (data == null) {
             logger.error("Failed to sync for input data is null");
             return "Errors:Failed to sync as input data is null";
         }
+        EntityManager em = null;
         try {
+        	DashboardServiceFacade dsf = new DashboardServiceFacade();
+			em = dsf.getEntityManager();
+			if (!em.getTransaction().isActive()) {
+				em.getTransaction().begin();
+			}
         	if (syncPreferenceTableRows(em, data.getEmsPreference()) <= 0) logger.debug("nothing was added to EMS_Prefernce!");
         	if (syncDashboardTableRows(em,data.getEmsDashboard()) <= 0) logger.debug("nothing was added to EMS_DASHBOARD!");
         	if (syncDashboardSetTableRows(em,data.getEmsDashboardSet()) <= 0)
@@ -58,7 +64,11 @@ public class TableRowsSynchronizer {
         catch (Exception e) {
         	logger.error(e);
         	return e.getMessage();
-        }
+        } finally {
+			if (em != null) {
+				em.close();
+			}
+		}
     }
 
 

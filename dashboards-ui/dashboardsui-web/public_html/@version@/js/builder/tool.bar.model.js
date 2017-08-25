@@ -17,7 +17,7 @@ define(['knockout',
         'builder/builder.core',
         'builder/dashboardDataSource/dashboard.datasource'
     ],
-    function(ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu,zdtUtilModel) {
+    function(ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu, zdtUtilModel) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;

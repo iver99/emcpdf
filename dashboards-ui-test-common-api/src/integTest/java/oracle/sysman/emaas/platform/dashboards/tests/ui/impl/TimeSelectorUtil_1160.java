@@ -86,6 +86,7 @@ public class TimeSelectorUtil_1160 extends TimeSelectorUtil_1130
 		webd.waitForElementVisible("css=" + TimeSelectorUIControls.sPickPanel);
 		//webd.isDisplayed(TimeSelectorUIControls.sPickPanel);
 		webd.takeScreenShot();
+		webd.savePageToFile();
 
 		webd.getLogger().info("Input the start date time and end date time...");
 		webd.click("css=" + TimeSelectorUIControls.sStartDateInput);

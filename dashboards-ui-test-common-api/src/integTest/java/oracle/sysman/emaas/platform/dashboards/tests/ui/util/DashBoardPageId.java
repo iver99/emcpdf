@@ -317,10 +317,36 @@ public class DashBoardPageId
 	public static final String RESTORETILEID = "/html/body/div[1]/div/ul/li[8]/a/span[2]";
 	public static final String REMOVETILEID = "/html/body/div[1]/div/ul/li[10]/a/span[2]";
 	//tile css locators -> css=<locator>
+	public static final String DASHBOARDTITLEBARCSS = ".oj-toolbars.oj-toolbar-bottom-border.oj-btton-half-chrome.head-bar-container.fit-size-vertical-sibling";
+	
 	public static final String WIDGETTITLECSS = ".dbd-widget";
 	public static final String TEXTWIDGETCONTENTCSS = "div[id^='textContentWrapper_']";
 	public static final String TEXTWIDGETEDITORCSS = "div[id^='textEditorWrapper_'] .cke_editable";
 	public static final String TEXTCONTENTCSS = "div[data-bind=\"html: content()\"]";
+	public static final String TEXTCONTENT1 = "//div[contains(@id, 'textContentWrapper_')]/div/a[1]";
+	public static final String TEXTCONTENT2 = "//div[contains(@id, 'textContentWrapper_')]/div/a[2]";
+	public static final String LINKICONCSS = ".cke_button__link";         // "//a[@title='Link']";
+	public static final String LINKDIALOGCSS = "div.cke_dialog_body";
+	public static final String PROTOCOLOPTION = "//div[contains(@class, 'cke_dialog_ui_select')]/label[text()='Protocol']/following-sibling::*//div[contains(@class, 'cke_dialog_ui_input_select')]";
+	public static final String PROTOCOLOPTION_HTTP = "http://";
+	public static final String PROTOCOLOPTION_HTTPS = "https://";
+	public static final String PROTOCOLOPTION_FTP = "ftp://";
+	public static final String PROTOCOLOPTION_NEWS = "news://";
+	public static final String PROTOCOLOPTION_OTHER = "";
+	public static final String HTTPCSS = ".cke_dialog_ui_input_select option[value='http://']";
+	public static final String HTTPSCSS = ".cke_dialog_ui_input_select option[value='https://']";
+	public static final String FTPCSS = ".cke_dialog_ui_input_select option[value='ftp://']";
+	public static final String NEWSCSS = ".cke_dialog_ui_input_select option[value='news://']";
+	public static final String OTHERXPATH = "//div[contains(@class, 'cke_dialog_ui_select')]/label[text()='Protocol']/following-sibling::*//div[contains(@class, 'cke_dialog_ui_input_select')]/select/option[@value='']";
+	public static final String URLINPUT = "//label[text()='URL']/following-sibling::*//div/input[@type='text']";
+	public static final String OKBTNCSS = "a.cke_dialog_ui_button_ok .cke_dialog_ui_button";
+	
+	public static final String IMAGEICONCSS = ".cke_button_icon.cke_button__image_icon";
+	public static final String IMAGEDIALOGCSS = "div.cke_dialog_body";
+	public static final String IMAGEURLINPUT = "//div[text()='Image Properties']/following-sibling::*//label[text()='URL']/following-sibling::*//div/input[@type='text']";
+	public static final String ALTERNATIVEINPUT = "//label[text()='Alternative Text']/following-sibling::*//div/input[@type='text']";
+
+	public static final String IMAGESCSS = "[id^='textContentWrapper_']>div>img";
 	
 	public static final String TILETITLECSS = "h2.dbd-tile-title";
 	public static final String CONFIGTILECSS = "button[id^=actionButton]";

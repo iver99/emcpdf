@@ -247,7 +247,7 @@ public class TimeSelectorUtil_1170 extends TimeSelectorUtil_1160
 				else {
 					webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 					webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
-					webd.takeScreenShot();
+
 
 					webd.waitForElementPresent("css=" + TimeSelectorUIControls.sLatestRadio);
 					webd.click("css=" + TimeSelectorUIControls.sLatestRadio);
@@ -374,7 +374,7 @@ public class TimeSelectorUtil_1170 extends TimeSelectorUtil_1160
 			case Last8Hours:
 				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_8Hours);
 				webd.click("css=" + TimeSelectorUIControls.sTimeRange_8Hours);
-				webd.takeScreenShot();
+		
 				break;
 			case NewLast60Mins:
 				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_New60Mins);

@@ -29,6 +29,7 @@ public class OobRefreshRunnable extends MetadataRefreshRunnable {
     private static final Logger LOGGER = LogManager.getLogger(OobRefreshRunnable.class);
     @Override
     public void run() {
+        LOGGER.info("Starting a new thread for fresh {} OOB.", serviceName);
         if(serviceName == null || serviceName.isEmpty()) {
             LOGGER.error("OobRefreshRunnable: there is no service name!");
             return;

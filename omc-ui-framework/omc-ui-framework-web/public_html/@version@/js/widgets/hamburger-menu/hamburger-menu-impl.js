@@ -37,6 +37,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 var sessionCacheBaseVanityUrlsKey = 'base_vanity_urls';
                 var sessionCacheUserRolesKey = 'user_roles';
                 var sessionCacheAllServiceDataKey = 'all_service_data';
+                var sessionCacheFavoriteDashboardKey = 'favorite_dashboards';
                 var omcMenuSeparatorId = 'omc_service_menu_separator';
                 
                 var userName = params.userName;
@@ -254,7 +255,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 var globalMenuIdHrefMapping = null;
                 var msgUtil = new msgModel();
                 var hitErrorsWhenLoading = false;
-                
+
                 //Get role names for current user
                 function getUserRoles() {
                     var dfdGetUserRoles = $.Deferred();
@@ -277,6 +278,72 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     return dfdGetUserRoles;
                 }
                 
+                //Get favorite dashboards
+                function getFavoriteDsb(forceRefresh) {
+                    var dfdGetFavoriteDsb = $.Deferred();
+                    if(!forceRefresh && self.favoriteDsb){
+                        dfdGetFavoriteDsb.resolve();//use the cached data
+                        return dfdGetFavoriteDsb;
+                    }
+                    self.favoriteDsb = [];
+                    var header = dfu.getDefaultHeader();
+                    var url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards") : '/sso.static/dashboards.service';
+                    url+='?offset=0&orderBy=default&filter=favorites';
+                    dfu.ajaxWithRetry(url, {
+                        type: 'get',
+                        dataType: 'json',
+                        contentType: "application/json",
+                        headers: header,
+                        success: function (data) {
+                            $.each(data.dashboards, function (idx, dsb) {
+                                self.favoriteDsb.push({name: dsb.name, href: "/emsaasui/emcpdfui/builder.html?dashboardId="+dsb.id});
+                            });
+                            dfdGetFavoriteDsb.resolve();
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            oj.Logger.error("Failed to load service menus due to error: " + textStatus);
+                            dfdGetFavoriteDsb.resolve();
+                        }
+                    });
+                    return dfdGetFavoriteDsb;
+                }
+
+                function updateFavoriteDsb(toRefresh){
+                    function updateFavoriteDsbInServiceMenuData(){
+                        var menuId = findAppItemIndex(rootMenuData, 'omc_root_dashboards');
+                        if(self.favoriteDsb){
+                            self.serviceMenuData[menuId].children = [];
+                            $.each(self.favoriteDsb, function (idx, dsb) {
+                                self.serviceMenuData[menuId].children.push({'appId': 'Dashboard', 'id': 'omc_dashboards_grp_' + idx, type: 'menu_item', 'label': dsb.name, 'externalUrl': dsb.href, 'disabled': false});
+                            });
+                        }else{
+                            delete self.serviceMenuData[menuId].children;
+                        }
+                    }
+                    if(toRefresh){
+                        $.when(getFavoriteDsb(toRefresh)).done(function(){
+                            updateFavoriteDsbInServiceMenuData();
+                            var menuId = findAppItemIndex(rootMenuData, 'omc_root_dashboards');
+                            var item = self.serviceMenuData[menuId];
+                            var menuItem = getMenuItem(item);
+                            $.each(omcMenus, function(idx, _item){
+                                if(menuItem.attr && _item.attr && _item.attr.id === menuItem.attr.id){
+                                    omcMenus[idx] = menuItem;
+                                }
+                            });
+                            self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                            $("#omcMenuNavList").ojNavigationList("refresh");
+                            sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusDataKey, omcMenus);
+                            sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheServiceMenuDataKey, self.serviceMenuData);
+                        });
+                    }else{
+                        updateFavoriteDsbInServiceMenuData();
+                    }
+                }
+                menuUtil.subscribeFavoriteDsbChangedEvent(function(){
+                    updateFavoriteDsb(true);
+                });
+
                 //Get vanity base URLs for all subscribed services
                 function fetchBaseVanityUrls() {
                     var dfdFetchBaseVanityUrls = $.Deferred();
@@ -324,7 +391,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         }
                     }
                 }
-                
+
                 function markLoadedServiceMenus(appId) {
                     if (self.serviceLinks && self.serviceLinks.length > 0) {
                         var serviceMenus = self.serviceLinks;
@@ -337,7 +404,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         }
                     }
                 }
-                
+
                 function isServiceMenuLoaded(appId) {
                     if (self.serviceLinks && self.serviceLinks.length > 0) {
                         var serviceMenus = self.serviceLinks;
@@ -356,7 +423,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                     return true;
                 }
-                
+
                 function findServiceMenuLinkByAppId(appId) {
                     if (self.serviceLinks && self.serviceLinks.length > 0) {
                         var serviceMenus = self.serviceLinks;
@@ -369,7 +436,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                     return null;
                 }
-                
+
                 function loadDummyDeferServiceMenus() {
                     if(!self.allServiceData || self.allServiceData.length < 1){
                         self.allServiceData = [];
@@ -385,7 +452,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         self.allServiceData.push(serviceItem);
                     });
                 }
-                
+
                 function getServiceMenuDefIndex(appId) {
                     if (self.allServiceData && self.allServiceData.length > 0) {
                         for (var i = 0; i < self.allServiceData.length; i++) {
@@ -397,7 +464,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                     return -1;
                 }
-                
+
                 function loadServiceMenuData(singleServiceData) {
                     //Find index for parent root menu item
                     var menuId = findAppItemIndex(rootMenuData, 'omc_root_' + singleServiceData.appId);
@@ -443,13 +510,13 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         }
                     }
                 }
-                
+
                 function updateServiceMenuCache() {
                     sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusServiceLinksKey, self.serviceLinks);
                     sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusDataKey, omcMenus);
                     sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheServiceMenuDataKey, self.serviceMenuData);
                 }
-                
+
                 function loadSingleServiceMenuJson(linkItem) {
                     var dfdLoadSingleSvcMenu = $.Deferred();
                     if (linkItem) {
@@ -500,8 +567,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                     dfdLoadSingleSvcMenu.resolve();
 //                                    if (needCount) {
 //                                        self.loadedServiceCnt(self.loadedServiceCnt() + 1);
-//                                    }                      
-                                }, 
+//                                    }
+                                },
                                 function() {
                                     hitErrorsWhenLoading = true;
                                     oj.Logger.error("Failed to load message file for service menus. Service name: " + serviceItem.serviceName);
@@ -526,7 +593,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                     return dfdLoadSingleSvcMenu;
                 }
-                
+
                 function findAllUnloadedServiceMenus() {
                     var unloadedMenus = [];
                     if(self.serviceLinks && self.serviceLinks.length > 0){
@@ -538,7 +605,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                     return unloadedMenus;
                 }
-                
+
                 function refreshSingleServiceMenu(appId, key, callback) {
                     omcMenus = []; //TODO
                     var svcMenuLink = findServiceMenuLinkByAppId(appId);
@@ -564,7 +631,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         }
                     });
                 }
-                
+
                 function refreshAllUnloadedServiceMenus() {
                     var dfdRefreshUnloadedMenus = $.Deferred();
                     omcMenus = []; //TODO
@@ -579,7 +646,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                     loadServiceMenuData(singleServiceData);
                                 }
                             });
-                            
+
                             for (var j = 0; j < self.serviceMenuData.length; j++) {
                                 var item = self.serviceMenuData[j];
                                 var menuItem = getMenuItem(item);
@@ -595,7 +662,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                     return dfdRefreshUnloadedMenus;
                 }
-                
+
                 //Load service menus from service registry JSON files
                 function loadServiceMenus() {
                     var dfdLoadServiceMenus = $.Deferred();
@@ -731,8 +798,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     self.serviceMenuData = cachedMenus[sessionCacheServiceMenuDataKey];
                     self.baseVanityUrls = cachedMenus[sessionCacheBaseVanityUrlsKey];
                     self.userRoles = cachedMenus[sessionCacheUserRolesKey];
+                    self.favoriteDsb = cachedMenus[sessionCacheFavoriteDashboardKey];
                     self.allServiceData = cachedMenus[sessionCacheAllServiceDataKey];
-                    
+
                     function refreshHamburgerMenuFromCache() {
                         cachedMenus = sessionCaches[0].retrieveDataFromCache(sessionCacheAllMenusKey);
                         omcMenus = cachedMenus[sessionCacheOmcMenusDataKey];
@@ -751,7 +819,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 }
                 //otherwise, get all service menus from service registries
                 else {
-                    $.when(loadServiceMenus(), getUserGrants(), getSubscribedApps(), fetchBaseVanityUrls(), getUserRoles()).done(function() {
+                    $.when(loadServiceMenus(), getUserGrants(), getSubscribedApps(), fetchBaseVanityUrls(), getUserRoles(), getFavoriteDsb()).done(function() {
                         if (hitErrorsWhenLoading) {
                             //Show error message to warn user
                             msgUtil.showMessage({
@@ -760,7 +828,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 "detail": nls.BRANDING_BAR_HAMBURGER_MENU_ERR_LOADING_DETAIL
                             });
                         }
-                        
+
                         fetchGlobalMenuLinks(self.registration);
                         for (var k = 0; k < rootMenuData.length; ++k) {
 //                            rootMenuData[k].externalUrl = globalMenuIdHrefMapping[rootMenuData[k].id] ? globalMenuIdHrefMapping[rootMenuData[k].id] : '#';
@@ -770,6 +838,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         self.allServiceData && $.each(self.allServiceData, function (idx, singleServiceData) {
                             loadServiceMenuData(singleServiceData);
                         });
+                        var toRefreshFavoriteDsb = false;
+                        updateFavoriteDsb(toRefreshFavoriteDsb);
                         //Construct menu items as data source for jet ojNavigationList component
                         for (var j = 0; j < self.serviceMenuData.length; j++) {
                             var item = self.serviceMenuData[j];
@@ -784,6 +854,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheServiceMenuDataKey, self.serviceMenuData);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheBaseVanityUrlsKey, self.baseVanityUrls);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheUserRolesKey, self.userRoles);
+                        sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheFavoriteDashboardKey, self.favoriteDsb);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheAllServiceDataKey, self.allServiceData);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                         self.hamburgerMenuLoaded(true);
@@ -835,7 +906,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 function isAppSubscribed(appId) {
                     if (self.subscribedApps) {
                         for (var i = 0; i < self.subscribedApps.length; i++) {
-                            if (self.subscribedApps[i].id === appId) {
+                            if (self.subscribedApps[i].id === appId || 'Dashboard' === appId) {
                                 return true;
                             }
                         }
@@ -1142,8 +1213,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 //Menu selection handler when a menu is clicked
                 self.selectionHandler = function(data, event) {
                     self.selectedItem(data.id);
-                    if (event.type === 'click' && (data.id.indexOf('omc_root_') !== -1 || data.selfHandleMenuSelection === 'false' 
-                            || !serviceAppId || data.appId !== serviceAppId)) {
+                    if (event.type === 'click' && ((data.id.indexOf('omc_root_') !== -1 || data.selfHandleMenuSelection === 'false' 
+                            || !serviceAppId || data.appId !== serviceAppId))||(data.id.indexOf('omc_dashboards_grp_') !== -1)) {
                         handleMenuSelection(true, data);
                     }
                     else {
@@ -1497,7 +1568,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 else {
                                     setCurrentMenuItem();
                                 }
-                                
+
                             }
                         }
                     }

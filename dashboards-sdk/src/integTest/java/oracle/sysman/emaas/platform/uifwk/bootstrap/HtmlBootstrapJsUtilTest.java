@@ -61,8 +61,9 @@ public class HtmlBootstrapJsUtilTest
 			}
 		};
 		String newJs = HtmlBootstrapJsUtil.getAllBootstrapJS(httpReq);
-		String expectedJs = sdkVersionJS + "if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}" + brandingBarData;
-		Assert.assertEquals(newJs, expectedJs);
+		String fullBrandingBarDataJs = "if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}" + brandingBarData;
+                Assert.assertTrue(newJs.indexOf(sdkVersionJS) != -1);
+                Assert.assertTrue(newJs.indexOf(fullBrandingBarDataJs) != -1);
 	}
 
 	@Test(groups = { "s2" })
@@ -86,7 +87,7 @@ public class HtmlBootstrapJsUtilTest
 		};
 		String newJs = HtmlBootstrapJsUtil.getBrandingDataJS(httpReq);
 		String expectedJs = "if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}" + brandingBarData;
-		Assert.assertEquals(newJs, expectedJs);
+                Assert.assertTrue(newJs.indexOf(expectedJs) != -1);
 
 		new Expectations() {
 			{
@@ -132,7 +133,7 @@ public class HtmlBootstrapJsUtilTest
 		};
 		String newJs = HtmlBootstrapJsUtil.getSDKVersionJS();
 		String expectedJs = "if(!window.sdkFilePath){window.sdkFilePath={};}window.sdkFilePath={};window.getSDKVersionFile=function(nonCacheableVersion){console.log(\"getSDKVersionFile() for: \"+nonCacheableVersion);var versionFile=nonCacheableVersion;if(window.sdkFilePath){versionFile=window.sdkFilePath[nonCacheableVersion];}if(!versionFile){versionFile=nonCacheableVersion;}console.log(\"getSDKVersionFile(), found version: \"+versionFile);return versionFile;};";
-		Assert.assertEquals(newJs, expectedJs);
+                Assert.assertTrue(newJs.indexOf(expectedJs) != -1);
 	}
 
 	@Test(groups = { "s2" })
@@ -152,7 +153,7 @@ public class HtmlBootstrapJsUtilTest
 		};
 		String newJs = HtmlBootstrapJsUtil.getSDKVersionJS();
 		String expectedJs = "if(!window.sdkFilePath){window.sdkFilePath={};}window.sdkFilePath={\"emsaasui/emcta/ta/js/sdk/topology/emcta-topology\":\"emsaasui/emcta/ta/1.15.0-170202.111534/js/shared-components/emcta-topology-impl\",\"emsaasui/emcta/ta/js/sdk/entitycard/EntityCardUtil\":\"emsaasui/emcta/ta/1.15.0-170202.111534/js/entitycard/EntityCardRegistryImpl\"};window.getSDKVersionFile=function(nonCacheableVersion){console.log(\"getSDKVersionFile() for: \"+nonCacheableVersion);var versionFile=nonCacheableVersion;if(window.sdkFilePath){versionFile=window.sdkFilePath[nonCacheableVersion];}if(!versionFile){versionFile=nonCacheableVersion;}console.log(\"getSDKVersionFile(), found version: \"+versionFile);return versionFile;};";
-		Assert.assertEquals(newJs, expectedJs);
+                Assert.assertTrue(newJs.indexOf(expectedJs) != -1);
 	}
 
 	private List<Link> getLinks()

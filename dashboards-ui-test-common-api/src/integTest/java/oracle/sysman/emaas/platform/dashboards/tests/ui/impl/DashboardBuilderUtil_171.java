@@ -108,6 +108,19 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.getLogger().info("Method not available in the current version");
 	}
 	
+	@Override
+	public void addImageInTextWidget(WebDriver driver, int index, String url, String alternativeText)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+	}
+	@Override
+	public void addLinkInTextWidget(WebDriver driver, int index, String url, String option)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		driver.getLogger().info("Method not available in the current version");
+	}
+	
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#addWidgetToDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
@@ -360,6 +373,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.sendKeys("id=" + DashBoardPageId.BUILDEROPTIONSEDITDESCRIPTIONCSS, descriptions);
 		driver.waitForElementVisible(DashBoardPageId.BUILDEROPTIONSEDITDESCRIPTIONCSS);
 		driver.takeScreenShot();
+		driver.savePageToFile();
 
 		//press ok button
 		driver.waitForElementPresent("css=" + DashBoardPageId.BUILDEROPTIONSEDITSAVECSS);
@@ -550,6 +564,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 
 		driver.waitForElementPresent(DashBoardPageId.DASHBOARDSETOPTIONSAUTOREFRESHOFFLOCATOR);
 		driver.takeScreenShot();
+		driver.savePageToFile();
 		if (REFRESH_DASHBOARD_SETTINGS_OFF.equals(refreshSettings)) {
 			boolean checked = driver.isDisplayed(DashBoardPageId.DASHBOARDSETAUTOREFRESHOFFSELECTEDLOCATOR);
 			driver.getLogger().info("isRefreshSettingCheckedForDashbaordSet completed, return result is " + checked);
@@ -673,6 +688,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			nav.click();
 			WaitUtil.waitForPageFullyLoaded(driver);
 			driver.takeScreenShot();
+			driver.savePageToFile();
 			driver.getLogger().info("printDashboardSet has click on the dashboard selection tab named");
 		}
 
@@ -860,7 +876,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		widgetEl.findElement(By.cssSelector(DashBoardPageId.CONFIGTILECSS)).click();
 		driver.click("css=" + tileResizeCSS);
 		driver.getLogger().info("Resize the widget");
-		driver.takeScreenShot();
+		
 
 	}
 

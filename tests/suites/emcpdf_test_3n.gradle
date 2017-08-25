@@ -124,15 +124,7 @@ omcCloudSetup {
     environment "OMR_REPOS_VERSION", "PS3"
 }
 
-// depends on OMCTF-977
-//def testTenants_v2 = [:]
-//testTenants_v2["df_omc_trial"]= [ "OMC" : [ "Trial"]]
-//testTenants_v2["df_omc_standard"]= [ "OMC" : [ "Standard"] ]
-//testTenants_v2["df_omc_ee"]= [ "OMC" : [ "Enterprise"] ]
-//testTenants_v2["df_omc_log"]= [ "OMC" : [ "Log"] ]
-//testTenants_v2["df_osmacc_trial"]= [ "OSMACC" : [ "Trail"] ]
-//testTenants_v2["df_osmacc_compliance"]= [ "OSMACC" : [ "Compliance"] ]
-//testTenants_v2["df_osmacc_security"]= [ "OSMACC" : [ "Security"] ]
+
 
 def testTenants_v3 = [:]
 testTenants_v3["df_omcse"]= [ "OMCSE" : [ "Standard"] ]
@@ -143,10 +135,37 @@ testTenants_v3["df_secsma"]= [ "SECSMA" : [ "Standard"] ]
 
 task onboardAllTenants(dependsOn:[omcOnboardTenants(testTenants_v3)]){
 }
+task suitePricingV4Tests(type: EMTest , overwrite: true,dependsOn:omcSetup){
+include "oracle/sysman/emaas/platform/dashboards/test/ui/util/OnboardV4Tenant.class"
+
+useWebdriver = true
+useRestAssured = true
+}
+
+
+task V4Test(type:EMTest,dependsOn:suitePricingV4Tests){
+include "oracle/sysman/emaas/platform/dashboards/test/ui/TestSuiteLicensing_V4.class"
+//include "oracle/sysman/emaas/platform/dashboards/logging/LoggingCRUDV4.class"
+//include "oracle/sysman/emaas/platform/dashboards/test/Configuration/GetConfigurationV4.class"
+//include "oracle/sysman/emaas/platform/dashboards/test/dashboard/DashboardCRUDV4.class"
+//include "oracle/sysman/emaas/platform/dashboards/test/dashboard/DashboardDeletionV4.class"
+//include "oracle/sysman/emaas/platform/dashboards/test/favoritedashboards/FavoriteDashboardCRUDV4.class"
+//include "oracle/sysman/emaas/platform/dashboards/test/omcstatus/GetOmcStatusV4.class"
+//include "oracle/sysman/emaas/platform/dashboards/test/preference/PreferenceCRUDV4.class"
+//include "oracle/sysman/emaas/platform/dashboards/test/RegistryLookup/RegistryLookupV4.class"
+//include "oracle/sysman/emaas/platform/dashboards/test/screenshot/ScreenshotCURDV4.class"
+//include "oracle/sysman/emaas/platform/dashboards/test/UserOptionsCRUDv4.class"
+//include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/TenantSubscriptions_licenseV4.class"
+//include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/TenantSubscriptionsV4.class"
+useWebdriver = true
+useRestAssured = true
+}
+
+
 
 //Task added from "emcpdf_qa_test_3n"
-task QATest(type:EMTest,dependsOn:[omcSetup]) {
-        include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
+task QATest(type:EMTest,dependsOn:[omcSetup,suitePricingV4Tests]) {
+    include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
 	include "oracle/sysman/emaas/platform/dashboards/logging/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/Configuration/*"
@@ -183,9 +202,9 @@ task QATest1(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]){
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FixDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FlexibleDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_RecentUseOption.class"
-	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_MillionSeconds.class"
-	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_DateOnly.class"
-	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_ErrorMsg.class"
+//	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_MillionSeconds.class"
+//	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_DateOnly.class"
+//	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_ErrorMsg.class"
         useWebdriver = true
 	useRestAssured=true
 }
@@ -258,8 +277,8 @@ task emcpdf_test_3n (dependsOn:[QATest,DEVUiTest,QATest1,DEVTest,DEVTest2,e2e, o
     apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")
 }
 */
-task emcpdf_test_3n (dependsOn:[QATest,DEVUiTest,QATest1,DEVTest,DEVTest2, omcTeardown]) {
-    omcTeardown.mustRunAfter([QATest,DEVUiTest,QATest1,DEVTest,DEVTest2])
+task emcpdf_test_3n (dependsOn:[QATest,V4Test,DEVUiTest,QATest1,DEVTest,DEVTest2, omcTeardown]) {
+    omcTeardown.mustRunAfter([QATest,DEVUiTest,QATest1,DEVTest,DEVTest2,V4Test])
 
     apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")
 }

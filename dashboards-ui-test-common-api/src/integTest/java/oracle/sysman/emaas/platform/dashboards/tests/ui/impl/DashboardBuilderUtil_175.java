@@ -134,6 +134,7 @@ public abstract class DashboardBuilderUtil_175 extends DashboardBuilderUtil_171
 		new Actions(driver.getWebDriver()).moveToElement(
 				driver.getWebDriver().findElement(By.xpath(DashBoardPageId_190.BUILDERTILESEDITAREA))).perform();
 		driver.takeScreenShot();
+		driver.savePageToFile();
 
 		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
 		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
@@ -144,6 +145,7 @@ public abstract class DashboardBuilderUtil_175 extends DashboardBuilderUtil_171
 		new Actions(driver.getWebDriver()).moveToElement(tileTitles.get(index)).perform();
 		//	tileTitles.get(index).click();
 		driver.takeScreenShot();
+		driver.savePageToFile();
 		return tileTitles.get(index);
 	}
 

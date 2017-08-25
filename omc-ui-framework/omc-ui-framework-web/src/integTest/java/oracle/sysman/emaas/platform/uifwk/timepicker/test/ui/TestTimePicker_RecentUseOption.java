@@ -168,6 +168,7 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 		webd.getWebDriver().findElements(By.cssSelector(UIControls.TIMERANGEBTN_CSS)).get(Index - 1).click();
 
 		webd.takeScreenShot();
+		webd.savePageToFile();
 	}
 
 	private String[] verifyRecentUseContent(WebDriver webd, int Index)
@@ -176,6 +177,7 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 		webd.getLogger().info("Click Recent Use Option");
 		webd.getWebDriver().findElements(By.cssSelector(UIControls.RECENTUSE_CSS)).get(Index - 1).click();
 		webd.takeScreenShot();
+		webd.savePageToFile();
 
 		//check the expand options
 		webd.getLogger().info("Get the context");

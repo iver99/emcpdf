@@ -2,16 +2,21 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest;
 
 import mockit.Expectations;
 import mockit.Mocked;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
+import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.CountsEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstanceData;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstancesComparedData;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.TableRowsEntity;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 
 import org.testng.annotations.Test;
 
@@ -42,27 +47,42 @@ public class ZDTAPITest {
     String tenant;
     @Mocked
     String userTenant;
+    @Mocked
+	RestClient restClient;
+	@Mocked
+	RestClientProxy proxy;
+	@Mocked
+	LookupManager lookupManager;
     
 
     @Test
-    public void testCompareOnDF(@Mocked final JsonUtil jsonUtil, @Mocked final LookupClient client1, @Mocked final LookupClient client2) throws IOException{
+    public void testCompareOnDF(@Mocked final JsonUtil jsonUtil, @Mocked final LookupClient client1, @Mocked final LookupClient client2,
+    		 @Mocked final RestClient anyRestClient,@Mocked final CountsEntity anyCountEntity,
+    		 @Mocked final LookupManager lookup) throws IOException{
     	final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
-    	//final CountsEntity countsEntity = new CountsEntity(10L, 10L, 10L);
+    	final String anyResponse = "response";
     	new Expectations(){
             {
                 abstractComparator.getOMCInstances();
                 result = lookupEntry;
     			lookupEntry.put("omc1",client1);
     	    	lookupEntry.put("omc2",client2);
-    	/*    	
-    	   	JsonUtil.buildNormalMapper();
-    			result = jsonUtil;
-    			jsonUtil.fromJson(anyString,CountsEntity.class);
-    			result = count; */
-    			
+    	    	proxy.getRestClient();
+    	    	result = anyRestClient;
+    	    	lookupManager.getInstance();
+    	    	result = lookup;
+    	    	lookup.getAuthorizationToken();
+    	    	result = new char[10];
+    	    	anyRestClient.get(anyString, anyString, anyString);
+   	    	    result = anyResponse;
+    	    	 JsonUtil.buildNormalMapper();
+    	    	 result = jsonUtil;
+    	    	jsonUtil.fromJson(anyString,CountsEntity.class);
+    	    	result = count;
             }
         };
-        zdtapi.compareOnDF(tenant, userTenant);
+       // zdtapi.compareOnDF(tenant, userTenant);
+        zdtapi.compareOnDF(tenant);
     }
 
     @Test
@@ -85,7 +105,8 @@ public class ZDTAPITest {
     			result = tableRow1;*/
     		}
     	};
-        zdtapi.syncOnDF(tenant, userTenant);
+       // zdtapi.syncOnDF(tenant, userTenant, tenant);
+    	 zdtapi.syncOnDF(tenant, tenant);
     }
     @Test
     public void testInnerClasses(){
@@ -101,55 +122,50 @@ public class ZDTAPITest {
         instancesComapredCounts.setInstance1(counts);
         instancesComapredCounts.setInstance2(counts);
     }
-    
+   
     @Test
     public void testCompareRows1() {
     	
-    	zdtapi.compareRows(tenant, userTenant,"full");
+    //	zdtapi.compareRows(tenant, userTenant,"full",30);
+    	zdtapi.compareRows(tenant, "full",30);
     }
     
     @Test
-    public void testCompareRows2(@Mocked final JsonUtil jsonUtil, @Mocked final LookupClient client1, @Mocked final LookupClient client2) throws Exception{
+    public void testCompareRows2(@Mocked final JsonUtil jsonUtil, @Mocked final LookupClient client1, @Mocked final LookupClient client2,
+    		@Mocked final Link link) throws Exception{
     	final TableRowsEntity tableRow1 = new TableRowsEntity();
     	tableRow1.setEmsDashboard(new ArrayList<DashboardRowEntity>());
     	TableRowsEntity tableRow2 = new TableRowsEntity();
     	tableRow2.setEmsDashboard(new ArrayList<DashboardRowEntity>());
-    	InstanceData<TableRowsEntity> instance1 = new InstanceData<TableRowsEntity>("", null,tableRow1,  100);
-    	InstanceData<TableRowsEntity> instance2 = new InstanceData<TableRowsEntity>("", null,tableRow2,  100);
-    	
+    	InstanceData<TableRowsEntity> instance1 = new InstanceData<TableRowsEntity>("", null,tableRow1);
+    	InstanceData<TableRowsEntity> instance2 = new InstanceData<TableRowsEntity>("", null,tableRow2);
+    	instance1.setKey("omc");
+    	instance1.setClient(null);
+    	instance1.setData(tableRow2);
     	final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
     	
     	
     	final InstancesComparedData<TableRowsEntity> comparedData = new InstancesComparedData<TableRowsEntity>(instance1, instance2);  
+    	comparedData.setInstance1(instance1);
+    	comparedData.setInstance2(instance2);
     	new Expectations() {
     		{ 	
     			abstractComparator.getOMCInstances();
     			result = lookupEntry;
     			lookupEntry.put("omc1",client1);
     	    	lookupEntry.put("omc2",client2);
-    	/*		
-    			JsonUtil.buildNormalMapper();
+    			
+    		/*	JsonUtil.buildNormalMapper();
     			result = jsonUtil;
     			jsonUtil.fromJson(anyString,TableRowsEntity.class);
-    			result = tableRow1; */
+    			result = tableRow1;  */
     		}
     	};
     	
-    	zdtapi.compareRows(tenant, userTenant,"full");
+    	//zdtapi.compareRows(tenant, userTenant,"full", 30);
+    	zdtapi.compareRows(tenant, "full", 30);
     }
-    
-    @Test
-    public void testGetTenantId(@Mocked final TenantIdProcessor processor) throws BasicServiceMalfunctionException {
-    	zdtapi.getTenantId(null);
-    	
-    	new Expectations() {
-    		{
-    			processor.getInternalTenantIdFromOpcTenantId(anyString);
-    			result = 11L;
-    		}
-    	};
-    	zdtapi.getTenantId("tenantId");
-    }
+ 
     
     @Test
     public void testGetCurrentTime() {
@@ -159,6 +175,23 @@ public class ZDTAPITest {
     @Test
     public void testGetTimeString() {
     	zdtapi.getTimeString(new Date());
+    }
+    
+    @Test
+    public void testgetSyncStatus() {
+    	//zdtapi.getCompareStatus("id", "userName");
+    	zdtapi.getCompareStatus("id");
+    	//zdtapi.getCompareStatus(null,null);
+    	zdtapi.getCompareStatus(null);
+    }
+    
+    @Test
+    public void testgetCompareStatus() {
+    	//zdtapi.getSyncStatus("id", "userName");
+    	zdtapi.getSyncStatus("id");
+
+    	//zdtapi.getCompareStatus(null,null);
+    	zdtapi.getCompareStatus(null);
     }
     
 

@@ -65,7 +65,7 @@ public class DashBoardUtils
 			webdriver.getLogger().info("Click Compass icon to display menu of branding bar");
 			webdriver.getWebDriver().findElement(By.xpath(PageId.COMPASSICON)).click();
 			WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(PageId.DASHBOARDLINK)));			
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(PageId.DASHBOARDLINK)));
 			webdriver.getLogger().info("Click Dashboard link to back to dashboard home page");
 			webdriver.getWebDriver().findElement(By.xpath(PageId.DASHBOARDLINK)).click();
 		}
@@ -120,9 +120,9 @@ public class DashBoardUtils
 		//Accepting alert.
 		webdriver.getLogger().info("foucus on the alert");
 		alert = webdriver.getWebDriver().switchTo().alert();
-		
+
 		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
-		alert.accept();		
+		alert.accept();
 	}
 
 	/**
@@ -278,14 +278,14 @@ public class DashBoardUtils
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Host"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Middleware"));
 
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Categorical"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Others"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Overview"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Performance"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Timeseries"));
-//
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Entities"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Summary"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Categorical"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Others"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Overview"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Performance"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Timeseries"));
+		//
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Entities"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Summary"));
 	}
 
 	public static void itaOobNotExist_v2v3(WebDriver driver)
@@ -300,15 +300,31 @@ public class DashBoardUtils
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Database"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Host"));
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Middleware"));
-//
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Categorical"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Others"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Overview"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Performance"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Timeseries"));
-//
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Entities"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Summary"));
+		//
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Categorical"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Others"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Overview"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Performance"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Timeseries"));
+		//
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Entities"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Summary"));
+	}
+
+	public static void itaOobNotExistV4(WebDriver driver)
+	{
+		driver.getLogger().info("Verify below IT Analytics OOB dashboard Set and Dashboards don't exist...");
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Exadata Health"));
+
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Analytics"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Availability Analytics"));
+
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Performance Analytics Application Server"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Performance Analytics: Database"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Database"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Host"));
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Resource Analytics: Middleware"));
+
 	}
 
 	public static void laOobExist(WebDriver driver)
@@ -379,17 +395,17 @@ public class DashBoardUtils
 	public static void outDateOob(WebDriver driver)
 	{
 		driver.getLogger().info("Verify below IT Analytics OOB don't exist...");
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Configuration and Storage By Version"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Enterprise Overview"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Host Inventory by Platform"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 Databases by Resource Consumption"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 WebLogic Servers by Heap Usage"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 WebLogic Servers by Load"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Servers by JDK Version"));
-//
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Host Health Summary"));
-//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Health Summary"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Configuration and Storage By Version"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Enterprise Overview"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Host Inventory by Platform"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 Databases by Resource Consumption"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 WebLogic Servers by Heap Usage"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Top 25 WebLogic Servers by Load"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Servers by JDK Version"));
+		//
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Database Health Summary"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "Host Health Summary"));
+		//		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(driver, "WebLogic Health Summary"));
 	}
 
 	public static void securityOobExist(WebDriver driver)
@@ -422,6 +438,17 @@ public class DashBoardUtils
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "UI Gallery"));
 	}
 
+	public static void udeOobExistV4(WebDriver driver)
+	{
+		driver.getLogger().info("Wait for dashboards loading...");
+		DashboardHomeUtil.waitForDashboardPresent(driver, "Enterprise Health");
+
+		driver.getLogger().info("Verify below UDE OOB dashboard Set exist...");
+		//		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Exadata Health"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Enterprise Health"));
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "UI Gallery"));
+	}
+
 	public static boolean verfiyShareOptionDisabled()
 	{
 		driver.getLogger().info("Click the option icon of Dashboard Set");
@@ -432,11 +459,11 @@ public class DashBoardUtils
 		driver.getLogger().info("Click Edit icon");
 		driver.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONSEDIT_CSS);
 		driver.click("css=" + PageId.DASHBOARDSETOPTIONSEDIT_CSS);
-		
+
 		driver.getLogger().info("Expand Share options");
 		driver.waitForElementPresent("css=" + PageId.RIGHTDRAWEREDITSINGLEDBSHARE_CSS);
 		driver.click("css=" + PageId.RIGHTDRAWEREDITSINGLEDBSHARE_CSS);
-		
+
 		driver.getLogger().info("Verify the options are disabled or not");
 		WebElement ShareOption = driver.getWebDriver().findElement(By.cssSelector(PageId.DASHBOARDSETSHARE_CSS));
 		WebElement NotShareOption = driver.getWebDriver().findElement(By.cssSelector(PageId.DASHBOARDSETNOTSHARE_CSS));
@@ -448,6 +475,53 @@ public class DashBoardUtils
 			driver.getLogger().info("Have the option enabled");
 			return false;
 		}
+	}
+
+	public static void verifyAddLinkButton(WebDriver webdriver, String widgetName, int index)
+	{
+		Validator.notEmptyString("widgetName", widgetName);
+		Validator.equalOrLargerThan0("index", index);
+
+		webdriver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
+		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId_190.BUILDERTILESEDITAREA)));
+		WaitUtil.waitForPageFullyLoaded(webdriver);
+
+		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
+
+		List<WebElement> tileTitles = webdriver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
+		if (tileTitles == null || tileTitles.size() <= index) {
+			throw new NoSuchElementException("Tile with title=" + widgetName + ", index=" + index + " is not found");
+		}
+
+		String titleXpath = tileTitles.get(index).toString();
+
+		new Actions(webdriver.getWebDriver()).moveToElement(tileTitles.get(index)).perform();
+		webdriver.waitForServer();
+		webdriver.takeScreenShot();
+		webdriver.savePageToFile();
+
+		WebElement tileTitle = tileTitles.get(index);
+		WebElement tileConfig = tileTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILECONFIGLOCATOR));
+		if (tileConfig == null) {
+			throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
+		}
+
+		Actions builder = new Actions(webdriver.getWebDriver());
+		builder.moveToElement(tileTitle).perform();
+		builder.moveToElement(tileConfig).click().perform();
+
+		//click edit button in widget config menu
+		webdriver.waitForElementPresent(DashBoardPageId_1200.BUILDERTILEEDITLOCATOR);
+		webdriver.click(DashBoardPageId_1200.BUILDERTILEEDITLOCATOR);
+
+		webdriver.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTAREACSSLOCATOR);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By
+				.cssSelector(DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTAREACSSLOCATOR)));
+
+		WebElement searchInput = webdriver.getElement("css="
+				+ DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
+		Assert.assertFalse(searchInput.isEnabled(), "'Search' input box is not diabled");
 	}
 
 	public static void verifyBrandingBarWithTenant(WebDriver webdriver, String tenantType)
@@ -903,7 +977,7 @@ public class DashBoardUtils
 		//find the widget
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
 		driver.click(DashBoardPageId_190.BUILDERTILESEDITAREA);
-		
+
 		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
 		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
 		if (tileTitles == null || tileTitles.size() < index) {
@@ -911,6 +985,7 @@ public class DashBoardUtils
 		}
 		tileTitles.get(index - 1).click();
 		driver.takeScreenShot();
+		driver.savePageToFile();
 
 		//move the mouse to the title of the widget
 
@@ -935,6 +1010,7 @@ public class DashBoardUtils
 			driver.getLogger().info("Now moving to the widget title bar");
 			builder.moveToElement(widgetTitle).perform();
 			driver.takeScreenShot();
+			driver.savePageToFile();
 			driver.getLogger().info("and clicks the widget config button");
 
 			return widgetDataExplore.isDisplayed();
@@ -1189,50 +1265,6 @@ public class DashBoardUtils
 			default:
 				webdriver.getLogger().info("The tenantType is: " + tenantType);
 		}
-	}
-	
-	public static void verifyAddLinkButton(WebDriver webdriver, String widgetName, int index)
-	{	    	
-		Validator.notEmptyString("widgetName", widgetName);
-		Validator.equalOrLargerThan0("index", index);
-
-		webdriver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
-		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId_190.BUILDERTILESEDITAREA)));
-		WaitUtil.waitForPageFullyLoaded(webdriver);
-		
-		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
-		
-		List<WebElement> tileTitles = webdriver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
-		if (tileTitles == null || tileTitles.size() <= index) {
-			throw new NoSuchElementException("Tile with title=" + widgetName + ", index=" + index + " is not found");
-		}
-        
-        String titleXpath = tileTitles.get(index).toString();
-        
-        new Actions(webdriver.getWebDriver()).moveToElement(tileTitles.get(index)).perform();	
-        webdriver.waitForServer();
-        webdriver.takeScreenShot();
-		
-		WebElement tileTitle = tileTitles.get(index);
-		WebElement tileConfig = tileTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILECONFIGLOCATOR));
-		if (tileConfig == null) {
-			throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
-		}
-		
-		Actions builder = new Actions(webdriver.getWebDriver());
-		builder.moveToElement(tileTitle).perform();
-		builder.moveToElement(tileConfig).click().perform();
-		
-		//click edit button in widget config menu
-		webdriver.waitForElementPresent(DashBoardPageId_1200.BUILDERTILEEDITLOCATOR);
-		webdriver.click(DashBoardPageId_1200.BUILDERTILEEDITLOCATOR);
-
-		webdriver.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTAREACSSLOCATOR);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTAREACSSLOCATOR)));
-	
-		WebElement searchInput = webdriver.getElement("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
-		Assert.assertFalse(searchInput.isEnabled(), "'Search' input box is not diabled");
 	}
 
 	private static String trimUrlParameters(String url)

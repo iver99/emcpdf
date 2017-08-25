@@ -16,9 +16,11 @@ import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionE
 import oracle.sysman.emaas.platform.dashboards.core.*;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.UpdateSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameNameException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.*;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.CreateSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableDescriptionState;
@@ -99,6 +101,9 @@ public class DashboardAPI extends APIBase
 			DashboardManager manager = DashboardManager.getInstance();
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
+			if (d.getIsSystem() != null && d.getIsSystem()) {
+				throw new CreateSystemDashboardException();
+			}
 			d = manager.saveNewDashboard(d, tenantId);
 			updateDashboardAllHref(d, tenantIdParam);
 			return Response.status(Status.CREATED).entity(getJsonUtil().toJson(d)).build();
@@ -964,8 +969,7 @@ public class DashboardAPI extends APIBase
 			initializeUserContext(tenantIdParam, userTenant);
 			Dashboard input = dm.getDashboardById(dashboardId, tenantId);
 			if (input.getIsSystem() != null && input.getIsSystem()) {
-				throw new CommonSecurityException(
-						MessageUtils.getDefaultBundleString(CommonSecurityException.NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR));
+				throw new UpdateSystemDashboardException();
 			}
 			if (name != null) {
 				input.setName(name);
@@ -1089,8 +1093,7 @@ public class DashboardAPI extends APIBase
 			initializeUserContext(tenantIdParam, userTenant);
 			input.setDashboardId(dashboardId);
 			if (input.getIsSystem() != null && input.getIsSystem()) {
-				throw new CommonSecurityException(
-						MessageUtils.getDefaultBundleString(CommonSecurityException.NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR));
+				throw new UpdateSystemDashboardException();
 			}
 			Dashboard dbd = dm.updateDashboard(input, tenantId);
 			updateDashboardAllHref(dbd, tenantIdParam);

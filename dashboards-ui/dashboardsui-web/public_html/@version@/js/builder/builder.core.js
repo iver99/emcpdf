@@ -122,10 +122,15 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         
         self.EVENT_DASHBOARD_OPTION_MENU_RENDERED = "EVENT_DASHBOARD_OPTION_MENU_RENDERED";
         
+        self.EVENT_DASHBOARD_INIT_FIRST_RESIZE = "EVENT_DASHBOARD_INIT_FIRST_RESIZE";
+        
         self.dispatcher = new dsp.Dispatcher();
         self.addEventListener = function(event, listener) {
             self.dispatcher.registerEventHandler(event, listener);
         };
+        
+        // event dispatcher listens to init first resize
+        self.addEventListener(self.EVENT_DASHBOARD_INIT_FIRST_RESIZE, self.dispatcher.initFirstResize);
 
         self.triggerEvent = function(event, message, p1, p2, p3, p4) {
             window.DEV_MODE && console.debug('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')+(p4?'(p4:'+p4+')':'')):""));

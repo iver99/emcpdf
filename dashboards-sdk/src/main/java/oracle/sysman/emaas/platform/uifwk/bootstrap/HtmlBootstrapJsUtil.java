@@ -27,6 +27,11 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupM
 import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.uifwk.util.DataAccessUtil;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
+
 
 import org.apache.logging.log4j.LogManager;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -80,6 +85,7 @@ public class HtmlBootstrapJsUtil
 	 */
 	public static String getBrandingDataJS(HttpServletRequest httpReq)
 	{
+                long startBdJS = System.currentTimeMillis();
 		LOGGER.debug("Start to get branding bar bootstrap js...");
 		StringBuilder sb = new StringBuilder();
 		String referer = httpReq.getHeader("referer");
@@ -102,6 +108,11 @@ public class HtmlBootstrapJsUtil
 			LOGGER.warn("Retrieved null or invalid tenant user");
 			return null;
 		}
+               
+                long startPageLoadEvent = System.currentTimeMillis(); 
+                LOGGER.debug("Generating Page Load Event.");
+                generatePageLoadEvent(tenant, user, referer, sessionExp);
+		long endPageLoadEvent = System.currentTimeMillis(); 		
 
 		//user info
 		LOGGER.debug("Start to get brandingbar data.");
@@ -127,6 +138,8 @@ public class HtmlBootstrapJsUtil
             }
         }
 		String injectableJS = sb.toString();
+                injectableJS = "/* PAGE_LOAD_EVENT_API_COST : " +  (endPageLoadEvent - startPageLoadEvent) + "ms */" + injectableJS;
+                injectableJS = "/* GET_BRANDING_BAR_DATA_API_COST : " + (System.currentTimeMillis() - startBdJS) + "ms */" + injectableJS; 
 		LOGGER.info("getBrandingDataJS(), injectableJS: " + injectableJS);
 		return injectableJS;
 	}
@@ -151,6 +164,7 @@ public class HtmlBootstrapJsUtil
 	 */
 	public static String getSDKVersionJS()
 	{
+                long start = System.currentTimeMillis();
 		List<Link> sdkFileLinks = HtmlBootstrapJsUtil.lookupLinksWithRelPrefix(SDK_FILE, HTTPS);
 		Map sdkFilesMap = HtmlBootstrapJsUtil.getSdkFilesMap(sdkFileLinks);
 		String mapResponse = JsonWriteUtil.writeValueAsString(sdkFilesMap);
@@ -159,6 +173,7 @@ public class HtmlBootstrapJsUtil
 		String getSDKVersionFunctionJS = "window.getSDKVersionFile=function(nonCacheableVersion){console.log(\"getSDKVersionFile() for: \"+nonCacheableVersion);var versionFile=nonCacheableVersion;if(window.sdkFilePath){versionFile=window.sdkFilePath[nonCacheableVersion];}if(!versionFile){versionFile=nonCacheableVersion;}console.log(\"getSDKVersionFile(), found version: \"+versionFile);return versionFile;};";
 
 		String injectableJS = sdkVersionDefinitionJS + getSDKVersionFunctionJS;
+                injectableJS = "/* GET_SDK_VERSION_JS_API_COST : " +  (System.currentTimeMillis() - start) + "ms */" + injectableJS;
 		LOGGER.debug("VersionFilesSDK(), injectableJS: " + injectableJS);
 		return injectableJS;
 	}
@@ -248,7 +263,36 @@ public class HtmlBootstrapJsUtil
 		LOGGER.debug("lookupLinksWithRelPrefix(" + linkPrefix + "): ", linkList.toString());
 		return linkList;
 	}
-	
+
+        private static void generatePageLoadEvent(String tenantName, String userName, String referer, String sessionExp)
+        {
+            String userTenant = tenantName + "." + userName;
+            long start = System.currentTimeMillis();
+
+            try {
+                Link uieventLink = RegistryLookupUtil.getServiceInternalLink("TargetAnalytics", "1.1+",
+                                    "static/entitycard_uievent", null);
+                if (uieventLink == null || StringUtil.isEmpty(uieventLink.getHref())) {
+                    LOGGER.warn("Retrieving UI Event Link for tenant {}: null/empty UI Event Link retrieved from service registry.");
+                }
+                String uieventHref = uieventLink.getHref();
+                RestClient rc = new RestClient();
+                rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantName);
+                rc.setHeader(RestClient.X_REMOTE_USER, userTenant);
+                rc.setHeader(RestClient.OAM_REMOTE_USER, userTenant);
+                if (!StringUtil.isEmpty(referer)) {
+                    rc.setHeader(RestClient.REFERER, referer);
+                }
+                if (!StringUtil.isEmpty(sessionExp)) {
+                    rc.setHeader(RestClient.SESSION_EXP, sessionExp);
+                }
+                rc.post(uieventHref, tenantName, ((VersionedLink) uieventLink).getAuthToken());
+                LOGGER.info("It takes {}ms to complete the UI Event REST API", System.currentTimeMillis() - start);
+            } catch (Exception e) {
+                LOGGER.error("Error in generating the page load event", e);
+            }
+        }
+
 	/**
 	 * Discover SSO logout URL from service registry
 	 *

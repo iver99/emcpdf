@@ -26,6 +26,11 @@ define(['jquery'], function($) {
         self.delayResizeListenerQueue = [];
         self.firstResize = false;
         self.lastBuilderResizeExecTimestamp = null;
+        
+        self.initFirstResize = function() {
+            self.firstResize = false;
+        };
+        
         self.triggerEvent = function(event, p1, p2, p3, p4) {
             if (event === "EVENT_BUILDER_RESIZE") {
                 if (!self.firstResize && $("#globalBody").is(":visible")) {

@@ -5,8 +5,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_115
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-
-import org.openqa.selenium.By;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver.ClickType;
 
 /**
  * Created by qiqia on 2016/12/13.
@@ -40,8 +39,8 @@ public class WelcomeUtil_1150 extends WelcomeUtil_175
 				break;
 
 		}
-		driver.getWebDriver().findElement(By.xpath(eleXpath)).click();
-		driver.takeScreenShot();
+		driver.click(eleXpath, ClickType.WEBELEMENT);
+
 	}
 
 	/**

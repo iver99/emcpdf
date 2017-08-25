@@ -30,4 +30,9 @@ public class MetadataRefreshAPITest {
         api.refreshNLS("");
         api.refreshNLS("serviceName");
     }
+    
+    @Test(groups = {"s1"})
+    public void testExpireOOBWidgetCache() {
+        api.expireOOBWidgetCache("serviceName");
+    }
 }

@@ -58,7 +58,8 @@ public class BugVerification extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF2040");
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF2856");
 		DashBoardUtils.deleteDashboard(webd, "DashboardSet_3660");
-		DashBoardUtils.deleteDashboard(webd, "Dashboard_3660"); 
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_3660");		
+		DashBoardUtils.deleteDashboard(webd, "testEMCPDF_4594");
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -243,17 +244,11 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("start to test in testEMPCDF_2970");
 
 		DashboardHomeUtil.createDashboard(webd, "~!@#$%^&*()-+", null);
-
-		webd.takeScreenShot();
-
 		DashboardBuilderUtil.verifyDashboard(webd, "~!@#$%^&*()-+", null, true);
 		DashboardBuilderUtil.saveDashboard(webd);
-		webd.takeScreenShot();
 		BrandingBarUtil.visitDashboardHome(webd);
-		webd.takeScreenShot();
 		DashboardHomeUtil.gridView(webd);
 		DashboardHomeUtil.deleteDashboard(webd, "~!@#$%^&*()-+", "dashboards_grid_view");
-		webd.takeScreenShot();
 		webd.getLogger().info("complete testing in testEMPCDF_2970");
 	}
 
@@ -306,10 +301,11 @@ public class BugVerification extends LoginAndLogout
 				.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
 		webd.waitForElementPresent("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
 		webd.takeScreenShot();
+		webd.savePageToFile();
 
 		webd.click("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
 		webd.getLogger().info("Sing out button is clicked");
-		webd.takeScreenShot();
+		
 
 		//initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		login(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName(), "welcome");
@@ -471,5 +467,53 @@ public class BugVerification extends LoginAndLogout
     	{
     		webd.getLogger().info("Hamburger menu is not enabled, do need to verify the fix for EMCPDF-4039");
     	}
+    }
+    
+    @Test(alwaysRun = true)
+    public void testEMCPDF_4594()
+    {
+    	String dbset_Name = "testEMCPDF_4594";
+    	String dbInSet_Name_1 = "Performance";
+    	String dbInSet_Name_2 = "Overview";
+    	String dbInSet_Name_3 = "Others";
+    	String widgetName = "Top 5 Databases by Active Sessions";
+    	
+    	//Initialize the test
+    	initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+    	webd.getLogger().info("Start the test case: testEMCPDF_4594");
+    	
+    	//reset the home page
+    	webd.getLogger().info("Reset all filter options in the home page");
+    	DashboardHomeUtil.resetFilterOptions(webd);
+    	
+    	//switch to Grid View
+    	webd.getLogger().info("Switch to grid view");
+    	DashboardHomeUtil.gridView(webd);
+    	
+    	//create dashboard set
+    	webd.getLogger().info("Create a dashboard set");
+    	DashboardHomeUtil.createDashboard(webd, dbset_Name, null, DashboardHomeUtil.DASHBOARDSET);
+    	
+    	webd.getLogger().info("Add some dashboards into the dashboard set");
+    	DashboardBuilderUtil.addNewDashboardToSet(webd, dbInSet_Name_1);
+    	DashboardBuilderUtil.addNewDashboardToSet(webd, dbInSet_Name_2);
+    	DashboardBuilderUtil.addNewDashboardToSet(webd, dbInSet_Name_3);
+    	
+    	webd.getLogger().info("Back to dashboard home page");
+    	BrandingBarUtil.visitDashboardHome(webd);
+    	
+    	webd.getLogger().info("Open the dashboard set created just now");
+    	DashboardHomeUtil.selectDashboard(webd, dbset_Name);
+    	
+    	webd.getLogger().info("Select each tabs in dashboard set");
+    	DashboardBuilderUtil.selectDashboardInsideSet(webd, dbInSet_Name_1);
+    	DashboardBuilderUtil.selectDashboardInsideSet(webd, dbInSet_Name_2);
+    	DashboardBuilderUtil.selectDashboardInsideSet(webd, dbInSet_Name_3);
+    	
+    	webd.getLogger().info("Select the first tab");
+    	DashboardBuilderUtil.selectDashboardInsideSet(webd, dbInSet_Name_1);
+    	
+    	webd.getLogger().info("Verify the widget display");
+    	Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, widgetName),"Expected widget is not displayed");
     }
 }

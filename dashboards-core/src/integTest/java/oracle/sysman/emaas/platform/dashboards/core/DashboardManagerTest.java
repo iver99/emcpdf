@@ -11,6 +11,8 @@ import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionE
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.CreateSystemDashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.UpdateSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
@@ -323,27 +325,42 @@ public class DashboardManagerTest extends BaseTest
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenantId1 = 11L;
-		// try to insert system dashboard, and it should work also
+		// try to insert system dashboard, and it should not work
 		String name1 = "name1" + System.currentTimeMillis();
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName(name1);
 		dbd1.setDescription("dashboard 1: system dashboard");
 		dbd1.setIsSystem(true);
 		dbd1.setAppicationType(DashboardApplicationType.APM);
+		try {
+			dm.saveNewDashboard(dbd1, tenantId1);
+		}
+		catch (CreateSystemDashboardException e) {
+			LOGGER.info("context", e);
+		}
+
+		String name2 = "name2" + System.currentTimeMillis();
+		dbd1 = new Dashboard();
+		dbd1.setName(name2);
+		dbd1.setDescription("dashboard 2: dashboard");
+		dbd1.setAppicationType(DashboardApplicationType.APM);
+		dbd1.setIsSystem(false);
+
 		dm.saveNewDashboard(dbd1, tenantId1);
 		Dashboard queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
 		Assert.assertNotNull(queried);
 
 		// try to update system dashboard, and it is not allowed
+		queried.setIsSystem(true);
 		queried.setName("Updated system dashboard name");
 		try {
 			dm.updateDashboard(dbd1, tenantId1);
 		}
-		catch (CommonSecurityException e) {
+		catch (UpdateSystemDashboardException e) {
 			LOGGER.info("context", e);
 		}
 		queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
-		Assert.assertEquals(queried.getName(), name1);
+		Assert.assertEquals(queried.getName(), name2);
 
 		// post test
 		try {

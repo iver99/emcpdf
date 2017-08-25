@@ -23,7 +23,7 @@ public class LoginAndLogout
 			((JavascriptExecutor) webd.getWebDriver()).executeScript("arguments[0].scrollIntoView(true);", webe);
 			((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
 			webd.takeScreenShot();
-			
+			webd.savePageToFile();
 			webd.getLogger().info("start to logout");
 
 			LoginUtils.doLogout(webd);
@@ -184,6 +184,70 @@ public class LoginAndLogout
 			LoginUtils.doLogin(webd, username, password, tenantID, url);
 		}
 
+	}
+
+	public void loginV4(String testName, String rel)
+	{
+		String tenantID = null, username = null, password = null;
+		try {
+			tenantID = OnboardV4Tenant.getTenantID();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			tenantID = "emaastesttenant1";
+		}
+
+		try {
+			username = oracle.sysman.emsaas.login.utils.Utils.getProperty("SSO_USERNAME");
+
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			username = "emcsadmin";
+		}
+		try {
+			password = oracle.sysman.emsaas.login.utils.Utils.getProperty("SSO_PASSWORD");
+
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			password = "Welcome1!";
+		}
+
+		loginV4(testName, username, password, tenantID, rel, "Dashboard-UI");
+	}
+
+	public void loginV4(String testName, String username, String password, String tenantId, String rel, String servicename)
+	{
+		webd = WebDriverUtils.initWebDriver(testName);
+		String url = null;
+		webd.getLogger().info("before::start to test in LoginAndOut");
+		try {
+			url = PageUtils.getServiceLink(tenantId, rel, servicename);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			//			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OMCS_DASHBOARD_URL");
+			url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OHS_URL") + "/emsaasui/emcpdfui/home.html";
+		}
+
+		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");
+		webd.getLogger().info("url is " + url + "   properties file is " + testPropertiesFile);
+		webd.getLogger().info("after::start to test in LoginAndOut");
+		// if the ui have been login, do not login ,again
+		//		if (!webd.getWebDriver().getCurrentUrl().equals(url)) {
+		url = url + "?DOMAIN-INSTANCE-NAME=" + OnboardV4Tenant.getInstanceID();
+		if (!webd.getWebDriver().getCurrentUrl().equals(url) && !webd.getWebDriver().getCurrentUrl().contains("omcCtx=")) {
+			//Append omc context into login url
+			if (!url.contains("omcCtx=")) {
+				url = url
+						+ (url.indexOf("?") > 0 ? "&" : "?")
+						+ "omcCtx=compositeType%3Domc_generic_system%26compositeName%3D%252FSOA1213_base_domain%252Fbase_domain%252Fsoa_server1%252Fsoa-infra_System%26compositeMEID%3D8426448730BDF663A9806A69AA2C445B%26entityMEIDs%3D132DBDE75046DEBC18DDC79CFCB04729";
+				webd.getLogger().info("New url with OMC global context appended is: " + url);
+			}
+
+			LoginUtils.doLogin(webd, username, password, tenantId, url);
+		}
 	}
 
 }

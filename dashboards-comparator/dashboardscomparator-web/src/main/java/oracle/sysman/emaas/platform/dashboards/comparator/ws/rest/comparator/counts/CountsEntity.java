@@ -15,69 +15,90 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.co
  */
 public class CountsEntity
 {
-	private Long countOfDashboards;
-	private Long countOfUserOptions;
-	private Long countOfPreference;
+	private long countOfDashboards;
+	private long countOfUserOptions;
+	private long countOfPreference;
+	private long countOfDashboardSet;
+	private long countOfTile;
+	private long countOfTileParam;
+
 
 	public CountsEntity()
 	{
 	}
 
-	public CountsEntity(Long countOfDashboards, Long countOfFavorite, Long countOfPreference)
-	{
+
+	public CountsEntity(long countOfDashboards, long countOfUserOptions,
+			long countOfPreference, long countOfDashboardSet, long countOfTile,
+			long countOfTileParam) {
+		super();
 		this.countOfDashboards = countOfDashboards;
-		this.countOfUserOptions = countOfFavorite;
+		this.countOfUserOptions = countOfUserOptions;
 		this.countOfPreference = countOfPreference;
+		this.countOfDashboardSet = countOfDashboardSet;
+		this.countOfTile = countOfTile;
+		this.countOfTileParam = countOfTileParam;
 	}
 
-	/**
-	 * @return the countOfDashboards
-	 */
-	public Long getCountOfDashboards()
-	{
+
+	public long getCountOfDashboards() {
 		return countOfDashboards;
 	}
 
-	/**
-	 * @return the countOfFavorite
-	 */
-	public Long getCountOfUserOptions()
-	{
-		return countOfUserOptions;
-	}
 
-	/**
-	 * @return the countOfPreference
-	 */
-	public Long getCountOfPreference()
-	{
-		return countOfPreference;
-	}
-
-	/**
-	 * @param countOfDashboards
-	 *            the countOfDashboards to set
-	 */
-	public void setCountOfDashboards(Long countOfDashboards)
-	{
+	public void setCountOfDashboards(long countOfDashboards) {
 		this.countOfDashboards = countOfDashboards;
 	}
 
-	/**
-	 * @param countOfFavorite
-	 *            the countOfFavorite to set
-	 */
-	public void setCountOfUserOptions(Long countOfFavorite)
-	{
-		this.countOfUserOptions = countOfFavorite;
+
+	public long getCountOfUserOptions() {
+		return countOfUserOptions;
 	}
 
-	/**
-	 * @param countOfPreference
-	 *            the countOfPreference to set
-	 */
-	public void setCountOfPreference(Long countOfPreference)
-	{
+
+	public void setCountOfUserOptions(long countOfUserOptions) {
+		this.countOfUserOptions = countOfUserOptions;
+	}
+
+
+	public long getCountOfPreference() {
+		return countOfPreference;
+	}
+
+
+	public void setCountOfPreference(long countOfPreference) {
 		this.countOfPreference = countOfPreference;
 	}
+
+
+	public long getCountOfDashboardSet() {
+		return countOfDashboardSet;
+	}
+
+
+	public void setCountOfDashboardSet(long countOfDashboardSet) {
+		this.countOfDashboardSet = countOfDashboardSet;
+	}
+
+
+	public long getCountOfTile() {
+		return countOfTile;
+	}
+
+
+	public void setCountOfTile(long countOfTile) {
+		this.countOfTile = countOfTile;
+	}
+
+
+	public long getCountOfTileParam() {
+		return countOfTileParam;
+	}
+
+
+	public void setCountOfTileParam(long countOfTileParam) {
+		this.countOfTileParam = countOfTileParam;
+	}
+
+	
 }

@@ -13,6 +13,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.UpdateSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.nls.DatabaseResourceBundleUtil;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.BigIntegerSerializer;
@@ -599,8 +600,7 @@ public class Dashboard
 			ed.setEnableRefresh(isEnableRefresh);
 			ed.setEnableEntityFilter(isEnableEntityFilter);
 			if (ed.getIsSystem() != null && isIsSystem != null && !isIsSystem.equals(ed.getIsSystem())) {
-				throw new CommonResourceException(
-						MessageUtils.getDefaultBundleString(CommonResourceException.NOT_SUPPORT_UPDATE_IS_SYSTEM_FIELD));
+				throw new UpdateSystemDashboardException();
 			}
 			ed.setLastModificationDate(lastModificationDate);
 			ed.setLastModifiedBy(lastModifiedBy);

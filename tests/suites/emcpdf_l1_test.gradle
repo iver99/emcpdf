@@ -158,7 +158,8 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/*.class"
-
+	include "oracle/sysman/emaas/platform/dashboards/comparator/timer/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/exception/*.class"
 
 	useRestAssured=true
 	ext.set("testType", "unit")

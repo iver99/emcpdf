@@ -30,6 +30,7 @@ public class NlsRefreshRunnable extends MetadataRefreshRunnable {
     private static final Logger LOGGER = LogManager.getLogger(NlsRefreshRunnable.class);
     @Override
     public void run() {
+        LOGGER.info("Starting a new thread for fresh {} resource bundles.", serviceName);
         if(serviceName == null || serviceName.isEmpty()) {
             LOGGER.error("NlsRefreshRunnable: there is no service name!");
             return;

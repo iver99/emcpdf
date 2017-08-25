@@ -8,9 +8,11 @@ define(['knockout',
     'jquery',
     'ojs/ojcore',
     'dfutil',
+    'uifwk/js/sdk/menu-util',
     'builder/builder.core'
-], function(ko, $, oj, dfu) {
-    
+], function(ko, $, oj, dfu, menuModel) {
+    var menuUtil = new menuModel();
+
     function DashboardDataSource() {
         var self = this;
         
@@ -270,6 +272,7 @@ define(['knockout',
                     function(data) {
                         self.dataSource[dashboardId].isFavorite = {"isFavorite": true};
                         successCallback && successCallback(data);
+                        menuUtil.fireFavoriteDsbChangedEvent(true);
                     },
                     function(jqXHR, textStatus, errorThrown) {
                         errorCallback && errorCallback(jqXHR, textStatus, errorThrown);
@@ -285,6 +288,7 @@ define(['knockout',
                     function(data) {
                         self.dataSource[dashboardId].isFavorite = {"isFavorite": false};
                         successCallback && successCallback(data);
+                        menuUtil.fireFavoriteDsbChangedEvent(false);
                     },
                     function(jqXHR, textStatus, errorThrown) {
                         errorCallback && errorCallback(jqXHR, textStatus, errorThrown);

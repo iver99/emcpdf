@@ -6,75 +6,25 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 
-public class DashboardDeletion {
-	
+public class DashboardDeletion
+{
+
 	static String HOSTNAME;
 	static String authToken;
 	static String tenantid;
 	static String remoteuser;
-	
+
 	static String dashboardId = "";
-	
+
 	static String dashboardSetId = "";
-	
+
 	private static final Logger LOGGER = LogManager.getLogger(DashboardDeletion.class);
-	
-	@BeforeClass
-	public static void setUp()
-	{
-		CommonTest ct = new CommonTest();
-		HOSTNAME = ct.getHOSTNAME(); //"den00ytq.us.oracle.com";//
-		authToken = ct.getAuthToken();//"Basic RU0wMV9FTUNTX0dMT0JBTF9JTlRFUl9TRVJWSUNFX0FQUElEOkN6czBwd2FkM3ZrX3Vo=";//
-		tenantid = ct.getTenantid(); //"emaastesttenant1";
-		remoteuser = ct.getRemoteUser();// "emcsadmin";//
-	}
-	
-	//@Test(dependsOnMethods = { "createDashboard"})
-	public void testDeleteAllByTenant()
-	{
-		Response res = RestAssured
-				.given()
-				.contentType(ContentType.JSON)
-				.log()
-				.everything()
-				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-						"Authorization", authToken).when().delete("/dashboards/all");
-		Assert.assertTrue(res.getStatusCode() == 204);
-		
-		Response res1 = RestAssured
-				.given()
-				.contentType(ContentType.JSON)
-				.log()
-				.everything()
-				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-						"Authorization", authToken).when().get("/dashboards/" + dashboardId);
-		Assert.assertTrue(res1.getStatusCode() == 404);
-		
-		Response res2 = RestAssured
-				.given()
-				.contentType(ContentType.JSON)
-				.log()
-				.everything()
-				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-						"Authorization", authToken).when().get("/dashboards/" + dashboardSetId);
-		Assert.assertTrue(res2.getStatusCode() == 404);
-		
-		Response res3 = RestAssured
-				.given()
-				.contentType(ContentType.JSON)
-				.log()
-				.everything()
-				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-						"Authorization", authToken).when().get("/preferences/addPreference");
-		Assert.assertTrue(res3.getStatusCode() == 404);
-	}
-	
+
 	//@Test
 	public static void createDashboard()
 	{
@@ -88,11 +38,11 @@ public class DashboardDeletion {
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).body(jsonString1).when().post("/dashboards");
-			
+
 			Assert.assertTrue(res1.getStatusCode() == 201);
 
 			dashboardId = res1.jsonPath().getString("id");
-			
+
 			Response res2 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -100,15 +50,15 @@ public class DashboardDeletion {
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("/dashboards/" + dashboardId);
-			
+
 			Assert.assertTrue(res2.getStatusCode() == 200);
 			Assert.assertEquals(res2.jsonPath().get("tiles.title[0]"), "a tile");
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
-			LOGGER.info("context",e);
+			LOGGER.info("context", e);
 		}
-		
+
 		// insert data to ems_dashboard_set
 		String jsonString2 = "{\"name\": \"add a dashboardSet\",\"type\":\"SET\" }";
 		Response res3 = RestAssured
@@ -116,12 +66,12 @@ public class DashboardDeletion {
 				.contentType(ContentType.JSON)
 				.log()
 				.everything()
-				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-						"Authorization", authToken).body(jsonString2).when().post("/dashboards");
-		
+				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser, "Authorization",
+						authToken).body(jsonString2).when().post("/dashboards");
+
 		Assert.assertTrue(res3.getStatusCode() == 201);
 		dashboardSetId = res3.jsonPath().getString("id");
-		
+
 		// insert data to ems_preference
 		String jsonString4 = "{\"value\":\"test\"}";
 		Response res4 = RestAssured
@@ -129,10 +79,60 @@ public class DashboardDeletion {
 				.contentType(ContentType.JSON)
 				.log()
 				.everything()
-				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-						"Authorization", authToken).body(jsonString4).when().put("/preferences/addPreference");
+				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser, "Authorization",
+						authToken).body(jsonString4).when().put("/preferences/addPreference");
 		Assert.assertTrue(res4.getStatusCode() == 200);
-				
+
+	}
+
+	@BeforeClass
+	public static void setUp()
+	{
+		CommonTest ct = new CommonTest();
+		HOSTNAME = ct.getHOSTNAME(); //"den00ytq.us.oracle.com";//
+		authToken = ct.getAuthToken();//"Basic RU0wMV9FTUNTX0dMT0JBTF9JTlRFUl9TRVJWSUNFX0FQUElEOkN6czBwd2FkM3ZrX3Vo=";//
+		tenantid = "instance1-emcpdftenant"; //"emaastesttenant1";
+		remoteuser = ct.getRemoteUser();// "emcsadmin";//
+	}
+
+	//@Test(dependsOnMethods = { "createDashboard"})
+	public void testDeleteAllByTenant()
+	{
+		Response res = RestAssured
+				.given()
+				.contentType(ContentType.JSON)
+				.log()
+				.everything()
+				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser, "Authorization",
+						authToken).when().delete("/dashboards/all");
+		Assert.assertTrue(res.getStatusCode() == 204);
+
+		Response res1 = RestAssured
+				.given()
+				.contentType(ContentType.JSON)
+				.log()
+				.everything()
+				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser, "Authorization",
+						authToken).when().get("/dashboards/" + dashboardId);
+		Assert.assertTrue(res1.getStatusCode() == 404);
+
+		Response res2 = RestAssured
+				.given()
+				.contentType(ContentType.JSON)
+				.log()
+				.everything()
+				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser, "Authorization",
+						authToken).when().get("/dashboards/" + dashboardSetId);
+		Assert.assertTrue(res2.getStatusCode() == 404);
+
+		Response res3 = RestAssured
+				.given()
+				.contentType(ContentType.JSON)
+				.log()
+				.everything()
+				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser, "Authorization",
+						authToken).when().get("/preferences/addPreference");
+		Assert.assertTrue(res3.getStatusCode() == 404);
 	}
 
 }
