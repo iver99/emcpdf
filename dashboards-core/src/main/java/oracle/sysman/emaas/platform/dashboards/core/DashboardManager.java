@@ -922,7 +922,7 @@ public class DashboardManager
 				}
 				sbApps.append(String.valueOf(app.getValue()));
 			}
-			sb.append(" and p.deleted = 0 and (p.tenant_Id = ?" + index++ + " or p.tenant_Id = ?" + index++ + ") and ((p.type<>2 and (p.share_public = 1 or p.owner = ?"+index+++" or p.application_type in (" + sbApps.toString() + "))" );
+			sb.append(" and p.deleted = 0 and (p.tenant_Id = ?" + index++ + " or p.tenant_Id = ?" + index++ + ") and ((p.type=0 and (p.share_public = 1 or p.owner = ?"+index+++" or p.application_type in (" + sbApps.toString() + "))" );
 			paramList.add(tenantId);
 			paramList.add(NON_TENANT_ID);
 			paramList.add(currentUser);
