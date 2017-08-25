@@ -94,7 +94,7 @@ public class RegistrationEntity implements Serializable
 	//	public static final String LA_URL = "/emsaasui/emlacore/html/log-analytics-search.html";
 	public static final String ITA_SERVICENAME = "emcitas-ui-apps";
 	public static final String ITA_VERSION = "1.0";
-	public static final String ITA_URL = "/emsaasui/emcpdfui/home.html?filter=ita";
+	public static final String ITA_URL = "#";
 	public static final String TA_SERVICENAME = "TargetAnalytics";
 	//	public static final String TA_URL = "/emsaasui/emcta/ta/analytics.html";
 	public static final String TMUI_SERVICENAME = "TenantManagementUI";
@@ -116,7 +116,7 @@ public class RegistrationEntity implements Serializable
 	public static final String ORCHESTRATION_OPC_APPNAME = "Orchestration";
 	public static final String ORCHESTRATION_SERVICENAME = "CosUIService";
 	public static final String ORCHESTRATION_VERSION = "1.0+";
-	public static final String ORCHESTRATION_URL = "/emsaasui/emcpdfui/home.html?filter=ocs";
+	public static final String ORCHESTRATION_URL = "/emsaasui/cosUi/wfDashboard.html"; //"/emsaasui/emcpdfui/home.html?filter=ocs";
 	// Compliance service
 	public static final String COMPLIANCE_OPC_APPNAME = "Compliance";
 	public static final String COMPLIANCE_SERVICENAME = "ComplianceUIService";
