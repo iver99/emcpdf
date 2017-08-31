@@ -208,7 +208,10 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the url of opened page
-		CommonUIUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ita");
+		CommonUIUtils.verifyURL_WithPara(webd, "emcpdfui/home.html");
+
+		//verify the current menu
+		Assert.assertTrue("IT Analytics".equals(BrandingBarUtil.getCurrentMenuHeader(webd).trim()));
 	}
 
 	@Test(alwaysRun = true)
@@ -253,7 +256,7 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the url of opened page
-		CommonUIUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ocs");
+		CommonUIUtils.verifyURL_WithPara(webd, "cosUi/wfDashboard.html");
 	}
 
 	@Test(alwaysRun = true)
