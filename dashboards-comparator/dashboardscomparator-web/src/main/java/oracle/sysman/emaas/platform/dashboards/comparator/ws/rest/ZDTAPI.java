@@ -158,7 +158,14 @@ public class ZDTAPI
 		super();
 	}
 
+	/**
+	 * Compare data in 2 clouds, will list the counts of each table of 2 clouds.
+	 * @param tenantIdParam
+	 * @param userTenant
+	 * @return
+	 */
 	@GET
+	@Deprecated
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response compareOnDF(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam)
          //   @HeaderParam(value = "X-REMOTE-USER") String userTenant)
@@ -192,7 +199,13 @@ public class ZDTAPI
 		String dateStr = sdf.format(date);
 		return dateStr;
 	}
-	
+
+	/**
+	 * this method is return the comparator status for omc instances.(will request zdt/compare/status API)
+	 * @param tenantIdParam
+	 * @param userTenant
+	 * @return
+	 */
 	@GET
 	@Path("compare/status")
 	public Response getCompareStatus(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam)
@@ -216,7 +229,13 @@ public class ZDTAPI
 		return Response.status(Status.OK).entity(response).build();
 		
 	}
-	
+
+	/**
+	 * this method is return the sync status for omc instance.(Will request zdt/sync/status)
+	 * @param tenantIdParam
+	 * @param userTenant
+	 * @return
+	 */
 	@GET
 	@Path("sync/status")
 	public Response getSyncStatus(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam)
@@ -250,7 +269,15 @@ public class ZDTAPI
 		String maxTimeStampStr = getTimeString(maxTimeStamp);
 		return maxTimeStampStr;
 	}
-	
+
+	/**
+	 *  will invoke compare action, #1.fetch data, #2.compare data, #3.store the different data into zdt table
+	 * @param tenantIdParam
+	 * @param userTenant
+	 * @param compareType
+	 * @param skipMinutes
+	 * @return
+	 */
 	@GET
 	@Path("compare")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -480,6 +507,13 @@ public class ZDTAPI
 		return Response.status(status).entity(message).build();
 	}
 
+	/**
+	 * will sync sync action, #1.retrieve data from zdt table, #2. sync action. #3. store sync status into sync table
+	 * @param tenantIdParam
+	 * @param userTenant
+	 * @param syncType
+	 * @return
+	 */
 	@GET
 	@Path("sync")
 	@Produces(MediaType.APPLICATION_JSON)

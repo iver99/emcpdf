@@ -20,7 +20,7 @@
 </div>
 <script type="text/html" id="hamburgerMenuItemTemplate">
     <li data-bind="attr: {id: $data['id'] + '_li'},css:{'oj-disabled':$data['disabled'], 'emaas-hamburger-menu-root-not-admin': $data['externalUrl']&&$data['externalUrl']!=='#'}">
-        <a data-bind="text: $data['label'],attr:{id: $data['id'], title: $data['tooltip'], href: $data['externalUrl']?$data['externalUrl']:'#'},click: $parent.selectionHandler"></a>
+        <a data-bind="text: $data['label'],attr:{id: $data['id'], href: $data['externalUrl']?$data['externalUrl']:'#'},click: $parent.selectionHandler"></a>
         <!--<a data-bind="text: $data['label'],attr:{id: $data['id'], title: $data['tooltip']},click: $parent.selectionHandler"></a>-->
     </li>
 </script>

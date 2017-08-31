@@ -68,7 +68,6 @@ public class PreferenceAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			//e.printStackTrace();
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
@@ -101,7 +100,6 @@ public class PreferenceAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			//e.printStackTrace();
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
@@ -140,7 +138,6 @@ public class PreferenceAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			//e.printStackTrace();
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
@@ -176,7 +173,6 @@ public class PreferenceAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			//e.printStackTrace();
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
@@ -211,7 +207,6 @@ public class PreferenceAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (IOException e) {
-			//e.printStackTrace();
 			LOGGER.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
@@ -231,7 +226,6 @@ public class PreferenceAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			//e.printStackTrace();
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}

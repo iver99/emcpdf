@@ -21,6 +21,8 @@ public class CacheConstants {
     public static final String CACHES_OOB_DASHBOARD_SAVEDSEARCH_CACHE = "oobDashboardSavedSearchCache";
 //    public static final String CACHES_TENANT_SUBSCRIPTION_INFO_CACHE = "tenantSubscriptionInfoCache";
     public static final String CACHES_SERVICE_MENU_CACHE = "serviceMenuCache";
+	public static final String CACHES_USER_ROLE_CACHE = "userRolesCache";
+	public static final String CACHES_USER_GRANT_CACHE = "userGrantsCache";
 
 	public static final String LOOKUP_CACHE_KEY_SUBSCRIBED_APPS = "subscribedApps";
 	public static final String LOOKUP_CACHE_KEY_SUBSCRIBED_APPS_UIFWK = "subscribedApps_uifwk";
@@ -38,6 +40,8 @@ public class CacheConstants {
 	public static final String LOOKUP_CACHE_KEY_OOB_DASHBOARD_SAVEDSEARCH = "oobDashboardSavedSearch";
 	public static final String LOOKUP_CACHE_KEY_SERVICE_MENU = "serviceMenus";
 //    public static final String LOOKUP_CACHE_KEY_TENANT_SUBSCRIPTION_INFO = "tenantSubscriptionInfo";
+	public static final String LOOKUP_CACHE_KEY_USER_ROLE= "userRoles";
+	public static final String LOOKUP_CACHE_KEY_USER_GRANT= "userGrants";
     
     // Load OOB metadata at runtime
     public static final String CACHES_OOB_DASHBOARD_CACHE = "oobDashboardCache";

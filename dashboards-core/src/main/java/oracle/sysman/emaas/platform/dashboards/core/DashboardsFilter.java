@@ -47,12 +47,14 @@ public class DashboardsFilter
 	public static final String APM_PROVIDER_APMUI = "ApmUI";
 	public static final String ITA_PROVIDER_EMCI = "emcitas-ui-apps";
 	public static final String ITA_PROVIDER_TA = "TargetAnalytics";
+        public static final String ALERT_PROVIDER_EVENTUI = "EventUI";
 	public static final String LA_PROVIDER_LS = "LogAnalyticsUI";
 	public static final String OCS_PROVIDER_OCS = "CosUIService";
 
 	public static final String APM_WIGDETGROUP = "APMCS";
 	//	public static final String ITA_WIGDETGROUP = "IT Analytics";
 	public static final String ITA_WIGDETGROUP = "Data Explorer";
+        public static final String ALERTS_WIGDETGROUP = "Alerts";
 	public static final String LA_WIGDETGROUP = "Log Analytics";
 	public static final String OCS_WIGDETGROUP = "Orchestration";
 	public static final String SEC_WIGDETGROUP = "Security Analytics";
@@ -119,9 +121,14 @@ public class DashboardsFilter
 			if(!tenantVersionModel.getIsV1Tenant() && !types.contains(DashboardApplicationType.UDE)){
 				types.add(DashboardApplicationType.UDE);
 				LOGGER.info("#2 Adding UDE application type for v2/v3 tenant");
-			}else if(tenantVersionModel.getIsV1Tenant() && types.contains(DashboardApplicationType.ITAnalytics)){
+			}
+                        else if(tenantVersionModel.getIsV1Tenant() && types.contains(DashboardApplicationType.ITAnalytics)){
 				types.add(DashboardApplicationType.UDE);
 				LOGGER.info("#3 Adding UDE application type for v1 tenant");
+			}
+                        if(!types.contains(DashboardApplicationType.EVT)){
+				types.add(DashboardApplicationType.EVT);
+				LOGGER.info("#3 Adding EVT application type for v1/v2/v3/v4 tenant");
 			}
 		}
 		catch (IllegalArgumentException iae) {
@@ -375,6 +382,7 @@ public class DashboardsFilter
 				sb.add(SEC_WIGDETGROUP);
 			}
 		}
+                sb.add(ALERTS_WIGDETGROUP);
 		return sb;
 	}
 

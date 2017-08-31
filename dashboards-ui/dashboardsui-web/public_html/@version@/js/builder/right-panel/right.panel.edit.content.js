@@ -28,24 +28,82 @@ define(['dashboards/dbsmodel',
         self.dashboards = ko.observableArray();
         self.selectedDashboardId = ko.observable();
         self.allDashboards = ko.observableArray();
-        var serviceUrl = "/sso.static/dashboards.service?offset=0&limit=120&orderBy=default";
-        if (dfu.isDevMode()) {
-            var serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards?offset=0&limit=120&orderBy=default");
+        self.LOADDASHBOARDLIMIT = 60;
+        var loadDashboardReqSent = false;
+        var totalResults = 0;
+        var currentQueryStr = '';
+        var currentPageNo = 1;
+        
+        function resetPaging(){
+            totalResults = 0;
+            currentPageNo = 1;
+            loadDashboardReqSent = false;
+            self.allDashboards.removeAll();
+            self.dashboards.removeAll();
         }
-        dfu.ajaxWithRetry({
-                        url: serviceUrl,
-                        headers: dfu.getDashboardsRequestHeader(),
-                        contentType:'application/json',
-                        success: function(data, textStatus) {
-                            self.allDashboards(data.dashboards);
-                            self.dashboards(data.dashboards.slice(0));
-                        },
-                        error: function(xhr, textStatus, errorThrown){
-                            oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
-                        },
-                        async: false
-                    });
+        
+        function loadDashboardList(sucCallback, queryStr, page){
+            if(loadDashboardReqSent){
+                return;
+            }
+            page = page || currentPageNo;
+            if(currentQueryStr && !queryStr){
+                queryStr = currentQueryStr;
+            }
+            var offset = (page-1)*self.LOADDASHBOARDLIMIT;
+            var serviceUrl = "/sso.static/dashboards.service?limit=" + self.LOADDASHBOARDLIMIT + "&offset=" + offset + "&orderBy=default";
+            if (dfu.isDevMode()) {
+                var serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards?limit=" + self.LOADDASHBOARDLIMIT + "&offset=" + offset + "&orderBy=default");
+            }
+            loadDashboardReqSent = true;
+            dfu.ajaxWithRetry({
+                            url: queryStr? serviceUrl + '&queryString=' + queryStr : serviceUrl,
+                            headers: dfu.getDashboardsRequestHeader(),
+                            contentType:'application/json',
+                            success: function(data, textStatus) {
+                                if(!loadDashboardReqSent){
+                                    return;
+                                }
+                                totalResults = data.totalResults;
+                                if(page === 1){
+                                    !queryStr && self.allDashboards(data.dashboards);
+                                    self.dashboards(data.dashboards.slice(0));
+                                }else{
+                                    if(!queryStr){
+                                        self.allDashboards(self.allDashboards().concat(data.dashboards));
+                                    }
+                                    self.dashboards(self.dashboards().concat(data.dashboards.slice(0)));
+                                }
+                                loadDashboardReqSent = false;
+                                sucCallback && sucCallback();
+                            },
+                            error: function(xhr, textStatus, errorThrown){
+                                oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
+                                loadDashboardReqSent = false;
+                            },
+                            async: page===1?false:true
+                        });
+        }
+        
 
+        function loadSingleDashboard(sucCallback, dashboardId){
+            var singleServiceUrl = "/sso.static/dashboards.service/";
+            if (dfu.isDevMode()) {
+                var singleServiceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards/");
+            }
+            dfu.ajaxWithRetry({
+                            url: singleServiceUrl + dashboardId,
+                            headers: dfu.getDashboardsRequestHeader(),
+                            contentType:'application/json',
+                            success: function(data, textStatus) {
+                                sucCallback(data);
+                            },
+                            error: function(xhr, textStatus, errorThrown){
+                                oj.Logger.error('Failed to get service instances by URL: '+singleServiceUrl);
+                            },
+                            async: false
+                        });
+        }
 
         self.addToTitleAbled = ko.observable(false);
         self.selectedContent = selectedContent;
@@ -76,12 +134,10 @@ define(['dashboards/dbsmodel',
             tile.outlineHightlight(true);
             if(tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()){
                 self.selectedDashboardId(tile.WIDGET_LINKED_DASHBOARD());
-                self.allDashboards().forEach(function(dashboard){
-                        if(self.selectedDashboardId() === dashboard.id){
-                            self.selectedDashboard(dashboard);
-                            self.hasLinkedToTitle(true);
-                        }
-                });
+                loadSingleDashboard(function(dsbData){
+                    self.selectedDashboard(dsbData);
+                    self.hasLinkedToTitle(true);
+                },self.selectedDashboardId());
             }
         });
 
@@ -91,9 +147,38 @@ define(['dashboards/dbsmodel',
 
 
         self.onContentSearching = ko.observable(false);
+        var initialed = false;
         self.onContentSearching.subscribe(function(val){
             if(val){
-                $(".search-content-dropdown-list-container ul").ojListView( "refresh" );
+                if(!initialed){
+                    var lastTime = 0;
+                    var delayTime = 700;
+                    $('.search-content-dropdown-list-container>div').scroll(function(){
+                        var currentTime = +new Date();
+                        if (currentTime - lastTime > delayTime){
+                            var indexOfFirstItemOnFormerPage = (currentPageNo - 1) * self.LOADDASHBOARDLIMIT + 1;
+                            if ($('.search-content-dropdown-list-container>div').scrollTop() + $('.search-content-dropdown-list-container>div').height() >= $('#search-content-dropdown-list li:eq(' + indexOfFirstItemOnFormerPage + ')').position().top) {
+                                var loadedDashboardsNum = self.dashboards().length;
+                                var nextPageNo = currentPageNo + 1;
+                                if (loadedDashboardsNum < totalResults) {
+                                    loadDashboardList(function () {
+                                        currentPageNo = nextPageNo;
+                                    }, null, nextPageNo);
+                                }
+                            }
+                          lastTime = currentTime ;
+                        }
+                    });
+                    initialed = true;
+                }
+                
+                if(!self.allDashboards() || self.allDashboards().length === 0){
+                    !loadDashboardReqSent && loadDashboardList(function(){
+                        $(".search-content-dropdown-list-container ul").ojListView( "refresh" );
+                    });
+                }else{
+                    $(".search-content-dropdown-list-container ul").ojListView( "refresh" );
+                }
             }else{
                 $(".search-content-dropdown-list-container ul").ojListView({"selection":[]});
             }
@@ -114,7 +199,7 @@ define(['dashboards/dbsmodel',
         self.keywordInputComputed = ko.computed(function(){
             return self.keywordInput();
         });
-        self.keywordInputComputed.extend({ rateLimit: 700 });
+        self.keywordInputComputed.extend({ rateLimit: 800 });
         self.keywordInputComputed.subscribe(function(val){
             self.autoSearchDashboard(val?val:"");
         });
@@ -162,17 +247,11 @@ define(['dashboards/dbsmodel',
         
         self.clearContentSearch = ko.observable();
         self.autoSearchDashboard = function (searchTerm) {
+            currentQueryStr = searchTerm && searchTerm.toLowerCase().trim();
+            resetPaging();
             self.dashboards.removeAll();
-            if(searchTerm.length>1){
-                self.allDashboards().forEach(function(dashboard){
-                    if(dashboard.name.toLowerCase().indexOf(searchTerm.toLowerCase())>-1){
-                        self.dashboards.push(dashboard);
-                    }
-                });
-            }else{
-                self.allDashboards().forEach(function(dashboard){
-                    self.dashboards.push(dashboard);
-                });
+            if(searchTerm !== null){
+                loadDashboardList(null, currentQueryStr);
             }
         };
         
@@ -209,15 +288,16 @@ define(['dashboards/dbsmodel',
 
         self.removeLinkToTitleClicked = function(e, d){
             self.selectedContent().WIDGET_LINKED_DASHBOARD(null);
+            saveDashboard();
+            resetPaging();
             self.hasLinkedToTitle(false);
             resetAddLinkToTitle();
             $b.triggerEvent($b.EVENT_TILE_LINK_CHANGED, null);
-            saveDashboard();
         };
 
         function resetAddLinkToTitle(holdHasLinkedToTitle){
             self.keyword("");
-            self.autoSearchDashboard("");
+            self.autoSearchDashboard(null);
             self.showSelectedDashboard(false);
             self.selectedDashboardId(null);
             self.addToTitleAbled(false);
@@ -232,9 +312,10 @@ define(['dashboards/dbsmodel',
             self.toolbarModel().handleSaveUpdateToServer(function(){
                 self.toolbarModel().isUpdated(false);
             }, function(error){
-                if (error && error.errorCode && error.errorCode() === 10002) {
-                    dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING_TEXT_WIDGET_EMPTY_CONTENT'), detail: '', removeDelayTime: 5000});
-                } else if (error && error.errorCode && error.errorCode() === 10003) {
+//                if (error && error.errorCode && error.errorCode() === 10002) {
+//                    dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING_TEXT_WIDGET_EMPTY_CONTENT'), detail: '', removeDelayTime: 5000});
+//                } else 
+                if (error && error.errorCode && error.errorCode() === 10003) {
                     dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING_TEXT_WIDGET_TOO_LONG_CONTENT'), detail: '', removeDelayTime: 5000});
 
                 } else {

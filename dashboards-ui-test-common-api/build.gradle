@@ -11,7 +11,7 @@ sourceSets {
 	integTest {
         java.srcDir 'src/integTest/java'
         compileClasspath = configurations.testConfig + configurations.webdriver + configurations.testNG
-	}
+    }
 }
         
 clean{

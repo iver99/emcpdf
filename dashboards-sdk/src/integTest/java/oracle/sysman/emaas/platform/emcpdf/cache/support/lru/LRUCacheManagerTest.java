@@ -146,7 +146,7 @@ public class LRUCacheManagerTest {
     	config.setCapacity(1);
     	list.add(config);
     	Deencapsulation.setField(CacheConfig.class, "cacheConfigList", list);
-        CacheManagers.getInstance().build().init();
+        CacheManagers.getInstance().build().init(null);
     }
     @Test
     public void testClose(){

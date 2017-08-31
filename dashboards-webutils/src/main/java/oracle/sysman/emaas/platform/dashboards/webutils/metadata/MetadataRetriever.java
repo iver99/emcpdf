@@ -53,6 +53,7 @@ public class MetadataRetriever
     public static final String SERVICENAME_ORCHESTRATION = "CosUIService";
 //    public static final String SERVICENAME_COMPLIANCE = "Compliance";
     public static final String SERVICENAME_UDE = "TargetAnalytics";
+    public static final String SERVICENAME_EVENT = "EventUI";
     
     private static final Logger LOGGER = LogManager.getLogger(MetadataRetriever.class);
     private static final Map<String, DashboardApplicationType> APPLICATION_MAP = new HashMap<String, DashboardApplicationType>();
@@ -72,6 +73,7 @@ public class MetadataRetriever
         APPLICATION_MAP.put(SERVICENAME_ORCHESTRATION, DashboardApplicationType.Orchestration);
 //        APPLICATION_MAP.put(SERVICENAME_COMPLIANCE, DashboardApplicationType.Compliance);
         APPLICATION_MAP.put(SERVICENAME_UDE, DashboardApplicationType.UDE);
+        APPLICATION_MAP.put(SERVICENAME_EVENT, DashboardApplicationType.EVT);
         
         // service name from SM -> widget group name/category name in DF
         WIDGET_GROUP_MAP.put(SERVICENAME_APM, "APMCS");
@@ -82,6 +84,7 @@ public class MetadataRetriever
         WIDGET_GROUP_MAP.put(SERVICENAME_ORCHESTRATION, "Orchestration");
         //WIDGET_GROUP_MAP.put(SERVICENAME_COMPLIANCE, "");
         WIDGET_GROUP_MAP.put(SERVICENAME_UDE, "Data Explorer");
+        WIDGET_GROUP_MAP.put(SERVICENAME_EVENT, "Alerts");
     }
     
     /**

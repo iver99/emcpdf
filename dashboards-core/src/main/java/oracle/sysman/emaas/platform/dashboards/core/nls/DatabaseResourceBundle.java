@@ -21,7 +21,6 @@ import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.core.util.Charsets;
 
-import sun.util.ResourceBundleEnumeration;
 
 /**
  * @author reliang

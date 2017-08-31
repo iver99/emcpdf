@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html id="global-html" data-testapiversion="1.20.0" lang="en-US">
+<html id="global-html" data-testapiversion="1.22.0" lang="en-US">
     <head>
         <title data-bind="text:builderTitle"></title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -308,6 +308,7 @@
                                 }"></button>
                           <!-- /ko -->
                       </div>
+                      <!-- ko if: $data.type() !== "TEXT_WIDGET" -->
                       <div class="dbd-btn-maxminToggle">
                           <button class="oj-button-half-chrome dbd-tile-maxmin" tabindex="0"
                                   data-bind="
@@ -319,6 +320,7 @@
                                         label: ''
                                 }"></button>
                       </div>
+                      <!-- /ko -->
                         <div class="dbd-btn-group" data-bind="stopDataBinding: $root.dashboard.systemDashboard && $root.dashboard.systemDashboard()==true">
                             <!-- ko if: ($root.dashboard.systemDashboard()===false)&& !(($root.dashboard.sharePublic ===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')&&($root.toolbarModel.notZdtStatus) -->
                             <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
@@ -404,6 +406,7 @@
                                 </li>
                                 -->
                                 <li data-option="divider"></li>
+                                    <!-- ko if: $data.type() !== "TEXT_WIDGET" -->
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="edit" data-bind="css: {'oj-disabled': !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
@@ -415,6 +418,7 @@
                                         </li>
                                         <!-- /ko -->
                                         <li data-option="divider"></li>
+                                    <!-- /ko -->
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="up" data-bind="css: { 'oj-disabled': (!$data.upEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}">
                                             <a href="#">
@@ -468,9 +472,9 @@
                                 <li data-option="remove" data-bind="css: { 'oj-disabled': $data.editDisabled()}">
                                     <a href="#">
                                         <span class="oj-menu-item-icon demo-icon-font">
-                                            <i class="fa-icon-font fa-icon-font-16 dbd-icon-remove"></i>
+                                            <i class="fa-icon-font fa-icon-font-16" data-bind="css: $data.dbdRemoveIcon"></i>
                                         </span>
-                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REMOVE')"></span>
+                                        <span data-bind="text: $data.dbsBuilderTileRemove()"></span>
                                     </a>
                                 </li>
                                 <!-- /ko -->
@@ -1097,7 +1101,7 @@
                                                         </li>
                                                     </script>
                                                     <div class="search-content-dropdown-list-container" style="z-index: 99999;" data-bind="style:{ display: rightPanelEditContent.onContentSearching()?'block':'none'}">
-                                                        <ul aria-label="list using observable array" style="max-height: 250px" class="search-content-dropdown-list-ul"
+                                                        <ul id="search-content-dropdown-list" style="max-height: 250px" class="search-content-dropdown-list-ul"
                                                             data-bind="ojComponent: {
                                                                 component: 'ojListView',
                                                                 data: rightPanelEditContent.dataSource,
@@ -1200,74 +1204,12 @@
                         <!--/ko-->
                         <div class="dbd-right-panel-wrench" data-bind="style:{'display': rightPanelControl.rightPanelIcon()=='wrench'?'block':'none'}">
                             <div class="oj-listview-group-item oj-navigationlist-item-title dbd-right-panel-title fit-size-vertical-sibling" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_TITLE')"></div>
-                            <div class="dbd-right-panel-build-container" style="padding:0">
-                                <div class="dbd-left-panel-header fit-size-vertical-sibling">
-                                    <div class="dbd-left-panel-header-search">
-                                        <div  class="dbd-left-panel-header-search-input">
-                                            <input class="widget-search-input" type="text" name="searchInput" id="widget-search-input"
-                                                   data-bind="event: { keypress: rightPanelWidget.searchWidgetsInputKeypressed },textInput: rightPanelWidget.keywordInput,ojComponent:{component:'ojInputText', value: rightPanelWidget.keyword,
-                                              placeholder: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODER_CONTENT'), rootAttributes: {'class': 'dbs-search-box-input'}}
-                                              ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL'),id:'widget-search-input_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1))) }"/>
-                                        </div>
-                                        <div>
-                                            <button class="dbd-left-panel-header-search-btn oj-button-half-chrome" id="dbd-left-panel-header-search-btn" data-bind="attr:{id:'dbd-left-panel-header-search-btn_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click:rightPanelWidget.searchWidgetsClicked,
-                                        ojComponent: {component: 'ojButton',chroming: 'half', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons',
-                                        icons: {start:'left-panel-dbd-search-icon'}}" style="float:right">
-                                            </button>
-                                            <!-- ko if: rightPanelWidget.clearRightPanelSearch -->
-                                            <button class="oj-button-half-chrome" id="clear-widget-search-input" data-bind="attr:{id:'clear-widget-search-input_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1)))},click: rightPanelWidget.clearWidgetSearchInputClicked,
-                                                    ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons',
-                                                    icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 31px;'}}" style="float:right;margin-bottom:0">
-                                            </button>
-                                            <!-- /ko -->
-                                        </div>
-                                    </div>
+                            <div class="dbd-right-panel-build-container fit-size" style="padding:0">
+                                <div id="right-panel-widget-selector" data-bind="component: {
+                                        name: 'df-widget-selector',
+                                        params: rightPanelWidget.widgetSelectorParams,
+                                    }">
                                 </div>
-                                <div class="dbd-left-panel-widgets fit-size" data-bind="event:{scroll: rightPanelWidget.widgetListScroll}" style="overflow-y: scroll">
-                                    <div class="dbd-left-panel-widgets-list oj-col stretch-width" data-bind="foreach: rightPanelWidget.widgets,attr:{'searchStaus':rightPanelWidget.searchStaus}">
-                                        <div class="dbd-left-panel-widget" data-bind="css: 'widget-item-'+WIDGET_UNIQUE_ID()">
-                                            <div data-bind="event: {mouseover: $root.rightPanelWidget.widgetMouseOverHandler, mouseout: $root.rightPanelWidget.widgetMouseOutHandler}">
-                                                <div class="dbd-left-panel-widget-text">
-                                                    <span tabindex="0" data-bind="text:WIDGET_NAME, click: $root.rightPanelWidget.resetFocus, event: {keypress: $root.rightPanelWidget.widgetKeyPress, focus: $root.rightPanelWidget.widgetShowPlusIcon},attr:{'data-rightpanel-items':WIDGET_NAME,'aria-label':WIDGET_NAME}"></span>
-                                                </div>
-                                                <i class="dbd-toolbar-fa-icon fa-plus" aria-hidden="false" tabindex="0" data-bind="click: $root.rightPanelWidget.widgetPlusClicked, event: {keypress: $root.rightPanelWidget.widgetKeyPress, blur: $root.rightPanelWidget.widgetHidePlusIcon},attr:{'data-rightpanel-items':WIDGET_NAME,'aria-label':WIDGET_NAME,'title': getNlsString('DBS_BUILDER_LEFT_PANEL_BUILD_BUTTON_PLUS')}"></i>
-                                            </div>
-                                            <div data-bind="css:'widget-'+WIDGET_UNIQUE_ID(),
-                                                ojComponent:{component: 'ojPopup',tail: 'simple'}" class="dbd-left-panel-img-pop" style="display: block;">
-                                                <div class="oj-row">
-                                                    <div class="oj-col oj-sm-12 oj-md-12">
-                                                        <h4 data-bind="text:WIDGET_NAME"></h4>
-                                                    </div>
-                                                </div>
-                                                <hr>
-                                                <div class="oj-row">
-                                                    <div class="oj-col oj-sm-4 oj-md-4" style="vertical-align:middle; line-height: 120px;">
-                                                        <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL, width: imgWidth, height: imgHeight}" style="vertical-align: middle;"/>
-                                                    </div>
-                                                    <div class="oj-col oj-sm-8 oj-md-8">
-                                                        <!-- ko if:WIDGET_DESCRIPTION === 'No description.' -->
-                                                        <i data-bind="html:getNlsString('DBS_BUILDER_WIDGET_NO_DESCRIPTION')" style="color: #9e9e9e; display: block;"></i>
-                                                        <!-- /ko -->
-                                                        <!-- ko if:WIDGET_DESCRIPTION !== 'No description.' -->
-                                                        <div data-bind="html:WIDGET_DESCRIPTION" style="color: #9e9e9e; display: block;"></div>
-                                                        <!-- /ko -->
-                                                    </div>
-                                                    <div class="oj-col oj-sm-8 oj-md-8" style="position:absolute;right:0;bottom:15px">
-                                                        <span style="color: #9e9e9e;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CREATE')"></span>
-                                                        <span data-bind="text:WIDGET_OWNER" style="color: #9e9e9e;"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- hide the container menu before the function is available.
-                                <div class="dbd-left-panel-footer-contain" style="padding-top: 10px; border-top: 1px solid #d6dfe6">
-                                    <div class="oj-row" data-bind="event: {mouseover: $root.containerMouseOverHandler, mouseout: $root.containerMouseOutHandler}">
-                                        <div class="oj-col oj-sm-12" style="height: 28px;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_LABEL')"></div>
-                                    </div>
-                                </div>
-                                -->
                             </div>
                         </div>
                     </div>

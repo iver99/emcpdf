@@ -362,6 +362,12 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	@Override
+	public void editDashboard(WebDriver driver, String name, String descriptions)
+	{
+		editDashboard(driver, name,descriptions,true);
+	}
+
+	@Override
 	public void editDashboard(WebDriver driver, String name, String descriptions, Boolean toShowDscptn)
 	{
 		Validator.notNull("editname", name);

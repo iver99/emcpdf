@@ -57,6 +57,12 @@ role value for that section to represent the appropriate content type.
                                           icons: {start: 'toolbar-icon-add-widget'},
                               }, attr: {title: addWidgetsTilte}">
                             </button>
+                            <button id="add-widget-button2" class="oj-button oj-default oj-button-half-chrome"
+                                    data-bind="click: openWidgetSelectorList, ojComponent: {
+                                          component:'ojButton', label: addWidgetBtnLabel,disabled: addWidgetBtnDisabled,
+                                          icons: {start: 'toolbar-icon-add-widget'},
+                              }, attr: {title: addWidgetsTilte}">
+                            </button>
                         </div>
                     </div>
                     <div data-bind="component: {

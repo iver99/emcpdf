@@ -20,7 +20,7 @@
                 </button>
             </div>
             <!-- /ko -->
-            <div id="emaas-appheader-bar" data-testapiversion="1.18.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
+            <div id="emaas-appheader-bar" data-testapiversion="1.18.0" class="oj-row emaas-appheader-lite" style="max-width: none;padding-left: 10px">
 
                 <!-- logo -->  
                 <div class="emaas-appheader-logo" data-bind="attr: {'aria-label': textOracle}">
@@ -44,12 +44,12 @@
                     <ul id="emaasAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: globalNavMenuItemSelect, beforeOpen: $data.emaasAppheaderGlobalNavMenuBeforeOpen}" style="display: none;">
                         <!-- ko if: renderEmaasAppheaderGlobalNavMenu() -->
                         <!-- ko foreach: globalNavItems -->
-                        <li class="oj-menu-item">
-                            <a data-bind="attr:{'id':id}, href: url"><span data-bind="text: label"></span></a>
+                        <li class="oj-menu-item emaas-appheader-menu-item">
+                            <a data-bind="attr:{'id':id}, href: url,css:linkClass"><span data-bind="css:iconClass"></span><span style="margin-top:1px;"data-bind="text: label"></span></a>
                         </li>
                         <!-- /ko -->
                         <!-- /ko -->
-                    </ul>
+                    </ul> 
 
                     <div class="emaas-appheader-toolbar-container">
                         <!--div class="emaas-appheader-toolbar oj-toolbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}"-->

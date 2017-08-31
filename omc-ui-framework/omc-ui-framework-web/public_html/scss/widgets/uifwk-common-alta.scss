@@ -72,7 +72,25 @@ a:hover {
   color: #454545;
   font-size: larger;
 }
+ 
+.emaas-appheader-help-link{
+    border-bottom: solid 1px #C4CED7;
+}
 
+.fa-navmenu-help:before{
+    font-family: FaFont;
+    content:'\f08e';
+    color:#878C90;
+    position:relative;
+    float:left;
+} 
+
+.emaas-appheader-menu-item:hover .fa-navmenu-help:before{
+    content:'\f08e';
+    color:#85BBE7;
+    position:relative;
+    float:left;
+}  
 #links_menu{
     background-color: white;
     position: absolute;

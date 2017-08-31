@@ -77,6 +77,8 @@ import java.util.concurrent.*;
 public class DashboardAPI extends APIBase
 {
 	private static final Logger LOGGER = LogManager.getLogger(DashboardAPI.class);
+	
+	private static final String TEXT_WIDGET_ID = "1";
 
 	public DashboardAPI()
 	{
@@ -196,7 +198,6 @@ public class DashboardAPI extends APIBase
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			DashboardManager manager = DashboardManager.getInstance();
 			ed = manager.getEmsDashboardById(dsf, dashboardId, tenantId, null);
-//			dbd = Dashboard.valueOf(ed, dbd, true, true, true);
 			LOGGER.info("Dashboard with id {} is existed!", ed);
 		} catch (BasicServiceMalfunctionException e) {
 			LOGGER.error(e);
@@ -258,7 +259,6 @@ public class DashboardAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			//e.printStackTrace();
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
@@ -294,40 +294,6 @@ public class DashboardAPI extends APIBase
 			clearUserContext();
 		}
 	}
-
-	//	@GET
-	//	@Path("{id: [1-9][0-9]*}/screenshot")
-	//	@Produces(MediaType.APPLICATION_JSON)
-	//	public Response getDashboardBase64ScreenShot(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-	//			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-	//			@PathParam("id") Long dashboardId)
-	//	{
-	//		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}/screenshot",
-	//				dashboardId);
-	//		try {
-	//			logkeyHeaders("getDashboardBase64ScreenShot()", userTenant, tenantIdParam);
-	//			DashboardManager manager = DashboardManager.getInstance();
-	//			Long tenantId = getTenantId(tenantIdParam);
-	//			initializeUserContext(tenantIdParam, userTenant);
-	//			ScreenshotData ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
-	//			//String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dashboardId + "/screenshot";
-	//			String externalBase = DashboardAPIUtil.getExternalDashboardAPIBase(tenantIdParam);
-	//			String screenShotUrl = externalBase + (externalBase.endsWith("/") ? "" : "/") + dashboardId + "/screenshot";
-	//			return Response.ok(getJsonUtil().toJson(new ScreenShotEntity(screenShotUrl, ss.getScreenshot()))).build();
-	//		}
-	//		catch (DashboardException e) {
-	//			return buildErrorResponse(new ErrorEntity(e));
-	//		}
-	//		catch (BasicServiceMalfunctionException e) {
-	//			//e.printStackTrace();
-	//			LOGGER.error(e.getLocalizedMessage(), e);
-	//			return buildErrorResponse(new ErrorEntity(e));
-	//		}
-	//		finally {
-	//			clearUserContext();
-	//		}
-	//
-	//	}
 
 	@GET
 	@Path("{id: [1-9][0-9]*}/screenshot/{serviceVersion}/images/{fileName}")
@@ -379,7 +345,6 @@ public class DashboardAPI extends APIBase
 						public void write(OutputStream os) throws IOException, WebApplicationException
 						{
 							os.write(se.getBuffer().getData());
-//							se.getBuffer().writeTo(os);
 							os.flush();
 							os.close();
 						}
@@ -579,19 +544,6 @@ public class DashboardAPI extends APIBase
 			@HeaderParam(value = "X-REMOTE-USER") final String userTenant, @HeaderParam(value = "Referer") String referer,
 			@PathParam("id") final BigInteger dashboardId,@HeaderParam(value = "SESSION_EXP") final String sessionExpiryTime)
 	{
-		/*final long TIMEOUT=30000;
-		Long begin=System.currentTimeMillis();
-		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
-		final DashboardManager dm = DashboardManager.getInstance();
-		StringBuilder sb=new StringBuilder();
-		ExecutorService pool = ParallelThreadPool.getThreadPool();
-
-		Dashboard dbd =null;
-		Future<Dashboard> futureDashboard=null;
-		Future<String> futureUserInfo =null;
-		Future<String> futureReg =null;
-		Future<String> futureSubscried =null;
-		Future<String> futureSubscried2 =null;*/
 		try {
 			final long TIMEOUT=30000;
 			Long begin=System.currentTimeMillis();
@@ -1290,7 +1242,9 @@ public class DashboardAPI extends APIBase
 				JSONArray requestEntity = new JSONArray();
 				if (widgetIds != null) {				
 					for (String widgetId : widgetIds) {
-						requestEntity.put(widgetId);
+						if (!widgetId.equals(TEXT_WIDGET_ID)) {
+							requestEntity.put(widgetId);
+						}						
 					}
 				}
 				JSONArray ssfObject = null;
@@ -1569,7 +1523,7 @@ public class DashboardAPI extends APIBase
 		newTile.setWidgetSource(1);
 		newTile.setType(0); //DEFAULT
 		//dashboard is empty
-		if(tileList == null | tileList.isEmpty()){
+		if((tileList == null) || tileList.isEmpty()){
 			tileList = new ArrayList<>();
 			tileList.add(newTile);
 			ed.setDashboardTileList(tileList);
@@ -1596,7 +1550,6 @@ public class DashboardAPI extends APIBase
 	private Tile calculateWidgetRowColumn(List<EmsDashboardTile> tileList){
 		Tile t = new Tile();
 		t.setRow(0);
-//		t.setColumn(0);
 		if(tileList == null || tileList.isEmpty()){
 			LOGGER.warn("Tile list is null empty!");
 			return t;
@@ -1612,7 +1565,6 @@ public class DashboardAPI extends APIBase
 			}
 		}
 		t.setRow(maxRow + maxHeight);// put new widget at the bottom
-//		t.setColumn(col);
 		return t;
 	}
 

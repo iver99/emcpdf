@@ -168,11 +168,13 @@ requirejs.config({
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
             'uifwk/js/widgets/navlinks/js/navigation-links',
             'uifwk/js/widgets/timeFilter/js/timeFilter',
+            'uifwk/js/widgets/widgetselector/js/widget-selector',
             'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
             'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
             'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
             'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
-            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
+            'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html',
+            'text!uifwk/js/widgets/widgetselector/html/widget-selector.html'
             ];
         return bundles;
     }(),
@@ -324,6 +326,12 @@ require(['knockout',
                                 ko.components.register("df-datetime-picker",{
                                     viewModel: {require: 'uifwk/js/widgets/datetime-picker/js/datetime-picker'},
                                     template: {require: 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
+                                });
+                            }
+                            if (!ko.components.isRegistered('df-widget-selector')) {
+                                ko.components.register("df-widget-selector",{
+                                    viewModel:{require:'uifwk/js/widgets/widgetselector/js/widget-selector'},
+                                    template:{require:'text!uifwk/js/widgets/widgetselector/html/widget-selector.html'}
                                 });
                             }
                             /*ko.components.register("DF_V1_WIDGET_TEXT", {

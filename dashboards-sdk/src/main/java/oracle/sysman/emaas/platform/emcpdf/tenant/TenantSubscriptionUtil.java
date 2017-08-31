@@ -38,8 +38,6 @@ public class TenantSubscriptionUtil {
 
     private static final Logger LOGGER = LogManager.getLogger(TenantSubscriptionUtil.class);
 
-//    private static Logger itrLogger = LogUtil.getInteractionLogger();
-
     public static String getTenantSubscribedServicesString(final String tenant) {
         List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenant, new TenantSubscriptionInfo());
         if (apps == null) {
@@ -70,7 +68,6 @@ public class TenantSubscriptionUtil {
 			LOGGER.warn("This is usually unexpected: now it's trying to retrieve subscribed applications for null tenant");
 			return Collections.emptyList();
 		}
-		final long start = System.currentTimeMillis();
 		final ICacheManager cm= CacheManagers.getInstance().build();
 		final Tenant cacheTenant = new Tenant(tenant);
         final Object cacheKey = DefaultKeyGenerator.getInstance().generate(cacheTenant,new Keys(CacheConstants.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS));
@@ -120,8 +117,6 @@ public class TenantSubscriptionUtil {
                 RestClient rc = new RestClient();
                 long subappQueryStart = System.currentTimeMillis();
                 String appsResponse = null;
-//                String user = UserContext.getCurrentUser();
-//                LOGGER.info("current user is {}", user);
                 try {
                     rc.setHeader("X-USER-IDENTITY-DOMAIN-NAME", tenant);
                     appsResponse = rc.getWithException(queryHref, tenant, lookupLink.getAuthToken());

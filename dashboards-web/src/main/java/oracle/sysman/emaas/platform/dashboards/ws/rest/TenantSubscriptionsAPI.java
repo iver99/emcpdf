@@ -54,10 +54,6 @@ public class TenantSubscriptionsAPI extends APIBase
 			applications = apps;
 		}
 
-        public SubscribedAppsEntity(List<E> applications, String version) {
-            this.applications = applications;
-        }
-
         public List<E> getApplications()
 		{
 			return applications;
@@ -205,8 +201,8 @@ public class TenantSubscriptionsAPI extends APIBase
                 result = edition;
             }
             //Handle V2 OSMACC suite
-            if(edition !=null &&(edition.contains(SubscriptionAppsUtil.CONFIGURATION_COMPLIANCE_EDITION))
-                    || edition.contains(SubscriptionAppsUtil.SECURITY_MONITORING_ANALYTICS_EDITION)){
+            if(edition !=null &&((edition.contains(SubscriptionAppsUtil.CONFIGURATION_COMPLIANCE_EDITION))
+                    || edition.contains(SubscriptionAppsUtil.SECURITY_MONITORING_ANALYTICS_EDITION))){
                 LOGGER.debug("2Picking edition...{}", edition);
                 return edition;
             }

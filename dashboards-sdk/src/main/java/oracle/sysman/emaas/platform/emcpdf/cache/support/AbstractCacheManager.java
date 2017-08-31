@@ -61,7 +61,8 @@ public abstract class AbstractCacheManager implements ICacheManager{
     public abstract ICache createNewCache(String name);
 
     @Override
-    public void init(){
+    public void init(String configFileName){
+        //EMPTY
     }
 
     @Override

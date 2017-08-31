@@ -107,7 +107,8 @@ public class CacheSAXParser extends DefaultHandler {
                 cacheConfig.setExpiry(Long.valueOf(elementValue));
                 currentState = 0;
                 break;
-
+            default:
+                break;
         }
     }
 }

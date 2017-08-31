@@ -75,6 +75,9 @@ task post_upgrade (type: EMTest, dependsOn:[omcCloudUpgrade,onboardNewTenant]){
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard_NegativeCases')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestRightPanel_DashboardFilters')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard_RespectGC')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_WidgetLink')
+				'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestGlobalContext_TimeRange')
             }
 	}
 	test('name': 'DashboardUITest_testDashboardSet_SetHome', 'preserve-order':'true'){

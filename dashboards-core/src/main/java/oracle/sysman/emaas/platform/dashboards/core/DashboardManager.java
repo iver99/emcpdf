@@ -937,10 +937,13 @@ public class DashboardManager
 		sb.append(" and ((p.is_system=0 ");
 		if (filter != null) {
 			if (filter.getIncludedWidgetGroupsString(tenantVersionModel) != null && !filter.getIncludedWidgetGroupsString(tenantVersionModel).isEmpty()) {
-				sb.append(" and (p.dashboard_id in (select t.dashboard_Id from Ems_Dashboard_Tile t where (t.TENANT_ID = ?"+ index++ +" or t.TENANT_ID = ?" + index++ + ") and t.WIDGET_GROUP_NAME in ("
-						+ filter.getIncludedWidgetGroupsString(tenantVersionModel) + " ))) ");
+				sb.append(" and (((p.dashboard_id in (select t.dashboard_Id from Ems_Dashboard_Tile t where (t.TENANT_ID = ?"+ index++ +" or t.TENANT_ID = ?" + index++ + ") and t.WIDGET_GROUP_NAME in ("
+						//EMCPDF-2152, empty dashboard/set can be filtered now.
+						+ filter.getIncludedWidgetGroupsString(tenantVersionModel) + " )) )  OR (      p.dashboard_id in ((select distinct t2.DASHBOARD_ID from EMS_DASHBOARD t2 where t2.TENANT_ID = ?"+ index++ +" and t2.DELETED = 0) minus (SELECT distinct t3.DASHBOARD_ID FROM EMS_DASHBOARD_TILE t3 where t3.TENANT_ID = ?"+ index++ +" and t3.DELETED =0))      ))    ) ");
 				paramList.add(tenantId);
 				paramList.add(NON_TENANT_ID);
+				paramList.add(tenantId);
+				paramList.add(tenantId);
 			}
 		}
 		sb.append(") or (p.is_system=1 ");
@@ -965,10 +968,13 @@ public class DashboardManager
 		sb1.append(" and ( (p.is_system=0 ");
 		if (filter != null) {
 			if (filter.getIncludedWidgetGroupsString(tenantVersionModel) != null && !filter.getIncludedWidgetGroupsString(tenantVersionModel).isEmpty()) {
-				sb1.append(" and p.DASHBOARD_ID in (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE (t.TENANT_ID = ?"+ index++ +" or t.TENANT_ID = ?" + index++ + ") and t.WIDGET_GROUP_NAME IN ("
-						+ filter.getIncludedWidgetGroupsString(tenantVersionModel)+ ")))");
+				sb1.append(" and ((p.DASHBOARD_ID in (SELECT p2.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET p2 WHERE p2.SUB_DASHBOARD_ID IN (SELECT t.dashboard_Id FROM Ems_Dashboard_Tile t WHERE (t.TENANT_ID = ?"+ index++ +" or t.TENANT_ID = ?" + index++ + ") and t.WIDGET_GROUP_NAME IN ("
+						+ filter.getIncludedWidgetGroupsString(tenantVersionModel)+ ")) ) OR (          p.DASHBOARD_ID in ((select distinct t2.dashboard_id from ems_dashboard t2 where t2.type=2 and t2.tenant_id = ?"+index++  +" and t2.deleted = 0) minus (SELECT distinct t4.DASHBOARD_SET_ID FROM EMS_DASHBOARD_SET t4 WHERE t4.tenant_id= ?"+ index++ +" and t4.deleted=0 and t4.sub_dashboard_id in (select sub_dashboard_id from ems_dashboard_set t5 where t5.sub_dashboard_id in (select distinct t6.dashboard_id from ems_dashboard_tile t6 where t6.tenant_id=?"+index++  +" and t6.deleted=0 ))  ))             ) )   )");
 				paramList.add(tenantId);
 				paramList.add(NON_TENANT_ID);
+				paramList.add(tenantId);
+				paramList.add(tenantId);
+				paramList.add(tenantId);
 			}
 		}
 		sb1.append(") or (p.is_system=1 ");
@@ -1758,10 +1764,14 @@ public class DashboardManager
 		if(!tv.getIsV1Tenant() && !apps.contains(DashboardApplicationType.UDE)){
 			LOGGER.info("#1 Adding UDE application type for v2/v3/v4 tenant");
 			apps.add(DashboardApplicationType.UDE);
-		}else if(tv.getIsV1Tenant() && apps.contains(DashboardApplicationType.ITAnalytics)){
+                }else if(tv.getIsV1Tenant() && apps.contains(DashboardApplicationType.ITAnalytics)){
             apps.add(DashboardApplicationType.UDE);
             LOGGER.info("#1-2 Adding UDE application type for v1 tenant");
-        }
+                }
+                if (!apps.contains(DashboardApplicationType.EVT)){
+			LOGGER.info("#1 Adding EVT application type for v1/v2/v3/v4 tenant");
+			apps.add(DashboardApplicationType.EVT);                
+                }
         LOGGER.info("Tenant's applications are {}",apps);
 		return apps;
 	}
