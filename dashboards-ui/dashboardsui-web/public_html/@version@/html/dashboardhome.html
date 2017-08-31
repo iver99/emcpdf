@@ -1,5 +1,5 @@
     <!-- Home toolbar start -->
-    <div aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 10px" data-testapiversion="1.17.0">
+    <div aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 10px" data-testapiversion="1.23.0">
         <button style=" margin-right: 5px;" data-bind="visible: (isMobileDevice() !== true), attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, 
                                          ojComponent: { component:'ojButton', rootAttributes: {'class': 'dbs-home-blue-button'}, label: getNlsString('DBS_HOME_CREATE_BTN_LABEL'),disabled: zdtStatus}"></button>
         <span role="separator" class="oj-toolbar-separator" style="margin-bottom: 4px;" data-bind="visible: (isMobileDevice() !== true) && isDashboardSet !== true"></span>
@@ -23,28 +23,28 @@
             <label class="oj-label-inline" data-bind="attr: { 'for': filterById }, text: getNlsString('DBS_HOME_SELECT_FILTER_BY_LABEL')"></label>
             <select aria-controls="dtabhomesc" data-bind="attr: { 'id': filterById }, ojComponent: {component: 'ojSelect', minimumResultsForSearch: 20, value: filterBy, optionChange: $component.handleFilterByChanged, 
                                                    rootAttributes: {style:'width: 20em; max-width:15em; margin-right: 30px; height: 32px; max-height: 32px;', class: 'dsb-filtercb'}}">
-                <option value="allnofilter" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_ALL')"></option>
-                <option value="favorites" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_FAVORITES')"></option>
-                <option value="me" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_ME')"></option>
-                <option value="oracle" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_ORACLE')"></option>
-                <option value="share" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_OTHERS')"></option>
+                <option value="allnofilter" id="filterby_all" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_ALL')"></option>
+                <option value="favorites" id="filterby_favorites" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_FAVORITES')"></option>
+                <option value="me" id="filterby_me" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_ME')"></option>
+                <option value="oracle" id="filterby_oracle" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_ORACLE')"></option>
+                <option value="share" id="filterby_share" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_OTHERS')"></option>
             </select>
             <!-- /ko -->
   
             <label class="oj-label-inline" data-bind="attr: { 'for': sortById }, text: getNlsString('DBS_HOME_SELECT_SORT_BY_LABEL')"></label>
             <select aria-controls="dtabhomesc" data-bind="attr: { 'id': sortById }, ojComponent: {component: 'ojSelect', minimumResultsForSearch: 20, value: sortBy, optionChange: $component.handleSortByChanged, 
                                                    rootAttributes: {style:'width: 15em; max-width:20em', class: 'dsb-sortcb'}}">
-            <option value="default" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_DEFAULT')"></option>
-            <option value="name_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_ASC')"></option>
-            <option value="name_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_DSC')"></option>
-            <option value="owner_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_OWNER_ASC')"></option>
-            <option value="owner_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_OWNER_DSC')"></option>
-            <option value="creation_date_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME_ASC')"></option>
-            <option value="creation_date_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME_DSC')"></option>
-            <option value="last_modification_date_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_MODIFIED_ASC')"></option>
-            <option value="last_modification_date_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_MODIFIED_DSC')"></option>
-            <option value="access_date_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE_ASC')"></option>
-            <option value="access_date_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE_DSC')"></option>
+            <option value="default" id="sortby_default" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_DEFAULT')"></option>
+            <option value="name_asc" id="sortby_nameasc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_ASC')"></option>
+            <option value="name_dsc" id="sortby_namedsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_DSC')"></option>
+            <option value="owner_asc" id="sortby_ownerasc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_OWNER_ASC')"></option>
+            <option value="owner_dsc" id="sortby_ownerdsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_OWNER_DSC')"></option>
+            <option value="creation_date_asc" id="sortby_creationasc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME_ASC')"></option>
+            <option value="creation_date_dsc" id="sortby_creationdsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME_DSC')"></option>
+            <option value="last_modification_date_asc" id="sortby_modasc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_MODIFIED_ASC')"></option>
+            <option value="last_modification_date_dsc" id="sortby_moddsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_MODIFIED_DSC')"></option>
+            <option value="access_date_asc" id="sortby_accessasc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE_ASC')"></option>
+            <option value="access_date_dsc" id="sortby_accessdsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE_DSC')"></option>
             </select>
 
             <!--button id="cbtn" class="dbs-home-button-create-new-dashboard"
