@@ -14,16 +14,21 @@ requirejs.config({
             'uifwk/js/util/usertenant-util',
             'uifwk/js/util/zdt-util',
             'uifwk/js/sdk/context-util',
+            'uifwk/js/sdk/widget-selector-util',
             'uifwk/js/widgets/aboutbox/js/aboutbox',
             'uifwk/js/widgets/brandingbar/js/brandingbar',
             'uifwk/js/widgets/datetime-picker/js/datetime-picker',
             'uifwk/js/widgets/navlinks/js/navigation-links',
             'uifwk/js/widgets/timeFilter/js/timeFilter',
             'uifwk/js/widgets/widgetselector/js/widget-selector',
+            'uifwk/js/widgets/widgetselector/js/widget-selector-dialog',
+            'uifwk/js/widgets/widgetselector/js/widget-selector-popup',
             'text!uifwk/js/widgets/aboutbox/html/aboutbox.html',
             'text!uifwk/js/widgets/navlinks/html/navigation-links.html',
             'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
             'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
+            'text!uifwk/js/widgets/widgetselector/html/widget-selector-dialog.html',
+            'text!uifwk/js/widgets/widgetselector/html/widget-selector-popup.html',
             'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
             'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
             ]
@@ -98,13 +103,14 @@ require(['knockout',
     'uifwk/js/util/df-util',
     'uifwk/@version@/js/sdk/context-util-impl',
     'uifwk/js/sdk/menu-util',
+    'uifwk/js/sdk/widget-selector-util',
     'uifwk/js/util/preference-util',
     'ojs/ojknockout',
     'ojs/ojbutton',
     'ojs/ojtoolbar',
     'ojs/ojdialog'
 ],
-        function(ko, $, oj, _emJETCustomLogger, userTenantUtilModel, msgUtilModel, dfumodel, contextModel, menuModel) // this callback gets executed when all required modules are loaded
+        function(ko, $, oj, _emJETCustomLogger, userTenantUtilModel, msgUtilModel, dfumodel, contextModel, menuModel, widgetSelectorUtilModel) // this callback gets executed when all required modules are loaded
         {
             var ctxUtil = new contextModel();
             var omcContext = ctxUtil.getOMCContext();
@@ -270,6 +276,11 @@ require(['knockout',
 
                 self.openWidgetSelectorDialog = function() {
                     $('#'+widgetSelectorDialogId).ojDialog('open');
+                };
+                
+                var widgetSelectorPopupUtil = new widgetSelectorUtilModel(widgetSelectorDialogId);
+                self.openWidgetSelectorList = function() {
+                    widgetSelectorPopupUtil.widgetSelector('open', '#add-widget-button2');
                 };
             }
 

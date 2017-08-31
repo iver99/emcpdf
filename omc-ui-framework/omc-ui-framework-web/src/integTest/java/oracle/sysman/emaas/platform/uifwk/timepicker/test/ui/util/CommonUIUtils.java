@@ -505,6 +505,15 @@ public class CommonUIUtils
 
 		return outputFormat.format(date);
 	}
+
+	public static void clickTimePicker(WebDriver webd, int Index)
+	{
+		//click the datetimepicker component
+		webd.waitForElementPresent("css=" + UIControls.TIMERANGEBTN_CSS);
+		webd.getWebDriver().findElements(By.cssSelector(UIControls.TIMERANGEBTN_CSS)).get(Index - 1).click();
+
+		webd.takeScreenShot();
+	}
 	
 	public void getCurrentDate()
 	{

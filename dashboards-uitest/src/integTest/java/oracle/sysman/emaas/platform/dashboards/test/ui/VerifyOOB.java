@@ -284,8 +284,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Database Operations");
 		DashboardHomeUtil.selectDashboard(webd, "Database Operations");
 
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
 		//verify Database Operations
 		VerifyOOBUtil.verifyDatabaseOperations(webd);
 		VerifyOOBUtil.verifyDatabaseOperations_Details(webd);
@@ -305,8 +303,6 @@ public class VerifyOOB extends LoginAndLogout
 		//open Database Operations
 		webd.getLogger().info("Open the OOB dashboard---Database Operations");
 		DashboardHomeUtil.selectDashboard(webd, "Database Operations");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Database Operations
 		VerifyOOBUtil.verifyDatabaseOperations(webd);
@@ -331,8 +327,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Database Operations");
 		DashboardHomeUtil.selectDashboard(webd, "Database Operations");
 
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
 		//verify Database Operations
 		VerifyOOBUtil.verifyDatabaseOperations(webd);
 	}
@@ -355,8 +349,6 @@ public class VerifyOOB extends LoginAndLogout
 		//open Database Operations
 		webd.getLogger().info("Open the OOB dashboard---Database Operations");
 		DashboardHomeUtil.selectDashboard(webd, "Database Operations");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Database Operations
 		VerifyOOBUtil.verifyDatabaseOperations(webd);
@@ -545,8 +537,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Enterprise Health");
 		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");
 
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
 		//verify Enterprise Health
 		VerifyOOBUtil.verifyEnterpriseHealth(webd);
 		VerifyOOBUtil.verifyEnterpriseHealth_Details(webd);
@@ -566,8 +556,6 @@ public class VerifyOOB extends LoginAndLogout
 		//Open the OOB dashboard---Enterprise Health
 		webd.getLogger().info("Open the OOB dashboard---Enterprise Health");
 		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Enterprise Health
 		VerifyOOBUtil.verifyEnterpriseHealth(webd);
@@ -592,8 +580,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Enterprise Health");
 		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");
 
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
 		//verify Enterprise Health
 		VerifyOOBUtil.verifyEnterpriseHealth(webd);
 	}
@@ -617,8 +603,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Enterprise Health");
 		DashboardHomeUtil.selectDashboard(webd, "Enterprise Health");
 
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
 		//verify Enterprise Health
 		VerifyOOBUtil.verifyEnterpriseHealth(webd);
 	}
@@ -637,8 +621,6 @@ public class VerifyOOB extends LoginAndLogout
 		//Open the OOB dashboard---Exadata Health
 		webd.getLogger().info("Open the OOB dashboard---Exadata Health");
 		DashboardHomeUtil.selectDashboard(webd, "Exadata Health");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Exadata Health
 		VerifyOOBUtil.verifyExadataHealth(webd);
@@ -659,8 +641,6 @@ public class VerifyOOB extends LoginAndLogout
 		//Open the OOB dashboard---Exadata Health
 		webd.getLogger().info("Open the OOB dashboard---Exadata Health");
 		DashboardHomeUtil.selectDashboard(webd, "Exadata Health");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Exadata Health
 		VerifyOOBUtil.verifyExadataHealth(webd);
@@ -685,8 +665,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Exadata Health");
 		DashboardHomeUtil.selectDashboard(webd, "Exadata Health");
 
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
 		//verify Exadata Health
 		VerifyOOBUtil.verifyExadataHealth(webd);
 	}
@@ -709,8 +687,6 @@ public class VerifyOOB extends LoginAndLogout
 		//Open the OOB dashboard---Exadata Health
 		webd.getLogger().info("Open the OOB dashboard---Exadata Health");
 		DashboardHomeUtil.selectDashboard(webd, "Exadata Health");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Exadata Health
 		VerifyOOBUtil.verifyExadataHealth(webd);
@@ -815,8 +791,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Host Operations");
 		DashboardHomeUtil.selectDashboard(webd, "Host Operations");
 
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
 		//verify Host Operations
 		VerifyOOBUtil.verifyHostOperations(webd);
 		VerifyOOBUtil.verifyHostOperations_Details(webd);
@@ -836,8 +810,6 @@ public class VerifyOOB extends LoginAndLogout
 		//open Host Operations
 		webd.getLogger().info("Open the OOB dashboard---Host Operations");
 		DashboardHomeUtil.selectDashboard(webd, "Host Operations");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Host Operations
 		VerifyOOBUtil.verifyHostOperations(webd);
@@ -862,8 +834,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Host Operations");
 		DashboardHomeUtil.selectDashboard(webd, "Host Operations");
 
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
 		//verify Host Operations
 		VerifyOOBUtil.verifyHostOperations(webd);
 	}
@@ -887,8 +857,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Host Operations");
 		DashboardHomeUtil.selectDashboard(webd, "Host Operations");
 
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
 		//verify Host Operations
 		VerifyOOBUtil.verifyHostOperations(webd);
 	}
@@ -907,8 +875,6 @@ public class VerifyOOB extends LoginAndLogout
 		//Open the OOB dashboard---Middleware Operations
 		webd.getLogger().info("Open the OOB dashboard---Middleware Operations");
 		DashboardHomeUtil.selectDashboard(webd, "Middleware Operations");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Middleware Operations
 		VerifyOOBUtil.verifyMiddlewareOperations(webd);
@@ -929,8 +895,6 @@ public class VerifyOOB extends LoginAndLogout
 		//Open the OOB dashboard---Middleware Operations
 		webd.getLogger().info("Open the OOB dashboard---Middleware Operations");
 		DashboardHomeUtil.selectDashboard(webd, "Middleware Operations");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Middleware Operations
 		VerifyOOBUtil.verifyMiddlewareOperations(webd);
@@ -955,8 +919,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Middleware Operations");
 		DashboardHomeUtil.selectDashboard(webd, "Middleware Operations");
 
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
 		//verify Middleware Operations
 		VerifyOOBUtil.verifyMiddlewareOperations(webd);
 	}
@@ -980,8 +942,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Middleware Operations");
 		DashboardHomeUtil.selectDashboard(webd, "Middleware Operations");
 
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
 		//verify Middleware Operations
 		VerifyOOBUtil.verifyMiddlewareOperations(webd);
 	}
@@ -1001,8 +961,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
 		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
 
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
 		//verify Orchestration Workflows
 		VerifyOOBUtil.verifyOrchestration(webd);
 	}
@@ -1021,8 +979,6 @@ public class VerifyOOB extends LoginAndLogout
 		//Open the OOB dashboard---Orchestration Workflows
 		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
 		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Orchestration Workflows
 		VerifyOOBUtil.verifyOrchestration(webd);
@@ -1047,8 +1003,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
 		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
 
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
 		//verify Orchestration Workflows
 		VerifyOOBUtil.verifyOrchestration(webd);
 	}
@@ -1071,8 +1025,6 @@ public class VerifyOOB extends LoginAndLogout
 		//Open the OOB dashboard---Orchestration Workflows
 		webd.getLogger().info("Open the OOB dashboard---Orchestration Workflows");
 		DashboardHomeUtil.selectDashboard(webd, "Orchestration Workflows");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify Orchestration Workflows
 		VerifyOOBUtil.verifyOrchestration(webd);
@@ -1512,8 +1464,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
 		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
 
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
 		//verify UI Gallery
 		VerifyOOBUtil.verifyUIGallery(webd);
 		VerifyOOBUtil.verifyUIGallery_Details(webd);
@@ -1533,8 +1483,6 @@ public class VerifyOOB extends LoginAndLogout
 		//Open the OOB dashboard---UI Gallery
 		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
 		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify UI Gallery
 		VerifyOOBUtil.verifyUIGallery(webd);
@@ -1559,8 +1507,6 @@ public class VerifyOOB extends LoginAndLogout
 		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
 		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
 
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
-
 		//verify UI Gallery
 		VerifyOOBUtil.verifyUIGallery(webd);
 	}
@@ -1583,8 +1529,6 @@ public class VerifyOOB extends LoginAndLogout
 		//Open the OOB dashboard---UI Gallery
 		webd.getLogger().info("Open the OOB dashboard---UI Gallery");
 		DashboardHomeUtil.selectDashboard(webd, "UI Gallery");
-
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		//verify UI Gallery
 		VerifyOOBUtil.verifyUIGallery(webd);

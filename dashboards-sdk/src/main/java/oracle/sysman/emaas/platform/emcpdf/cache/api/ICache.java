@@ -23,6 +23,6 @@ public interface ICache<K,V> {
 
     public boolean isExpired(CachedItem cachedItem);
 
-    public Object refreshAfterGet(K key,CacheLoader factory) throws ExecutionException;
+//    public Object refreshAfterGet(K key,CacheLoader factory) throws ExecutionException;
 
 }

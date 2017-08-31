@@ -140,6 +140,10 @@ define(['knockout',
                     Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, newTile);                    
                     if (newTile){
                        self.editor.tiles.push(newTile);
+                       if(newTile.type() === "TEXT_WIDGET") {
+                            self.editor.draggingTile = newTile;
+                            self.editor.moveTileTo(new Builder.Cell(0, 0), newTile);
+                       }
                        self.show();
                        Builder.getTileConfigure(self.editor.mode, self.dashboard, newTile, self.timeSelectorModel, self.targets, dashboardInst);
                        $b.triggerEvent($b.EVENT_TILE_ADDED, null, newTile);
@@ -480,6 +484,7 @@ define(['knockout',
                             self.beforeResizeHeight = self.resizingTile().cssHeight();
                             self.currentWigedtWidth(self.resizingTile().cssWidth());
                             self.currentWigedtHeight(self.resizingTile().cssHeight());                  
+                            $b.triggerEvent($b.EVENT_TILE_RESIZED);
                         }
                         self.tilesView.disableDraggable();
                     });
@@ -495,6 +500,9 @@ define(['knockout',
                                 $(this).css('cursor', 'ns-resize');
                             } else if (self.resizingOptions().mode === self.editor.RESIZE_OPTIONS.SOUTH_EAST) {
                                 $(this).css('cursor', 'se-resize');
+                            }
+                            if($('.tiles-wrapper').length > 0 && event.clientX < $('.tiles-wrapper').offset().left){
+                                event.clientX = $('.tiles-wrapper').offset().left;
                             }
                             var clonedTarget = $.extend(self.resizingOptions(), {left: event.clientX, top: event.clientY});
                             self.resizingOptions(clonedTarget);
@@ -769,6 +777,13 @@ define(['knockout',
                     if (!tile) {
                         tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targets, true, dashboardInst);
                         Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, tile);
+                        
+                        //fix EMCPDF-4722 by setting tile's display info here so that the semitransparent helper has correct width and height and is always attached to mouse
+                        tile.cssWidth(self.getDisplayWidthForTile(self.editor.mode.getModeWidth(tile)));
+                        tile.cssHeight(self.getDisplayHeightForTile(self.editor.mode.getModeHeight(tile)));
+                        tile.left(pos.left-tile.cssWidth()/2);
+                        tile.top(pos.top-15);
+                        
                         u.helper.tile = tile;
                         self.editor.tiles.push(tile);
                         $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);

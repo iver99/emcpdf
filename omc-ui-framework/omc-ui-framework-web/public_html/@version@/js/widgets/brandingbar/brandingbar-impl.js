@@ -607,18 +607,23 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 {
                     "label": self.helpMenuLabel,
                     "url": "#",
-                    "id": "emcpdf_oba_help"
-//                        ,"subNavItems": self.subHelpMenuItems
+                    "id": "emcpdf_oba_help",
+                    "iconClass":"oj-menu-item-icon oj-fwk-icon fa-navmenu-help",
+                    "linkClass":"emaas-appheader-help-link"
                 },
                 {
                     "label": self.aboutMenuLabel,
                     "url": "#",
-                    "id": "emcpdf_oba_about"
+                    "id": "emcpdf_oba_about",
+                    "iconClass":null,
+                    "linkClass":null
                 },
                 {
                     "label": self.signOutMenuLabel,
                     "url": "#",
-                    "id": "emcpdf_oba_logout"
+                    "id": "emcpdf_oba_logout",
+                    "iconClass":null,
+                    "linkClass":null
                 }
             ];
 
@@ -1829,6 +1834,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //
             // send message when brandingbar is instantiated
             //
+            if(!window._uiwfk){
+                window._uiwfk = {};
+            }
+            window._uiwfk.brandingbar_initialized = true;
             var message = {'tag': 'EMAAS_BRANDINGBAR_INSTANTIATED'};
             window.postMessage(message, window.location.href);
 

@@ -18,6 +18,10 @@ import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RoleNamesEntity;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
+import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
+import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
@@ -52,7 +56,7 @@ public class PrivilegeCheckerTest
 			}
 		};
 		Assert.assertNull(PrivilegeChecker.getUserGrants(tenantName, userName));
-
+		clearCache();
 		// Test case for getting user grants successfully
 		new Expectations() {
 			{
@@ -63,7 +67,7 @@ public class PrivilegeCheckerTest
 			}
 		};
 		Assert.assertEquals(PrivilegeChecker.getUserGrants(tenantName, userName), sampleUserGrants);
-
+		clearCache();
 		// Test case for Exception
 		try {
 			new Expectations() {
@@ -106,7 +110,7 @@ public class PrivilegeCheckerTest
 			}
 		};
 		Assert.assertNull(PrivilegeChecker.getUserRoles(tenantName, userName));
-
+		clearCache();
 		// Test case for getting user roles successfully
 		new Expectations() {
 			{
@@ -118,6 +122,7 @@ public class PrivilegeCheckerTest
 		};
 		Assert.assertNotNull(PrivilegeChecker.getUserRoles(tenantName, userName));
 		Assert.assertNotNull(PrivilegeChecker.getUserRoles(tenantName, userName).size() == 6);
+		clearCache();
 
 		// Test case for IOException for JsonUtil.fromJson()
 		try {
@@ -167,5 +172,13 @@ public class PrivilegeCheckerTest
 		Assert.assertTrue(PrivilegeChecker.isAdminUser(Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_SECURITY)));
 		Assert.assertTrue(PrivilegeChecker.isAdminUser(Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_ORCHESTRATION)));
 		Assert.assertTrue(PrivilegeChecker.isAdminUser(Arrays.asList(PrivilegeChecker.ADMIN_ROLE_NAME_COMPLIANCE)));
+	}
+
+	private static void clearCache(){
+		ICacheManager iCacheManager = CacheManagers.getInstance().build();
+		ICache cache = iCacheManager.getCache(CacheConstants.CACHES_USER_GRANT_CACHE);
+		cache.clear();
+		ICache cache1 = iCacheManager.getCache(CacheConstants.CACHES_USER_ROLE_CACHE);
+		cache1.clear();
 	}
 }

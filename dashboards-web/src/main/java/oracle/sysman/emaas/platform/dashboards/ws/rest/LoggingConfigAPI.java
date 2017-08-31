@@ -76,7 +76,7 @@ public class LoggingConfigAPI extends APIBase
 			input = getJsonUtil().fromJson(inputJson.toString(), UpdatedLoggerLevel.class);
 			if (input == null || StringUtil.isEmpty(input.getLevel())) {
 				throw new CommonResourceException(MessageUtils.getDefaultBundleString(
-						CommonResourceException.LOGGER_LEVEL_NOT_FOUND_TO_CONFIG, input.getLevel(), LOGGERName));
+						CommonResourceException.LOGGER_LEVEL_NOT_FOUND_TO_CONFIG, input == null ? null : input.getLevel(), LOGGERName));
 			}
 			Level level = Level.getLevel(input.getLevel().toUpperCase());
 			if (level == null) {

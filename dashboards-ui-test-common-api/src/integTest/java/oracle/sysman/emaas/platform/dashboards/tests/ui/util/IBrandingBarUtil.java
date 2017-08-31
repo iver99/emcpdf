@@ -60,6 +60,9 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	public static final String GLOBAL_ADMIN_MENU_ALERT_RULES = "Alert Rules";
 	public static final String GLOBAL_ADMIN_MENU_AGENTS = "Agents";
 	public static final String GLOBAL_ADMIN_MENU_ENTITIES_CFG = "Entities Configuration";
+	public static final String GLOBAL_ADMIN_MENU_NOTIFICATION_CHANNELS = "Notification Channels";
+	public static final String GLOBAL_ADMIN_MENU_ADD_ENTITY = "Add Entity";
+	public static final String GLOBAL_ADMIN_MENU_CLOUD_DISCOVERY = "Cloud Discovery Profiles";
 
 	public void clickHierarchicalMenu(WebDriver driver, String menuitem);
 

@@ -34,6 +34,7 @@ import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.Versioned
 
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class HtmlBootstrapJsUtil
@@ -85,7 +86,7 @@ public class HtmlBootstrapJsUtil
 	 */
 	public static String getBrandingDataJS(HttpServletRequest httpReq)
 	{
-                long startBdJS = System.currentTimeMillis();
+		long begin = System.currentTimeMillis();
 		LOGGER.debug("Start to get branding bar bootstrap js...");
 		StringBuilder sb = new StringBuilder();
 		String referer = httpReq.getHeader("referer");
@@ -94,8 +95,8 @@ public class HtmlBootstrapJsUtil
 		String userTenant = httpReq.getHeader(OAM_REMOTE_USER_HEADER);
 		String tenant = null;
 		String user = null;
-		if (!StringUtil.isEmpty(userTenant) && userTenant.indexOf(".") > 0) {
-			int pos = userTenant.indexOf(".");
+		if (!StringUtil.isEmpty(userTenant) && userTenant.indexOf('.') > 0) {
+			int pos = userTenant.indexOf('.');
 			tenant = userTenant.substring(0, pos);
 			user = userTenant.substring(pos + 1);
 			LOGGER.info("Retrieved tenant is {} and user is {} from userTenant {}", tenant, user, userTenant);
@@ -114,9 +115,9 @@ public class HtmlBootstrapJsUtil
                 generatePageLoadEvent(tenant, user, referer, sessionExp);
 		long endPageLoadEvent = System.currentTimeMillis(); 		
 
-		//user info
-		LOGGER.debug("Start to get brandingbar data.");
+		long start = System.currentTimeMillis();
 		String brandingbarData = DataAccessUtil.getBrandingBarData(tenant, user, referer, sessionExp);
+        LOGGER.info("Retriving brandingbar data takes {}ms", System.currentTimeMillis()-start);
 		//append uifwk cache data structure
         sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
         if (!StringUtil.isEmpty(brandingbarData)) {
@@ -139,8 +140,9 @@ public class HtmlBootstrapJsUtil
         }
 		String injectableJS = sb.toString();
                 injectableJS = "/* PAGE_LOAD_EVENT_API_COST : " +  (endPageLoadEvent - startPageLoadEvent) + "ms */" + injectableJS;
-                injectableJS = "/* GET_BRANDING_BAR_DATA_API_COST : " + (System.currentTimeMillis() - startBdJS) + "ms */" + injectableJS; 
+                injectableJS = "/* GET_BRANDING_BAR_DATA_API_COST : " + (System.currentTimeMillis() - begin) + "ms */" + injectableJS; 
 		LOGGER.info("getBrandingDataJS(), injectableJS: " + injectableJS);
+		LOGGER.info("getBrandingDataJS method takes {}ms", System.currentTimeMillis() - begin);
 		return injectableJS;
 	}
 

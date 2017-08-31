@@ -4,6 +4,7 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
@@ -11,6 +12,8 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -23,7 +26,13 @@ import org.testng.annotations.Test;
 
 public class BugVerification extends LoginAndLogout
 {
-
+	private String longName1 = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNa1e";
+	private String longName2 = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNa2e";
+	private String longName3 = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNa3e";
+	private String expectName1 = longName1.substring(0, 64);
+	private String expectName2 = longName2.substring(0, 64);
+	private String expectName3 = longName3.substring(0, 64);
+	
 	public void initTest(String testName)
 	{
 		login(this.getClass().getName() + "." + testName);
@@ -58,8 +67,19 @@ public class BugVerification extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF2040");
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF2856");
 		DashBoardUtils.deleteDashboard(webd, "DashboardSet_3660");
-		DashBoardUtils.deleteDashboard(webd, "Dashboard_3660");		
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_3660"); 
+		DashBoardUtils.deleteDashboard(webd, "DashboardSet_4068");
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_4068"); 
+		DashBoardUtils.deleteDashboard(webd, "DashboardInSet_4068");
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_EMCPDF1094");
+		DashBoardUtils.deleteDashboard(webd, "test EMCPDF_2975 with / character"); 
+		DashBoardUtils.deleteDashboard(webd, expectName1);
+		DashBoardUtils.deleteDashboard(webd, expectName2);
+		DashBoardUtils.deleteDashboard(webd, expectName3);
 		DashBoardUtils.deleteDashboard(webd, "testEMCPDF_4594");
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_4362");
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_4362_set");
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_4643");
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -470,50 +490,403 @@ public class BugVerification extends LoginAndLogout
     }
     
     @Test(alwaysRun = true)
-    public void testEMCPDF_4594()
+	public void testEMCPDF_4068_1()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_4068_1");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+		
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webd, "Dashboard_4068", null);
+		WaitUtil.waitForPageFullyLoaded(webd);
+		
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_4068", null, true),
+				"Create dashboard failed!");
+		
+		webd.click("css=" + DashBoardPageId.EDITBTNCSS);
+		WaitUtil.waitForPageFullyLoaded(webd);
+		
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWEREDITSINGLEDBBTNCSS);
+		webd.clear("id=" + DashBoardPageId.DASHBOARDNAMEBOXID);
+		webd.sendKeys("css=" + DashBoardPageId.BUILDEROPTIONSEDITDESCRIPTIONCSS, "The description of this dashboard");
+
+		WebElement errMsgSummary = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGSUMMARYCSS));
+		WebElement errMsgDetail = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGDETAILCSS));
+		Assert.assertEquals(errMsgSummary.getText(), "Name is required");
+		Assert.assertEquals(errMsgDetail.getText(), "You must enter a value.");	
+		
+		webd.sendKeys("id=" + DashBoardPageId.DASHBOARDNAMEBOXID, "Dashboard_4068");
+
+		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGSUMMARYCSS), "The error message isn't disappearred after re-input name in name input box");
+		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGDETAILCSS), "The error message isn't disappearred after re-input name in name input box");
+		
+	}
+    
+    @Test(alwaysRun = true)
+	public void testEMCPDF_4068_2()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_4068");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+		
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard set
+		webd.getLogger().info("Create a dashboard set");
+		DashboardHomeUtil.createDashboardSet(webd, "DashboardSet_4068", null);
+		DashboardBuilderUtil.createDashboardInsideSet(webd, "DashboardInSet_4068", null);
+
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, "DashboardSet_4068"),
+				"Create dashboard failed!");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, "DashboardInSet_4068"), 
+				"Create dashboard in Set failed!");
+		
+		webd.click("css=" + DashBoardPageId.EDITBTNCSS);
+		WaitUtil.waitForPageFullyLoaded(webd);
+		
+		//Verify the behavior of clearing dashboard set name
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWEREDITSINGLEDBSETBTNCSS);
+		webd.clear("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS);
+		webd.sendKeys("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITDESCRIPTIONCSS, "test the behaviour when clearing the input box of name field");												
+
+		//webd.sendKeys("id=" + DashBoardPageId.DASHBOARDNAMEBOXID, "");
+		WebElement errMsgSummary1 = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGSUMMARYCSS));
+		WebElement errMsgDetail1 = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGDETAILCSS));
+		Assert.assertEquals(errMsgSummary1.getText(), "Name is required");
+		Assert.assertEquals(errMsgDetail1.getText(), "You must enter a value.");
+		
+		webd.sendKeys("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS, "DashboardSet_4068");
+
+		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGSUMMARYCSS), "The error message isn't disappearred after re-input name in name input box");
+		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGDETAILCSS), "The error message isn't disappearred after re-input name in name input box");
+		
+		webd.click("css=" + DashBoardPageId.DASHBOARDSETFWKICONCSS);
+		
+		//Verify the behavior of clearing dashboard name which is in dashboardSet 
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWEREDITSINGLEDBBTNCSS);
+		webd.clear("id=" + DashBoardPageId.DASHBOARDNAMEBOXID);
+		
+		webd.sendKeys("css=" + DashBoardPageId.BUILDEROPTIONSEDITDESCRIPTIONCSS, "The description of this dashboard");
+
+		WebElement errMsgSummary2 = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGSUMMARYCSS));
+		WebElement errMsgDetail2 = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGDETAILCSS));
+		Assert.assertEquals(errMsgSummary2.getText(), "Name is required");
+		Assert.assertEquals(errMsgDetail2.getText(), "You must enter a value.");	
+		
+		webd.sendKeys("id=" + DashBoardPageId.DASHBOARDNAMEBOXID, "DashboardInSet_4068");
+
+		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGSUMMARYCSS), "The error message isn't disappearred after re-input name in name input box");
+		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGDETAILCSS), "The error message isn't disappearred after re-input name in name input box");		
+	}
+    public void testEMCPDF_1094()
     {
-    	String dbset_Name = "testEMCPDF_4594";
-    	String dbInSet_Name_1 = "Performance";
-    	String dbInSet_Name_2 = "Overview";
-    	String dbInSet_Name_3 = "Others";
-    	String widgetName = "Top 5 Databases by Active Sessions";
-    	
-    	//Initialize the test
-    	initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-    	webd.getLogger().info("Start the test case: testEMCPDF_4594");
-    	
-    	//reset the home page
-    	webd.getLogger().info("Reset all filter options in the home page");
-    	DashboardHomeUtil.resetFilterOptions(webd);
-    	
-    	//switch to Grid View
-    	webd.getLogger().info("Switch to grid view");
-    	DashboardHomeUtil.gridView(webd);
-    	
-    	//create dashboard set
-    	webd.getLogger().info("Create a dashboard set");
-    	DashboardHomeUtil.createDashboard(webd, dbset_Name, null, DashboardHomeUtil.DASHBOARDSET);
-    	
-    	webd.getLogger().info("Add some dashboards into the dashboard set");
-    	DashboardBuilderUtil.addNewDashboardToSet(webd, dbInSet_Name_1);
-    	DashboardBuilderUtil.addNewDashboardToSet(webd, dbInSet_Name_2);
-    	DashboardBuilderUtil.addNewDashboardToSet(webd, dbInSet_Name_3);
-    	
-    	webd.getLogger().info("Back to dashboard home page");
-    	BrandingBarUtil.visitDashboardHome(webd);
-    	
-    	webd.getLogger().info("Open the dashboard set created just now");
-    	DashboardHomeUtil.selectDashboard(webd, dbset_Name);
-    	
-    	webd.getLogger().info("Select each tabs in dashboard set");
-    	DashboardBuilderUtil.selectDashboardInsideSet(webd, dbInSet_Name_1);
-    	DashboardBuilderUtil.selectDashboardInsideSet(webd, dbInSet_Name_2);
-    	DashboardBuilderUtil.selectDashboardInsideSet(webd, dbInSet_Name_3);
-    	
-    	webd.getLogger().info("Select the first tab");
-    	DashboardBuilderUtil.selectDashboardInsideSet(webd, dbInSet_Name_1);
-    	
-    	webd.getLogger().info("Verify the widget display");
-    	Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, widgetName),"Expected widget is not displayed");
+    	String dbdesc = "Dashboard_EMCPDF1094\nline break\ntest";
+    	String dbname = "Dashboard_EMCPDF1094";
+	//Initialize the test
+	initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	webd.getLogger().info("Start the test case: testEMCPDF_1094");
+
+	//reset the home page
+	webd.getLogger().info("Reset all filter options in the home page");
+	DashboardHomeUtil.resetFilterOptions(webd);
+
+	//switch to Grid View
+	webd.getLogger().info("Switch to grid view");
+	DashboardHomeUtil.gridView(webd);
+
+	//create dashboard
+	webd.getLogger().info("Create a dashboard: with description, with time refresh");
+	DashboardHomeUtil.createDashboard(webd, dbname, dbdesc, DashboardHomeUtil.DASHBOARD);
+	DashboardBuilderUtil.editDashboard(webd, dbname, dbdesc, true);
+	webd.getLogger().info("verify the dashboard created Successfully");
+	Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbname, dbdesc, true), "Create dashboard failed!"); 	
     }
+
+    @Test(alwaysRun = true)
+    public void testEMCPDF_2975()
+    {
+    	String dbName = "test EMCPDF_2975 with / character";
+	//Initialize the test
+	initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+	webd.getLogger().info("Start the test case: testEMCPDF_2975");
+
+	//reset the home page
+	webd.getLogger().info("Reset all filter options in the home page");
+	DashboardHomeUtil.resetFilterOptions(webd);
+
+	//switch to Grid View
+	webd.getLogger().info("Switch to grid view");
+	DashboardHomeUtil.gridView(webd);
+
+	//create dashboard
+	webd.getLogger().info("Create a dashboard: no description, with time refresh");
+	DashboardHomeUtil.createDashboard(webd, dbName, null, DashboardHomeUtil.DASHBOARD);
+	webd.getLogger().info("verify the dashboard created Successfully");
+	Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, null, true), "Create dashboard failed!");
+		
+	webd.getLogger().info("Add Widget to the dashboard");
+	DashboardBuilderUtil.addWidgetToDashboard(webd, "Donut");
+		
+	webd.getLogger().info("Save the dashboard");
+	DashboardBuilderUtil.saveDashboard(webd);
+		
+	webd.getLogger().info("Open the Widget");
+	DashboardBuilderUtil.openWidget(webd, "Donut");
+	
+	webd.getLogger().info("Back to Dashboard builder page");
+	webd.click("css=#linkHeader>a>span");
+		
+	webd.getLogger().info("Verify the dashboard");
+	Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, null, true), "Verify dashboard failed!");
+    }
+    
+    //test the maximize length is 64 when editing the dashboard name
+    @Test(alwaysRun = true)
+	public void testEMCPDF_4607_1()
+	{
+    	String desc = "the description of dashboard1";
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_4607");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webd, "Dashboard_4607", desc);
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_4607", desc, true),
+				"Create dashboard failed!");
+	
+		DashboardBuilderUtil.editDashboard(webd, longName2, desc, true);
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, expectName2, desc, true), "Edit dashboard failed!");
+	}
+    
+    //test the maximize length is 64 when editing the dashboard set name
+    @Test(alwaysRun = true)
+	public void testEMCPDF_4607_2()
+	{
+    	String desc = "the description of dashboard2";
+    	
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_4607");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard set
+		webd.getLogger().info("Create a dashboard set");
+		DashboardHomeUtil.createDashboardSet(webd, "DashboardSet_4607", desc);
+
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, "DashboardSet_4607"),
+				"Create dashboard set failed!");
+		
+		DashboardBuilderUtil.editDashboardSet(webd, longName3, desc);
+
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, expectName3),
+				"Edit dashboard set failed!");
+	}
+    //test the maximize length of name is 64 when creating dashboard
+    @Test(alwaysRun = true)
+	public void testEMCPDF_4607_3()
+	{
+    	String desc = "the description of dashboard3";
+    	
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_4607");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webd, longName1, null);
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, expectName1, desc, true),
+				"Create dashboard failed!");			
+	}
+
+    @Test(alwaysRun = true)
+	public void testEMCPDF_4594()
+	{
+		String dbset_Name = "testEMCPDF_4594";
+		String dbInSet_Name_1 = "Performance";
+		String dbInSet_Name_2 = "Overview";
+		String dbInSet_Name_3 = "Others";
+		String widgetName = "Top 5 Databases by Active Sessions";
+
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testEMCPDF_4594");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to Grid View
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//create dashboard set
+		webd.getLogger().info("Create a dashboard set");
+		DashboardHomeUtil.createDashboard(webd, dbset_Name, null, DashboardHomeUtil.DASHBOARDSET);
+
+		webd.getLogger().info("Add some dashboards into the dashboard set");
+		DashboardBuilderUtil.addNewDashboardToSet(webd, dbInSet_Name_1);
+		DashboardBuilderUtil.addNewDashboardToSet(webd, dbInSet_Name_2);
+		DashboardBuilderUtil.addNewDashboardToSet(webd, dbInSet_Name_3);
+
+		webd.getLogger().info("Back to dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		webd.getLogger().info("Open the dashboard set created just now");
+		DashboardHomeUtil.selectDashboard(webd, dbset_Name);
+
+		webd.getLogger().info("Select each tabs in dashboard set");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, dbInSet_Name_1);
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, dbInSet_Name_2);
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, dbInSet_Name_3);
+
+		webd.getLogger().info("Select the first tab");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, dbInSet_Name_1);
+
+		webd.getLogger().info("Verify the widget display");
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, widgetName),"Expected widget is not displayed");
+	}
+
+	@Test(alwaysRun = true)
+	public void testEMCPDF_4362()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_4362");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webd, "Dashboard_4362", null);
+		webd.getLogger().info("edit started");
+		webd.click("css=" + DashBoardPageId.BUILDEROPTIONSMENULOCATOR);
+		webd.click("css=" + DashBoardPageId.BUILDEROPTIONSEDITLOCATORCSS);
+		webd.getElement("css=" + DashBoardPageId.BUILDEROPTIONSEDITNAMECSS).clear();
+		webd.click("css=" + DashBoardPageId.BUILDEROPTIONSEDITDESCRIPTIONCSS);
+		webd.waitForElementPresent("css=" + ".oj-message-summary");
+		Assert.assertEquals(webd.getText("css=" + ".oj-message-summary"), "Name is required");
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWERTOGGLEPENCILBTNCSS);
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWERTOGGLEPENCILBTNCSS);
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWEREDITGENERNALCSS);
+		Assert.assertEquals(webd.getValue("css=" + DashBoardPageId.BUILDEROPTIONSEDITNAMECSS), "Dashboard_4362");
+	}
+
+	@Test(alwaysRun = true)
+	public void testEMCPDF_4643()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_4643");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webd, "Dashboard_4643", null);
+		webd.getLogger().info("edit started");
+		webd.click("css=" + DashBoardPageId.BUILDEROPTIONSMENULOCATOR);
+		webd.click("css=" + DashBoardPageId.BUILDEROPTIONSEDITLOCATORCSS);
+		webd.getElement("css=" + DashBoardPageId.BUILDEROPTIONSEDITNAMECSS).clear();
+		webd.click("css=" + DashBoardPageId.BUILDEROPTIONSEDITDESCRIPTIONCSS);
+		webd.waitForElementPresent("css=" + ".oj-message-summary");
+		Assert.assertEquals(webd.getText("css=" + ".oj-message-summary"), "Name is required");
+		DashboardBuilderUtil.saveDashboard(webd);
+		webd.waitForElementPresent("css=" + ".emaas-appheader-message.emaas-appheader-message-summary");
+		Assert.assertEquals(webd.getText("css=" + ".emaas-appheader-message.emaas-appheader-message-summary"), "Dashboard name should not be empty." );	
+	}
+	
+	@Test(alwaysRun = true)
+	public void testEMCPDF_4362_set()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMCPDF_4362_set");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard set");
+		DashboardHomeUtil.createDashboardSet(webd, "Dashboard_4362_set", null);
+
+		webd.getLogger().info("edit started");
+
+		//open the edit dialog
+		webd.getLogger().info("editDashboardSet started");
+
+		webd.click("id=" + DashBoardPageId.DASHBOARDSETOPTIONSMENUID);
+
+		webd.click("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITCSS);
+
+		webd.waitForElementVisible("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS);
+		//edit name
+		webd.getLogger().info("editDashboardSet start editing name");
+		webd.getElement("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS).clear();
+		webd.click("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITDESCRIPTIONCSS);
+		webd.waitForElementPresent("css=" + ".oj-message-summary");
+		Assert.assertEquals(webd.getText("css=" + ".oj-message-summary"), "Name is required");
+		webd.waitForServer();
+		webd.takeScreenShot();
+		webd.savePageToFile();
+		webd.click("css=" + DashBoardPageId.RIGHTDRAWERTOGGLEPENCILBTNCSS);
+		webd.click("id=" + DashBoardPageId.DASHBOARDSETOPTIONSMENUID);
+		webd.click("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITCSS);
+		Assert.assertEquals(webd.getValue("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS), "Dashboard_4362_set");
+
+	}
+
+
+
 }

@@ -223,6 +223,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             {'id': 'omc_root_admin_alertrules', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ALERTRULES_LABEL, 'externalUrl': '#'},
                             {'id': 'omc_root_admin_notificationChannels', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_NOTIFICATIONCHANNELS_LABEL, 'externalUrl': '#'},
                             {'id': 'omc_root_admin_agents', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_AGENTS_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_root_admin_addentity', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ADDENTITY_LABEL, 'externalUrl': '#'},
                             {'id': 'omc_root_admin_clouddiscoveryprofiles', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_CLOUDDISCOVERYPROFILES_LABEL, 'externalUrl': '#'},
                             {'id': 'omc_root_admin_entitiesconfig', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ADMIN_ENTITIESCONFIG_LABEL, 'externalUrl': '#'},
                             {'id': 'omc_root_admin_divider', type: 'divider', 'label': '', 'externalUrl': '#'},
@@ -241,6 +242,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     'omc_root_admin_alertrules', 
                     'omc_root_admin_notificationChannels',
                     'omc_root_admin_agents',
+                    'omc_root_admin_addentity',
 //                    'omc_root_admin_entitiesconfig',
                     rootCompositeMenuid
                 ];
@@ -1358,7 +1360,26 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     globalMenuIdHrefMapping['omc_root_admin_alertrules'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI', 'Alert Rules');
                     globalMenuIdHrefMapping['omc_root_admin_notificationChannels'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI', 'Notification Channels')?fetchLinkFromRegistrationData(data, 'adminLinks', 'EventUI', 'Notification Channels'):'/emsaasui/eventUi/channels/html/channels-dashboard.html';
                     globalMenuIdHrefMapping['omc_root_admin_agents'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'TenantManagementUI');
-                    globalMenuIdHrefMapping['omc_root_admin_clouddiscoveryprofiles'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')?fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI')+"?root=cmsCloudProfilesDashboard":null;
+                    var registeredAddEntityLink = fetchLinkFromRegistrationData(data, 'adminLinks', 'MonitoringServiceUI', 'Add Entity');
+                    var registeredCloudDiscoveryProfilesLink = fetchLinkFromRegistrationData(data, 'adminLinks', 'MonitoringServiceUI', 'Cloud Discovery Profiles');
+                    var monitoringSvcUrl = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI');
+                    //In case Monitoring service's 'Add Entity', 'Cloud Discovery Profiles' are still not registered as admin links(EMCMS-8087)
+                    //construct the URLs from base Monitoring URL
+                    if (!registeredAddEntityLink) {
+                        registeredAddEntityLink = monitoringSvcUrl ? monitoringSvcUrl + "?root=cmsDiscoveryStatus" : null;
+                        if(registeredAddEntityLink && registeredAddEntityLink.indexOf('global-index.html') < 0 && registeredAddEntityLink.indexOf('index.html') > 0) {
+                            registeredAddEntityLink = registeredAddEntityLink.replace('index.html','global-index.html');
+                        }
+                    }
+                    if (!registeredCloudDiscoveryProfilesLink) {
+                        registeredCloudDiscoveryProfilesLink = monitoringSvcUrl ? monitoringSvcUrl + "?root=cmsCloudProfilesDashboard" : null;
+                        if(registeredCloudDiscoveryProfilesLink && registeredCloudDiscoveryProfilesLink.indexOf('global-index.html') < 0 && registeredCloudDiscoveryProfilesLink.indexOf('index.html') > 0) {
+                            registeredCloudDiscoveryProfilesLink = registeredCloudDiscoveryProfilesLink.replace('index.html','global-index.html');
+                        }
+                    }
+                    
+                    globalMenuIdHrefMapping['omc_root_admin_addentity'] = registeredAddEntityLink ? registeredAddEntityLink : null;
+                    globalMenuIdHrefMapping['omc_root_admin_clouddiscoveryprofiles'] = registeredCloudDiscoveryProfilesLink ? registeredCloudDiscoveryProfilesLink : null;
                     globalMenuIdHrefMapping['omc_root_admin_entitiesconfig'] = fetchLinkFromRegistrationData(data, 'adminLinks', 'AdminConsoleSaaSUi');
                 }
                 

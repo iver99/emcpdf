@@ -34,8 +34,18 @@ public class OobRefreshRunnable extends MetadataRefreshRunnable {
             LOGGER.error("OobRefreshRunnable: there is no service name!");
             return;
         }
-        List<Dashboard> oobList = new ArrayList<Dashboard>();
         
+        int loopNum = 0;  // how many times DF has already tried to fetch the OOB
+        while(!isServiceAvailable(serviceName, "1.0+") && (loopNum < MAX_LOOP_NUM)) {
+            try {
+                LOGGER.warn("{} time failed to fecth OOB dashboards from {}", loopNum++, serviceName);
+                Thread.sleep(INTERVAL_TIME); // 60s
+            } catch (InterruptedException e) {
+                LOGGER.error(e.getLocalizedMessage(), e);
+            }
+        }
+        
+        List<Dashboard> oobList = new ArrayList<Dashboard>();
         MetadataRetriever oobRetriever = new MetadataRetriever();
         try {
             oobList = oobRetriever.getOobDashboardsByService(serviceName);

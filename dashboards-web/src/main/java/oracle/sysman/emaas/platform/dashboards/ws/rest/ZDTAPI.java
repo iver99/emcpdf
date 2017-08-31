@@ -11,7 +11,6 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,14 +29,12 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.DataManager;
-import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.TableRowsSynchronizer;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.ZDTEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.*;
@@ -63,7 +60,11 @@ public class ZDTAPI extends APIBase
 	{
 		super();
 	}
-	
+
+	/**
+	 *  This method is return all the tenants that have dashboards in EMS_DASHBOARD table
+	 * @return
+	 */
 	@GET
 	@Path("tenants")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -110,15 +111,23 @@ public class ZDTAPI extends APIBase
 		
 		return utcDate;
 	}
-	
 
+
+    /**
+     *  this method return all records in each table for each tenant
+     * @param type
+     * @param maxComparedDate
+     * @param tenant tenant id, first compare will retrieve data for specific tenant, if tenant id is null means this is not the first
+	 *               time comparision, comparision work has finished before.(Incremental)
+     * @return
+     */
 	@GET
 	@Path("tablerows")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllTableData(@QueryParam("comparisonType") String type, @QueryParam("maxComparedDate") String maxComparedDate,
 			@QueryParam("tenant") String tenant)
 	{
-		infoInteractionLogAPIIncomingCall(null, null, "Service call to [GET] /v1/zdt/tablerows?comparisonType=");
+		infoInteractionLogAPIIncomingCall(null, null, "Service call to [GET] /v1/zdt/tablerows?comparisonType=" + type);
 
 		JSONObject obj = new JSONObject();
 		EntityManager em = null;
@@ -158,6 +167,11 @@ public class ZDTAPI extends APIBase
 		return Response.status(Status.OK).entity(obj).build();
 	}
 
+    /**
+     * this method return all the records counts in each table
+     * @param maxComparedData
+     * @return
+     */
 	@GET
 	@Path("counts")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -296,13 +310,19 @@ public class ZDTAPI extends APIBase
 		return entities;
 	}
 
+	/**
+	 * sync data from zdt table
+	 * @param type
+	 * @param syncDate
+	 * @return
+	 */
 	@GET
 	@Path("sync")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response sync(@QueryParam("syncType") String type, @QueryParam("syncDate") String syncDate)
 	{
-		infoInteractionLogAPIIncomingCall(null, null, "Service call to (GET) /v1/zdt/sync?syncType=xx&syncDate=xx");
+		infoInteractionLogAPIIncomingCall(null, null, "Service call to (GET) /v1/zdt/sync?syncType="+ type +"&syncDate=" + syncDate);
 		logger.info("Service call to /v1/zdt/sync");
 		TableRowsEntity data = null;
 		String lastCompareDate = null;
@@ -396,7 +416,11 @@ public class ZDTAPI extends APIBase
 		String dateStr = sdf.format(date);
 		return dateStr;
 	}
-	
+
+	/**
+	 * sync status of last time, empty for the first time.
+	 * @return
+	 */
 	@GET
 	@Path("sync/status")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -433,7 +457,11 @@ public class ZDTAPI extends APIBase
 		}
 		return Response.status(statusCode).entity(message).build();
 	}
-	
+
+	/**
+	 * latest compare status
+	 * @return
+	 */
 	@GET
 	@Path("compare/status")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -473,6 +501,12 @@ public class ZDTAPI extends APIBase
 		return Response.status(statusCode).entity(message).build();
 	}
 
+
+	/**
+	 * latest comparasion result(stored into zdt table).
+	 * @param jsonObj
+	 * @return
+	 */
 	@PUT
 	@Path("compare/result")
 	@Consumes(MediaType.APPLICATION_JSON)

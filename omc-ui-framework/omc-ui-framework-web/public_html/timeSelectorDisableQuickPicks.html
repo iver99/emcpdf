@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<!-- ************************ IMPORTANT INFORMATION ************************************
+     This file and Quick Start project are provided as an example of how to configure a JET application.
+     It contains the Oracle JET framework and a default requireJS configuration file to show how JET can be setup
+     in a common application. This project template can be used in conjunction with demo code from the JET website 
+     to test JET component behvior and interactions.
+
+     Any CSS styling with the prefix "demo-" is for demonstration only and is not provided as part of the JET framework.
+
+     The Header and Footer sections are provided for demonstration only. They are not part of the JET framework. 
+     Best practice patterns are provided as part of the JET website under the Samples section.
+
+     Aria Landmark role attributes are added to the different sections of the application for accessibility compliance.
+     If you change the type of content for a specific section from what is defined, you should also change the 
+     role value for that section to represent the appropriate content type.
+     ***************************** IMPORTANT INFORMATION ************************************ -->
+
+<html class='demo-sticky-footer-layout'>
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="icon" type="image/png" href="images/o_logo.png" />
+        <!-- This is the main css file for the default Alta theme -->
+        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v2.0.2/alta/oj-alta-min.css" type="text/css"/>
+       
+        <!-- RequireJS bootstrap file -->
+        <script data-main="@version@/js/timeSelectorDisableQuickPicksMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
+
+    </head>
+    <body>
+        <div id="dateTimePicker">
+            <div id="timeRange1" style="font-size: 16px; font-weight: bold; padding: 10px; display: inline-block;">
+                <span id="start1" data-bind="text: start1"></span> ~ 
+                <span id="end1" data-bind="text: end1"></span>
+            </div>
+            <div id="timePicker1">
+                <div data-bind="component: {name: 'date-time-picker', params: timeParams1}"></div>
+            </div>
+            <button id="changeOption1" data-bind="ojComponent: {component: 'ojButton', label: buttonLabel}, click: changeOption1"></button>
+            
+            <br/>
+            
+            <div id="timeRange2" style="font-size: 16px; font-weight: bold; padding: 30px 10px 10px 10px; display: inline-block;">
+                <span id="start2" data-bind="text: start2"></span> ~ 
+                <span id="end2" data-bind="text: end2"></span>
+            </div>
+            <div>
+                <div data-bind="component: {name: 'date-time-picker', params: timeParams2}"></div>
+            </div>
+            <button id="changeOption2" data-bind="ojComponent: {component: 'ojButton', label: buttonLabel}, click: changeOption2"></button>
+
+        </div>
+    </body>
+</html>

@@ -19,7 +19,6 @@ import java.util.Random;
 public class RetryableLookupClient<T> {
     private static final Logger LOGGER = LogManager.getLogger(RetryableLookupClient.class);
 
-//    private static final Logger itrLogger = LogUtil.getInteractionLogger();
 
     public static class RetryableLookupException extends Exception {
         public RetryableLookupException(Exception e) {
@@ -116,7 +115,6 @@ public class RetryableLookupClient<T> {
         InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
         if (!StringUtil.isEmpty(tenantName)) {
             InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
-//            itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
             if (ins == null) {
                 LOGGER.error(
                         "Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",

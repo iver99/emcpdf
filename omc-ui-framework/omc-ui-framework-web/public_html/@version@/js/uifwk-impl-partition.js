@@ -9,6 +9,10 @@ define([
 'text!uifwk/js/widgets/hamburger-menu/html/hamburger-menu.html',
 'uifwk/@version@/js/widgets/brandingbar/brandingbar-impl',
 'text!uifwk/js/widgets/brandingbar/html/brandingbar.html',
+'uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',
+'text!uifwk/js/widgets/widgetselector/html/widget-selector-popup.html',
+'uifwk/@version@/js/widgets/widgetselector/widget-selector-dialog-impl',
+'text!uifwk/js/widgets/widgetselector/html/widget-selector-dialog.html',
 'uifwk/@version@/js/widgets/widgetselector/widget-selector-impl',
 'text!uifwk/js/widgets/widgetselector/html/widget-selector.html',
 'uifwk/@version@/js/widgets/time-filter/time-filter-impl',
@@ -25,13 +29,14 @@ define([
 'uifwk/@version@/js/util/typeahead-search-impl',
 'uifwk/@version@/js/util/usertenant-util-impl',
 'uifwk/@version@/js/sdk/context-util-impl',
+'uifwk/@version@/js/sdk/widget-selector-util-impl',
 'uifwk/@version@/js/sdk/SessionCacheUtil',
 'uifwk/@version@/js/resources/nls/uifwkCommonMsg',
 'uifwk/@version@/js/resources/nls/root/uifwkCommonMsg',
 'uifwk/@version@/js/util/zdt-util-impl',
 'uifwk/@version@/js/sdk/entity-object'
 ],
-    function (ko, menuModel, aboutVM, aboutTemplate, navVM, navTemplate, brandingVM, brandingTemplate, hbgmenuVM, hbgmenuTemplate, widgetsVM, widgetsTemplate, timefilterVM, timeFilterTemplate, timePickerVM, timePickerTemplate) {
+    function (ko, menuModel, aboutVM, aboutTemplate, navVM, navTemplate, brandingVM, brandingTemplate, hbgmenuVM, hbgmenuTemplate, widgetsVM, widgetsDialogTemplate, widgetsPopupTemplate, widgetsTemplate, timefilterVM, timeFilterTemplate, timePickerVM, timePickerTemplate) {
 //        function registerComponent(kocName, kocViewModel, kocTemplate)
 //        {
 //            if (!ko.components.isRegistered(kocName))

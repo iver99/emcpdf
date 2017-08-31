@@ -95,12 +95,6 @@ public class RestClient {
             return null;
         }
 
-		// as jersey client cost for creating new object is high, will reuse the instance
-//        ClientConfig cc = new DefaultClientConfig();
-//        Client client = Client.create(cc);
-//        client.setConnectTimeout(DEFAULT_TIMEOUT);
-//        client.setReadTimeout(DEFAULT_TIMEOUT);
-
         if (StringUtil.isEmpty(auth)) {
             LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
             itrLogger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
@@ -117,12 +111,14 @@ public class RestClient {
             builder = builder.accept(accept);
         }
         if (headers != null && !headers.isEmpty()) {
-            for (String key : headers.keySet()) {
+            for (Map.Entry entry : headers.entrySet()) {
+                String key = entry.getKey().toString();
+                String value = entry.getValue().toString();
                 if (HttpHeaders.AUTHORIZATION.equals(key)) {
                     continue;
                 }
-                builder.header(key, headers.get(key));
-                itrLogger.info("[GET] Setting header ({}, {}) for call to {}", key, headers.get(key), url);
+                builder.header(key, value);
+                itrLogger.info("[GET] Setting header ({}, {}) for call to {}", key, value, url);
             }
         }
         return builder.get(String.class);
@@ -137,14 +133,6 @@ public class RestClient {
             LOGGER.error("Unable to post an empty request entity");
             return null;
         }
-
-		// as jersey client cost for creating new object is high, will reuse the instance
-        /*ClientConfig cc = new DefaultClientConfig();
-        //TODO
-//        cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-        Client client = Client.create(cc);
-        client.setConnectTimeout(DEFAULT_TIMEOUT);
-        client.setReadTimeout(DEFAULT_TIMEOUT);*/
 
         if (StringUtil.isEmpty(auth)) {
             LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
@@ -163,13 +151,14 @@ public class RestClient {
                 builder = builder.accept(accept);
             }
             if (headers != null) {
-                for (String key : headers.keySet()) {
-                    Object value = headers.get(key);
-                    if (value == null || HttpHeaders.AUTHORIZATION.equals(key)) {
+                for (Map.Entry entry : headers.entrySet()) {
+                    String key = entry.getKey().toString();
+                    String value = entry.getValue().toString();
+                    if (HttpHeaders.AUTHORIZATION.equals(key)) {
                         continue;
                     }
                     builder.header(key, value);
-                    itrLogger.info("[PUT] Setting header ({}, {}) for call to {}", key, headers.get(key), url);
+                    itrLogger.info("[PUT] Setting header ({}, {}) for call to {}", key, value, url);
                 }
             }
             return builder.put(requestEntity.getClass(), requestEntity).toString();
@@ -200,9 +189,6 @@ public class RestClient {
             return null;
         }*/
 
-        /*ClientConfig cc = new DefaultClientConfig();
-//        cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-        Client client = Client.create(cc);*/
         if (StringUtil.isEmpty(auth)) {
             LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
             itrLogger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
@@ -222,12 +208,14 @@ public class RestClient {
                 builder = builder.accept(accept);
             }
             if (headers != null) {
-                for (String key : headers.keySet()) {
-                    Object value = headers.get(key);
-                    if (value == null || HttpHeaders.AUTHORIZATION.equals(key)) {
+                for (Map.Entry entry : headers.entrySet()) {
+                    String key = entry.getKey().toString();
+                    String value = entry.getValue().toString();
+                    if (HttpHeaders.AUTHORIZATION.equals(key)) {
                         continue;
                     }
                     builder.header(key, value);
+                    itrLogger.info("[POST] Setting header ({}, {}) for call to {}", key, value, url);
                 }
             }
             if(requestEntity == null) {

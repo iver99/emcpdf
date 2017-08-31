@@ -1187,13 +1187,21 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
 
                 //If it's an array, convert to a comma separated string
                 if ($.isArray(entityMEIDs)) {
+                    //Filter out duplicated IDs
+                    entityMEIDs = entityMEIDs.filter(function(elem, index, self) {
+                        return index === self.indexOf(elem);
+                    });
+                }
+                //If it's a string
+                else if (entityMEIDs) {
+                    //Filter out duplicated IDs
+                    entityMEIDs = entityMEIDs.split(',').filter(function(elem, index, self) {
+                        return index === self.indexOf(elem);
+                    });
+                }
+                if (entityMEIDs) {
                     meIds = entityMEIDs.join();
                     _meIds = entityMEIDs.sort().join();
-                }
-//                //If it's a string
-                else if (entityMEIDs) {
-                    meIds = entityMEIDs;
-                    _meIds = entityMEIDs;
                 }
                 var currentEntityIds = self.getEntityMeIds();
                 if (_meIds !== (currentEntityIds ? currentEntityIds.sort().join() : null)) {
@@ -1214,11 +1222,16 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             self.getEntityMeIds = function () {
                 var entityMEIDs = getIndividualContext('entity', 'entityMEIDs');
                 if ($.isArray(entityMEIDs)) {
-                    return entityMEIDs;
+                    //Filter out duplicated IDs
+                    return entityMEIDs.filter(function(elem, index, self) {
+                        return index === self.indexOf(elem);
+                    });
                 }
                 else if (entityMEIDs) {
-                    //Convert to a array
-                    return entityMEIDs.split(',');
+                    //Convert to a array and filter out duplicated IDs
+                    return entityMEIDs.split(',').filter(function(elem, index, self) {
+                        return index === self.indexOf(elem);
+                    });
                 }
                 return null;
             };

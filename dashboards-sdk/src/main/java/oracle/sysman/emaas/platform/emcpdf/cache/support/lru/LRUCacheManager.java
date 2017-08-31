@@ -23,13 +23,25 @@ import org.xml.sax.SAXException;
 public class LRUCacheManager extends AbstractCacheManager{
 
     private static final Logger LOGGER = LogManager.getLogger(LRUCacheManager.class);
-    private static LRUCacheManager instance =new LRUCacheManager();
+    private static LRUCacheManager instance = null;
+    private static final String DEFAULT_CONIFIGURATION_FILE_NAME = "cache-config.xml";
 
-    private LRUCacheManager() {
-        init();
+    private LRUCacheManager(String configFileName) {
+        LOGGER.info("Initializing Cache Manager with custom configuration file named {}...", configFileName);
+        init(configFileName);
     }
 
-    public static LRUCacheManager getInstance(){
+    public synchronized static LRUCacheManager getInstance(){
+        if(instance == null){
+             instance = new LRUCacheManager(null);
+        }
+        return instance;
+    }
+
+    public synchronized static LRUCacheManager getInstance(String configFileName){
+        if(instance == null){
+            instance = new LRUCacheManager(configFileName);
+        }
         return instance;
     }
     @Override
@@ -48,23 +60,25 @@ public class LRUCacheManager extends AbstractCacheManager{
      * @return the names of all caches known by the cache manager
      */
     @Override
-    public void init() {
-        super.init();
+    public void init(String configFileName) {
+        super.init(configFileName);
         //init default cache group
         LOGGER.info("Initialing LRU CacheManager...");
         //parse cache config
-        parseCacheConfig();
+        parseCacheConfig(configFileName);
         LOGGER.info("cache config size "+CacheConfig.cacheConfigList.size());
         for(CacheConfig cacheConfig : CacheConfig.cacheConfigList){
             getCache(cacheConfig.getName(), cacheConfig.getCapacity(), cacheConfig.getExpiry());
         }
     }
 
-    private void parseCacheConfig() {
+    private void parseCacheConfig(String configFileName){
         SAXParserFactory factory = SAXParserFactory.newInstance();
+        String fileName = configFileName == null ? DEFAULT_CONIFIGURATION_FILE_NAME : configFileName;
+        LOGGER.info("Detected cache Configuration file name is {}", configFileName);
         try {
             SAXParser parser = factory.newSAXParser();
-            InputStream f = LRUCacheManager.class.getClassLoader().getResourceAsStream("cache-config.xml");
+            InputStream f = LRUCacheManager.class.getClassLoader().getResourceAsStream(fileName);
             CacheSAXParser dh = new CacheSAXParser();
             parser.parse(f, dh);
         } catch (ParserConfigurationException e) {

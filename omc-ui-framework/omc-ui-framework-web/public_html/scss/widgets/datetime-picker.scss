@@ -379,6 +379,13 @@ div[id^='pickerPanel'] .oj-listbox-search-wrapper {
     font-size: 0.5em;*/
 }
 
+.time-range-overflow {
+    display: block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 .show-individual-time-badge{
     height:16px;
     width:16px;

@@ -40,11 +40,11 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 
 		//click the time picker and verify that there is no Recent Use option
 		webd.getLogger().info("Click TimePicker");
-		clickTimePicker(webd, 2);
+		CommonUIUtils.clickTimePicker(webd, 2);
 		webd.getLogger().info("Verify no Recent Use");
 		Assert.assertFalse(verifyRecentUseExist(webd, 1), "Recent Use Option should not be displayed");
 
-		clickTimePicker(webd, 2);
+		CommonUIUtils.clickTimePicker(webd, 2);
 
 		//set time range
 		webd.getLogger().info("set timerange as Last 7 days");
@@ -54,7 +54,7 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 
 		//click the time picker and verify that there is Recent Use option
 		webd.getLogger().info("Click TimePicker");
-		clickTimePicker(webd, 2);
+		CommonUIUtils.clickTimePicker(webd, 2);
 		webd.getLogger().info("Verify has Recent Use");
 		Assert.assertTrue(verifyRecentUseExist(webd, 1), "Recent Use Option should be displayed");
 		String[] context = verifyRecentUseContent(webd, 1);
@@ -62,12 +62,12 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 		;
 
 		//add more time range to the Recent Use and verify them
-		clickTimePicker(webd, 2);
+		CommonUIUtils.clickTimePicker(webd, 2);
 		webd.getLogger().info("set timerange as Last 2 hours");
 		TimeSelectorUtil.setTimeRange(webd, 2, TimeRange.Last2Hours);
 
 		webd.getLogger().info("Verify the context in Recent Use");
-		clickTimePicker(webd, 2);
+		CommonUIUtils.clickTimePicker(webd, 2);
 		context = verifyRecentUseContent(webd, 1);
 		Assert.assertEquals(context[1], "Last week");
 		Assert.assertEquals(context[0], "Last 2 hours");
@@ -84,11 +84,11 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 
 		//click the time picker and verify that there is no Recent Use option
 		webd.getLogger().info("Click TimePicker");
-		clickTimePicker(webd, 3);
+		CommonUIUtils.clickTimePicker(webd, 3);
 		webd.getLogger().info("Verify no Recent Use");
 		Assert.assertFalse(verifyRecentUseExist(webd, 1), "Recent Use Option should not be displayed");
 
-		clickTimePicker(webd, 3);
+		CommonUIUtils.clickTimePicker(webd, 3);
 
 		//set time range
 		webd.getLogger().info("set timerange as Last 14 days");
@@ -98,19 +98,19 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 
 		//click the time picker and verify that there is Recent Use option
 		webd.getLogger().info("Click TimePicker");
-		clickTimePicker(webd, 3);
+		CommonUIUtils.clickTimePicker(webd, 3);
 		webd.getLogger().info("Verify has Recent Use");
 		Assert.assertTrue(verifyRecentUseExist(webd, 1), "Recent Use Option should be displayed");
 		String[] context = verifyRecentUseContent(webd, 1);
 		Assert.assertEquals(context[0], "Last year");
 
 		//add more time range to the Recent Use and verify them
-		clickTimePicker(webd, 3);
+		CommonUIUtils.clickTimePicker(webd, 3);
 		webd.getLogger().info("set timerange as Last 30 days");
 		TimeSelectorUtil.setTimeRangeWithDateOnly(webd, 3, TimeRange.Last30Days);
 
 		webd.getLogger().info("Verify the context in Recent Use");
-		clickTimePicker(webd, 3);
+		CommonUIUtils.clickTimePicker(webd, 3);
 		context = verifyRecentUseContent(webd, 1);
 		Assert.assertEquals(context[1], "Last year");
 		Assert.assertEquals(context[0], "Last 30 days");
@@ -127,11 +127,11 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 
 		//click the time picker and verify that there is no Recent Use option
 		webd.getLogger().info("Click TimePicker");
-		clickTimePicker(webd, 1);
+		CommonUIUtils.clickTimePicker(webd, 1);
 		webd.getLogger().info("Verify no Recent Use");
 		Assert.assertFalse(verifyRecentUseExist(webd, 1), "Recent Use Option should not be displayed");
 
-		clickTimePicker(webd, 1);
+		CommonUIUtils.clickTimePicker(webd, 1);
 
 		//set time range
 		webd.getLogger().info("set timerange as Last 14 days");
@@ -141,19 +141,19 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 
 		//click the time picker and verify that there is Recent Use option
 		webd.getLogger().info("Click TimePicker");
-		clickTimePicker(webd, 1);
+		CommonUIUtils.clickTimePicker(webd, 1);
 		webd.getLogger().info("Verify has Recent Use");
 		Assert.assertTrue(verifyRecentUseExist(webd, 1), "Recent Use Option should be displayed");
 		String[] context = verifyRecentUseContent(webd, 1);
 		Assert.assertEquals(context[0], "Last 14 days");
 
 		//add more time range to the Recent Use and verify them
-		clickTimePicker(webd, 1);
+		CommonUIUtils.clickTimePicker(webd, 1);
 		webd.getLogger().info("set timerange as Last 15 minutes");
 		TimeSelectorUtil.setTimeRange(webd, 1, TimeRange.Last15Mins);
 
 		webd.getLogger().info("Verify the context in Recent Use");
-		clickTimePicker(webd, 1);
+		CommonUIUtils.clickTimePicker(webd, 1);
 		context = verifyRecentUseContent(webd, 1);
 		Assert.assertEquals(context[1], "Last 14 days");
 		Assert.assertEquals(context[0], "Last 15 mins");

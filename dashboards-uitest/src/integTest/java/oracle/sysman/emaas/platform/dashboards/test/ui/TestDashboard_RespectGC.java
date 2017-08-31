@@ -5,7 +5,9 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeUnit;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.testng.Assert;
@@ -21,6 +23,7 @@ import org.testng.annotations.Test;
 public class TestDashboard_RespectGC extends LoginAndLogout
 {
 	private String dbRespectGCTimeRangeName = "";
+	private String dbRespectGCTimeRangeName_URLCheck = "";
 	private final String dbRespectGCEntityName = "";
 
 	private final String widgetName_LA = "Database Errors Trend";
@@ -49,21 +52,22 @@ public class TestDashboard_RespectGC extends LoginAndLogout
 
 		webd.getLogger().info("Start to remove the test data...");
 		DashBoardUtils.deleteDashboard(webd, dbRespectGCTimeRangeName);
+		DashBoardUtils.deleteDashboard(webd, dbRespectGCTimeRangeName_URLCheck);
 
 		webd.getLogger().info("All test data have been removed");
 
 		LoginAndLogout.logoutMethod();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testRespectGCTimeRange() throws InterruptedException
 	{
-		dbRespectGCTimeRangeName = "respectGC TimeRange-" + generateTimeStamp();
+		dbRespectGCTimeRangeName = "respectGC TimeRange-" + DashBoardUtils.generateTimeStamp();
 
 		//initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger()
-				.info("start to test the performance when creating dashboard with tenant that doesn't have ITA privilege");
+				.info("start to test testRespectGCTimeRange");
 
 		//Create dashboard
 		DashboardHomeUtil.createDashboard(webd, dbRespectGCTimeRangeName, null, DashboardHomeUtil.DASHBOARD);
@@ -84,7 +88,7 @@ public class TestDashboard_RespectGC extends LoginAndLogout
 
 		//change the time range, verify the url will be changed
 		webd.getLogger().info("Change the time range, verify the url will be changed");
-		GlobalContextUtil.setTimeRange(webd, TimeRange.Last7Days);
+		GlobalContextUtil.setTimeRange(webd, TimeRange.NewLast7Days);
 
 		String currentURL = webd.getWebDriver().getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_7_DAY"), true);
@@ -95,11 +99,93 @@ public class TestDashboard_RespectGC extends LoginAndLogout
 
 		WaitUtil.waitForPageFullyLoaded(webd);
 
-		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last week"), true);
+		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last 7 days"), true);
 	}
-
-	private String generateTimeStamp()
+	
+	@Test(alwaysRun = true)
+	public void testRespectGCTimeRange_URLCheck()
 	{
-		return String.valueOf(System.currentTimeMillis());
+		dbRespectGCTimeRangeName_URLCheck = "respectGC TimeRange URL-" + DashBoardUtils.generateTimeStamp();
+
+		//initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger()
+				.info("start to test testRespectGCTimeRange_URLCheck");
+
+		//Create dashboard
+		webd.getLogger().info("Create dashboard");
+		DashboardHomeUtil.createDashboard(webd, dbRespectGCTimeRangeName_URLCheck, null, DashboardHomeUtil.DASHBOARD);
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbRespectGCTimeRangeName_URLCheck, null, true),
+				"Create dashboard failed!");
+		
+		webd.getLogger().info("Respect GC");
+		Assert.assertTrue(DashboardBuilderUtil.respectGCForTimeRange(webd), "Fail to configure respect GC");
+		
+		webd.getLogger().info("Start to set time range then check the URL change as well");
+		
+		webd.getLogger().info("Set Last 15 mins");
+		TimeSelectorUtil.setTimeRange(webd, TimeRange.Last15Mins);
+		String currentURL = webd.getWebDriver().getCurrentUrl();
+		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_15_MINUTE"), true);
+
+		webd.getLogger().info("Set Last 30 mins");
+		TimeSelectorUtil.setTimeRange(webd, TimeRange.Last30Mins);
+		currentURL = webd.getWebDriver().getCurrentUrl();
+		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_30_MINUTE"), true);
+		
+		webd.getLogger().info("Set Last 60 mins");
+		TimeSelectorUtil.setTimeRange(webd, TimeRange.NewLast60Mins);
+		currentURL = webd.getWebDriver().getCurrentUrl();
+		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_60_MINUTE"), true);
+		
+		webd.getLogger().info("Set Last 8 hours");
+		TimeSelectorUtil.setTimeRange(webd, TimeRange.Last8Hours);
+		currentURL = webd.getWebDriver().getCurrentUrl();
+		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_8_HOUR"), true);
+		
+		webd.getLogger().info("Set Last 24 hours");
+		TimeSelectorUtil.setTimeRange(webd, TimeRange.Last24Hours);
+		currentURL = webd.getWebDriver().getCurrentUrl();
+		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_24_HOUR"), true);
+		
+		webd.getLogger().info("Set Last 7 days");
+		TimeSelectorUtil.setTimeRange(webd, TimeRange.NewLast7Days);
+		currentURL = webd.getWebDriver().getCurrentUrl();
+		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_7_DAY"), true);
+		
+		webd.getLogger().info("Set Last 14 days");
+		TimeSelectorUtil.setTimeRange(webd, TimeRange.Last14Days);
+		currentURL = webd.getWebDriver().getCurrentUrl();
+		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_14_DAY"), true);
+		
+		webd.getLogger().info("Set custom Last 8 mins");
+		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 8, TimeUnit.Minute);
+		currentURL = webd.getWebDriver().getCurrentUrl();
+		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_8_MINUTE"), true);
+		
+		webd.getLogger().info("Set custom Last 14 hours");
+		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 14, TimeUnit.Hour);
+		currentURL = webd.getWebDriver().getCurrentUrl();
+		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_14_HOUR"), true);
+		
+		webd.getLogger().info("Set custom Last 5 days");
+		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 5, TimeUnit.Day);
+		currentURL = webd.getWebDriver().getCurrentUrl();
+		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_5_DAY"), true);
+		
+		webd.getLogger().info("Set custom Last 3 weeks");
+		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 3, TimeUnit.Week);
+		currentURL = webd.getWebDriver().getCurrentUrl();
+		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_3_WEEK"), true);
+		
+		webd.getLogger().info("Set custom Last 6 months");
+		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 6, TimeUnit.Month);
+		currentURL = webd.getWebDriver().getCurrentUrl();
+		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_6_MONTH"), true);
+		
+		webd.getLogger().info("Set custom Last 2 years");
+		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 2, TimeUnit.Year);
+		currentURL = webd.getWebDriver().getCurrentUrl();
+		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_2_YEAR"), true);		
 	}
 }

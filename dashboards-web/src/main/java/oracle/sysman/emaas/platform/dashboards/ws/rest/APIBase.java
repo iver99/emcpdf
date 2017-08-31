@@ -120,7 +120,7 @@ public class APIBase
 			throw new CommonSecurityException(
 					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
 		}
-		int idx = userTenant.indexOf(".");
+		int idx = userTenant.indexOf('.');
 		if (idx <= 0) {
 			throw new CommonSecurityException(
 					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));

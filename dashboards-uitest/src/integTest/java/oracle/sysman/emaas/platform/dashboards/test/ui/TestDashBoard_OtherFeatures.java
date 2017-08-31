@@ -20,6 +20,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -48,10 +49,14 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_duplicateOOB = "";
 	private String dbName_saveConfirmation = "";
 	private String dbName_textWidget = "";
+	private String dbName_textWidget_toolbar = "";
+	private String dbName_longName = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNam";
 	private String dbName_textWidget_image = "";
 	private String dbName_textWidget_link = "";
 	private String dbName_textWidget_multiLink = "";
-	
+	private String dbName_textWidget_order = "";
+	private String dbName_textWidget_empty = "";
+
 	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
 	private final String OOBDesc = "Displays the current health of your Oracle middleware ecosystem";
@@ -116,9 +121,12 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_duplicate);
 		DashBoardUtils.deleteDashboard(webd, dbName_duplicateOOB);
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget);
+		DashBoardUtils.deleteDashboard(webd, dbName_longName);
+		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_toolbar);
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_link);
 		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_multiLink);
-
+		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_order);
+		
 		webd.getLogger().info("All test data have been removed");
 
 		LoginAndLogout.logoutMethod();
@@ -953,6 +961,32 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	}
 	
 	@Test
+	public void testLongName_display()
+	{		
+		String dbDesc = "Test its display when dashboard with long name";
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testLongName_display");
+
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Create the dashboard with long name");
+		DashboardHomeUtil.createDashboard(webd, dbName_longName, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_longName, dbDesc, true), "Create dashboard failed!");		
+				
+		BrandingBarUtil.clickMenuItem(webd, "Dashboards");
+
+		DashboardHomeUtil.search(webd, dbName_longName);
+		webd.click(DashBoardPageId.INFOBTNID);		
+		
+		//Verify the dashboard with long name is wrapped present in dashboard information dialog
+		webd.getLogger().info("Verify the long name is wrapped displayed in dashboard information dialog");
+		webd.isElementPresent(DashBoardPageId.DASHBOARDOFLONGNAMELOCATOR);	
+    }
+
+    @Test
 	public void testTextWidget_Image()
 	{
 		dbName_textWidget_image = "Dashboard_textWidgetImage-" + DashBoardUtils.generateTimeStamp();
@@ -1100,5 +1134,127 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertEquals(textContent2.getText(), DashBoardPageId.PROTOCOLOPTION_HTTP + url);		
 		
 		DashboardBuilderUtil.saveDashboard(webd);	
+	}
+	
+	@Test
+	public void testTextWidget_order()
+	{
+		dbName_textWidget_order = "Dashboard_textWidgetOrder-" + DashBoardUtils.generateTimeStamp();
+		
+		String dbDesc = "Add text widget into dashboard, and test its order";
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test the order of Text Widget");
+
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Create the dashboard");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_order, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_order, dbDesc, true), "Create dashboard failed!");		
+		
+		DashboardBuilderUtil.addWidgetToDashboard(webd, customWidgetName);
+		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, customWidgetName), "The widget added failed");
+				
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);	
+		
+		DashboardBuilderUtil.editTextWidgetAddContent(webd, 1, "This is a Text Widget");
+		
+		//Verify the Text Widget is ordered in the first place
+		webd.getLogger().info("Verify the Text Widget is order in first place");	
+		List<WebElement> widgets = webd.getWebDriver().findElements(By.cssSelector(DashBoardPageId.TILESLISTCSS)); 
+		
+		WebElement widget1 = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTWIDGETCSS));
+		Assert.assertTrue(widgets.get(0).equals(widget1), "The text widget isn't placed in the first place");
+		//Assert.assertTrue(widgets.get(0).getAttribute("data-tile-name").equals("Text Widget"), "The text widget isn't placed in the first place");
+
+		DashboardBuilderUtil.saveDashboard(webd);				
+	}
+	
+	@Test
+	public void testTextWidget_toolbar()
+	{		
+		dbName_textWidget_toolbar = "Dashboard_textWidgetToolbar-" + DashBoardUtils.generateTimeStamp();
+		String dbDesc = "Test whether text widget remove the Maximize/Remove icon and add delete icon";
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testTextWidget_toolbarIcon");
+
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Create the dashboard");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_toolbar, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_toolbar, dbDesc, true), "Create dashboard failed!");		
+				
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);
+
+		webd.getLogger().info("Verify there is no Maximize icon in Text Widget");
+		Assert.assertFalse(webd.isElementPresent(DashBoardPageId.MAXIMIZEICON), "There is Maximize icon in the text widget");	
+		
+		WebElement textTileTitle = webd.getElement("css=" + DashBoardPageId.TILETITLECSS);
+		
+		Actions actions = new Actions(webd.getWebDriver()); 			
+		actions.moveToElement(textTileTitle).build().perform();
+		
+		webd.click("css=" + DashBoardPageId.CONFIGTILECSS);
+		
+		webd.getLogger().info("Verify remove icon is substituted by delete icon");
+		Assert.assertTrue(webd.isDisplayed(DashBoardPageId.DELETETILE), "Don't find delete icon");
+		Assert.assertFalse(webd.isDisplayed(DashBoardPageId.REMOVETILECSS), "Find the remove icon");
+		
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+		
+		DashboardBuilderUtil.editTextWidgetAddContent(webd, 1, "This is a Text Widget");
+		
+		DashboardBuilderUtil.saveDashboard(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void testEmptyTextWidget()
+	{
+		dbName_textWidget_empty= "Empty Text Widget - " + DashBoardUtils.generateTimeStamp();
+		//initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testEmptyTextWidget");
+
+		//reset all filter options
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_empty, "", DashboardHomeUtil.DASHBOARD);
+
+		//Add a text widget
+		webd.getLogger().info("Add a empty text widget");
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);
+
+		//save the dashboard
+		webd.getLogger().info("Save the dashboard");
+		DashboardBuilderUtil.saveDashboard(webd);
+
+		//back to the dashboard home page
+		webd.getLogger().info("Back to the dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//open the created dashboard
+		webd.getLogger().info("Open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, dbName_textWidget_empty);
+
+		//verify the dashbaord
+		webd.getLogger().info("Verify the empty dashboard was saved");
+		DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_empty, "", true);
+
+		//verify the text widget
+		webd.getLogger().info("Verify the text widget in the dashboard");
+		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTWIDGETCONTENTCSS));
+		Assert.assertEquals(textContent.getText().trim(), "Start typing...");
 	}
 }
