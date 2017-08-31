@@ -63,7 +63,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 	}
 
 	@Test
-	public void TestSortBy_createdBy_ListView()
+	public void testSortBy_createdBy_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with created by in list view");
@@ -166,9 +166,9 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.waitForDashboardPresent(webd, "Performance Analytics: Database");
+		DashboardHomeUtil.waitForDashboardPresent(webd, "Database Opertations");
 		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
-		Assert.assertEquals(names.get(0), "Performance Analytics: Database");
+		Assert.assertEquals(names.get(0), "Database Opertations");
 		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(0));
 	}
 
@@ -184,11 +184,10 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.waitForDashboardPresent(webd, "Performance Analytics: Database");
+		DashboardHomeUtil.waitForDashboardPresent(webd, "Database Opertations");
 		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
-		Assert.assertEquals(names.get(names.size() - 1), "Performance Analytics: Database");
+		Assert.assertEquals(names.get(names.size() - 1), "Database Opertations");
 		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(names.size() - 1));
-
 	}
 
 	@Test
@@ -264,7 +263,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 	}
 
 	@Test
-	public void TestSortBy_LastModified_ListView()
+	public void testSortBy_LastModified_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with last modified in list view");
@@ -404,7 +403,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 	}
 
 	@Test
-	public void TestSortBy_Name_ListView()
+	public void testSortBy_Name_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with name in list view");
