@@ -3,12 +3,8 @@ package oracle.sysman.emaas.platform.dashboards.test.ui;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.*;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.testng.Assert;
@@ -139,44 +135,6 @@ public class BugVerification extends LoginAndLogout
 
 	}
 
-	/*@Test
-	public void testEMCPDF_2855()
-	{
-		//Initialize the test
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testEMCPDF_2855");
-
-		//reset the home page
-		webd.getLogger().info("Reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//visit LA page
-		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_LA);
-                WaitUtil.waitForPageFullyLoaded(webd);
-
-		String laCtx_url = webd.getWebDriver().getCurrentUrl();
-		Assert.assertTrue(laCtx_url.contains("log-analytics-search"), "Failed to open the LA page");
-		webd.getLogger().info("Start to test opening LA page...");
-
-		//verify omcCtx exist in the LA url
-		webd.getLogger().info("start to verify omcCtx exist in the LA page url");
-		Assert.assertTrue(laCtx_url.contains("omcCtx="), "The global context infomation in URL is lost");
-
-		//find notification button and click it to open notification page
-		WebElement ntButton = webd.getWebDriver().findElement(By.xpath(PageId.NOTIFICATIONBUTTON_LA));
-		Assert.assertTrue(ntButton.isDisplayed(), "Notiification button isn't displayed in the page.");
-		webd.click(PageId.NOTIFICATIONBUTTON_LA);
-
-		WaitUtil.waitForPageFullyLoaded(webd);
-
-		//verify omcCtx exist in the Notification page url
-		webd.switchToWindow();
-		String lantCtx_url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("start to verify omcCtx exist in the Notification page url: " + lantCtx_url);
-		Assert.assertTrue(lantCtx_url.contains("omcCtx="), "The global context infomation in URL is lost");
-
-	}
-
 	@Test
 	public void testEMCPDF_2856()
 	{
@@ -207,9 +165,12 @@ public class BugVerification extends LoginAndLogout
 				"It is NOT the home page!");
 
 		//logout and login
-		LoginAndLogout.logoutMethod();
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Logout and login");
+		//signout menu
+		webd.click(PageId.MENUBTNID);
+		webd.click(PageId.SIGNOUTID);
+
+		//login again
+		login(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName(),"welcome");
 
 		//visit welcome page
 		webd.getLogger().info("Visit Welcome Page");
@@ -235,7 +196,7 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("Verfiy the home page");
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
 				"It is NOT the home page!");
-	}*/
+	}
 
 	@Test(alwaysRun = true)
 	public void testEMPCDF_2970()
@@ -253,85 +214,27 @@ public class BugVerification extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void testEMPCDF_812_1()
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testEMPCDF_812");
-
-		//reset all filter options
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//check ita box
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//check la box
-		DashboardHomeUtil.filterOptions(webd, "la");
-
-		//signout menu
-		webd.click(PageId.MENUBTNID);
-		webd.click(PageId.SIGNOUTID);
-
-		login(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testEMPCDF_812");
-
-		//check ita box
-		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "ita"));
-
-		//check la box
-		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "la"));
-
-		//check ita box
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//check la box
-		DashboardHomeUtil.filterOptions(webd, "la");
-
-	}
-
-	@Test(alwaysRun = true)
 	public void testEMPCDF_832_1()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_832");
 
-		String url = webd.getWebDriver().getCurrentUrl();
+		String url = webd.getCurrentUrl();
 		webd.getLogger().info("current url = " + url);
 
-		webd.getWebDriver().navigate()
-				.to(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
+		webd.open(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
 		webd.waitForElementPresent("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
-		webd.takeScreenShot();
-		webd.savePageToFile();
-
 		webd.click("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
 		webd.getLogger().info("Sing out button is clicked");
-		
 
-		//initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		//login to welcome page
 		login(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName(), "welcome");
 		webd.getLogger().info("welcome page is being loaded, going to to verify...");
-
-		//DashboardHomeUtil.gridView(webd);
-		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.WelcomeID),"Welcome to Oracle Management Cloud");
 
 		WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS);
 		webd.getLogger().info("welcome page is verified successfully");
 		webd.getLogger().info("complete testing in testEMPCDF_832");
 	}
-
-	@Test(alwaysRun = true)
-    public void testEMCPDF_3120()
-    {
-		//Initialize the test
-		//login the dashboard with emaastesttenantnoita and onboard OCS Service only
-		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emcsadmin", "emaastesttenantnoita");
-		WaitUtil.waitForPageFullyLoaded(webd);
-		webd.getLogger().info("Start the test case: testEMCPDF_3120");
-                
-		//verify the Explore Data menu is disabled
-		webd.getLogger().info("Verify the Explore Data menu is not diplayed in the page");
-		Assert.assertFalse(webd.isDisplayed("id=" + DashBoardPageId.EXPLOREDATABTNID), "Explore Data menu is displayed in dashboard");
-	}   
 
 	@Test(alwaysRun = true)
 	public void testEMCPDF_3660() throws Exception
@@ -399,7 +302,6 @@ public class BugVerification extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, newdsb_idx, "05/08/2016 12:00 AM", "05/15/2016 13:30 PM"), "The return date time is null");
 		Assert.assertEquals(TimeSelectorUtil.getTimeRangeLabel(webd, newdsb_idx).contains("Custom"), true);
-
 	}
     
     @Test(alwaysRun = true)
@@ -435,13 +337,9 @@ public class BugVerification extends LoginAndLogout
     		currenMenuHeader = BrandingBarUtil.getCurrentMenuHeader(webd);
     		Assert.assertEquals(currenMenuHeader.trim(), BrandingBarUtil.ROOT_MENU_TITLE);
     			
-    		//back to the dashboard home page
+    		//go to the APM home page
     		webd.getLogger().info("Navigate to Dashboard Home page");
-    		BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.ROOT_MENU_DASHBOARDS);
-    			
-    		//open APM oob dashboard
-    		webd.getLogger().info("Open APM oob dashboard");
-    		DashboardHomeUtil.selectDashboard(webd, "Application Performance Monitoring");
+    		BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.ROOT_MENU_APM);
 
 			if(DashBoardUtils.isHamburgerMenuEnabled(webd))
 			{
