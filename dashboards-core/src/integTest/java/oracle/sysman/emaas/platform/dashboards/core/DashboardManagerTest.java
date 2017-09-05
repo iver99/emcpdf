@@ -713,11 +713,11 @@ public class DashboardManagerTest extends BaseTest
 		dbd3 = dm.saveNewDashboard(dbd3, tenant1);
 		pd = dm.listDashboards(null, null, tenant1, false);
 		long allSize = pd.getTotalResults();
-		Assert.assertEquals(allSize, originSize + 3);
+		Assert.assertEquals(allSize, originSize + 2);
 		// query by key word, case sensitive
 		pd = dm.listDashboards("key", null, null, tenant1, false);
 		long caseSensitiveSize = pd.getTotalResults();
-		Assert.assertEquals(caseSensitiveSize, caseSensitiveOriginSize + 3);
+		Assert.assertEquals(caseSensitiveSize, caseSensitiveOriginSize + 2);
 
 		Dashboard dbd4 = new Dashboard();
 		dbd4.setName("KEY1" + System.currentTimeMillis());
@@ -804,7 +804,7 @@ public class DashboardManagerTest extends BaseTest
 		// query by key word, case in-sensitive
 		pd = dm.listDashboards("key", null, null, tenant1, true);
 		long icSize = pd.getTotalResults();
-		Assert.assertEquals(icSize, 8); // dbd6/dbd9/10/12/13 not in the returned list
+		Assert.assertEquals(icSize, 4); // dbd6/dbd9/10/12/13 not in the returned list
 		for (Dashboard dbd : pd.getDashboards()) {
 			if (dbd.getName().equals(dbd6.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned: owned by others");
