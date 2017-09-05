@@ -623,7 +623,7 @@ public class DashboardCRUD
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("/dashboards?offset=0&limit=240&orderBy=default");
 			Assert.assertTrue(res1.getStatusCode() == 200);
-			Assert.assertEquals(res1.jsonPath().get("dashboards.name[0]"), "Application Performance Monitoring");
+			Assert.assertEquals(res1.jsonPath().get("dashboards.name[0]"), "Exadata Health");
 			
 		}
 		catch (Exception e) {
