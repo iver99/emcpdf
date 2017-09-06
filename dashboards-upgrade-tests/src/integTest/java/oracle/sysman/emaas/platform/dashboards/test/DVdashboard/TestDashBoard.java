@@ -46,7 +46,7 @@ public class TestDashBoard extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testFavorite()
 	{
 		dbName_favorite = "favoriteDashboard-" + generateTimeStamp();
@@ -82,11 +82,8 @@ public class TestDashBoard extends LoginAndLogout
 
 		webd.getLogger().info("Verfiy the favortie checkbox is checked");
 		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites option is NOT checked");
-		//		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
-		//		Assert.assertTrue(el.isSelected());
-
+		
 		webd.getLogger().info("Verfiy the dashboard is favorite");
-		//DashboardHomeUtil.search(webd, dbName_favorite);
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_favorite), "Can not find the dashboard");
 
 		webd.getLogger().info("Open the dashboard");
@@ -105,27 +102,19 @@ public class TestDashBoard extends LoginAndLogout
 		BrandingBarUtil.visitMyFavorites(webd);
 		webd.getLogger().info("Verfiy the favortie checkbox is checked");
 		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites option is NOT checked");
-		//		el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
-		//		Assert.assertTrue(el.isSelected());
+		
 		webd.getLogger().info("Verfiy the dashboard is not favorite");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_favorite),
 				"The dashboard is still my favorite dashboard");
-		//		DashboardHomeUtil.search(webd, dbName_favorite);
-		//		Assert.assertEquals(webd.getAttribute(DashBoardPageId.DashboardSerachResult_panelID + "@childElementCount"), "0");
-		//		webd.getLogger().info("no favorite dashboard");
-
+		
 		//delete the dashboard
+		DashboardHomeUtil.resetFilterOptions(webd);
 		webd.getLogger().info("start to delete the dashboard");
-
-		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.FAVORITE_BOXID));
-		if (el.isSelected()) {
-			el.click();
-		}
 		DashboardHomeUtil.deleteDashboard(webd, dbName_favorite, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 		webd.getLogger().info("the dashboard has been deleted");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testModifyDashboard_LA()
 	{
 
@@ -158,7 +147,7 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testModifyDashboard_UDE()
 	{
 
@@ -191,7 +180,7 @@ public class TestDashBoard extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testNoGCinURL()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -217,7 +206,7 @@ public class TestDashBoard extends LoginAndLogout
 		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testNoGCinURL_EnableEntitiesTimeSelector()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -250,7 +239,7 @@ public class TestDashBoard extends LoginAndLogout
 		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testSetHome()
 	{
 		dbName_setHome = "setHomeDashboard-" + generateTimeStamp();

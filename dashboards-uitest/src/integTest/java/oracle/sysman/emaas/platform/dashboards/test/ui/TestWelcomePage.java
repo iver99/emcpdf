@@ -305,14 +305,7 @@ public class TestWelcomePage extends LoginAndLogout
 		WelcomeUtil.visitITA(webd, "default");
 
 		//verify the url of opened page
-		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ita");
-
-		WebElement el = webd.getWebDriver().findElement(By.id(PageId.ITA_BOXID));
-		Assert.assertTrue(el.isSelected());
-		DashBoardUtils.itaOobExist(webd);
-		DashBoardUtils.outDateOob(webd);
-		DashBoardUtils.laOobNotExist(webd);
-		DashBoardUtils.apmOobNotExist(webd);
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/welcome.html");
 		webd.getLogger().info("Test open ITA in welcome page finished!!!");
 	}
 
@@ -341,7 +334,7 @@ public class TestWelcomePage extends LoginAndLogout
 		WelcomeUtil.visitOrchestration(webd);
 
 		//verify the url of opened page
-		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ocs");
+		DashBoardUtils.verifyURL_WithPara(webd, "cosUi/wfDashboard.html");
 
 		webd.getLogger().info("Test open Security Analytics in welcome page finished!!!");
 	}

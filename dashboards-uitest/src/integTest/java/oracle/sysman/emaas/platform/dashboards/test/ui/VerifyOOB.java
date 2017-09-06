@@ -65,9 +65,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in verifyDatabaseOperations_WithFilter_GridView");
 
-		//click Filter-Application Servers
-		webd.getLogger().info("Click Cloud Services - Log Analytics");
-		DashboardHomeUtil.filterOptions(webd, "la");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//lick on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -88,9 +88,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in verifyDatabaseOperations_WithFilter_ListView");
 
-		//click Filter-Application Servers
-		webd.getLogger().info("Click Cloud Services - Log Analytics");
-		DashboardHomeUtil.filterOptions(webd, "la");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//lick on List View
 		webd.getLogger().info("Click on List View icon");
@@ -149,9 +149,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in verifyDatabaseSecurity_WithFilter_GridView");
 
-		//click Filter-Application Servers
-		webd.getLogger().info("Click Cloud Services - Security Analytics");
-		DashboardHomeUtil.filterOptions(webd, "security");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -172,9 +172,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in verifyDatabaseSecurity_WithFilter_ListView");
 
-		//click Filter-Application Servers
-		webd.getLogger().info("Click Cloud Services - Security Analytics");
-		DashboardHomeUtil.filterOptions(webd, "security");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on Grid View
 		webd.getLogger().info("Click on List View icon");
@@ -233,9 +233,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in verifyDNS_WithFilter_GridView");
 
-		//click Filter-Application Servers
-		webd.getLogger().info("Click Cloud Services - Security Analytics");
-		DashboardHomeUtil.filterOptions(webd, "security");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -256,9 +256,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in verifyDNS_WithFilter_ListView");
 
-		//click Filter-Application Servers
-		webd.getLogger().info("Click Cloud Services - Security Analytics");
-		DashboardHomeUtil.filterOptions(webd, "security");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on Grid View
 		webd.getLogger().info("Click on List View icon");
@@ -318,9 +318,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test in verifyEnterpriseHealth_WithFilter_GridView");
 
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -341,9 +341,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test in verifyEnterpriseHealth_WithFilter_ListView");
 
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -403,9 +403,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test in verifyExadataHealth_WithFilter_GridView");
 
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -426,9 +426,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test in verifyExadataHealth_WithFilter_ListView");
 
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -487,9 +487,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in verifyFirewall_WithFilter_GridView");
 
-		//click Filter-Application Servers
-		webd.getLogger().info("Click Cloud Services - Security Analytics");
-		DashboardHomeUtil.filterOptions(webd, "security");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -510,9 +510,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in verifyFirewall_WithFilter_ListView");
 
-		//click Filter-Application Servers
-		webd.getLogger().info("Click Cloud Services - Security Analytics");
-		DashboardHomeUtil.filterOptions(webd, "security");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on Grid View
 		webd.getLogger().info("Click on List View icon");
@@ -572,9 +572,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in verifyHostOperations_WithFilter_GridView");
 
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - Log Analytics");
-		DashboardHomeUtil.filterOptions(webd, "la");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -595,9 +595,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in verifyHostOperations_WithFilter_ListView");
 
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - Log Analytics");
-		DashboardHomeUtil.filterOptions(webd, "la");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -657,9 +657,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test in verifyMiddlewareOperations_WithFilter_GridView");
 
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - Log Analytics");
-		DashboardHomeUtil.filterOptions(webd, "la");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -680,9 +680,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test in verifyMiddlewareOperations_WithFilter_ListView");
 
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - Log Analytics");
-		DashboardHomeUtil.filterOptions(webd, "la");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -741,9 +741,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test in verifyOrchestration_GridView");
 
-		//click Filter-orchestration
-		webd.getLogger().info("Click Cloud Services - orchestration");
-		DashboardHomeUtil.filterOptions(webd, "orchestration");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -764,9 +764,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test in verifyOrchestration_ListView");
 
-		//click Filter-orchestration
-		webd.getLogger().info("Click Cloud Services - orchestration");
-		DashboardHomeUtil.filterOptions(webd, "orchestration");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");
@@ -826,9 +826,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test in verifyUIGallery_WithFilter_GridView");
 
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on Grid View
 		webd.getLogger().info("Click on Grid View icon");
@@ -849,9 +849,9 @@ public class VerifyOOB extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test in verifyUIGallery_WithFilter_ListView");
 
-		//click Filter-Application PerfAnalytics
-		webd.getLogger().info("Click Cloud Services - IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
+		//click Filter- Oracle
+		webd.getLogger().info("Filter by Oracle");
+		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//click on List View
 		webd.getLogger().info("Click on List View icon");

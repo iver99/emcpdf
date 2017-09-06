@@ -155,7 +155,7 @@ public class DashboardHomeUtil_1230 extends DashboardHomeUtil_1170
 			driver.click(eleXpath, WebDriver.ClickType.WEBELEMENT);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC.equals(option)) {
-			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_LASTACCESS_ASC);
+			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_LASTACCESS_DSC);
 			driver.click(eleXpath, WebDriver.ClickType.WEBELEMENT);
 		}
 		else {
