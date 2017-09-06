@@ -113,9 +113,6 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		//verify below oob dashboards not displayed in the home page, due to EMCPDF-4327
 		DashBoardUtils.apmOobNotExist(webd);
 		DashBoardUtils.itaOobNotExist_v2v3(webd);
-
-		//verify created dashboard not displayed
-		verifyCreatedDashboardNotExisted();
 	}
 
 	@Test(alwaysRun = true)
@@ -141,9 +138,6 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 		//verify below oob dashboards not displayed in the home page, due to EMCPDF-4327
 		DashBoardUtils.apmOobNotExist(webd);
 		DashBoardUtils.itaOobNotExist_v2v3(webd);
-
-		//verify created dashboard not displayed
-		verifyCreatedDashboardNotExisted();
 	}
 
 	@Test(alwaysRun = true)
