@@ -18,8 +18,6 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
-import org.openqa.selenium.WebElement;
-
 public class DashboardHomeUtil_1170 extends DashboardHomeUtil_1150
 {
 	/* (non-Javadoc)
@@ -102,42 +100,42 @@ public class DashboardHomeUtil_1170 extends DashboardHomeUtil_1150
 	{
 
 		driver.getLogger().info("[DashboardHomeUtil] call resetFilterOptions");
-		driver.waitForElementPresent(DashBoardPageId.FILTERAPMLOCATOR);
-		WebElement el = driver.getElement(DashBoardPageId.FILTERAPMLOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		driver.waitForElementPresent(DashBoardPageId.FILTERAPMLOCATOR);		
+		
+		if (driver.isSelected(DashBoardPageId.FILTERAPMLOCATOR)) {
+			driver.click(DashBoardPageId.FILTERAPMLOCATOR);
 		}
-		el = driver.getElement(DashBoardPageId.FILTERLALOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		
+		if (driver.isSelected(DashBoardPageId.FILTERLALOCATOR)) {
+			driver.click(DashBoardPageId.FILTERLALOCATOR);
 		}
-		el = driver.getElement(DashBoardPageId.FILTERITALOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		
+		if (driver.isSelected(DashBoardPageId.FILTERITALOCATOR)) {
+			driver.click(DashBoardPageId.FILTERITALOCATOR);
 		}
-		el = driver.getElement(DashBoardPageId.FILTERORCHESTRATIONLOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		
+		if (driver.isSelected(DashBoardPageId.FILTERORCHESTRATIONLOCATOR)) {
+			driver.click(DashBoardPageId.FILTERORCHESTRATIONLOCATOR);
 		}
-		el = driver.getElement(DashBoardPageId.FILTERSECURITYLOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		
+		if (driver.isSelected(DashBoardPageId.FILTERSECURITYLOCATOR)) {
+			driver.click(DashBoardPageId.FILTERSECURITYLOCATOR);
 		}
-		el = driver.getElement(DashBoardPageId.FILTERORACLELOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		
+		if (driver.isSelected(DashBoardPageId.FILTERORACLELOCATOR)) {
+			driver.click(DashBoardPageId.FILTERORACLELOCATOR);
 		}
-		el = driver.getElement(DashBoardPageId.FILTERSHARELOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		
+		if (driver.isSelected(DashBoardPageId.FILTERSHARELOCATOR)) {
+			driver.click(DashBoardPageId.FILTERSHARELOCATOR);
 		}
-		el = driver.getElement(DashBoardPageId.FILTERMELOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		
+		if (driver.isSelected(DashBoardPageId.FILTERMELOCATOR)) {
+			driver.click(DashBoardPageId.FILTERMELOCATOR);
 		}
-		el = driver.getElement(DashBoardPageId.FILTERFAVORITELOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		
+		if (driver.isSelected(DashBoardPageId.FILTERFAVORITELOCATOR)) {
+			driver.click(DashBoardPageId.FILTERFAVORITELOCATOR);
 		}
 		WaitUtil.waitForPageFullyLoaded(driver);
 	}

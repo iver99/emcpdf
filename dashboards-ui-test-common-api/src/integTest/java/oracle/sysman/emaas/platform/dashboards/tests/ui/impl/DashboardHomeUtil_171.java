@@ -407,7 +407,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
                    String indicator = DashBoardPageId.DASHBOARDNAMELOCATOR.replace("_name_", dashboardName);
                    driver.setPageLoadDetector(BuildPageLoadDetector.class);
                    driver.waitForElementEnabled(indicator);
-                   driver.getWebDriver().findElement(By.xpath(indicator)).click();
+                   driver.click(indicator);
                    driver.waitForServer();
                    driver.setPageLoadDetector(null);
          }
@@ -603,17 +603,14 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON)); // click delete
 
 				driver.waitForElementPresent(convertCss(DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG));
-				driver.getLogger().info("foucus on the delete button");
+				driver.getLogger().info("foucus on the delete button");				
 				driver.getWebDriver().findElement(By.name(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM)).sendKeys(Keys.TAB);
 
 				//driver.focus(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); //focus on the delete button
 				driver.getLogger().info("click on the delete button");
 				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM)); // confirm to delete
 
-				driver.getLogger().info("wait for the popup dialog close");
-				WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-				//				wait.until(ExpectedConditions.invisibilityOfElementLocated(By
-				//						.cssSelector(DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG)));
+				driver.getLogger().info("wait for the popup dialog close");				
 				driver.waitForElementNotVisible("css=" + DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG);
 				break;
 			}

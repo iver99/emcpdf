@@ -6,14 +6,11 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.*;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.JavascriptExecutor;
 import org.testng.Assert;
 
 public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
@@ -28,8 +25,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		Validator.equalOrLargerThan0("index", index);
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId_190.BUILDERTILESEDITAREA)));
+		driver.waitForElementVisible(DashBoardPageId_190.BUILDERTILESEDITAREA);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		clickTileConfigButton(driver, widgetName, index);
@@ -39,7 +35,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		driver.click(DashBoardPageId_1200.BUILDERTILEEDITLOCATOR);
 
 		driver.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTAREACSSLOCATOR);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTAREACSSLOCATOR)));
+		driver.waitForElementVisible("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTAREACSSLOCATOR);
 
 		//remove link if widget title is linked
 		if(driver.isElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTREMOVELINKCSSLOCATOR)){
@@ -50,6 +46,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		if(dashboardName != null && !dashboardName.isEmpty()){
 			WebElement searchInput = driver.getElement("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
 			// focus on search input box
+			WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 			wait.until(ExpectedConditions.elementToBeClickable(searchInput));
 
 			Actions actions = new Actions(driver.getWebDriver());
@@ -262,25 +259,18 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 
 		driver.waitForElementPresent("css=" + DashBoardPageId.IMAGEDIALOGCSS);
 		
-		WebElement url_input = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.IMAGEURLINPUT));	
-		url_input.clear();
-		url_input.sendKeys(url);
+		driver.clear(DashBoardPageId.IMAGEURLINPUT);
+		driver.sendKeys(DashBoardPageId.IMAGEURLINPUT, url);
 		
 		if(alternativeText != null)
 		{
-			WebElement alternative_input = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.ALTERNATIVEINPUT));
-			alternative_input.clear();
-	
-			WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.ALTERNATIVEINPUT)));
-
-			alternative_input.sendKeys(alternativeText);	
+			driver.clear(DashBoardPageId.ALTERNATIVEINPUT);			
+			driver.waitForElementVisible(DashBoardPageId.ALTERNATIVEINPUT);
+			driver.sendKeys(DashBoardPageId.ALTERNATIVEINPUT, alternativeText);			
 		}
 
 		driver.click("css=" + DashBoardPageId.OKBTNCSS);
 
-		//driver.waitForServer();
-		//driver.takeScreenShot();
 		driver.getLogger().info("add link in text widget completed");
 	}
 	
@@ -311,45 +301,44 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 	 			driver.getLogger().info("Click http protocol");	 			
 				
 	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.HTTPCSS)).findElement(By.xpath("..")).click();
-			    driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.HTTPCSS)).click();
+	 			driver.click("css=" + DashBoardPageId.HTTPCSS);
 			    
 	 			break;
 	 		case DashBoardPageId.PROTOCOLOPTION_HTTPS:
 	 			driver.getLogger().info("Click https protocol");			
 		
 			    driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.HTTPSCSS)).findElement(By.xpath("..")).click();
-			    driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.HTTPSCSS)).click();
+			    driver.click("css=" + DashBoardPageId.HTTPSCSS);
 			    
 	 			break;	
 	 		case DashBoardPageId.PROTOCOLOPTION_FTP:
 	 			driver.getLogger().info("Click ftp protocol");
 	 			
 	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.FTPCSS)).findElement(By.xpath("..")).click();
-	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.FTPCSS)).click();
+	 			driver.click("css=" + DashBoardPageId.FTPCSS);
 	 			
 	 			break;
 	 		case DashBoardPageId.PROTOCOLOPTION_NEWS:
 	 			driver.getLogger().info("Click news protocol");
 	 			
 	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.NEWSCSS)).findElement(By.xpath("..")).click();
-	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.NEWSCSS)).click();
+	 			driver.click("css=" + DashBoardPageId.NEWSCSS);
 	 			
 	 			break;
 	 		case DashBoardPageId.PROTOCOLOPTION_OTHER:
 	 			driver.getLogger().info("Click other protocol");
 	 			
 	 			driver.getWebDriver().findElement(By.xpath(DashBoardPageId.OTHERXPATH)).findElement(By.xpath("..")).click();
-	 			driver.getWebDriver().findElement(By.xpath(DashBoardPageId.OTHERXPATH)).click();
+	 			driver.click("css=" + DashBoardPageId.OTHERXPATH);
 
 	 			break;
 	 		default:
 	 				break;
 	 	}
 	 	
-	 	WebElement url_input = driver.getElement(DashBoardPageId.URLINPUT);
-	 	url_input.clear();
-	 	url_input.sendKeys(url);
-	 	
+	 	driver.clear(DashBoardPageId.URLINPUT);
+	 	driver.sendKeys(DashBoardPageId.URLINPUT, url);
+	 		 	
 	 	driver.click("css=" + DashBoardPageId.OKBTNCSS);	
 		
 		driver.getLogger().info("add link in text widget completed");

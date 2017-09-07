@@ -54,9 +54,8 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	 */
 	@Override
 	public int getNumberOfPills(WebDriver driver, Logger logger)
-	{
-		List<WebElement> entSelectorPills = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.EntSelPills));
-		int count = entSelectorPills.size();
+	{		
+		int count = driver.getElementCount(DashBoardPageId.EntSelPills);
 		logger.log(Level.INFO, "{0} pills found", new Object[] { count });
 		return count;
 	}

@@ -9,7 +9,6 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 public class DashboardBuilderUtil_1100 extends DashboardBuilderUtil_190
 {
@@ -79,10 +78,9 @@ public class DashboardBuilderUtil_1100 extends DashboardBuilderUtil_190
             driver.savePageToFile();
             throw new NoSuchElementException("Widget config menu is not found");
         }
+        
+        driver.moveToElement("css=" + DashBoardPageId_1100.TileTitleCSS);
 
-        WebElement widgetHeader = widgetElement.findElement(By.cssSelector(DashBoardPageId_1100.TileTitleCSS));
-        Actions actions = new Actions(driver.getWebDriver());
-        actions.moveToElement(widgetHeader).build().perform();
         driver.getLogger().info("Focus to the widget");
     }
 
