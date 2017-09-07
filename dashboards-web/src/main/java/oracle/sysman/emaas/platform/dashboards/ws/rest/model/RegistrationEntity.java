@@ -113,10 +113,11 @@ public class RegistrationEntity implements Serializable
 	public static final String SECURITY_ANALYTICS_VERSION = "1.0+";
 	public static final String SECURITY_ANALYTICS_HOME_LINK = "sso.analytics-ui";
 	// Orchestration cloud service
+	//emsaasui/cosUi/wfDashboard.html
 	public static final String ORCHESTRATION_OPC_APPNAME = "Orchestration";
 	public static final String ORCHESTRATION_SERVICENAME = "CosUIService";
 	public static final String ORCHESTRATION_VERSION = "1.0+";
-	public static final String ORCHESTRATION_URL = "/emsaasui/cosUi/wfDashboard.html"; //"/emsaasui/emcpdfui/home.html?filter=ocs";
+	public static final String ORCHESTRATION_HOME_LINK = "sso.wfdashboard";
 	// Compliance service
 	public static final String COMPLIANCE_OPC_APPNAME = "Compliance";
 	public static final String COMPLIANCE_SERVICENAME = "ComplianceUIService";
@@ -368,8 +369,16 @@ public class RegistrationEntity implements Serializable
 					list.add(le);
 				}
 				else if (ORCHESTRATION_SERVICENAME.equals(app)) {
-					list.add(new LinkEntity(ORCHESTRATION_OPC_APPNAME, ORCHESTRATION_URL, ORCHESTRATION_SERVICENAME,
-							ORCHESTRATION_VERSION));
+					Link l = RegistryLookupUtil.getServiceExternalLink(ORCHESTRATION_SERVICENAME,
+							ORCHESTRATION_VERSION, ORCHESTRATION_HOME_LINK, tenantName);
+					if (l == null) {
+						throw new Exception("Link for " + app + "return null");
+					}
+					//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
+					LinkEntity le = new LinkEntity(ORCHESTRATION_OPC_APPNAME, l.getHref(), ORCHESTRATION_SERVICENAME,
+							ORCHESTRATION_VERSION);
+					le = replaceWithVanityUrl(le, tenantName, ORCHESTRATION_SERVICENAME);
+					list.add(le);
 				}
 				else if (COMPLIANCE_SERVICENAME.equals(app)) {
 					VersionedLink l = RegistryLookupUtil.getServiceExternalLink(COMPLIANCE_SERVICENAME, COMPLIANCE_VERSION,
