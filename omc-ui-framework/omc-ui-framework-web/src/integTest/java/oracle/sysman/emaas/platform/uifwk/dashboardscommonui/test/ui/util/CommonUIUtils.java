@@ -319,7 +319,7 @@ public class CommonUIUtils
 
 	public static void verifyURL(WebDriver webdriver, String url)
 	{
-		String currurl = webdriver.getWebDriver().getCurrentUrl();
+		String currurl = webdriver.getCurrentUrl();
 		webdriver.getLogger().info("the origin url = " + currurl);
 		String tmpurl = trimUrlParameters(currurl.substring(currurl.indexOf("emsaasui") + 9));
 		webdriver.getLogger().info("the url without para = " + tmpurl);
@@ -329,7 +329,7 @@ public class CommonUIUtils
 	public static void verifyURL_WithPara(WebDriver webdriver, String url)
 	{
 		webdriver.getLogger().info("the expected relative url = " + url);
-		String currurl = webdriver.getWebDriver().getCurrentUrl();
+		String currurl = webdriver.getCurrentUrl();
 		webdriver.getLogger().info("the current url = " + currurl);
 		String tmpurl = currurl.substring(currurl.indexOf("emsaasui") + 9);
 		webdriver.getLogger().info("the relative url to compare = " + tmpurl);

@@ -122,6 +122,7 @@ public class DashBoardUtils
 //
 //		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
 //		alert.accept();
+		webdriver.waitForServer();
 		webdriver.getAlert().accept();
 	}
 
@@ -1272,5 +1273,27 @@ public class DashBoardUtils
 		}
 
 		return baseUrl;
+	}
+	
+	public void verifyAlert(WebDriver webdriver)
+	{
+		if (DashBoardUtils.isHamburgerMenuEnabled(webdriver)) {
+			if (!BrandingBarUtil.isHamburgerMenuDisplayed(webdriver)) {
+				BrandingBarUtil.toggleHamburgerMenu(webdriver);
+			}
+			webdriver.getLogger().info("Click Dashboards menu item to back to dashboard home page");
+			webdriver.click("css=#omc_root_dashboards>span");
+		}
+		else {
+			webdriver.getLogger().info("Click Compass icon to display menu of branding bar");
+			webdriver.click(PageId.COMPASSICON);
+			
+			webdriver.getLogger().info("Click Dashboard link to back to dashboard home page");
+			webdriver.click(PageId.DASHBOARDLINK);
+		}
+		
+		webdriver.getLogger().info("Dismiss the Alert Dialog");
+		webdriver.waitForServer();
+		webdriver.getAlert().accept();
 	}
 }

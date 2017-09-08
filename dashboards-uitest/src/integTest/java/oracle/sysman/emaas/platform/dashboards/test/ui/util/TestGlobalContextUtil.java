@@ -105,7 +105,7 @@ public class TestGlobalContextUtil
 		DashboardHomeUtil.selectDashboard(driver, dbname);
 		
 		driver.getLogger().info("Start to verify GC in OOB");
-		String currenturl = driver.getWebDriver().getCurrentUrl();
+		String currenturl = driver.getCurrentUrl();
 		if(currenturl.contains("builder.html"))
 		{
 			Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(driver), "The global context exists in OOB Dashboard Set"+ dbname);			

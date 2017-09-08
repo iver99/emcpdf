@@ -15,7 +15,9 @@ import java.util.logging.Logger;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.EntitySelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.ude.testsdk.ui.topology.Topology;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+
 
 public class GlobalContextUtil_1180 extends GlobalContextUtil_1170
 {	
@@ -61,6 +63,7 @@ public class GlobalContextUtil_1180 extends GlobalContextUtil_1170
 		}
 		else {
 			driver.click(GLBCTXTBUTTON);
+			Topology.waitForTopology(driver);
 		}
 	}
 	
