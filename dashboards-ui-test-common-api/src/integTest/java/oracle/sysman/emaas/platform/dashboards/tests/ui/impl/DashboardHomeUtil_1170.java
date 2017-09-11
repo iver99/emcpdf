@@ -102,39 +102,39 @@ public class DashboardHomeUtil_1170 extends DashboardHomeUtil_1150
 		driver.getLogger().info("[DashboardHomeUtil] call resetFilterOptions");
 		driver.waitForElementPresent(DashBoardPageId.FILTERAPMLOCATOR);		
 		
-		if (driver.isSelected(DashBoardPageId.FILTERAPMLOCATOR)) {
+		if (driver.isDisplayed(DashBoardPageId.FILTERAPMLOCATOR) && driver.isSelected(DashBoardPageId.FILTERAPMLOCATOR)) {
 			driver.click(DashBoardPageId.FILTERAPMLOCATOR);
 		}
 		
-		if (driver.isSelected(DashBoardPageId.FILTERLALOCATOR)) {
+		if (driver.isDisplayed(DashBoardPageId.FILTERLALOCATOR) && driver.isSelected(DashBoardPageId.FILTERLALOCATOR)) {
 			driver.click(DashBoardPageId.FILTERLALOCATOR);
 		}
 		
-		if (driver.isSelected(DashBoardPageId.FILTERITALOCATOR)) {
+		if (driver.isDisplayed(DashBoardPageId.FILTERITALOCATOR) && driver.isSelected(DashBoardPageId.FILTERITALOCATOR)) {
 			driver.click(DashBoardPageId.FILTERITALOCATOR);
 		}
 		
-		if (driver.isSelected(DashBoardPageId.FILTERORCHESTRATIONLOCATOR)) {
+		if (driver.isDisplayed(DashBoardPageId.FILTERORCHESTRATIONLOCATOR) && driver.isSelected(DashBoardPageId.FILTERORCHESTRATIONLOCATOR)) {
 			driver.click(DashBoardPageId.FILTERORCHESTRATIONLOCATOR);
 		}
 		
-		if (driver.isSelected(DashBoardPageId.FILTERSECURITYLOCATOR)) {
+		if (driver.isDisplayed(DashBoardPageId.FILTERSECURITYLOCATOR) && driver.isSelected(DashBoardPageId.FILTERSECURITYLOCATOR)) {
 			driver.click(DashBoardPageId.FILTERSECURITYLOCATOR);
 		}
 		
-		if (driver.isSelected(DashBoardPageId.FILTERORACLELOCATOR)) {
+		if (driver.isDisplayed(DashBoardPageId.FILTERORACLELOCATOR) && driver.isSelected(DashBoardPageId.FILTERORACLELOCATOR)) {
 			driver.click(DashBoardPageId.FILTERORACLELOCATOR);
 		}
 		
-		if (driver.isSelected(DashBoardPageId.FILTERSHARELOCATOR)) {
+		if (driver.isDisplayed(DashBoardPageId.FILTERSHARELOCATOR) && driver.isSelected(DashBoardPageId.FILTERSHARELOCATOR)) {
 			driver.click(DashBoardPageId.FILTERSHARELOCATOR);
 		}
 		
-		if (driver.isSelected(DashBoardPageId.FILTERMELOCATOR)) {
+		if (driver.isDisplayed(DashBoardPageId.FILTERMELOCATOR) && driver.isSelected(DashBoardPageId.FILTERMELOCATOR)) {
 			driver.click(DashBoardPageId.FILTERMELOCATOR);
 		}
 		
-		if (driver.isSelected(DashBoardPageId.FILTERFAVORITELOCATOR)) {
+		if (driver.isDisplayed(DashBoardPageId.FILTERFAVORITELOCATOR) && driver.isSelected(DashBoardPageId.FILTERFAVORITELOCATOR)) {
 			driver.click(DashBoardPageId.FILTERFAVORITELOCATOR);
 		}
 		WaitUtil.waitForPageFullyLoaded(driver);
