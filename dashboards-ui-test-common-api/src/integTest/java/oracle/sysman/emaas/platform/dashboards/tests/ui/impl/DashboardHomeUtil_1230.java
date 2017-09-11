@@ -56,7 +56,7 @@ public class DashboardHomeUtil_1230 extends DashboardHomeUtil_1170
 			default:
 				break;
 		}
-		driver.click(eleXpath, WebDriver.ClickType.WEBELEMENT);
+		driver.click(eleXpath);
 	}
 
 	@Override
@@ -96,7 +96,7 @@ public class DashboardHomeUtil_1230 extends DashboardHomeUtil_1170
 		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId_1230.FILTER_SELECT_ID);
 		driver.click("id=oj-select-choice-" + DashBoardPageId_1230.FILTER_SELECT_ID);
 		eleXpath = getOptionXpath(driver, DashBoardPageId_1230.FILTER_SELECT_ID, DashBoardPageId_1230.FILTER_ALL);
-		driver.click(eleXpath, WebDriver.ClickType.WEBELEMENT);
+		driver.click(eleXpath);
 		WaitUtil.waitForPageFullyLoaded(driver);
 	}
 
@@ -116,47 +116,47 @@ public class DashboardHomeUtil_1230 extends DashboardHomeUtil_1170
 
 		if ("default".equals(option)) {
 			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_DEFAULT);
-			driver.click(eleXpath, WebDriver.ClickType.WEBELEMENT);
+			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_NAME_ASC.equals(option)) {
 			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_NAME_ASC);
-			driver.click(eleXpath, WebDriver.ClickType.WEBELEMENT);
+			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_NAME_DSC.equals(option)) {
 			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_NAME_DSC);
-			driver.click(eleXpath, WebDriver.ClickType.WEBELEMENT);
+			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_OWNER_ASC.equals(option)) {
 			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_CREATEDBY_ASC);
-			driver.click(eleXpath, WebDriver.ClickType.WEBELEMENT);
+			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_OWNER_DSC.equals(option)) {
 			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_CREATEDBY_DSC);
-			driver.click(eleXpath, WebDriver.ClickType.WEBELEMENT);
+			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_ASC.equals(option)) {
 			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_CREATEDATE_ASC);
-			driver.click(eleXpath, WebDriver.ClickType.WEBELEMENT);
+			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_DSC.equals(option)) {
 			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_CREATEDATE_DSC);
-			driver.click(eleXpath, WebDriver.ClickType.WEBELEMENT);
+			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_ASC.equals(option)) {
 			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_LASTMODIFY_ASC);
-			driver.click(eleXpath, WebDriver.ClickType.WEBELEMENT);
+			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC.equals(option)) {
 			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_LASTMODIFY_DSC);
-			driver.click(eleXpath, WebDriver.ClickType.WEBELEMENT);
+			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC.equals(option)) {
 			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_LASTACCESS_ASC);
-			driver.click(eleXpath, WebDriver.ClickType.WEBELEMENT);
+			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC.equals(option)) {
 			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_LASTACCESS_DSC);
-			driver.click(eleXpath, WebDriver.ClickType.WEBELEMENT);
+			driver.click(eleXpath);
 		}
 		else {
 			throw new IllegalArgumentException("Unknow Sort by option: " + option);
