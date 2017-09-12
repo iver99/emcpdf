@@ -90,7 +90,7 @@ DashboardsFilter.prototype.saveFilter = function()
     if (this.saveFilterPref === true && this.prefUtil && this.filterPrefKey)
     {
         var _fs =  this.toFilterString();
-        if (_fs && _fs.trim().length > 0)
+        if (_fs && _fs.trim().length > 0 && _fs !== "allnofilter")
         {
             this.prefUtil.setPreference(this.filterPrefKey, _fs);
         }
