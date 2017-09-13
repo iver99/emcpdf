@@ -3,7 +3,6 @@ package oracle.sysman.emaas.platform.emcpdf.cache.support;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.exception.ExecutionException;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.CacheThreadPools;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * Created by chehao on 2016/12/22.
  */
 public abstract class AbstractCache implements ICache {
-    Logger LOGGER = LogManager.getLogger(AbstractCache.class);
+    private static final Logger LOGGER = LogManager.getLogger(AbstractCache.class);
 
     protected SimpleCacheCounter cacheCounter = new SimpleCacheCounter();
 
@@ -65,7 +64,7 @@ public abstract class AbstractCache implements ICache {
         return valueFromFactory;
     }
 
-    @Override
+    /*@Override
     public Object refreshAfterGet(final Object key, final CacheLoader factory) throws ExecutionException {
         ScheduledExecutorService pool = CacheThreadPools.getThreadPool();
         LOGGER.info("Refresh after get action begin...");
@@ -84,7 +83,7 @@ public abstract class AbstractCache implements ICache {
         }, 30, TimeUnit.SECONDS);
         LOGGER.info("Refresh after get action end...");
         return get(key, factory);
-    }
+    }*/
 
     @Override
     public void evict(Object key) {

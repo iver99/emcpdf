@@ -29,18 +29,6 @@
         <expiry>60</expiry>
     </cache-group>
 
-    <!--<cache-group>
-        <name>externalLinkCache</name>
-        <capacity>1000</capacity>
-        <expiry>60</expiry>
-    </cache-group>
-
-    <cache-group>
-        <name>internalLinkCache</name>
-        <capacity>1000</capacity>
-        <expiry>60</expiry>
-    </cache-group>-->
-
     <cache-group>
         <name>vanityBaseUrlCache</name>
         <capacity>1000</capacity>
@@ -68,14 +56,8 @@
     <cache-group>
         <name>subscribeCache</name>
         <capacity>5000</capacity>
-        <expiry>60</expiry>
+        <expiry>120</expiry>
     </cache-group>
-
-    <!--<cache-group>
-        <name>tenantSubscriptionInfoCache</name>
-        <capacity>5000</capacity>
-        <expiry>60</expiry>
-    </cache-group>-->
 
     <cache-group>
         <name>assetRootCache</name>
@@ -117,6 +99,18 @@
         <name>oobSavedSearchCache</name>
         <capacity>30</capacity>
         <expiry>0</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>userRolesCache</name>
+        <capacity>3000</capacity>
+        <expiry>180</expiry>
+    </cache-group>
+
+    <cache-group>
+        <name>userGrantsCache</name>
+        <capacity>3000</capacity>
+        <expiry>180</expiry>
     </cache-group>
 
 </root>

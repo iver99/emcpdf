@@ -74,6 +74,45 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
+	public void testClickNotificationChannelsMenuItem()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "");
+		webd.getLogger().info("start to test in testClickNotificationChannelsMenuItem()");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+		BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_NOTIFICATION_CHANNELS);
+		WaitUtil.waitForPageFullyLoaded(webd);
+		CommonUIUtils.verifyURL_WithPara(webd, "eventUi/channels/html/channels-dashboard.html");
+	}
+
+	@Test(alwaysRun = true)
+	public void testClickAddEntityMenuItem()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "");
+		webd.getLogger().info("start to test in testClickAddEntityMenuItem()");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+		BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ADD_ENTITY);
+		WaitUtil.waitForPageFullyLoaded(webd);
+		CommonUIUtils.verifyURL_WithPara(webd, "monitoringservicesui/cms/global-index.html?root=cmsConfigureEntityDiscovery");
+	}
+
+	@Test(alwaysRun = true)
+	public void testClickCloudDiscoveryMenuItem()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "");
+		webd.getLogger().info("start to test in testClickCloudDiscoveryMenuItem()");
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+		BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_CLOUD_DISCOVERY);
+		WaitUtil.waitForPageFullyLoaded(webd);
+		CommonUIUtils.verifyURL_WithPara(webd, "monitoringservicesui/cms/global-index.html?root=cmsCloudProfilesDashboard");
+	}
+
+	@Test(alwaysRun = true)
 	public void testClickAlertsMenuItem()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "");

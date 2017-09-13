@@ -319,7 +319,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 
 				driver.getLogger().info("Click About menu.");
 				driver.click(DashBoardPageId.OPTION_ABOUT);
-				driver.takeScreenShot();
+
 				driver.getLogger().info("Close the About dialog.");
 				driver.click(DashBoardPageId.ABOUTDIALOGCLOSE);
 				break;

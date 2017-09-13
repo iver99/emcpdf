@@ -329,7 +329,9 @@ public class DashboardAPITest
 		final List<Dashboard> subDbds = new ArrayList<Dashboard>();
 		subDbds.add(new Dashboard());
 		final List<Tile> allTiles = new ArrayList<Tile>();
-		allTiles.add(new Tile());
+		Tile tile = new Tile();
+		tile.setWidgetUniqueId("566");
+		allTiles.add(tile);
 		final BigInteger id = new BigInteger("123");
 		    
 		new Expectations() {

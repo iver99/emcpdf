@@ -202,9 +202,9 @@ task QATest1(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]){
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FixDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FlexibleDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_RecentUseOption.class"
-	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_MillionSeconds.class"
-	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_DateOnly.class"
-	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_ErrorMsg.class"
+//	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_MillionSeconds.class"
+//	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_DateOnly.class"
+//	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_ErrorMsg.class"
         useWebdriver = true
 	useRestAssured=true
 }

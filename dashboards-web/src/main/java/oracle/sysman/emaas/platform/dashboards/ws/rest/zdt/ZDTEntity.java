@@ -16,68 +16,75 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt;
 public class ZDTEntity
 {
 	private long countOfDashboards;
-	private long countOfFavorite;
+	private long countOfUserOptions;
 	private long countOfPreference;
+	private long countOfDashboardSet;
+	private long countOfTile;
+	private long countOfTileParam;
 
 	public ZDTEntity()
 	{
 	}
 
-	public ZDTEntity(long countOfDashboards, long countOfFavorite, long countOfPreference)
-	{
+	public ZDTEntity(long countOfDashboards, long countOfUserOptions,
+			long countOfPreference, long countOfDashboardSet, long countOfTile,
+			long countOfTileParam) {
+		super();
 		this.countOfDashboards = countOfDashboards;
-		this.countOfFavorite = countOfFavorite;
+		this.countOfUserOptions = countOfUserOptions;
 		this.countOfPreference = countOfPreference;
+		this.countOfDashboardSet = countOfDashboardSet;
+		this.countOfTile = countOfTile;
+		this.countOfTileParam = countOfTileParam;
 	}
 
-	/**
-	 * @return the countOfDashboards
-	 */
-	public long getCountOfDashboards()
-	{
+	public long getCountOfDashboards() {
 		return countOfDashboards;
 	}
 
-	/**
-	 * @return the countOfFavorite
-	 */
-	public long getCountOfFavorite()
-	{
-		return countOfFavorite;
-	}
-
-	/**
-	 * @return the countOfPreference
-	 */
-	public long getCountOfPreference()
-	{
-		return countOfPreference;
-	}
-
-	/**
-	 * @param countOfDashboards
-	 *            the countOfDashboards to set
-	 */
-	public void setCountOfDashboards(long countOfDashboards)
-	{
+	public void setCountOfDashboards(long countOfDashboards) {
 		this.countOfDashboards = countOfDashboards;
 	}
 
-	/**
-	 * @param countOfFavorite
-	 *            the countOfFavorite to set
-	 */
-	public void setCountOfFavorite(long countOfFavorite)
-	{
-		this.countOfFavorite = countOfFavorite;
+	public long getCountOfUserOptions() {
+		return countOfUserOptions;
 	}
 
-	/**
-	 * @param countOfPreference
-	 *            the countOfPreference to set
-	 */
-	public void setCountOfPreference(long countOfPreference)
-	{
+	public void setCountOfUserOptions(long countOfUserOptions) {
+		this.countOfUserOptions = countOfUserOptions;
+	}
+
+	public long getCountOfPreference() {
+		return countOfPreference;
+	}
+
+	public void setCountOfPreference(long countOfPreference) {
 		this.countOfPreference = countOfPreference;
 	}
+
+	public long getCountOfDashboardSet() {
+		return countOfDashboardSet;
+	}
+
+	public void setCountOfDashboardSet(long countOfDashboardSet) {
+		this.countOfDashboardSet = countOfDashboardSet;
+	}
+
+	public long getCountOfTile() {
+		return countOfTile;
+	}
+
+	public void setCountOfTile(long countOfTile) {
+		this.countOfTile = countOfTile;
+	}
+
+	public long getCountOfTileParam() {
+		return countOfTileParam;
+	}
+
+	public void setCountOfTileParam(long countOfTileParam) {
+		this.countOfTileParam = countOfTileParam;
+	}
+
+	
 }

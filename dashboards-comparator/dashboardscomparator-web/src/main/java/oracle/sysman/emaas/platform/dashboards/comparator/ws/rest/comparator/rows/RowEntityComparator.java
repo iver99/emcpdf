@@ -55,23 +55,6 @@ public class RowEntityComparator<T extends RowEntity>
 			return list2;
 		}
 
-		/**
-		 * @param list1
-		 *            the list1 to set
-		 */
-		public void setList1(List<T> list1)
-		{
-			this.list1 = list1;
-		}
-
-		/**
-		 * @param list2
-		 *            the list2 to set
-		 */
-		public void setList2(List<T> list2)
-		{
-			this.list2 = list2;
-		}
 	}
 
 	/**

@@ -141,6 +141,10 @@ define(['knockout',
                     self.rightPanelControl.dashboardEditDisabled(true) ;
                 }
             };
+            
+            self.loadRightPanelWidget = function(_$b){
+                self.rightPanelWidget.change$bContext(_$b);
+            };
 
             self.loadToolBarModel(toolBarModel,self.$b);
 
@@ -193,37 +197,28 @@ define(['knockout',
                     
                     if(self.rightPanelControl.completelyHidden() === false && self.rightPanelWidget.isWidgetLoaded()===false) {
                         //load widgets only when right panel is editable and have not loaded widget before
-                        //self.rightPanelWidget.loadWidgets(null,function successCallback(){
-                        self.rightPanelWidget.initWidgetData(null, function() {
-                            self.rightPanelWidget.forwardRenderWidgets(self.rightPanelWidget.DEFAULT_WIDGET_INIT_AMOUNT, function(){
-                                initRightPanelDragAndTile();
-                            });
+                        self.rightPanelWidget.loadWidgets(null,function successCallback(){
+                            initRightPanelDragAndTile();
                         });
                     }
 
                     self.rightPanelControl.initializeRightPanel.subscribe(function (newValue) {
                         newValue && self.rightPanelControl.initializeCollapsible();
                         newValue && initRightPanelDragAndTile();
-                        self.initLoadOnScroll();
                     });
 
                     self.emptyDashboard && self.rightPanelControl.initializeRightPanel(true);
                     initRightPanelDragAndTile();
-            };
-            
-            self.initLoadOnScroll = function() {
-                $('.dbd-left-panel-widgets').scroll(function() {
-                    if ($('.dbd-left-panel-widgets').scrollTop() + $('.dbd-left-panel-widgets').height() >= $('.dbd-left-panel-widgets-list').height()) {
-                        console.debug("Scrolled to the bottom of widget list. Loading more forwardly...");
-                        var widgetPanel = $b.getRightPanelWidget();
-                        widgetPanel.forwardRenderWidgets(widgetPanel.DEFAULT_WIDGET_INCREMENT_AMOUNT);
+                    if(!self.rightPanelControl.resetEmptyDashboardName){
+                        if(self.rightPanelEdit && self.rightPanelEdit.resetEmptyDashboardName){
+                            self.rightPanelControl.resetEmptyDashboardName = self.rightPanelEdit.resetEmptyDashboardName;
+                        }else if(self.editDashboardDialogModel()){
+                            self.rightPanelControl.resetEmptyDashboardName = self.editDashboardDialogModel().resetEmptyDashboardName;
+                        }
+                        self.rightPanelControl.resetEmptyDashboardName && $("#dbd-tabs-container")[0] && $("#dbd-tabs-container").on( "ojbeforeselect", function( event, ui ) { //reset empty dashboard name when user switch tabs in dashboard set
+                            self.rightPanelControl.resetEmptyDashboardName()
+                        } );
                     }
-                    if ($('.dbd-left-panel-widgets').scrollTop() <= 0) {
-                        console.debug("Scrolled to the top of widget list. Loading more backwardly...");
-                        var widgetPanel = $b.getRightPanelWidget();
-                        widgetPanel.backwardRenderWidgets(widgetPanel.DEFAULT_WIDGET_INCREMENT_AMOUNT);
-                    }
-                });
             };
 
             self.initEventHandlers = function() {

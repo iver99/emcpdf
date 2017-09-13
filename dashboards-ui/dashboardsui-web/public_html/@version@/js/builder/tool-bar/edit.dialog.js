@@ -37,10 +37,16 @@ define(['knockout',
                 }
                 return true;
             });
+            
+            self.resetEmptyDashboardName = function(){
+                if(!self.nameInputed() || !self.nameInputed().trim()){
+                    self.tbModel && self.tbModel.dashboardName(dsb.name());
+                    self.name(dsb.name());
+                }
+            };
 
             if (self.tbModel) {
                 self.nameInputed.subscribe(function (val) {
-                    self.dashboard.name(val);
                     self.tbModel && self.tbModel.dashboardName(val);
                     self.name(val);
                 });

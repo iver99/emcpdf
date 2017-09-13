@@ -136,13 +136,7 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
             self.getUserRoles = function(callback,sendAsync) {
                 var serviceUrl = "/sso.static/dashboards.configurations/userInfo";
                 if (dfu.isDevMode()){
-                    if (dfu.getDevData() && dfu.getDevData().userRoles) {
-                        callback(dfu.getDevData().userRoles.roleNames);
-                    }
-                    else {
-                        callback(["APM Administrator","APM User","IT Analytics Administrator","Log Analytics Administrator","Log Analytics User","IT Analytics User"]);
-                    }
-                    return;
+                    serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, 'configurations/userInfo');
                 }
                 if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.roles){
                     self.userRoles = window._uifwk.cachedData.roles; 
@@ -160,7 +154,7 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                             window._uifwk.cachedData.loggedInUser = {"currentUser":data["currentUser"]};
                         }
                         if(data && data["userGrants"]){
-                            window._uifwk.cachedData.userGrants = data["userGrants"];
+                            window._uifwk.cachedData.userGrants = ko.observable(data["userGrants"]);
                         }
                         if(data && data["userRoles"]){
                             window._uifwk.cachedData.roles = data["userRoles"];
@@ -238,11 +232,11 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
              * @returns
              */
             self.getUserGrants = function(callback) {
-                if (self.devMode) {
-                    callback(dfu.getDevData().userGrants);
-                    return;
-                }
                 var serviceUrl = '/sso.static/dashboards.configurations/userInfo';
+                if (self.devMode) {
+                    serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, 'configurations/userInfo');
+                }
+                
                 if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.userGrants &&
                         ($.isFunction(window._uifwk.cachedData.userGrants) ? window._uifwk.cachedData.userGrants() : true)) {
                     callback($.isFunction(window._uifwk.cachedData.userGrants) ? window._uifwk.cachedData.userGrants() :
@@ -293,6 +287,7 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                             })
                             .done(function(data) {
                                 doneCallback(data);
+                                
                             })
                             .fail(function() {
                                 oj.Logger.error('Failed to get user granted privileges!');

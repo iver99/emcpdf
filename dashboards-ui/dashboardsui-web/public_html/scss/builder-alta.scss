@@ -1080,13 +1080,15 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
       .left-panel-dbd-clear-icon:before {
         height:16px;
         width:16px;
-        content:url("../images/clearEntry_ena.png");
+        content:" ";
+        background:url(../images/dfSprite.png) no-repeat 0px -656px;height:16px;padding-left:18px;
       }
 
       .left-panel-dbd-search-icon:before {
         height:16px;
         width:16px;
-        content:url("../images/func_search_16_ena.png");
+        content:" ";
+        background:url(../images/dfSprite.png) no-repeat 0px -208px;height:16px;padding-left:18px;
       }
 
       .dbd-left-panel-header-search {
@@ -1396,6 +1398,14 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 .dbd-icon-remove:before{
    content: "\f00d";  
+}
+.dbd-icon-delete{
+    line-height: 12px;
+    margin-right: 3px;
+}
+.dbd-icon-delete:before{
+   content: " ";
+   background:url(../images/dfSprite.png) no-repeat 0px -416px;height:16px;padding-left:18px;
 }
 .dbd-icon-eye{
     line-height: 12px;
@@ -1731,4 +1741,8 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .textWidgetWrapper img {
     max-width: 100% !important;
     height: auto !important;
+}
+
+#uifwkLayoutMainContainer{
+    overflow: hidden !important;
 }

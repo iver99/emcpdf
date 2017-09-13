@@ -36,6 +36,7 @@ public class DashboardBuilderUtil_1100 extends DashboardBuilderUtil_190
 
         focusOnWidgetHeader(driver, widgetEl);
         driver.takeScreenShot();
+        driver.savePageToFile();
 
         String tileMoveCSS = null;
         switch (moveOption) {
@@ -61,7 +62,7 @@ public class DashboardBuilderUtil_1100 extends DashboardBuilderUtil_190
         widgetEl.findElement(By.cssSelector(DashBoardPageId_1100.ConfigTileCSS)).click();
         driver.click("css=" + tileMoveCSS);
         driver.getLogger().info("Move the widget: " + moveOption);
-        driver.takeScreenShot();
+   
     }
     
     @Override

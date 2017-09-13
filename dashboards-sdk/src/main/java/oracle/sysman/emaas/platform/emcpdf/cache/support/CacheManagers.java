@@ -22,4 +22,8 @@ public class CacheManagers {
         return LRUCacheManager.getInstance();
     }
 
+    public ICacheManager build(String configFileName){
+        return LRUCacheManager.getInstance(configFileName);
+    }
+
 }

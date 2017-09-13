@@ -17,6 +17,8 @@ public class TimeSelectorUIControls
 {
 	// Begin: Text
 	public static final String sErrorMsg = "div.errorMsg";
+	public static final String sJetErrorMsg = "div.oj-message-error";
+	public static final String sJetErrorMsgDetail = "div.oj-message-error .oj-message-content .oj-message-detail span";
 	//public static final String sFilterInfoLabel = "//*[@id='filterInfo']";
 	// End: Text
 

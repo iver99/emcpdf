@@ -1,5 +1,4 @@
-        <div data-testapiversion="1.17.0" data-bind="attr: {id: 'dateTimePicker_' + randomId}" style="display: table">
-            <label for="dropdown" data-bind="attr: {id: 'dropdownLabel_'+randomId}" style="font-weight: bold; font-size: 14px; vertical-align: middle; padding-right: 5px;" data-bind="text: timeRangeMsg, style: {display: hideMainLabel}"></label>
+        <div data-testapiversion="1.17.0" data-bind="attr: {id: 'dateTimePicker_' + randomId}" style="display: table; padding: 0 5px;">
             <span class="oj-select-choice"  style="width: auto; display: inline-block; cursor: pointer;" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime">
                 <img class="info-badge" src="/emsaasui/uifwk/@version@/images/imgbackground.png" style="position:absolute; height:16px;width:16px;vertical-align:top;margin:8px;background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -46px;" data-bind="style: {display: showBadge()?'inline':'none'},event: {mouseover: badgeMouseOverHandler, mouseout: badgeMouseOutHandler}"/>
                 <div data-bind="ojComponent:{component: 'ojPopup',tail: 'simple'}" class="badge-popup-message" style="display: block;padding:0; max-width: 340px;">
@@ -43,51 +42,58 @@
             <div class="panel" style="display:inline-block; padding: 0px; margin: 0px;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none', beforeClose: setLastDatas}, click: function(data, event) {event.stopPropagation();return true;}, attr: {id: 'panel_'+randomId}">
                 <!-- left of panel -->
                 <div class="drawers" data-bind="style: {height: leftDrawerHeight}">
-                <div data-bind="attr: {id: 'drawers_'+randomId}, click: chooseTimePeriod">
-                    <a href="#" data-bind="attr: {id: 'drawer0_'+randomId}, text: timePeriodLast15mins, css: last15minsCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer1_'+randomId}, text: timePeriodLast30mins, css: last30minsCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer2_'+randomId}, text: timePeriodLast60mins, css: last60minsCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer15_'+randomId}, text: timePeriodLast2hours, css: last2hoursCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer3_'+randomId}, text: timePeriodLast4hours, css: last4hoursCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer4_'+randomId}, text: timePeriodLast6hours, css: last6hoursCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer16_'+randomId}, text: timePeriodLast8hours, css: last8hoursCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer17_'+randomId}, text: timePeriodLast24hours, css: last24hoursCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer5_'+randomId}, text: timePeriodLast1day, css: last1dayCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer6_'+randomId}, text: timePeriodLast7days, css: last7daysCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer13_'+randomId}, text: timePeriodLast14days, css: last14daysCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer7_'+randomId}, text: timePeriodLast30days, css: last30daysCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer8_'+randomId}, text: timePeriodLast90days, css: last90daysCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer18_'+randomId}, text: timePeriodLast12months, css: last12monthsCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer12_'+randomId}, text: timePeriodLast1year, css: last1yearCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <!--<a href="#" data-bind="attr: {id: 'drawer11_'+randomId}, text: timePeriodToday, css: todayCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>-->
-                    <a href="#" data-bind="attr: {id: 'drawer10_'+randomId}, text: timePeriodLatest, css: latestCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer14_'+randomId}, text: timePeriodRecent, css: recentCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer9_'+randomId}, text: timePeriodCustom, css: customCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
+                <div data-bind="attr: {id: 'drawers_'+randomId}, click: chooseTimePeriod, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}">
+                    <a href="#" data-tp-id="LAST_15_MINUTE" class="drawer" data-bind="attr: {id: 'drawer0_'+randomId}, text: timePeriodLast15mins"></a>
+                    <a href="#" data-tp-id="LAST_30_MINUTE" class="drawer" data-bind="attr: {id: 'drawer1_'+randomId}, text: timePeriodLast30mins"></a>
+                    <a href="#" data-tp-id="LAST_60_MINUTE" class="drawer" data-bind="attr: {id: 'drawer2_'+randomId}, text: timePeriodLast60mins"></a>
+                    <a href="#" data-tp-id="LAST_2_HOUR" class="drawer" data-bind="attr: {id: 'drawer15_'+randomId}, text: timePeriodLast2hours"></a>
+                    <a href="#" data-tp-id="LAST_4_HOUR" class="drawer" data-bind="attr: {id: 'drawer3_'+randomId}, text: timePeriodLast4hours"></a>
+                    <a href="#" data-tp-id="LAST_6_HOUR" class="drawer" data-bind="attr: {id: 'drawer4_'+randomId}, text: timePeriodLast6hours"></a>
+                    <a href="#" data-tp-id="LAST_8_HOUR" class="drawer" data-bind="attr: {id: 'drawer16_'+randomId}, text: timePeriodLast8hours"></a>
+                    <a href="#" data-tp-id="LAST_24_HOUR" class="drawer" data-bind="attr: {id: 'drawer17_'+randomId}, text: timePeriodLast24hours"></a>
+                    <a href="#" data-tp-id="LAST_1_DAY" class="drawer" data-bind="attr: {id: 'drawer5_'+randomId}, text: timePeriodLast1day"></a>
+                    <a href="#" data-tp-id="LAST_7_DAY" class="drawer" data-bind="attr: {id: 'drawer6_'+randomId}, text: timePeriodLast7days"></a>
+                    <a href="#" data-tp-id="LAST_14_DAY" class="drawer" data-bind="attr: {id: 'drawer13_'+randomId}, text: timePeriodLast14days"></a>
+                    <a href="#" data-tp-id="LAST_30_DAY" class="drawer" data-bind="attr: {id: 'drawer7_'+randomId}, text: timePeriodLast30days"></a>
+                    <a href="#" data-tp-id="LAST_90_DAY" class="drawer" data-bind="attr: {id: 'drawer8_'+randomId}, text: timePeriodLast90days"></a>
+                    <a href="#" data-tp-id="LAST_12_MONTH" class="drawer" data-bind="attr: {id: 'drawer18_'+randomId}, text: timePeriodLast12months"></a>
+                    <a href="#" data-tp-id="LAST_1_YEAR" class="drawer" data-bind="attr: {id: 'drawer12_'+randomId}, text: timePeriodLast1year"></a>
+                    <a href="#" data-tp-id="LATEST" class="drawer" data-bind="attr: {id: 'drawer10_'+randomId}, text: timePeriodLatest"></a>
+                    <hr style="margin: 0px;">
+                    <a href="#" data-tp-id="RECENT" class="drawer" data-bind="attr: {id: 'drawer14_'+randomId}, text: timePeriodRecent"></a>
+                    <a href="#" data-tp-id="CUSTOM" class="drawer" data-bind="attr: {id: 'drawer9_'+randomId}, text: timePeriodCustom"></a>
                 </div>
                 </div>
                 
                 <!-- popup for recently used time ranges -->
                 <div style="background-color: #fcfdfe; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px;" data-bind="ojComponent: {component: 'ojPopup'}, attr: {id: 'recentPanel_'+randomId}">
                     <div data-bind="foreach: recentList()">
-                        <div style="padding: 5px; cursor: pointer;" data-bind="html: $parent.getRecentDateTimeInfo($data), event: {mouseover: $parent.hoverOnDrawer, mouseout: $parent.hoverOutDrawer}, click: $parent.chooseByRecent"></div>
+                        <div class="recent-list" style="padding: 5px; cursor: pointer;" data-bind="html: $parent.getRecentDateTimeInfo($data), event: {mouseover: $parent.hoverOnDrawer, mouseout: $parent.hoverOutDrawer}, click: $parent.chooseByRecent"></div>
                     </div>
                 </div>
 
                 <!-- right of panel-->
                 <!--<div class="pickerPanel" data-bind="visible: showRightPanel, attr: {id: 'pickerPanel_'+randomId}">-->
-                <div class="pickerPanel" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'pickerPanel_'+randomId}, click: function(data, event) {event.stopPropagation();return true;}, css: pickerPanelCss">
+                <div class="pickerPanel" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'pickerPanel_'+randomId}, click: function(data, event) {event.stopPropagation();return true;}">
+                    <div style="height: 21px; margin: 0 auto;">
+                        <span style="display: inline-block; padding: 5px 5px 0px;" tabindex="0" data-bind="click: timeFilterControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {timeFilterControl();}}}, visible: enableTimeFilter, css: timeFilterIconCss, attr: {'aria-label': timeFilterAlt}">
+                            <!--func_gear_16_ena-->
+                            <img data-bind="attr: {id: 'timeFilterIcon_'+randomId, alt: timeFilterAlt, title: timeFilterIconTitle}" src="/emsaasui/uifwk/@version@/images/imgbackground.png" style="background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -126px;height:16px;width:16px;"/>
+                        </span>
+                    </div>
 
-                    <!-- ko if: hideLastRange() !== true -->
                     <div class="lrControlRadios">
                         <span class="relRadios">
                             <input type="radio" name="lrCtrl" value="flexRelTimeCtrl" data-bind="checked: lrCtrlVal">
                             <label data-bind="text: nls.DATETIME_PICKER_FLEX_REL_TIME_LAST"></label>
                         </span>
-                        <input data-bind="ojComponent: {component: 'ojInputNumber', value: flexRelTimeVal,
+                        <input data-bind="ojComponent: {component: 'ojInputNumber', value: flexRelTimeVal, min: 1, max: 999,
                                 validators: [numberValidator],
-                                rootAttributes: {style: 'min-width: 54px; max-width:88px;padding-left: 10px; padding-right: 10px; display: inline-block; vertical-align: top;'},
+                                rootAttributes: {id: 'lastNumber_' + randomId,
+                                    style: 'min-width: 54px; max-width:88px;padding-left: 10px; padding-right: 10px; display: inline-block; vertical-align: top;'},
                                 displayOptions: {'validatorHint': 'none'},
-                                optionChange: flexRelTimeValChanged, disabled: lrCtrlVal()!=='flexRelTimeCtrl'},
+                                optionChange: flexRelTimeValChanged, disabled: lrCtrlVal()!=='flexRelTimeCtrl'
+                                },
                                 attr: {id: 'flexRelTimeVal_' + randomId}"/>
                         <select data-bind="ojComponent: {component: 'ojSelect', value: flexRelTimeOpt,
                             rootAttributes: {style: 'max-width: 98px; min-width:7em; display: inline-block; vertical-align: top;', id: 'flexRelTimeOpt_' + randomId}, 
@@ -158,92 +164,58 @@
                             <span class="time-filter-latest-tooltip" data-bind="text: nls.DATETIME_PICKER_RADIO_LATEST_HELP, css: {'latest-enabled': enableLatestOnCustomPanel()}"></span>
                         </div>                                                    
                         <!-- /ko -->
+                        
                         <hr>
                         
-                        <span style="display: inline-block; padding-top: 5px;">
+                        <span style="margin-top: 0px;" class="relRadios">
                             <span>
                                 <input type="radio" name="lrCtrl" value="timeLevelCtrl" data-bind="checked: lrCtrlVal">
                                 <label data-bind="text: nls.DATETIME_PICKER_RADIO_RANGE"></label>
                             </span>
-<!--                            <select data-bind="ojComponent: {component: 'ojSelect', value: timeLevelOpt, 
-                                rootAttributes: {style: 'max-width: 108px; padding-left: 10px;'},
-                                optionChange: timeLevelOptChanged, disabled: lrCtrlVal()!=='timeLevelCtrl'}">
-                                <option value="minute">Minute</option>
-                                <option value="second">Second</option>
-                                <option value="millisecond">Millisecond</option>
-                            </select>-->
                         </span>
-                    </div>
-                    <!-- /ko -->
-
-                    <span style="display: inline-block;" tabindex="0" data-bind="click: timeFilterControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {timeFilterControl();}}}, visible: enableTimeFilter, css: timeFilterIconCss, attr: {'aria-label': timeFilterAlt}">
-                        <!--func_gear_16_ena-->
-                        <img data-bind="attr: {id: 'timeFilterIcon_'+randomId, alt: timeFilterAlt, title: timeFilterIconTitle}" src="/emsaasui/uifwk/@version@/images/imgbackground.png" style="background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -126px;height:16px;width:16px;"/>
-                    </span>
-                    
-                    <!--date and time info above picker -->
-                    <div class="pickerTop" data-bind="attr: {style: pickerTopCss}">
-                        <!-- date and time above the canlendar -->
-
-                        <div style="display:inline-block; padding-left: 15px;">
-                            <div class="chosenDate">
-                                <input id="chosen-date-1" data-bind="attr: {id: 'inputStartDate_'+randomId, 'aria-label': startDateLabel}, 
-                                    ojComponent: {component: 'ojInputText', value: startDate, placeholder: calendarDateFormat,
-                                        rootAttributes:{style : 'width: 70px;'}, 
-                                        optionChange: function(event, data){changeDate(event, data, 1)},
-                                        disabled: lrCtrlVal()!=='timeLevelCtrl'
-                                    },
-                                    click: focusOnStartDate, hasFocus: startDateFocus"/>
-                            </div>
-
-                            <div class="chosenTime" data-bind="attr: {id: 'divStartTime_'+randomId}, click: focusOnStartTime, visible: !hideTimeSelection()">
-                                <input id="chosen-time-1" data-bind="attr:{id: 'inputStartTime_'+randomId, 'aria-label': startTimeLabel},
-                                    ojComponent:{component: 'ojInputTime', value: startTime, converter: getTimeConverter(), timePicker:{timeIncrement: timeIncrement()},
-                                        optionChange: changeStartTime, displayOptions: {'messages': 'none'},
-                                        disabled: lrCtrlVal()!=='timeLevelCtrl'
-                                    }, 
-                                    hasFocus: startTimeFocus
-                                    "/>
-                            </div>
-
-                            <div class="to">
-                                <span style="font-weight: bold">-</span>
-                            </div>
-
-                            <div class="chosenDate">
-                                <input id="chosen-date-2" data-bind="attr: {id: 'inputEndDate_'+randomId, 'aria-label': endDateLabel}, 
-                                    ojComponent: {component: 'ojInputText', value: endDate, placeholder: calendarDateFormat, 
-                                        rootAttributes: {style : 'width: 70px;'}, 
-                                        optionChange: function(event, data){changeDate(event, data, 2)},
-                                        disabled: lrCtrlVal()!=='timeLevelCtrl'
-                                    },
-                                    click: focusOnEndDate, hasFocus: endDateFocus"/>
-                            </div>
-
-                            <div class="chosenTime" data-bind="attr: {id: 'divEndTime_'+randomId}, click: focusOnEndTime, visible: !hideTimeSelection()">
-                                <input id="chosen-time-2" data-bind="attr:{id: 'inputEndTime_'+randomId, 'aria-label': endTimeLabel}, 
-                                    ojComponent:{component: 'ojInputTime', value: endTime, converter: getTimeConverter(), timePicker:{timeIncrement: timeIncrement()}, 
-                                        optionChange: changeEndTime, displayOptions: {'messages': 'none'},
-                                        disabled: lrCtrlVal()!=='timeLevelCtrl'
-                                    },
-                                    hasFocus: endTimeFocus"/>
-                            </div>
+                        <div>
+                            <input data-bind="ojComponent: {component: 'ojInputDate', value: startDateISO, rawValue: rawStartDate, disabled: lrCtrlVal() !== 'timeLevelCtrl',
+                                                    datePicker: {daysOutsideMonth: 'hidden'},
+                                                    converter: inputDateConverter,
+                                                    required: true,
+                                                    min: startDateMin, max: endDateISO(),
+                                                    optionChange: startDateChanged,
+                                                    displayOptions: {'validatorHint': 'none'},
+                                                    rootAttributes: {style: 'width: 70px;', class: 'relRadios', id: 'startDate_'+randomId}
+                                                },
+                                    attr: {id: 'inputStartDate_'+randomId, 'aira-label': startDateLabel}"/>
+                            <!-- ko if: !hideTimeSelection() -->
+                            <input data-bind="ojComponent: {component: 'ojInputTime', value: startTime, rawValue: rawStartTime, converter: getTimeConverter(), timePicker: {timeIncrement: timeIncrement()},
+                                                    disabled: lrCtrlVal() !== 'timeLevelCtrl',
+                                                    required: true,
+                                                    optionChange: startTimeChanged,
+                                                    rootAttributes: {style: 'width: 150px;', class: 'relRadios', id: 'startTime_'+randomId}
+                                                },
+                                    attr: {id: 'inputStartTime_'+randomId, 'aira-label': startTimeLabel}"/>
+                            <!-- /ko -->
+                            <span class="relRadios" style="font-weight: bold; padding-top: 8px;">-</span>
+                            <input data-bind="ojComponent: {component: 'ojInputDate', value: endDateISO, rawValue: rawEndDate, disabled: lrCtrlVal() !== 'timeLevelCtrl',
+                                                    datePicker: {daysOutsideMonth: 'hidden'},
+                                                    converter: inputDateConverter,
+                                                    required: true,
+                                                    min: endDateMin, max: endDateMax,
+                                                    optionChange: endDateChanged,
+                                                    displayOptions: {'validatorHint': 'none'},
+                                                    rootAttributes: {style: 'width: 70px;', class: 'relRadios', id: 'endDate_'+randomId}
+                                                },
+                                    attr: {id: 'inputEndDate_'+randomId, 'aira-label': endDateLabel}"/>
+                            <!-- ko if: !hideTimeSelection() -->
+                            <input data-bind="ojComponent: {component: 'ojInputTime', value: endTime, rawValue: rawEndTime, converter: getTimeConverter(), timePicker: {timeIncrement: timeIncrement()},
+                                                    disabled: lrCtrlVal() !== 'timeLevelCtrl',
+                                                    required: true,
+                                                    optionChange: endTimeChanged,
+                                                    rootAttributes: {style: 'width: 150px;', class: 'relRadios', id: 'endTime_'+randomId}
+                                                },
+                                    attr: {id: 'inputEndTime_'+randomId, 'aira-label': endTimeLabel}"/>
+                            <!-- /ko -->
                         </div>
-
                     </div>
 
-                    <!-- ko if: showCalendar -->
-                    <div style="display: inline-block; padding: 0px 10px; min-height: 250px;">
-                        <!--date picker -->
-                        <div class="datePicker" data-bind="attr: {id: 'datePicker_'+randomId}, ojComponent:{component: 'ojInputDate', 
-                                                                datePicker:{changeMonth: 'none', changeYear: 'none', daysOutsideMonth: 'hidden', numberOfMonths: 2, stepMonths: 1},
-                                                                value: value, min: minDate, max: maxDate, displayOptions: {'messages':'none', validatorHint: 'none'},
-                                                                optionChange: calendarOptionChanged, disabled: lrCtrlVal()!=='timeLevelCtrl'
-                                                                }, 
-                                                            event: {mouseup: calendarClicked}">
-                        </div>   
-                    </div>
-                    <!-- /ko -->
                     
                     <!-- Apply & Cancel button -->
                     <div class="buttons">
@@ -253,21 +225,9 @@
                         </button>
                         <span style="font-size: 14px; padding-left: 10px;" data-bind="text: timeZone"></span>
                     </div>
-                    <!-- ko if: showErrorMsg -->
-                    <div class="errorMsg" data-bind="text: formatErrorMsg"></div>
-                    <!-- /ko -->
-                    <!-- ko if: showTimeValidateErrorMsg -->
-                    <div class="errorMsg" data-bind="text: timeValidateErrorMsg"></div>
-                    <!-- /ko -->
-                    <!-- ko if: showTimeValidateFutureErrorMsg -->
-                    <div class="errorMsg" data-bind="text: timeValidateFutureErrorMsg"></div>
-                    <!-- /ko -->
-                    <!--ko if: showBeyondWindowLimitError-->
-                    <div class="errorMsg" data-bind="text: beyondWindowLimitErrorMsg"></div>
-                    <!-- /ko -->
                     
                     <!-- pop up for time filter-->
-                    <div style="display: none; width: 560px; height: 499px; margin: auto; border: 1px solid #f0f0f0; background: #FFFFFF;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'timeFilter_'+randomId}, click: function(data, event) {event.stopPropagation();return true;}">
+                    <div style="display: none; width: 560px; height: auto; margin: auto; border: 1px solid #f0f0f0; background: #FFFFFF;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'timeFilter_'+randomId}, click: function(data, event) {event.stopPropagation();return true;}">
                         <!-- ko if: enableTimeFilter -->
                         <div style="padding-top: 15px;" data-bind="component: {name: 'time-filter', params: tfParams}"></div>
                         <!-- /ko -->

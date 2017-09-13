@@ -22,32 +22,18 @@ public class InstanceData<T>
 	private String key;
 	private T data;
 	private LookupClient client;
-	private int totalRowNum;
 
 	/**
 	 * @param instance
 	 * @param data
 	 */
-	public InstanceData(String key, LookupClient client, T data, int totalRowNum)
+	public InstanceData(String key, LookupClient client, T data)
 	{
 		super();
 		this.key = key;
 		this.client = client;
 		this.data = data;
-		this.totalRowNum = totalRowNum;
 	}
-
-	public int getTotalRowNum() {
-		return totalRowNum;
-	}
-
-
-
-	public void setTotalRowNum(int totalRowNum) {
-		this.totalRowNum = totalRowNum;
-	}
-
-
 
 	/**
 	 * @return the data
@@ -57,32 +43,24 @@ public class InstanceData<T>
 		return data;
 	}
 
-	
-
-	/**
-	 * @param data
-	 *            the data to set
-	 */
-	public void setData(T data)
-	{
-		this.data = data;
-	}
-
 	public String getKey() {
 		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
 	}
 
 	public LookupClient getClient() {
 		return client;
 	}
 
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public void setData(T data) {
+		this.data = data;
+	}
+
 	public void setClient(LookupClient client) {
 		this.client = client;
 	}
 
-	
 }

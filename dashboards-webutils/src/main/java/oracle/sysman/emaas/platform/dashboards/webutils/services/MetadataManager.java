@@ -36,7 +36,7 @@ public class MetadataManager implements ApplicationServiceManager
     //TODO fetch all services by rel name
     private static final List<String> oobProvider = Arrays.asList(MetadataRetriever.SERVICENAME_APM,
             MetadataRetriever.SERVICENAME_ITA, MetadataRetriever.SERVICENAME_LA, MetadataRetriever.SERVICENAME_ORCHESTRATION,
-            MetadataRetriever.SERVICENAME_SECURITY_ANALYTICS, MetadataRetriever.SERVICENAME_UDE);
+            MetadataRetriever.SERVICENAME_SECURITY_ANALYTICS, MetadataRetriever.SERVICENAME_UDE, MetadataRetriever.SERVICENAME_EVENT);
     /* (non-Javadoc)
      * @see oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager#getName()
      */
@@ -63,12 +63,18 @@ public class MetadataManager implements ApplicationServiceManager
                 oobList = metadataRetriever.getOobDashboardsByService(serviceName);
             } catch (DashboardException e) {
                 LOGGER.error("Error when retrieving OOB from {} :{}", serviceName, e.getLocalizedMessage());
+            } catch (Exception ex) {
+                // in case some unknow exception
+                LOGGER.error(ex.getLocalizedMessage(), ex);
             }
             
             try {
                 metadataStorer.storeOobDashboards(oobList);
             } catch (DashboardException e) {
                 LOGGER.error("Error when storing OOB into database for {} : {}", serviceName, e.getLocalizedMessage());
+            } catch (Exception ex) {
+                // in case some unknow exception
+                LOGGER.error(ex.getLocalizedMessage(), ex);
             }
             
             // Load resource bundle for OOB metadata from other services
@@ -77,12 +83,18 @@ public class MetadataManager implements ApplicationServiceManager
                 rbList = metadataRetriever.getResourceBundleByService(serviceName);
             } catch (DashboardException e) {
                 LOGGER.error("Error when retrieving resource bundles from {} : {}", serviceName, e.getLocalizedMessage());
+            } catch (Exception ex) {
+                // in case some unknow exception
+                LOGGER.error(ex.getLocalizedMessage(), ex);
             }
             
             try {
                 metadataStorer.storeResourceBundle(rbList);
             } catch (DashboardException e ) {
                 LOGGER.error("Error when saving resource bundles for {} : {}", serviceName, e.getLocalizedMessage());
+            } catch (Exception ex) {
+                // in case some unknow exception
+                LOGGER.error(ex.getLocalizedMessage(), ex);
             }
             
         }

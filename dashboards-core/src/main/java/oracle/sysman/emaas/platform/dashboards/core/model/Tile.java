@@ -973,11 +973,11 @@ public class Tile
 			to.setWidgetUniqueId(Tile.TEXT_WIDGET_NAME);*/
 			to.setWidgetCreationTime(String.valueOf(DateUtil.getGatewayTime()));
 			String encodedContent = StringEscapeUtils.escapeHtml4(getContent());
-			if (StringUtil.isEmpty(encodedContent)) {
-				throw new CommonFunctionalException(DashboardErrorConstants.DASHBOARD_TEXT_WIDGET_EMPTY_CONTENT_ERROR_CODE,
-						MessageUtils.getDefaultBundleString(CommonFunctionalException.TEXT_WIDGET_INVALID_EMPTY_CONTENT_ERROR));
-			}
-			if (encodedContent.length() > TEXT_WIDGET_MAX_CONTENT_LEN) {
+//			if (StringUtil.isEmpty(encodedContent)) {
+//				throw new CommonFunctionalException(DashboardErrorConstants.DASHBOARD_TEXT_WIDGET_EMPTY_CONTENT_ERROR_CODE,
+//						MessageUtils.getDefaultBundleString(CommonFunctionalException.TEXT_WIDGET_INVALID_EMPTY_CONTENT_ERROR));
+//			}
+			if (encodedContent != null && encodedContent.length() > TEXT_WIDGET_MAX_CONTENT_LEN) {
 				throw new CommonFunctionalException(DashboardErrorConstants.DASHBOARD_TEXT_WIDGET_CONTENT_TOO_LONG_ERROR_CODE,
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.TEXT_WIDGET_CONTENT_TOO_LONG_ERROR));
 			}

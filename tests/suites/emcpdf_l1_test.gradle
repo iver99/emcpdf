@@ -158,7 +158,9 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/*.class"
-
+	include "oracle/sysman/emaas/platform/dashboards/comparator/exception/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/timer/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/exception/*.class"
 
 	useRestAssured=true
 	ext.set("testType", "unit")
@@ -173,6 +175,7 @@ task DEVTest(type:EMTest,dependsOn: DEVTest_ws){
 	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest_S2.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/UserOptionsManagerTest_S2.class"
 //	include "oracle/sysman/emaas/platform/dashboards/core/persistence/PersistenceManagerTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest_S2.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/model/subscription2/*.class"
 
 	include "oracle/sysman/emaas/platform/dashboards/core/model/*.class"

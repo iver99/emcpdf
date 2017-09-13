@@ -208,6 +208,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_ZDT_COUNTS = NAV_API_BASE + "zdt/counts";
 	private static final String NAV_ZDT_TABLEROWS = NAV_API_BASE + "zdt/tablerows";
 	private static final String NAV_ZDT_SYNC = NAV_API_BASE + "zdt/sync";
+	private static final String NAV_ZDT_TENANTS = NAV_API_BASE + "zdt/tenants";
+	
+	private static final String NAV_ZDT_SYNC_STATUS = NAV_API_BASE + "zdt/sync/status";
+	private static final String NAV_ZDT_COMPARE_STATUS = NAV_API_BASE + "zdt/compare/status";
+	private static final String NAV_ZDT_COMPARE_RESULT = NAV_API_BASE + "zdt/compare/result";
+	
 	private static final String NAV_STATIC_OMCSTATUS = NAV_API_BASE + "omcstatus";
 	private static final String NAV_WIDGET_NOTIFY = NAV_API_BASE + "widgetnotification";
 	private static final String NAV_SSF_LIFECYCLE = NAV_API_BASE + "ssflifecycle.ntf";
@@ -466,6 +472,35 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("zdt/sync").withHref(applicationUrlHttps + NAV_ZDT_SYNC));
 			}
+			
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("zdt/sync/status").withHref(applicationUrlHttp + NAV_ZDT_SYNC_STATUS));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("zdt/sync/status").withHref(applicationUrlHttps + NAV_ZDT_SYNC_STATUS));
+			}
+				
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("zdt/compare/status").withHref(applicationUrlHttp + NAV_ZDT_COMPARE_STATUS));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("zdt/compare/status").withHref(applicationUrlHttps + NAV_ZDT_COMPARE_STATUS));
+			}
+			
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("zdt/compare/result").withHref(applicationUrlHttp + NAV_ZDT_COMPARE_RESULT));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("zdt/compare/result").withHref(applicationUrlHttps + NAV_ZDT_COMPARE_RESULT));
+			}
+			
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("zdt/tenants").withHref(applicationUrlHttp + NAV_ZDT_TENANTS));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("zdt/tenants").withHref(applicationUrlHttps + NAV_ZDT_TENANTS));
+			}
+			
 			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("ssf.widget.changed").withHref(applicationUrlHttp + NAV_WIDGET_NOTIFY));
 			}

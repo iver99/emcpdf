@@ -1,8 +1,11 @@
-package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities;
+package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class ZDTStatusRowEntity {
+public class ZDTComparatorStatusRowEntity {
+
+	
+
 	@JsonProperty("lastComparisonDateTime")
 	private String comparisonDate;
 	
@@ -13,15 +16,9 @@ public class ZDTStatusRowEntity {
 	private String nextComparisonDate;
 	
 	@JsonProperty("divergencePercentage")
-	private double divergencePercentage;
+	private String divergencePercentage;
 	
-	/*
-	@JsonProperty("SYNC_DATE")
-	private String syncDate;
 	
-	@JsonProperty("SYNC_RESULT")
-	private String syncResult;
-*/
 	public String getComparisonDate() {
 		return comparisonDate;
 	}
@@ -46,32 +43,16 @@ public class ZDTStatusRowEntity {
 		this.nextComparisonDate = nextComparisonDate;
 	}
 
-	public double getDivergencePercentage() {
+	public String getDivergencePercentage() {
 		return divergencePercentage;
 	}
 
-	public void setDivergencePercentage(double divergencePercentage) {
+	public void setDivergencePercentage(String divergencePercentage) {
 		this.divergencePercentage = divergencePercentage;
 	}
-/*
-	public String getSyncDate() {
-		return syncDate;
-	}
 
-	public void setSyncDate(String syncDate) {
-		this.syncDate = syncDate;
-	}
-
-	public String getSyncResult() {
-		return syncResult;
-	}
-
-	public void setSyncResult(String syncResult) {
-		this.syncResult = syncResult;
-	}
-*/
-	public ZDTStatusRowEntity(String comparisonDate, String comparisonType,
-			String nextComparisonDate, double divergencePercentage) {
+	public ZDTComparatorStatusRowEntity(String comparisonDate, String comparisonType,
+			String nextComparisonDate, String divergencePercentage) {
 		super();
 		this.comparisonDate = comparisonDate;
 		this.comparisonType = comparisonType;
@@ -79,10 +60,9 @@ public class ZDTStatusRowEntity {
 		this.divergencePercentage = divergencePercentage;
 	}
 
-	public ZDTStatusRowEntity() {
+	public ZDTComparatorStatusRowEntity() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	
+
 }

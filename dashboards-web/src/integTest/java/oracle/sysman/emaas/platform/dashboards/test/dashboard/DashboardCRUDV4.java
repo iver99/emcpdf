@@ -424,6 +424,28 @@ public class DashboardCRUDV4
 	}
 
 	@Test
+	public void dashboardCreateOOB()
+	{
+		try {
+			String jsonString1 = "{ \"name\":\"New_OOB_Dashboard\", \"systemDashboard\": true}";
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString1).when().post("/dashboards");
+			Assert.assertTrue(res1.getStatusCode() == 403);
+			Assert.assertEquals(res1.jsonPath().getString("errorCode"), "30002");
+			Assert.assertEquals(res1.jsonPath().getString("errorMessage"), "Not support to create system dashboard");
+		}
+		catch (Exception e){
+			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
+		}
+	}
+
+	@Test
 	public void dashboardDeleteInvalidId()
 	{
 		try {
@@ -941,6 +963,28 @@ public class DashboardCRUDV4
 	}
 
 	@Test
+	public void dashboardsetCreateOOB()
+	{
+		try {
+			String jsonString1 = "{ \"name\":\"New_OOB_DashboardSet\", \"type\": \"SET\", \"systemDashboard\": true}";
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString1).when().post("/dashboards");
+			Assert.assertTrue(res1.getStatusCode() == 403);
+			Assert.assertEquals(res1.jsonPath().getString("errorCode"), "30002");
+			Assert.assertEquals(res1.jsonPath().getString("errorMessage"), "Not support to create system dashboard");
+		}
+		catch (Exception e){
+			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
+		}
+	}
+
+	@Test
 	public void dashboardsetUpdate()
 	{
 		String dashboard_id = "";
@@ -1022,6 +1066,65 @@ public class DashboardCRUDV4
 				Assert.assertTrue(res9.getStatusCode() == 204);
 			}
 
+		}
+	}
+
+	@Test
+	public void dashboardsetUpdateSystemDashboard()
+	{
+		String dashboard_id = "";
+		try {
+			String jsonString = "{ \"name\":\"Custom_DashboardSet_Edit\", \"type\": \"SET\" }";
+
+			Response res = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString).when().put("/dashboards/28");
+
+			Assert.assertTrue(res.getStatusCode() == 403);
+			Assert.assertEquals(res.jsonPath().getString("errorCode"), "30003");
+			Assert.assertEquals(res.jsonPath().getString("errorMessage"), "Not support to update system dashboard");
+
+			String jsonString1 = "{ \"name\":\"Test_Custom_DashboardSet\", \"type\": \"SET\"}";
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString1).when().post("/dashboards");
+			Assert.assertTrue(res1.getStatusCode() == 201);
+			dashboard_id = res1.jsonPath().getString("id");
+			String jsonString2 = "{ \"name\":\"Custom_Dashboard_Edit\",\"type\": \"SET\", \"systemDashboard\":true }";
+			Response res2 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString2).when().put("/dashboards/" + dashboard_id);
+			Assert.assertTrue(res2.getStatusCode() == 403);
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "30003");
+			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Not support to update system dashboard");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
+		}
+		finally {
+			if (!("").equals(dashboard_id)) {
+				Response res5 = RestAssured
+						.given()
+						.contentType(ContentType.JSON)
+						.log()
+						.everything()
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+								"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
+				Assert.assertTrue(res5.getStatusCode() == 204);
+			}
 		}
 	}
 
@@ -1476,7 +1579,7 @@ public class DashboardCRUDV4
 							"Authorization", authToken).body(jsonString).when().put("/dashboards/2");
 
 			Assert.assertTrue(res.getStatusCode() == 403);
-			Assert.assertEquals(res.jsonPath().getString("errorCode"), "30000");
+			Assert.assertEquals(res.jsonPath().getString("errorCode"), "30003");
 			Assert.assertEquals(res.jsonPath().getString("errorMessage"), "Not support to update system dashboard");
 			String jsonString1 = "{ \"name\":\"Test_Custom_Dashboard\"}";
 			Response res1 = RestAssured
@@ -1497,7 +1600,7 @@ public class DashboardCRUDV4
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).body(jsonString2).when().put("/dashboards/" + dashboard_id);
 			Assert.assertTrue(res2.getStatusCode() == 403);
-			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "30000");
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "30003");
 			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Not support to update system dashboard");
 
 		}

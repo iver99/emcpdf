@@ -66,6 +66,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 resetTileHighlighted();
                 selectedContent && selectedContent(param);
             }
+                self.resetEmptyDashboardName && self.resetEmptyDashboardName(); //reset empty dashboard name when user click edit button on tile menu
 
             self.$b().triggerBuilderResizeEvent('resize right panel');
         };
@@ -100,6 +101,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                     setTileHightlighted(self.lastHighlightWigetIndex);
                 }
             }
+            self.resetEmptyDashboardName && self.resetEmptyDashboardName(); //reset empty dashboard name when user toggle right panel
             $b.triggerBuilderResizeEvent('show right panel');
         };
 
@@ -125,19 +127,21 @@ function (ko, $, oj, dfu, mbu, uiutil) {
         };
 
         self.switchEditPanelContent = function (data, event) {
+            var koData = ko.dataFor(event.currentTarget);
             if ($(event.currentTarget).hasClass('edit-dsb-link')) {
                 self.editPanelContent("editdashboard");
                 self.expandDBEditor("singleDashboard-edit", true);
             } else if($(event.currentTarget).hasClass('edit-content-link')){
                 self.editPanelContent("editcontent");
                 $('.dbd-right-panel-editcontent-title').ojCollapsible("option", "expanded", true);
-                selectedContent && selectedContent(ko.dataFor(event.currentTarget));
+                selectedContent && selectedContent(koData);
             } else if ($(event.currentTarget).hasClass('edit-dsbset-link')) {
                 self.editPanelContent("editset");
                 self.expandDBEditor("dashboardset-edit", true);
             } else {
                 self.editPanelContent("settings");
             }
+            self.resetEmptyDashboardName && self.resetEmptyDashboardName(); //reset empty dashboard name when user click back icon or other settings
             self.$b().triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
         };
 

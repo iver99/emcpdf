@@ -48,21 +48,13 @@ public class InstancesComparedData<T>
 		return instance2;
 	}
 
-	/**
-	 * @param instance1
-	 *            the instance1 to set
-	 */
-	public void setInstance1(InstanceData<T> instance1)
-	{
+	public void setInstance1(InstanceData<T> instance1) {
 		this.instance1 = instance1;
 	}
 
-	/**
-	 * @param instance2
-	 *            the instance2 to set
-	 */
-	public void setInstance2(InstanceData<T> instance2)
-	{
+	public void setInstance2(InstanceData<T> instance2) {
 		this.instance2 = instance2;
 	}
+
+	
 }

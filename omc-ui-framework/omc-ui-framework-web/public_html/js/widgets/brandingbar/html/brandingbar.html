@@ -20,7 +20,7 @@
                 </button>
             </div>
             <!-- /ko -->
-            <div id="emaas-appheader-bar" data-testapiversion="1.18.0" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
+            <div id="emaas-appheader-bar" data-testapiversion="1.18.0" class="oj-row emaas-appheader-lite" style="max-width: none;padding-left: 10px">
 
                 <!-- logo -->  
                 <div class="emaas-appheader-logo" data-bind="attr: {'aria-label': textOracle}">
@@ -44,12 +44,12 @@
                     <ul id="emaasAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: globalNavMenuItemSelect, beforeOpen: $data.emaasAppheaderGlobalNavMenuBeforeOpen}" style="display: none;">
                         <!-- ko if: renderEmaasAppheaderGlobalNavMenu() -->
                         <!-- ko foreach: globalNavItems -->
-                        <li class="oj-menu-item">
-                            <a data-bind="attr:{'id':id}, href: url"><span data-bind="text: label"></span></a>
+                        <li class="oj-menu-item emaas-appheader-menu-item">
+                            <a data-bind="attr:{'id':id}, href: url,css:linkClass"><span data-bind="css:iconClass"></span><span style="margin-top:1px;"data-bind="text: label"></span></a>
                         </li>
                         <!-- /ko -->
                         <!-- /ko -->
-                    </ul>
+                    </ul> 
 
                     <div class="emaas-appheader-toolbar-container">
                         <!--div class="emaas-appheader-toolbar oj-toolbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}"-->
@@ -213,28 +213,14 @@
         <!-- topology --->
         <!-- ko if: isTopologyCompRegistered() !== false -->
         <div id="ude-topology-div" style="height:auto; display: flex; padding-left: 10px; padding-right: 10px; padding-bottom: 5px;"
-             data-bind="style:{'overflow-y': showMaxMinButtonInDF() ? 'auto': 'hidden'},visible: isTopologyDisplayed, event: {mouseover: showMaxMinButtonInDF() ? showTopologyMaxIcon: null, 
-                                mouseout: showMaxMinButtonInDF()? hideTopologyMaxIcon: null}" class="ude-sdk">
-            <!-- ko if: topologyHeight() > 201 && showMaxMinButtonInDF() -->
-            <div id="ude-topology-title" style="display: flex; position: absolute; z-index: 1" data-bind="style: {right: maxIconToRight}">
-                    <button data-bind="attr: {'id': 'maxMinTopology', title: isMaximized() ? topologyRestoreLabel : topologyMaximizeLabel}, click: maxMinTopologyToggle,
-                                    style: {display: 'none'},
-                                    ojComponent: {
-                                        component: 'ojButton', chroming: 'half',
-                                        icons: {start: isMaximized() ? 'fa-icon-font icon-font-16 emaas-appheader-restore-icon' : 'fa-icon-font icon-font-16 emaas-appheader-maximize-icon'},
-                                        label: ''
-                                    }" >
-                    </button>
-            </div>
-            <!-- /ko -->
-            
+             data-bind="visible: isTopologyDisplayed" class="ude-sdk">            
             <!--<div data-bind="attr: {style: topologyStyle}" style="margin: 0 auto">test div</div>-->
         <div style="height: auto; display: flex; width:100%;
-            border-width: 1px; border-color: #d6dfe6; border-style: solid; background-color: white;"
-            data-bind="style:{'overflow-y': showMaxMinButtonInDF() ? 'auto': 'hidden'}">
-        <div class="ude-topology ude-topology-in-brandingbar" data-bind="attr: {style: topologyStyle},
-           component:{name:'emctas-topology', 
-            params:{
+            border-width: 1px; border-color: #d6dfe6; border-style: solid; background-color: white;">
+        <div class="ude-topology ude-topology-in-brandingbar"
+             style="display:block;float:none;width:100%;"
+             data-bind="component:{name:'emctas-topology', 
+             params:{
                    entityQueryVars: queryVars(),
                    entities: entities(),
                    associations: associations(),
@@ -245,9 +231,7 @@
                    highlightedEntities: highlightedEntities,
                    updateGlobalContextByTopologySelection: updateGlobalContextByTopologySelection,
                    enableCache: true,
-                   topologySize: topologySize,
                    topologyData: topologyData,
-                   showMaxMinButtonInDF: showMaxMinButtonInDF,
                    topologyResizeCallback: topologyResizeCallback,
                    showEnterpriseTopology:showEnterpriseTopology
                 }

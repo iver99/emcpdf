@@ -107,49 +107,7 @@ public class DashboardBuilderUtil
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		dbu.addLinkInTextWidget(driver, index, url, option);
 	}
-	/*
-	public static void EditDashboard_targetselctor(WebDriver driver, String name, String descriptions)
-	{
-	Validator.notNull("editname", name);
-	Validator.notEmptyString("editname", name);
-
-	driver.getLogger().info("DashboardBuilderUtil.edit started");
-	driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
-	driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
-	driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsEditLocatorCSS);
-	driver.click("css=" + DashBoardPageId.BuilderOptionsEditLocatorCSS);
-	driver.takeScreenShot();
-	driver.waitForElementPresent("id=" + DashBoardPageId.BuilderOptionsEditNameCSS);
-
-	//wait for 900s
-	By locatorOfEditDesEl = By.id(DashBoardPageId.BuilderOptionsEditDescriptionCSS);
-	WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-
-	//add name and description
-	driver.getElement("id=" + DashBoardPageId.BuilderOptionsEditNameCSS).clear();
-	driver.click("id=" + DashBoardPageId.BuilderOptionsEditNameCSS);
-	wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfEditDesEl));
-	driver.sendKeys("id=" + DashBoardPageId.BuilderOptionsEditNameCSS, name);
-
-	driver.getElement("id=" + DashBoardPageId.BuilderOptionsEditDescriptionCSS).clear();
-	driver.click("id=" + DashBoardPageId.BuilderOptionsEditDescriptionCSS);
-
-	wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfEditDesEl));
-	driver.sendKeys("id=" + DashBoardPageId.BuilderOptionsEditDescriptionCSS, descriptions);
-	wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfEditDesEl));
-	driver.takeScreenShot();
-
-	        //selctor filetr entity
-	driver.waitForElementPresent(DashBoardPageId.EntityfilterLocator);
-	driver.click(DashBoardPageId.EntityfilterLocator);
-
-	//press ok button
-	driver.waitForElementPresent("css=" + DashBoardPageId.BuilderOptionsEditSaveCSS);
-	driver.click("css=" + DashBoardPageId.BuilderOptionsEditSaveCSS);
-	driver.takeScreenShot();
-	driver.getLogger().info("DashboardBuilderUtil.edit complete");
-	}
-	 */
+	
 
 	public static Boolean favoriteOption(WebDriver driver)
 	{

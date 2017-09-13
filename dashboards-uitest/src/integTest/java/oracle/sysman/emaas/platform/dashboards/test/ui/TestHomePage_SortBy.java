@@ -24,7 +24,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//create a dashboard
 		DashboardHomeUtil.createDashboard(webd, "ADashboard Test", "", DashboardHomeUtil.DASHBOARD);
-		DashboardBuilderUtil.verifyDashboard(webd, "ADashboard Test", "", false);
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "ADashboard Test", "", true),"Failed to create dashboard");
 
 		LoginAndLogout.logoutMethod();
 	}
@@ -44,16 +44,19 @@ public class TestHomePage_SortBy extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to create a dashboard for test");
 
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
 		//switch to list view
 		webd.getLogger().info("Switch to List View");
 		DashboardHomeUtil.gridView(webd);
 
-		//search the dashboard
-		webd.getLogger().info("search the dashboard");
-		DashboardHomeUtil.search(webd, "ADashboard Test");
+		//delete the test data
+		webd.getLogger().info("Delete the test data");
+		DashBoardUtils.deleteDashboard(webd, "ADashboard Test");
 
-		//remove the dashboard
-		DashboardHomeUtil.deleteDashboard(webd, "ADashboard Test", DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+		webd.getLogger().info("All test data have been removed");
 
 		//logout
 		LoginAndLogout.logoutMethod();

@@ -73,27 +73,34 @@ public abstract class AbstractComparator
 
 	protected Link getSingleInstanceUrl(LookupClient lc, String rel, String protocol) throws Exception
 	{
+		logger.info("start to get url");
 		if (lc == null) {
+			logger.info("lookup client is null");
 			logger.error("Failed to lookup instance for specified lookup client is null!");
 			return null;
 		}
 		if (rel == null) {
+			logger.info("rel is null");
 			logger.error("Failed to lookup instance for specified lookup rel is null!");
 			return null;
 		}
 		if (protocol == null) {
+			logger.info("protocol is null");
 			logger.error("Failed to lookup instance for specified lookup protocol is null!");
 			return null;
 		}
 		// TODO: following are testing code only!
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(DF_SERVICE_NAME).withVersion(DF_VERSION).build();
+		logger.info("info is "+info);
 		List<InstanceInfo> result = lc.lookup(new InstanceQuery(info));
+		logger.info("result size is "+(result==null?null:result.size()));
 		Link lk = null;
 		if (result != null && result.size() > 0) {
 			// [EMCPDF-733] Rest client can't handle https currently, so http protocol is enough for internal use
 			// find http link only
 			for (InstanceInfo internalInstance : result) {
 				List<Link> links = internalInstance.getLinksWithProtocol(rel, protocol);
+				logger.info("links size is "+(links==null?null:links.size()));
 				if (links != null && links.size() > 0) {
 					lk = links.get(0);
 					return lk;

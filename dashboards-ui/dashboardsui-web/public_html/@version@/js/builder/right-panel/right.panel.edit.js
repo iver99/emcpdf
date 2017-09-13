@@ -81,7 +81,19 @@ define([
 
             self.dashboardsetNameInputed.subscribe(function (val) {
                 self.dashboardsetName(val);
+                self.dashboardsetToolBarModel.dashboardsetName(val);
             });
+            
+            self.resetEmptyDashboardName = function(){
+                if(!self.dashboardsetNameInputed() || !self.dashboardsetNameInputed().trim()){
+                    self.dashboardsetToolBarModel.dashboardsetName(self.dashboardsetToolBarModel.dashboardInst.name());
+                    self.dashboardsetName(self.dashboardsetToolBarModel.dashboardInst.name());
+                }
+                if(self.editDashboardDialogModel()){
+                    self.editDashboardDialogModel().resetEmptyDashboardName();
+                }
+            };
+            
             self.dashboardsetDescriptionInputed.subscribe(function (val) {
                 self.dashboardsetDescription(val);
             });

@@ -130,15 +130,19 @@ public class NLSFilter implements Filter
         public String getResponseText()
         {
             String result;
+            final Logger logger = Logger.getLogger(NLSFilter.class.getSimpleName());
             try {
                 outputStream.flush();
-                outputStream.close();
                 result = byteStream.toString("UTF-8");
-            }
-            catch (IOException x) {
-                final Logger logger = Logger.getLogger(NLSFilter.class.getSimpleName());
+            } catch (IOException x) {
                 logger.log(Level.SEVERE, "Failed to decode outputStream", x);
                 result = null;
+            } finally {
+                try {
+                    outputStream.close();
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "Unable to close outputStream", e);
+                }
             }
             return result;
         }

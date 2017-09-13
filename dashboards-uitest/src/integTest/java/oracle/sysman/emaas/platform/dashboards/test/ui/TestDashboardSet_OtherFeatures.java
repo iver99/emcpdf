@@ -40,6 +40,7 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 	private String dbName_indbSet = "";
 
 	private static String OOBAddToSet = "Database Operations";
+	private static String OOBSetName = "Exadata Health";
 
 	@BeforeClass
 	public void createTestData()
@@ -156,6 +157,55 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		webd.getLogger().info("Verify if the dashboard set is not favorite");
 		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites options is NOT checked!");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbsetName_Favorite), "dashboard set is still favorite");
+	}
+
+	@Test (alwaysRun = true)
+	public void testFavorite_OOBSET()
+	{
+		//initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test in testFavorite_OOBSET");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//open an OOB dashboard
+		webd.getLogger().info("Open an OOB dashboard set");
+		DashboardHomeUtil.selectDashboard(webd, OOBSetName);
+
+		//set the OOB as my favorite
+		webd.getLogger().info("Set the OOB dashboard set as My Favorite");
+		Assert.assertTrue(DashboardBuilderUtil.favoriteOptionDashboardSet(webd),"Fail to set the OOB set as My Favorite");
+
+		//verify the dashboard is favorite
+		webd.getLogger().info("Visit my favorite page");
+		BrandingBarUtil.visitMyFavorites(webd);
+
+		webd.getLogger().info("Verfiy the favortie checkbox is checked");
+		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites option is NOT checked");
+
+		webd.getLogger().info("Verfiy the dashboard is favorite");
+		//DashboardHomeUtil.search(webd, dbName_favorite);
+		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, OOBSetName), "Can not find the dashboard");
+
+		webd.getLogger().info("Open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, OOBSetName);
+		webd.getLogger().info("Verify the dashboard set in builder page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, OOBSetName), "Verify OOB dashboard set failed!");
+
+		//set it to not favorite
+		webd.getLogger().info("set the dashboard to not favorite");
+		Assert.assertFalse(DashboardBuilderUtil.favoriteOptionDashboardSet(webd), "Set to not my favorite dashboard failed!");
+
+		//verify the dashboard is not favoite
+		webd.getLogger().info("visit my favorite page");
+		BrandingBarUtil.visitMyFavorites(webd);
+		webd.getLogger().info("Verfiy the favortie checkbox is checked");
+		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites option is NOT checked");
+
+		webd.getLogger().info("Verfiy the dashboard is not favorite");
+		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, OOBSetName),"The dashboard is still my favorite dashboard");
 	}
 
 	@Test(groups = "first run")

@@ -50,6 +50,9 @@ public class BrandingBarUtil
 	public static final String GLOBAL_ADMIN_MENU_ALERT_RULES = IBrandingBarUtil.GLOBAL_ADMIN_MENU_ALERT_RULES;
 	public static final String GLOBAL_ADMIN_MENU_AGENTS = IBrandingBarUtil.GLOBAL_ADMIN_MENU_AGENTS;
 	public static final String GLOBAL_ADMIN_MENU_ENTITIES_CFG = IBrandingBarUtil.GLOBAL_ADMIN_MENU_ENTITIES_CFG;
+	public static final String GLOBAL_ADMIN_MENU_NOTIFICATION_CHANNELS = IBrandingBarUtil.GLOBAL_ADMIN_MENU_NOTIFICATION_CHANNELS;
+	public static final String GLOBAL_ADMIN_MENU_ADD_ENTITY = IBrandingBarUtil.GLOBAL_ADMIN_MENU_ADD_ENTITY;
+	public static final String GLOBAL_ADMIN_MENU_CLOUD_DISCOVERY = IBrandingBarUtil.GLOBAL_ADMIN_MENU_CLOUD_DISCOVERY;
 
 	/**
 	 * Click the Hierarchical menu item

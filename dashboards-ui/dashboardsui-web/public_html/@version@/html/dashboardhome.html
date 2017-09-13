@@ -113,7 +113,7 @@
      data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', autoDismiss: 'focusLoss', initialFocus: 'none', rootAttributes: {'style': 'padding: 5px;', 'class': 'dbs-summary-page-info-pop'}}">
     <div data-bind="with: selectedDashboard">
         <!-- ko if:  $component.isTilesView() === 'gridtview' -->
-        <div data-bind="text: dashboard.name" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; text-align: center"></div>
+        <div data-bind="text: dashboard.name" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; text-align: center; word-wrap: break-word; "></div>
         <!-- /ko -->
         <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_DESC')"></span><div style="word-wrap: break-word;" data-bind="html: dashboard.description, css:{'dsbinfopopson': dashboard.hasLongDscrpt}"></div><br/>
         <!-- ko if:  $component.isTilesView() === 'gridtview' -->

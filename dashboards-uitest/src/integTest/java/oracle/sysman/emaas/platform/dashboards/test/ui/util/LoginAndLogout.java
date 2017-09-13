@@ -23,7 +23,7 @@ public class LoginAndLogout
 			((JavascriptExecutor) webd.getWebDriver()).executeScript("arguments[0].scrollIntoView(true);", webe);
 			((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
 			webd.takeScreenShot();
-			
+			webd.savePageToFile();
 			webd.getLogger().info("start to logout");
 
 			LoginUtils.doLogout(webd);

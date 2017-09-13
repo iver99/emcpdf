@@ -42,6 +42,7 @@ public class CommonUIUtils
 		driver.getLogger().info("The window title is:  " + driver.getText("css=" + UIControls.SWIDGETWINDOWTITLE_CSS));
 		Assert.assertTrue(driver.isTextPresent("Add Widgets", "css=" + UIControls.SWIDGETWINDOWTITLE_CSS));
 		driver.takeScreenShot();
+		driver.savePageToFile();
 		driver.getLogger().info("Verify the Add Widgets button is disabled");
 		driver.getLogger().info("The button is:  " + driver.getText(UIControls.SADDWIDGETBTN));
 		Assert.assertEquals(driver.getText(UIControls.SADDWIDGETBTN), "Add");
@@ -58,16 +59,16 @@ public class CommonUIUtils
 		driver.getLogger().info("Click Add button");
 		driver.waitForElementPresent(UIControls.SADDWIDGETBTN);
 		driver.click(UIControls.SADDWIDGETBTN);
-		driver.takeScreenShot();
+		
 
 		driver.getLogger().info("Close the Add Widget window");
 		driver.waitForElementPresent(UIControls.SCLOSEWIDGET);
 		driver.click(UIControls.SCLOSEWIDGET);
-		driver.takeScreenShot();
+		
 
 		driver.getLogger().info("Verify the widget has been added to main page");
 		Assert.assertTrue(driver.isElementPresent(UIControls.SWIDGET));
-		driver.takeScreenShot();
+		
 	}
 
 	public static void commonUITestLog(String sDesc)
@@ -176,6 +177,7 @@ public class CommonUIUtils
 			driver.getLogger().info("The window title is:  " + driver.getText("css=" + UIControls.SWIDGETWINDOWTITLE_CSS));
 			Assert.assertTrue(driver.isTextPresent("Open", "css=" + UIControls.SWIDGETWINDOWTITLE_CSS));
 			driver.takeScreenShot();
+			driver.savePageToFile();
 			driver.getLogger().info("Verify the Open button is disabled");
 			driver.getLogger().info("The button is:  " + driver.getText(UIControls.SADDWIDGETBTN));
 			Assert.assertEquals(driver.getText(UIControls.SADDWIDGETBTN), "Open");
@@ -201,11 +203,10 @@ public class CommonUIUtils
 				driver.getLogger().info("Click Open button");
 				driver.waitForElementPresent(UIControls.SADDWIDGETBTN);
 				driver.click(UIControls.SADDWIDGETBTN);
-				driver.takeScreenShot();
+			
 
 				driver.getLogger().info("Verify the widget has been opened in main page");
 				Assert.assertTrue(driver.isElementPresent(UIControls.SWIDGET));
-				driver.takeScreenShot();
 			}
 		}
 		else {

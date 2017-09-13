@@ -382,7 +382,7 @@ public class TestWelcomePage extends LoginAndLogout
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in test Welcome Page");
 		BrandingBarUtil.visitWelcome(webd);
-		webd.takeScreenShot();
+
 
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "APM"));
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, "LA"));

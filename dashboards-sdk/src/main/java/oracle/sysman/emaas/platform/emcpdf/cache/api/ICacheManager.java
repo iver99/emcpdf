@@ -21,5 +21,5 @@ public interface ICacheManager extends Closeable {
 
     public ICache createNewCache(String name);
 
-    public void init();
+    public void init(String configFileName);
 }

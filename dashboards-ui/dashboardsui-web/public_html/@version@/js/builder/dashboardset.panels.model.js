@@ -42,6 +42,7 @@ define([
                     self.rightPanelModel.$b = $b;
                     self.rightPanelModel.loadToolBarModel(toolBarModel,$b);
                     self.rightPanelModel.loadTilesViewModel(tilesViewModel);
+                    self.rightPanelModel.loadRightPanelWidget($b);
                 } else {
                     var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel, toolBarModel, dashboardsetToolBarModel);
                     ko.applyBindings(rightPanelModel, $('.df-right-panel')[0]);

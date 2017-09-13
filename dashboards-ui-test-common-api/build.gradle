@@ -11,7 +11,7 @@ sourceSets {
 	integTest {
         java.srcDir 'src/integTest/java'
         compileClasspath = configurations.testConfig + configurations.webdriver + configurations.testNG
-	}
+    }
 }
         
 clean{
@@ -56,11 +56,15 @@ artifactoryPublish {
  
 }
 
+def emctasUiTestSdkVersion = getDependentSdkVersion('com.oracle.emaas.emctas.test', 'emctas-ui-test-sdk', '1.+')
+def targetModelApiVer = getDependentSdkVersion('com.oracle.emaas.emcpdm.sdk', 'emaas-platform-target-model-api', '1.+')
 
 dependencies {
 	testConfig getProjectArtifact('jmockit')   
 	testConfig getProjectArtifact('log4j-core')   
 	testConfig getProjectArtifact('log4j-api')   
+	testConfig(group: 'com.oracle.emaas.emcpdm.sdk', name: 'emaas-platform-target-model-api', version: targetModelApiVer)
+    testConfig(group: 'com.oracle.emaas.emctas.test', name: 'emctas-ui-test-sdk', version: emctasUiTestSdkVersion )
 }
 
 //avoid building error in Eclipse
@@ -69,6 +73,7 @@ eclipse {
         plusConfigurations += configurations.testNG
         plusConfigurations += configurations.webdriver
         plusConfigurations += configurations.testConfig
+        
     }
 }
 

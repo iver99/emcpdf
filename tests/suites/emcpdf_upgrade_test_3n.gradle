@@ -21,6 +21,9 @@ dependencies {
     testConfig group: 'com.oracle.emaas.emcpdf.test', name:'dashboards-upgrade-tests-integ-tests', version: "${REPO_BID}"
     testConfig group: 'com.oracle.emaas.emcpdf.test', name:'dashboards-uitest-integ-tests', version: "${REPO_BID}" 
     testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
+	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-web-integ-tests', version: "${REPO_BID}") {
+      	exclude('module':'groovy')
+    }
 }
 //project.ext.omctf_omcCloudSetup_additionalParam = "-skipagents -skipomr"
 project.ext.omctf_omcCloudSetup_additionalParam = ""
@@ -72,6 +75,9 @@ task post_upgrade (type: EMTest, dependsOn:[omcCloudUpgrade,onboardNewTenant]){
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard_NegativeCases')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestRightPanel_DashboardFilters')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboard_RespectGC')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_WidgetLink')
+				'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestGlobalContext_TimeRange')
             }
 	}
 	test('name': 'DashboardUITest_testDashboardSet_SetHome', 'preserve-order':'true'){
@@ -82,6 +88,18 @@ task post_upgrade (type: EMTest, dependsOn:[omcCloudUpgrade,onboardNewTenant]){
 	test('name': 'DashboardUITest_testDashboard_SetHome', 'preserve-order':'true'){
 	    classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SetHome')
+	    }
+	}
+	test('name': 'TimepickerTest', 'preserve-order':'true'){
+	    classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SetHome')
+	//	'class'('name': 'oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.TestTimePicker_FixDate')
+	//	'class'('name': 'oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.TestTimePicker_FlexibleDate')
+	//	'class'('name': 'oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.TestTimePicker_RecentUseOption')
+		'class'('name': 'oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.TestTimePicker_MillionSeconds')		
+		'class'('name': 'oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.TestTimePicker_DateOnly')			
+		'class'('name': 'oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.TestTimePicker_ErrorMsg')
+
 	    }
 	}
          

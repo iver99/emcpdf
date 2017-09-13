@@ -3,5 +3,8 @@
     "**/js/d3/**,",
     "**/js/jquery/**"
 
-  ]  
+  ],
+  "skipProjects" : [
+   "dashboards-ui-test-common-api"
+  ]
 }

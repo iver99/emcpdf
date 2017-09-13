@@ -16,7 +16,7 @@ import java.util.*;
  * Created by chehao on 2016/12/9.
  */
 public class LinkedHashMapCache extends AbstractCache{
-    Logger LOGGER= LogManager.getLogger(LinkedHashMapCache.class);
+    private static final Logger LOGGER = LogManager.getLogger(LinkedHashMapCache.class);
 
     private CacheStatus cacheStatus;
     private LinkedHashMap<Object, CachedItem> cacheMap;

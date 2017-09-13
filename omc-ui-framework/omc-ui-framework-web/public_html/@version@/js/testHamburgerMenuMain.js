@@ -196,6 +196,7 @@ require(['knockout',
                 var dialogTitle = appId === "Dashboard" ? "Add Widgets" : "Open";
                 var dialogConfirmBtnLabel = appId === "Dashboard" ? "Add" : "Open";
                 self.widgetsContainerPadding = '0px '+widgetsContainerPaddingWidth+'px '+ '0px '+widgetsContainerPaddingWidth+'px';
+                self.pageLoading = "Loading";
                 self.pageTitle = 'Sample page for OMC UI Framework components testing only';
                 self.addWidgetsTilte = 'Add Widgets';
                 self.widgetList = ko.observableArray(widgetArray);

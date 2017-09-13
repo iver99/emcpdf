@@ -98,7 +98,44 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 };
                 window.addEventListener("message", onServiceMenuLoaded, false);
             };
+
+            /**
+             * Fire event to indicate that favorite dashboards have been changed
+             * 
+             * @returns
+             */
+            self.fireFavoriteDsbChangedEvent = function(setFavorite){
+                if (!window._uifwk) {
+                    window._uifwk = {};
+                }
+                var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_FAVORITE_DSB_CHANGED'};
+                message.setFavorite = setFavorite;
+                window.postMessage(message, window.location.href);
+            };
             
+            /**
+             * Add listener to repond favorite dashboard changed event.
+             * 
+             * @param {Function} callback Callback to be invoked
+             * 
+             * @returns
+             */
+            self.subscribeFavoriteDsbChangedEvent = function(callback) {
+                function onFavoriteDsbChanged(event) {
+                    if (event.origin !== window.location.protocol + '//' + window.location.host) {
+                        return;
+                    }
+                    var eventData = event.data;
+                    //Only handle received message for service menu registering
+                    if (eventData && eventData.tag && eventData.tag === 'EMAAS_OMC_GLOBAL_MENU_FAVORITE_DSB_CHANGED') {
+                        if ($.isFunction(callback)) {
+                            callback(eventData.setFavorite);
+                        }
+                    }
+                };
+                window.addEventListener("message", onFavoriteDsbChanged, false);
+            };
+
             /**
              * Set current menu item
              * 

@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt;
 
 import mockit.Expectations;
 import mockit.Mocked;
+import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.DataManager;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardRowEntity;
@@ -33,7 +34,7 @@ public class TableRowsSynchronizerTest {
 
     private TableRowsSynchronizer tableRowsSynchronizer = new TableRowsSynchronizer();
     @Test
-    public void testSync(@Mocked final PersistenceManager persistenceManager, 
+    public void testSync(@Mocked final DashboardServiceFacade serviceFacade, 
 			@Mocked final EntityManager em) throws Exception {
         TableRowsEntity tableRowsEntity = new TableRowsEntity();
 
@@ -172,15 +173,20 @@ public class TableRowsSynchronizerTest {
                 result = 1;
             }
         };
-        tableRowsSynchronizer.sync(em, tableRowsEntity);
-        tableRowsSynchronizer.sync(em,null);
+
+        tableRowsSynchronizer.sync(tableRowsEntity);
+
+        tableRowsSynchronizer.sync(null);
+
         tableRowsEntity.setEmsDashboard(dashboardRowEntities);
         tableRowsEntity.setEmsDashboardSet(dashboardSetRowEntities);
         tableRowsEntity.setEmsDashboardTile(dashboardTileRowEntities);
         tableRowsEntity.setEmsDashboardTileParams(dashboardTileParamsRowEntities);
         tableRowsEntity.setEmsDashboardUserOptions(dashboardUserOptionsRowEntities);
         tableRowsEntity.setEmsPreference(preferenceRowEntities);
-        tableRowsSynchronizer.sync(em, tableRowsEntity);
+
+        tableRowsSynchronizer.sync(tableRowsEntity);
+
 
     }
 

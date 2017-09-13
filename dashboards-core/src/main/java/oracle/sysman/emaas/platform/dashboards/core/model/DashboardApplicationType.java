@@ -47,6 +47,8 @@ public enum DashboardApplicationType
 	Compliance(7, false),
 	// UDE
 	UDE(8, false),
+	// EVENT
+	EVT(9, false),
 
 	// following are bundle services, will be transferred to individual services
 	OMCSE(100, true),
@@ -65,6 +67,7 @@ public enum DashboardApplicationType
 	public static final String ORCHESTRATION_STRING = "Orchestration";
 	public static final String COMPLIANCE_STRING = "Compliance";
 	public static final String UDE_STRING = "UDE";
+	public static final String EVENT_STRING = "Alerts";
 	public static final String OMCSE_STRING = "OMCSE";
 	public static final String OMCEE_STRING = "OMCEE";
 	public static final String OMCLOG_STRING = "OMCLOG";
@@ -102,6 +105,9 @@ public enum DashboardApplicationType
         }
         if (UDE_STRING.equals(value)) {
             return UDE;
+        }
+        if (EVENT_STRING.equals(value)) {
+            return EVT;
         }
 		if (OMC_STRING.equals(value)) {
 			return OMC;
@@ -172,6 +178,9 @@ public enum DashboardApplicationType
         }
         if (value == UDE.value) {
             return UDE_STRING;
+        }
+        if (value == EVT.value) {
+            return EVENT_STRING;
         }
 		if (value == OMC.value) {
 			return OMC_STRING;

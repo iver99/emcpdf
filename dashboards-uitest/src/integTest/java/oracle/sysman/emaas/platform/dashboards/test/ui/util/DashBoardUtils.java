@@ -499,6 +499,7 @@ public class DashBoardUtils
 		new Actions(webdriver.getWebDriver()).moveToElement(tileTitles.get(index)).perform();
 		webdriver.waitForServer();
 		webdriver.takeScreenShot();
+		webdriver.savePageToFile();
 
 		WebElement tileTitle = tileTitles.get(index);
 		WebElement tileConfig = tileTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILECONFIGLOCATOR));
@@ -984,6 +985,7 @@ public class DashBoardUtils
 		}
 		tileTitles.get(index - 1).click();
 		driver.takeScreenShot();
+		driver.savePageToFile();
 
 		//move the mouse to the title of the widget
 
@@ -1008,6 +1010,7 @@ public class DashBoardUtils
 			driver.getLogger().info("Now moving to the widget title bar");
 			builder.moveToElement(widgetTitle).perform();
 			driver.takeScreenShot();
+			driver.savePageToFile();
 			driver.getLogger().info("and clicks the widget config button");
 
 			return widgetDataExplore.isDisplayed();

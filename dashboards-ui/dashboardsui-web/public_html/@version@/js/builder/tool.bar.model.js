@@ -17,7 +17,7 @@ define(['knockout',
         'builder/builder.core',
         'builder/dashboardDataSource/dashboard.datasource'
     ],
-    function(ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu,zdtUtilModel) {
+    function(ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu, zdtUtilModel) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
@@ -255,8 +255,8 @@ define(['knockout',
                 function dashboardSummary(name, description) {
                     var self = this;
                     self.dashboardId = dashboardId;
-                    self.dashboardName = name;
-                    self.dashboardDescription = description;
+                    self.name = name;
+                    self.description = description;
                     self.widgets = [];
                 }
 
@@ -288,6 +288,8 @@ define(['knockout',
 
 
             self.handleDashboardSave = function() {
+                self.dashboardName($('#dbsHNameIn').val()); //temporary solution for: input value change made by selenium webdriver cannot be subscribed by knockout. same as the line below
+                self.dashboardDescription($('#editDbdDscp').val());
                 var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
                 outputData.eventType = "SAVE";
 
@@ -317,23 +319,32 @@ define(['knockout',
                             removeDelayTime: 5000
                     });
                 }, function(error) {
-                    if(error && error.errorCode && error.errorCode() === 10002) {
-                        dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING_TEXT_WIDGET_EMPTY_CONTENT'), detail: '', removeDelayTime: 5000});
-                    }else if(error && error.errorCode && error.errorCode() === 10003) {
+//                    if(error && error.errorCode && error.errorCode() === 10002) {
+//                        dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING_TEXT_WIDGET_EMPTY_CONTENT'), detail: '', removeDelayTime: 5000});
+//                    }else 
+                    if(error && error.errorCode && error.errorCode() === 10003) {
                         dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING_TEXT_WIDGET_TOO_LONG_CONTENT'), detail: '', removeDelayTime: 5000});
 
+                    }else if(error && error.errorCode && error.errorCode() === 10000) {
+                        dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING_EMPTY_DASHBOARD_NAME'), detail: '', removeDelayTime: 5000});
                     }else {
                         error && error.errorMessage() && dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
                     }
-                });
+                }, outputData);
             };
 
-            self.handleSaveUpdateToServer = function(succCallback, errorCallback) {
+            self.handleSaveUpdateToServer = function(succCallback, errorCallback, outputData) {
                 if(self.isUnderSet){
                    console.log("This is a dashboard in set, send its parent set id...");
                    self.tilesViewModel.dashboard.dupDashboardId=selectedDashboardInst().dashboardsetToolBar.dashboardInst.id()
                 }                
-                var dbdJs = ko.mapping.toJS(self.tilesViewModel.dashboard, {
+                var objToSave;
+                if(outputData){
+                    objToSave = $.extend({},self.tilesViewModel.dashboard, outputData);
+                }else{
+                    objToSave = self.tilesViewModel.dashboard;
+                }
+                var dbdJs = ko.mapping.toJS(objToSave, {
                     'include': ['screenShot', 'description', 'height',
                         'isMaximized', 'title', 'type', 'width',
                         'tileParameters', 'name', 'systemParameter',
