@@ -619,6 +619,8 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     return result;
                 };
                 self.useIn === 'builder' && self.refreshWidgets();
+                var message = {'tag': 'EMAAS_WIDGETSELECTOR_INITIALIZED'};
+                window.postMessage(message, window.location.href);
             }
 
             return WidgetSelectorPopupViewModel;

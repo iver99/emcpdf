@@ -139,7 +139,6 @@ define({
       "BRANDING_BAR_MESSAGE_PLANNED_DOWNTIME_SUMMARY": "Oracle Management Cloud is under maintenance.",
       "BRANDING_BAR_MESSAGE_PLANNED_DOWNTIME_DETAIL": "Create and edit operations are unavailable.",
        //datetime picker
-      "DATETIME_PICKER_DROP_DOWN": "Drop Down",
       "DATATIME_PICKER_TF_INDICATOR_LABEL": "Time filter indicator",
       "DATETIME_PICKER_TIME_FILTER": "Time Filter",
       "DATETIME_FILTER_TIME_FILTER_ICON_TITLE": "Click to show time filter settings",
@@ -189,9 +188,7 @@ define({
       "DATETIME_PICKER_BUTTONS_CANCEL_BUTTON": "Cancel",
       "DATETIME_PICKER_BADGE_MESSAGE_TITLE": "Showing data for {0}", //{0} is a time period like "Last 7 days" indicating the page is showing data for this time period
       "DATETIME_PICKER_BUTTONS_REPORTING_TIMEZONE": "Reporting time in UTC{0}{1}:{2}",
-      "DATETIME_PICKER_TIME_RANGE": "Time Range",
       "DATETIME_PICKER_ERROR": "Error!",
-      "DATETIME_PICKER_FORMAT_ERROR_MSG": "Please enter valid \"mm/dd/yyyy\" for date or \"hh:mm AM/PM\" for time.",
       "DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG": "The start date/time is after the end date/time.",
       "DATETIME_PICKER_TIME_VALIDATE_FUTURE_ERROR_MSG": "Date and time must be on or sooner than current date and time.",
       "DATETIME_PICKER_BEYOND_WINDOW_LIMIT_ERROR_MSG": "The selected time range should not exceed ",

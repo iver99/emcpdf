@@ -28,6 +28,11 @@
 	     <pipeline name="PRODUCT"/> 
 	     </pipelines> 
 	</lrg>
+      <lrg name="emctas_sharedcomp_3n" repos="emctas" description="Run LRG from emcpdf to ensure the SDK is not breaking it.">
+	     <pipelines>
+	     <pipeline name="PRODUCT"/> 
+	     </pipelines> 
+	</lrg>
       <!-- <lrg name="emaas_itcs_livetargetscans_3n" repos="emcitcs" description="Run LRG from emcpdf to ensure the SDK is not breaking it.">
 	     <pipelines>
 	     <pipeline name="PRODUCT"/> 
