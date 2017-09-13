@@ -240,6 +240,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
             classes([:]) {
                 'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SimpleCRUD')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_OtherFeatures')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_TextWidget')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_SimpleCRUD')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_OtherFeatures')
