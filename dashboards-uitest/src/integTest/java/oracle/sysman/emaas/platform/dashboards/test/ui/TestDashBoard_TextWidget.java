@@ -70,7 +70,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 		LoginAndLogout.logoutMethod();
 	}
 	
-	@Test
+	@Test(alwaysRun = true)
 	public void testTextWidget()
 	{
 		dbName_textWidget = "Dashboard_textWidget-" + DashBoardUtils.generateTimeStamp();
@@ -99,12 +99,11 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 		
 		//Verify the content is added successfully
 		webd.getLogger().info("Verify the content is added successfully");
-		
-		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-		Assert.assertEquals(textContent.getText(), content);
+				
+		Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTCONTENTCSS), content);
 	}
 	
-	 @Test
+	 @Test(alwaysRun = true)
 		public void testTextWidget_Image()
 		{
 			dbName_textWidget_image = "Dashboard_textWidgetImage-" + DashBoardUtils.generateTimeStamp();
@@ -119,7 +118,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 
 			DashboardHomeUtil.gridView(webd);
 			
-			String currentUrl = webd.getWebDriver().getCurrentUrl();
+			String currentUrl = webd.getCurrentUrl();
 			url = (currentUrl.substring(0, currentUrl.indexOf("emsaasui"))).concat(urlString);
 
 			webd.getLogger().info("Create the dashboard, then to add text widget");
@@ -146,6 +145,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 			DashboardBuilderUtil.saveDashboard(webd);	
 		}
 
+	 	@Test(alwaysRun = true)
 		public void testTextWidget_Link()
 		{
 			dbName_textWidget_link = "Dashboard_textWidgetURL-" + DashBoardUtils.generateTimeStamp();
@@ -171,46 +171,36 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 			//Verify the content is added successfully
 			webd.getLogger().info("Verify the url is added successfully");	
-			WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-			webd.getLogger().info(textContent.getText());
-			Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_HTTP + url);		
+			Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTCONTENTCSS), DashBoardPageId.PROTOCOLOPTION_HTTP + url);		
 			
 			DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTPS);
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 			//Verify the content is added successfully
 			webd.getLogger().info("Verify the url is added successfully");			
-			textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-			webd.getLogger().info(textContent.getText());
-			Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_HTTPS + url);				
+			Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTCONTENTCSS), DashBoardPageId.PROTOCOLOPTION_HTTPS + url);				
 			
 			DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_FTP);
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 			//Verify the content is added successfully
 			webd.getLogger().info("Verify the url is added successfully");	
-			textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-			webd.getLogger().info(textContent.getText());
-			Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_FTP + url);		
+			Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTCONTENTCSS), DashBoardPageId.PROTOCOLOPTION_FTP + url);		
 			
 			DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_NEWS);
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 			//Verify the content is added successfully
 			webd.getLogger().info("Verify the url is added successfully");				
-			textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-			webd.getLogger().info(textContent.getText());
-			Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_NEWS + url);		
+			Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTCONTENTCSS), DashBoardPageId.PROTOCOLOPTION_NEWS + url);		
 			
 			DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_OTHER);
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 			//Verify the content is added successfully
 			webd.getLogger().info("Verify the url is added successfully");		
-			textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-			webd.getLogger().info(textContent.getText());
-			Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_OTHER + url);		
+			Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTCONTENTCSS), DashBoardPageId.PROTOCOLOPTION_OTHER + url);		
 			
 			DashboardBuilderUtil.saveDashboard(webd);				
 		}
 		
-		@Test
+		@Test(alwaysRun = true)
 		public void testTextWidget_multiLink()
 		{
 			dbName_textWidget_multiLink = "Dashboard_textWidgetMultiURL-" + DashBoardUtils.generateTimeStamp();
@@ -234,8 +224,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 			DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTP);	
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 			
-			WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-			textContent.click();
+			webd.click("css=" + DashBoardPageId.TEXTCONTENTCSS);
 			webd.getWebDriver().switchTo().activeElement().sendKeys(Keys.ENTER);
 			webd.getWebDriver().switchTo().activeElement().sendKeys(Keys.ARROW_UP);
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
@@ -245,16 +234,14 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 			
 			//Verify the content is added successfully
 			webd.getLogger().info("Verify the two urls are added successfully");	
-			WebElement textContent1 = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.TEXTCONTENT1));
-			Assert.assertEquals(textContent1.getText(), DashBoardPageId.PROTOCOLOPTION_HTTPS + url);			
+			Assert.assertEquals(webd.getText(DashBoardPageId.TEXTCONTENT1), DashBoardPageId.PROTOCOLOPTION_HTTPS + url);			
 						
-			WebElement textContent2 = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.TEXTCONTENT2));
-			Assert.assertEquals(textContent2.getText(), DashBoardPageId.PROTOCOLOPTION_HTTP + url);		
+			Assert.assertEquals(webd.getText(DashBoardPageId.TEXTCONTENT2), DashBoardPageId.PROTOCOLOPTION_HTTP + url);		
 			
 			DashboardBuilderUtil.saveDashboard(webd);	
 		}
 		
-		@Test
+		@Test(alwaysRun = true)
 		public void testTextWidget_order()
 		{
 			dbName_textWidget_order = "Dashboard_textWidgetOrder-" + DashBoardUtils.generateTimeStamp();
@@ -285,12 +272,11 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 			
 			WebElement widget1 = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTWIDGETCSS));
 			Assert.assertTrue(widgets.get(0).equals(widget1), "The text widget isn't placed in the first place");
-			//Assert.assertTrue(widgets.get(0).getAttribute("data-tile-name").equals("Text Widget"), "The text widget isn't placed in the first place");
 
 			DashboardBuilderUtil.saveDashboard(webd);				
 		}
 		
-		@Test
+		@Test(alwaysRun = true)
 		public void testTextWidget_toolbar()
 		{		
 			dbName_textWidget_toolbar = "Dashboard_textWidgetToolbar-" + DashBoardUtils.generateTimeStamp();
@@ -311,11 +297,8 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 
 			webd.getLogger().info("Verify there is no Maximize icon in Text Widget");
 			Assert.assertFalse(webd.isElementPresent(DashBoardPageId.MAXIMIZEICON), "There is Maximize icon in the text widget");	
-			
-			WebElement textTileTitle = webd.getElement("css=" + DashBoardPageId.TILETITLECSS);
-			
-			Actions actions = new Actions(webd.getWebDriver()); 			
-			actions.moveToElement(textTileTitle).build().perform();
+					
+			webd.moveToElement("css=" + DashBoardPageId.TILETITLECSS);
 			
 			webd.click("css=" + DashBoardPageId.CONFIGTILECSS);
 			
@@ -372,7 +355,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 
 			//verify the text widget
 			webd.getLogger().info("Verify the text widget in the dashboard");
-			WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTWIDGETCONTENTCSS));
-			Assert.assertEquals(textContent.getText().trim(), "Start typing...");
+			Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTWIDGETCONTENTCSS).trim(), "Start typing...");
 		}
 }
+ 
