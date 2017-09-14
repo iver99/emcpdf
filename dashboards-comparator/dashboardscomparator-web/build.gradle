@@ -98,6 +98,7 @@ task ftpRestDoc << {
 
 
 test {
+	classpath = sourceSets.integTest.compileClasspath + sourceSets.test.output
 	useTestNG()		
 	{
 		//We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
@@ -108,7 +109,6 @@ test {
 
 
 dependencies {
-	compile configurations.restAssured 
 	
     providedCompile project(':dashboards-comparator:dashboardscomparator-webutils')  { transitive = false }
     
@@ -185,7 +185,8 @@ dependencies {
 build.dependsOn integTestJar
 build.dependsOn jarMe
 sourceSets {
-        test{
+        test{ 
+		compileClasspath = configurations.testNG+configurations.restAssured + configurations.testConfig
                 java {
                         srcDirs = ['src/integTest/java']
                 }
