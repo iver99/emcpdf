@@ -208,6 +208,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 //                    {'id': 'omc_root_applications', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_APPS_LABEL, 'externalUrl': '#'},
                     {'id': 'omc_root_dashboards', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_DASHBOARDS_LABEL, 'externalUrl': '#'},
 //                    {'id': 'omc_root_savedsearches', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_SAVEDSEARCH_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_federatedview', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_FEDERATEDVIEW_LABEL, 'externalUrl': '#', children: [
+                            {'id': 'omc_federatedview_grp_overview', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_FEDERATEDVIEW_OVERVIEW_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_federatedview_grp_alerts', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_FEDERATEDVIEW_ALERTS_LABEL, 'externalUrl': '#'}
+                    ]},
                     {'id': 'omc_root_dataexplorer', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_DATAEXPLORER_LABEL, 'externalUrl': '#'},
                     {'id': 'omc_root_divider', type: 'divider', 'label': '', 'externalUrl': '#'},
                     {'id': 'omc_root_APM', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_APM_LABEL, 'externalUrl': '#'},
@@ -238,6 +242,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 var defaultMenuIds = ['omc_root_home',
                     'omc_root_alerts',
                     'omc_root_dashboards',
+                    'omc_root_federatedview',
                     'omc_root_admin', 
                     'omc_root_admin_alertrules', 
                     'omc_root_admin_notificationChannels',
@@ -1348,6 +1353,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     globalMenuIdHrefMapping['omc_root_home'] = omcHomeUrl ? omcHomeUrl : '/emsaasui/emcpdfui/welcome.html';
                     globalMenuIdHrefMapping['omc_root_alerts'] = fetchLinkFromRegistrationData(data, 'homeLinks', 'EventUI');
                     globalMenuIdHrefMapping['omc_root_dashboards'] = '/emsaasui/emcpdfui/home.html';
+                    //hard-code url for federated OOB dashboard for now
+                    globalMenuIdHrefMapping['omc_federatedview_grp_overview'] = '/emaasui/emcpdfui/builder.html?dashboardId=24&federatedMode=true';
+                    globalMenuIdHrefMapping['omc_federatedview_grp_alerts'] = '/emaasui/emcpdfui/builder.html?dashboardId=28&federatedMode=true';
                     globalMenuIdHrefMapping['omc_root_dataexplorer'] = fetchLinkFromRegistrationData(data, 'visualAnalyzers', 'TargetAnalytics');
                     globalMenuIdHrefMapping['omc_root_APM'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'ApmUI');
                     globalMenuIdHrefMapping['omc_root_Monitoring'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI');
