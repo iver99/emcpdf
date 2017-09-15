@@ -612,17 +612,19 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         self.handleFilterByChanged = function(context, valueParam) {
             var _value = valueParam.value;
             if(valueParam.option === "value") {
-                if(_value === "allnofilter") {
+                var filterByValue = _value[0];
+                if(filterByValue === "allnofilter") {
                     self.filter.creatorFilter([]);
                     self.filter.favoritesFilter([]);
-                }else if(_value === "favorites") {
+                }else if(filterByValue === "favorites") {
                     self.filter.creatorFilter([]);
                     self.filter.favoritesFilter(["favorites"]);
                 }else {
-                    self.filter.creatorFilter([_value]);
+                    self.filter.creatorFilter([filterByValue]);
                     self.filter.favoritesFilter([]);
                 }
                 self.filter.saveFilter();
+                self.filter.handleFilterChange({filterType: 'serviceFilter', newValue: filterByValue});
             }
         };
 
