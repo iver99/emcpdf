@@ -55,6 +55,9 @@ public class CommonFunctionalException extends DashboardException
 	public static final String TEXT_WIDGET_INVALID_LINK_TEXT_ERROR = "TEXT_WIDGET_INVALID_LINK_TEXT_ERROR";
 	public static final String TEXT_WIDGET_INVALID_LINK_URL_ERROR = "TEXT_WIDGET_INVALID_LINK_URL_ERROR";
 
+	// i18n messages for federated dashboards
+	public static final String DASHBOARD_INVALID_MODE_SUPPORT_ERROR = "DASHBOARD_INVALID_MODE_SUPPORT_ERROR";
+
 	// preference messages
 	public static final String PREFERENCE_INVALID_KEY = "PREFERENCE_INVALID_KEY";
 	public static final String PREFERENCE_INVALID_VALUE = "PREFERENCE_INVALID_VALUE";

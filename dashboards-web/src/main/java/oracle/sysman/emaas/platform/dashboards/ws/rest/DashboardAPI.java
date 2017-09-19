@@ -815,7 +815,7 @@ public class DashboardAPI extends APIBase
 			@QueryParam("queryString") String queryString, @DefaultValue("") @QueryParam("limit") Integer limit,
 			@DefaultValue("0") @QueryParam("offset") Integer offset,
 			@DefaultValue(DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME) @QueryParam("orderBy") String orderBy,
-			@QueryParam("filter") String filterString
+			@QueryParam("filter") String filterString, @DefaultValue("false") @QueryParam("federationEnabled") String federationEnabled
 	/*@QueryParam("types") String types, @QueryParam("appTypes") String appTypes, @QueryParam("owners") String owners,
 	@QueryParam("onlyFavorites") Boolean onlyFavorites*/)
 	{
@@ -830,6 +830,10 @@ public class DashboardAPI extends APIBase
 		}
 		catch (UnsupportedEncodingException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
+		}
+		boolean federationMode = false;
+		if (Boolean.TRUE.toString().equalsIgnoreCase(federationEnabled)) {
+			federationMode = true;
 		}
 
 		try {
@@ -847,7 +851,7 @@ public class DashboardAPI extends APIBase
 			//filter.setIncludedTypesFromString(types);
 			//filter.setIncludedFavorites(onlyFavorites);
 			filter.initializeFilters(filterString);
-			PaginatedDashboards pd = manager.listDashboards(qs, offset, limit, tenantId, true, orderBy, filter);
+			PaginatedDashboards pd = manager.listDashboards(qs, offset, limit, tenantId, true, orderBy, filter, federationMode);
 			if (pd != null && pd.getDashboards() != null) {
 				for (Dashboard d : pd.getDashboards()) {
 					updateDashboardAllHref(d, tenantIdParam);

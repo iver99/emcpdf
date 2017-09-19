@@ -72,6 +72,10 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	private String name;
 	@Column(nullable = false, length = 128)
 	private String owner;
+	@Column(name = "FEDERATION_SUPPORTED", nullable = false)
+	private Integer federationSupported;
+	@Column(name = "GREENFIELD_SUPPORTED", nullable = false)
+	private Integer greenfieldSupported;
 
 	@Lob
 	@Basic(fetch = FetchType.EAGER)
@@ -225,6 +229,14 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 		return screenShot;
 	}
 
+	public Integer getFederationSupported() {
+		return federationSupported;
+	}
+
+	public Integer getGreenfieldSupported() {
+		return greenfieldSupported;
+	}
+
 	/**
 	 * @return the sharePublic
 	 */
@@ -362,6 +374,14 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	public void setType(Integer type)
 	{
 		this.type = type;
+	}
+
+	public void setFederationSupported(Integer federationSupported) {
+		this.federationSupported = federationSupported;
+	}
+
+	public void setGreenfieldSupported(Integer greenfieldSupported) {
+		this.greenfieldSupported = greenfieldSupported;
 	}
 
 }

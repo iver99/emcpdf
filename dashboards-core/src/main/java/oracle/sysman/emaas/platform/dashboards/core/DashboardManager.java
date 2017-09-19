@@ -833,7 +833,7 @@ public class DashboardManager
 	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
 			boolean ic) throws DashboardException
 	{
-		return listDashboards(queryString, offset, pageSize, tenantId, ic, null, null);
+		return listDashboards(queryString, offset, pageSize, tenantId, ic, null, null, false);
 	}
 
 	/**
@@ -849,7 +849,7 @@ public class DashboardManager
 	 * @return
 	 */
 	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
-			boolean ic, String orderBy, DashboardsFilter filter) throws DashboardException
+			boolean ic, String orderBy, DashboardsFilter filter, boolean federationEnabled) throws DashboardException
 	{
 		LOGGER.debug(
 				"Listing dashboards with parameters: queryString={}, offset={}, pageSize={}, tenantId={}, ic={}, orderBy={}, filter={}",
@@ -904,6 +904,12 @@ public class DashboardManager
 		sb.append("where 1=1 ");
 		if (filter!= null && filter.getShowInHome()) {
 			sb.append(" and p.show_inhome = 1 ");
+		}
+
+		if (!federationEnabled) {
+			sb.append(" and p.greenfield_supported = 1 ");
+		} else {
+			sb.append(" and p.federation_supported = 1 ");
 		}
 
 		StringBuilder sbApps = new StringBuilder();
@@ -1004,7 +1010,7 @@ public class DashboardManager
 						+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE,p.APPLICATION_TYPE ");
 		String jpqlQuery = sbQuery.toString();
 
-		LOGGER.debug("Executing SQL is: " + jpqlQuery);
+		LOGGER.info("Executing SQL is: " + jpqlQuery);
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);	
 		EntityManager em = dsf.getEntityManager();
 		try {
@@ -1026,7 +1032,7 @@ public class DashboardManager
 			StringBuilder sbCount = new StringBuilder(sb);
 			sbCount.insert(0, "select count(*) ");
 			String jpqlCount = sbCount.toString();
-			LOGGER.debug(jpqlCount);
+			LOGGER.info(jpqlCount);
 			Query countQuery = em.createNativeQuery(jpqlCount);
 			initializeQueryParams(countQuery, paramList);
 			Long totalResults = 0L;

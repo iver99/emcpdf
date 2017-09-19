@@ -94,6 +94,8 @@ public class Tile
 		tile.setWidgetSupportTimeControl(DataFormatUtils.integer2Boolean(edt.getWidgetSupportTimeControl()));
 		tile.setWidgetLinkedDashboard(edt.getWidgetLinkedDashboard());
 		tile.setWidth(edt.getWidth());
+		tile.setFederationSupported(DataFormatUtils.integer2Boolean(edt.getFederationSupported()));
+		tile.setGreenfieldSupported(DataFormatUtils.integer2Boolean(edt.getGreenfieldSupported()));
 		
         // translate OOB data
         if(TEXT_WIDGET_OWNER.equalsIgnoreCase(tile.getWidgetOwner())) {
@@ -227,6 +229,10 @@ public class Tile
 	private Boolean widgetDeleted;
 
 	private Date widgetDeletionDate;
+
+	private Boolean federationSupported;
+
+	private Boolean greenfieldSupported;
 
 	@JsonIgnore
 	private Dashboard dashboard;
@@ -491,10 +497,18 @@ public class Tile
 		return width;
 	}
 
+	public Boolean getFederationSupported() {
+		return federationSupported;
+	}
+
+	public Boolean getGreenfieldSupported() {
+		return greenfieldSupported;
+	}
+
 	/**
 	 * Removes a tile parameter specified by the name
 	 *
-	 * @param index
+	 * @param name
 	 * @return
 	 */
 	public TileParam removeParameter(String name)
@@ -715,6 +729,14 @@ public class Tile
 		this.width = width;
 	}
 
+	public void setFederationSupported(Boolean federationSupported) {
+		this.federationSupported = federationSupported;
+	}
+
+	public void setGreenfieldSupported(Boolean greenfieldSupported) {
+		this.greenfieldSupported = greenfieldSupported;
+	}
+
 	private EmsDashboardTile getDefaultTilePersistenceEntity(EmsDashboardTile to) throws DashboardException
 	{
 		Integer intIsMaximized = DataFormatUtils.boolean2Integer(isMaximized);
@@ -729,6 +751,10 @@ public class Tile
 		if (encodedTitle.length() > TILE_TITLE_MAX_LEN) {
 			throw new CommonFunctionalException(
 					MessageUtils.getDefaultBundleString(CommonFunctionalException.TILE_INVALID_TITLE_EXCEED_MAX_LEN));
+		}
+		if (!federationSupported && !greenfieldSupported) {
+			throw new CommonFunctionalException(
+					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_MODE_SUPPORT_ERROR));
 		}
 		if (row == null) {
 			row = TILE_DEFAULT_ROW;

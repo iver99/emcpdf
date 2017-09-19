@@ -258,6 +258,8 @@ public class Dashboard
 		to.setType(DataFormatUtils.dashboardTypeInteger2String(from.getType()));
 		to.setExtendedOptions(from.getExtendedOptions());
 		to.setApplicationType(from.getApplicationType());
+		to.setFederationSupported((DataFormatUtils.integer2Boolean(from.getFederationSupported())));
+		to.setGreenfieldSupported((DataFormatUtils.integer2Boolean(from.getGreenfieldSupported())));
 		
 		// translate OOB data
 		if(to.isSystem) {
@@ -359,6 +361,10 @@ public class Dashboard
 	private String href;
 
 	private String type;
+
+	private Boolean federationSupported;
+
+	private Boolean greenfieldSupported;
 
 	private DashboardApplicationType appicationType;
 	
@@ -552,6 +558,10 @@ public class Dashboard
 			throw new CommonFunctionalException(
 					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_DESCRIPTION_ERROR));
 		}
+		if (!federationSupported && !greenfieldSupported) {
+			throw new CommonFunctionalException(
+					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_MODE_SUPPORT_ERROR));
+		}
 		Integer isEnableDescription = enableDescription == null ? null : enableDescription.getValue();
 		Integer isEnableTimeRange = enableTimeRange == null ? null : enableTimeRange.getValue();
 		Integer isEnableEntityFilter = enableEntityFilter == null ? null : enableEntityFilter.getValue();
@@ -657,6 +667,14 @@ public class Dashboard
 	public String getType()
 	{
 		return type;
+	}
+
+	public Boolean getFederationSupported() {
+		return federationSupported;
+	}
+
+	public Boolean getGreenfieldSupported() {
+		return greenfieldSupported;
 	}
 
 	public Tile removeTile(Tile tile)
@@ -792,6 +810,14 @@ public class Dashboard
 	public void setType(String type)
 	{
 		this.type = type;
+	}
+
+	public void setFederationSupported(Boolean federationSupported) {
+		this.federationSupported = federationSupported;
+	}
+
+	public void setGreenfieldSupported(Boolean greenfieldSupported) {
+		this.greenfieldSupported = greenfieldSupported;
 	}
 	
 	private static void getSubDashboardIds(List<EmsSubDashboard> subDashboards,

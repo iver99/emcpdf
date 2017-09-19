@@ -107,6 +107,10 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "WIDGET_DELETION_DATE")
 	private Date widgetDeletionDate;
+	@Column(name = "FEDERATION_SUPPORTED", nullable = false)
+	private Integer federationSupported;
+	@Column(name = "GREENFIELD_SUPPORTED", nullable = false)
+	private Integer greenfieldSupported;
 
 	@ManyToOne
 	@JoinColumns(value = { @JoinColumn(name = "DASHBOARD_ID", referencedColumnName = "DASHBOARD_ID"),
@@ -365,6 +369,14 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 		return width;
 	}
 
+	public Integer getFederationSupported() {
+		return federationSupported;
+	}
+
+	public Integer getGreenfieldSupported() {
+		return greenfieldSupported;
+	}
+
 	public EmsDashboardTileParams removeEmsDashboardTileParams(EmsDashboardTileParams emsDashboardTileParams)
 	{
 		getDashboardTileParamsList().remove(emsDashboardTileParams);
@@ -560,5 +572,13 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 	public void setWidth(Integer width)
 	{
 		this.width = width;
+	}
+
+	public void setFederationSupported(Integer federationSupported) {
+		this.federationSupported = federationSupported;
+	}
+
+	public void setGreenfieldSupported(Integer greenfieldSupported) {
+		this.greenfieldSupported = greenfieldSupported;
 	}
 }
