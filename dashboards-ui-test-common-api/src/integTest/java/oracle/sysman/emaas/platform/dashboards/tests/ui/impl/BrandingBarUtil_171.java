@@ -627,4 +627,8 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 		String xpath = "//div[@id='" + parentId + "']/descendant::a[text()='" + linkName + "']";
 		visitApplicationLink(driver, xpath);
 	}
+	@Override
+	public void verifyUserMenuItemByText(WebDriver driver, String item, String text){
+		// overrided in BrandingBarUtil_1230
+	}
 }

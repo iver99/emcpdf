@@ -36,7 +36,8 @@ public class MetadataManager implements ApplicationServiceManager
     //TODO fetch all services by rel name
     private static final List<String> oobProvider = Arrays.asList(MetadataRetriever.SERVICENAME_APM,
             MetadataRetriever.SERVICENAME_ITA, MetadataRetriever.SERVICENAME_LA, MetadataRetriever.SERVICENAME_ORCHESTRATION,
-            MetadataRetriever.SERVICENAME_SECURITY_ANALYTICS, MetadataRetriever.SERVICENAME_UDE, MetadataRetriever.SERVICENAME_EVENT);
+            MetadataRetriever.SERVICENAME_SECURITY_ANALYTICS, MetadataRetriever.SERVICENAME_UDE, MetadataRetriever.SERVICENAME_EVENT,
+            MetadataRetriever.SERVICENAME_MONITORING);
     /* (non-Javadoc)
      * @see oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager#getName()
      */

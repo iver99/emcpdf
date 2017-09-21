@@ -229,7 +229,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             self.highlightedEntities([NO_HIGHLIGHT]);
                         }
                         self.topologyInitialized = true;
-                        $(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
+                        //$(".ude-topology-in-brandingbar .oj-diagram").ojDiagram("refresh");
                     }
                     //set brandingbar_cache information for Topology expanded state
                     var brandingBarCache = {isTopologyDisplayed: self.isTopologyDisplayed()};

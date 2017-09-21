@@ -266,7 +266,7 @@ public class HtmlBootstrapJsUtil
 		return linkList;
 	}
 
-        private static void generatePageLoadEvent(String tenantName, String userName, String referer, String sessionExp)
+        public static void generatePageLoadEvent(String tenantName, String userName, String referer, String sessionExp)
         {
             String userTenant = tenantName + "." + userName;
             long start = System.currentTimeMillis();

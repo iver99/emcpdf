@@ -62,7 +62,7 @@
                     <!-- ko if: visibility -->
                     <li data-bind="attr:{'id':id}">
                         <a href="#" data-bind="attr:{'dashboardset-option':name}">
-                            <span class="fa-icon-font fa-icon-font-14 oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
+                            <span class="fa-icon-font oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
                             <span data-bind="text:label"></span>
                         </a>
                         <!--ko if:subMenu.length!==0-->
@@ -70,7 +70,7 @@
                             <!--ko foreach:subMenu-->
                             <li data-bind="attr:{'id':id}">
                                 <a href="#">
-                                    <span class="fa-icon-font fa-icon-font-14 oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
+                                    <span class="fa-icon-font oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
                                     <span data-bind="text:label"></span>
                                 </a>
                             </li>
@@ -249,8 +249,8 @@
                         <!-- ko if:$root.isEmpty() -->
                         <div class="tooltip-add-widget" style="padding-top: 64px; text-align: center">
                             <!--add-widget-tooltip-->
-                            <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -1064px;height:220px;"  width="240px" height="240px" margin-bottom="30px" data-bind="attr:{alt:oj.Translations.getTranslatedString('Add content to dashboard')}"/>
-                            <p style="font-size: 24px; font-weight: bold;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></p>
+                            <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -1064px;height:220px; margin-bottom:20px;"  width="220px" height="220px" data-bind="attr:{alt:oj.Translations.getTranslatedString('Add content to dashboard')}"/>
+                            <p style="font-size: 24px; font-weight: 400;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></p>
                             <!-- ko if:($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) -->
                             <p style="font-size: 16px;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1')"></p>                            
                             <!-- /ko -->
@@ -278,7 +278,9 @@
                                             <!-- /ko -->
                                         </div>
                                         <div class="dbd-resize-handler-placeholder dbd-resize-handler cursor-resize-right-bottom dbd-resize-handler-right-bottom">
-                                            <span class="oj-fwk-icon-arrow-s-end oj-component-icon"></span>
+                                            <!-- ko if: ($root.dashboard.systemDashboard()===false)&& !(($root.dashboard.sharePublic ===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')&&($root.toolbarModel.notZdtStatus) -->
+                                            <span class="oj-fwk-icon-arrow-s-end oj-component-icon dbd-resize-arrow-icon"></span>
+                                            <!-- /ko -->
                                         </div>
                                     </div>
                                 </div>
@@ -321,7 +323,7 @@
                       </div>
                       <!-- /ko -->
                         <div class="dbd-btn-group" data-bind="stopDataBinding: $root.dashboard.systemDashboard && $root.dashboard.systemDashboard()==true">
-                            <!-- ko if: ($root.dashboard.systemDashboard()===false)&& !(($root.dashboard.sharePublic ===true)&&($root.dashboard.owner()!==$root.loginUser())) &&($root.isMobileDevice !== 'true')&&($root.toolbarModel.notZdtStatus) -->
+                            <!-- ko if: ($root.dashboard.systemDashboard()===false)&& !($data.editDisabled()) &&($root.isMobileDevice !== 'true')&&($root.toolbarModel.notZdtStatus) -->
                             <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
                                     data-bind="attr: {'id': 'actionButton' + $data.clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
                                                ojComponent: {component: 'ojButton', 
@@ -359,7 +361,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="wider" data-bind="css: { 'oj-disabled': (!$data.widerEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <!--func_window_wider_16_ena-->
                                                     <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -352px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_WIDER')}, css: { 'dbd-icon-disabled': (!$data.widerEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}"/>
                                                 </span>
@@ -370,7 +372,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="narrower" data-bind="css: { 'oj-disabled': !$data.narrowerEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <!--func_window_narrower_16_ena-->
                                                     <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -368px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_NARROWER')}, css: { 'dbd-icon-disabled': !$data.narrowerEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}"/>
                                                 </span>
@@ -381,7 +383,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="taller" data-bind="css: {'oj-disabled': !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <!--func_window_taller_16_ena-->
                                                     <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -256px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}, css: {'dbd-icon-disabled': !$data.maximizeEnabled() || $data.editDisabled()}"/>
                                                 </span>
@@ -392,7 +394,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="shorter" data-bind="css: {'oj-disabled': !$data.shorterEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <!--func_window_shorter_16_ena-->
                                                     <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -272px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}, css: {'dbd-icon-disabled': !$data.shorterEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}"/>
                                                 </span>
@@ -409,7 +411,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="edit" data-bind="css: {'oj-disabled': !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <img src="@version@/images/imgbackground.png" class="absolute-Center" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -560px;height:16px;" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}, css: {'dbd-icon-disabled': !$data.maximizeEnabled() || $data.editDisabled()}"/>
                                                 </span>
                                                 <span data-bind="text: getNlsString('COMMON_BTN_EDIT')"></span>
@@ -421,7 +423,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="up" data-bind="css: { 'oj-disabled': (!$data.upEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <!--func_window_up_16_ena-->
                                                     <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -304px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_UP')}, css: { 'dbd-icon-disabled': (!$data.upEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}"/>
                                                 </span>
@@ -432,7 +434,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="down" data-bind="css: { 'oj-disabled': !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <!--func_window_down_16_ena-->
                                                     <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -464px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_DOWN')}, css: { 'dbd-icon-disabled': !$data.maximizeEnabled() || $data.editDisabled()}"/>
                                                 </span>
@@ -443,7 +445,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="left" data-bind="css: {'oj-disabled': !$data.leftEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <!--func_window_left_16_ena-->
                                                     <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -448px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_LEFT')}, css: {'dbd-icon-disabled': !$data.leftEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}"/>
                                                 </span>
@@ -454,7 +456,7 @@
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="right" data-bind="css: {'oj-disabled': !$data.rightEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
-                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                <span class="oj-menu-item-icon demo-icon-font tile-menu-img">
                                                     <!--func_window_right_16_ena-->
                                                     <img src="@version@/images/imgbackground.png" style="background: url('@version@/images/dfSprite.png') no-repeat 0px -288px;height:16px;" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RIGHT')}, css: {'dbd-icon-disabled': !$data.rightEnabled() || !$data.maximizeEnabled() || $data.editDisabled()}"/>
                                                 </span>
@@ -491,7 +493,7 @@
                     <div data-bind="css:{'cursor-resize-ew dbd-resize-handler dbd-resize-handler-right':($data.dashboard.systemDashboard()===false) && !(($data.dashboard.sharePublic()===true)&&($data.dashboard.owner()!==$data.loginUser())) &&($data.isMobileDevice !== 'true')}"></div>
                     <div data-bind="css:{'cursor-resize-ns dbd-resize-handler dbd-resize-handler-bottom':($data.dashboard.systemDashboard()===false) && !(($data.dashboard.sharePublic()===true)&&($data.dashboard.owner()!==$data.loginUser())) &&($data.isMobileDevice !== 'true')}"></div>
                     <div data-bind="css:{'cursor-resize-right-bottom dbd-resize-handler dbd-resize-handler-right-bottom':($root.dashboard.systemDashboard()===false) && !(($data.dashboard.sharePublic()===true)&&($data.dashboard.owner()!==$data.loginUser())) &&($data.isMobileDevice !== 'true')}">
-                        <span data-bind="css:{'oj-fwk-icon-arrow-s-end oj-component-icon':($data.dashboard.systemDashboard()===false) && !(($data.dashboard.sharePublic()===true)&&($data.dashboard.owner()!==$data.loginUser())) &&($data.isMobileDevice !== 'true')}"></span>
+                        <span data-bind="css:{'oj-fwk-icon-arrow-s-end oj-component-icon dbd-resize-arrow-icon':($data.dashboard.systemDashboard()===false) && !(($data.dashboard.sharePublic()===true)&&($data.dashboard.owner()!==$data.loginUser())) &&($data.isMobileDevice !== 'true')}"></span>
                     </div>
                 <!-- /ko -->
                 <!-- /ko -->

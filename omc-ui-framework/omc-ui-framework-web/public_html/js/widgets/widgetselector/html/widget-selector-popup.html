@@ -1,5 +1,5 @@
 <!-- ko if: useIn === 'normal' -->
-        <div class="widget-selector-main-new"  data-testapiversion="1.7.5" 
+        <div class="widget-selector-main-new"  data-testapiversion="1.23.0" 
              data-bind="ojComponent:{component: 'ojPopup', autoDismiss:'focusLoss', beforeOpen: beforeOpenDialog, title: widgetSelectorTitle,
                 rootAttributes: { style: 'width: 600px;'}}, attr: {id: dialogId}">   
             <div style="overflow: hidden;" >
@@ -7,7 +7,7 @@
                 <div class="widget-selector-search-container">
                     <div class="widget-selector-searchbox widget-searchbox-without-filter" data-bind="event:{keydown: widgetBoxClicked}">
                         <div class="widget-selector-search-input widget-search-input-without-filter">
-                            <input id="searchTxt" maxlength='100' autofocus="autofocus" class="widget-searchtxt-without-filter"
+                            <input maxlength='100' autofocus="autofocus" class="searchTxt widget-searchtxt-without-filter"
                                data-bind="ojComponent:{component:'ojInputText',value: searchText}, 
                                             attr: {placeholder: searchBoxPlaceHolder, 'aria-label': searchBoxPlaceHolder},
                                             typeAheadSearch: {filterFunc: searchFilterFunc,  response: searchResponse, source: []},
@@ -46,7 +46,7 @@
                 <div class="widget-selector-search-container fit-size-vertical-sibling">
                     <div class="widget-selector-searchbox widget-searchbox-without-filter" data-bind="event:{keydown: widgetBoxClicked}">
                         <div class="widget-selector-search-input widget-search-input-without-filter">
-                            <input id="searchTxt" maxlength='100' autofocus="autofocus" class="widget-searchtxt-without-filter"
+                            <input maxlength='100' autofocus="autofocus" class="searchTxt widget-searchtxt-without-filter"
                                data-bind="ojComponent:{component:'ojInputText',value: searchText}, 
                                             attr: {placeholder: searchBoxPlaceHolder, 'aria-label': searchBoxPlaceHolder},
                                             typeAheadSearch: {filterFunc: searchFilterFunc,  response: searchResponse, source: []},

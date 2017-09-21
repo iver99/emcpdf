@@ -20,14 +20,15 @@ def File sourceWebappDir = new File(project.projectDir, 'public_html')
 def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclejet')
 def File sourceJsCanvgDestDir = new File(sourceWebappDir, 'libs/@version@/js/canvg')
 def File sourceJsCanvasDesDir = new File(sourceWebappDir, 'libs/@version@/js/html2canvas')
-
+def File sourceQunitDestDir = new File(sourceWebappDir, 'libs/@version@/js/qunit')
 // source directories where font files are copied
 def File sourceFontDestDir = new File(sourceWebappDir, 'libs/@version@/css/font-awesome')
 
 def stagingDir = buildDir.absolutePath+'/staging/public_html'
 def compiledDir = buildDir.absolutePath+'/public_html'
 def webRootSourceDir = 'public_html'
-
+def projectAbsolutePath = project.projectDir.absolutePath.toString();
+def stagingDirForQunit = projectAbsolutePath.substring(0, projectAbsolutePath.indexOf("omc-ui-framework"))+'/build/omc-ui-framwork/public_html';
 //def chefDir = project.rootDir.absolutePath +'/dashboards-chef/cookbook-emcs-omc-ui-framework/recipes'
 
 sourceCompatibility = 1.7
@@ -36,6 +37,7 @@ targetCompatibility = 1.7
 configurations{
 	jscover  
 	compass
+	qunit
 }
 
 def jscc = "1".equals(System.getenv()['ENABLE_CC_JS'])
@@ -47,6 +49,7 @@ dependencies {
     compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
     compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
     compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
+	compile getProjectArtifact('qunit')
     providedCompile (project(':dashboards-ui-test-common-api')) //  { transitive = false }
     providedCompile (project(':omc-ui-framework:omc-ui-framework-webutils')) //  { transitive = false }
     compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')
@@ -55,9 +58,46 @@ dependencies {
 
 task cleanJs(type:Delete) {
 	delete fileTree(dir: stagingDir)
-	delete fileTree(dir: compiledDir)	
+	delete fileTree(dir: compiledDir)
+	delete fileTree(dir:stagingDirForQunit)
 }
 
+//unpack Qunit
+project.task("unpackQunitFromArtifactory") << {
+	def File buildQunitUnzipDir = new File(buildDir.absolutePath, 'qunit');
+	sourceQunitDestDir.mkdirs();
+	configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+		if(artifact.name.equals('qunit') && files(sourceQunitDestDir.listFiles()).isEmpty()){
+			logger.lifecycle("Unpacking artifact ${artifact.name}, version: ${artifact.moduleVersion.id.version}..")
+			buildQunitUnzipDir.mkdirs()
+			project.copy {
+				from project.zipTree(artifact.file.absolutePath)
+				into buildQunitUnzipDir.absolutePath
+			}
+			project.copy {
+				from buildQunitUnzipDir
+				into sourceQunitDestDir.absolutePath
+			}
+
+			if(!project.hasProperty("devMode")){
+				def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/qunit")
+				outputs.dir outputDir
+				project.copy {
+					from  buildQunitUnzipDir
+					into outputDir
+				}
+			}
+			project.delete(buildQunitUnzipDir)
+		}
+	}
+}
+
+
+project.task("cleanQunit") << {
+	println 'Cleaning up qunit directories ...'
+	println 'qunit dir: ' + sourceQunitDestDir.absolutePath
+	sourceQunitDestDir.deleteDir()
+}
 project.task("unpackJETFromArtifactory") << {
     def File buildJetUnzipDir = new File(buildDir.absolutePath, 'jet')
     //first time or if custom cleans removes it
@@ -192,7 +232,7 @@ project.task("cleanFont") << {
     sourceFontDestDir.deleteDir()
 }
 
-clean.dependsOn cleanJet,cleanFont
+clean.dependsOn cleanJet,cleanFont,cleanQunit
 
 project.task("cleanCompassCss")<<{
 }
@@ -236,7 +276,7 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
     }
 }
 
-task stageJs(dependsOn:[unpackJETFromArtifactory,unpackJSLibFromArtifactory,unpackFontFromArtifactory,copyJsSource]) {
+task stageJs(dependsOn:[unpackJETFromArtifactory,unpackJSLibFromArtifactory,unpackFontFromArtifactory,copyJsSource,unpackQunitFromArtifactory]) {
 }
 
 //define the JS source locations
@@ -560,7 +600,12 @@ task copyStagedJs(type:Copy, dependsOn:[stageJs]) {
     }
     into compiledDir
 }
-
+task copyJsForQUnitTest(type:Copy, dependsOn:[copyStagedJs]){
+	from (stagingDir) {
+		include "**/*"
+	}
+	into stagingDirForQunit
+}
 task prepareRequireJsConfig(type:Copy) {
     if(!project.hasProperty("devMode")){
         from ('.') {
@@ -578,7 +623,7 @@ task prepareRequireJsConfig(type:Copy) {
     }
 }
 
-task individualMinify(dependsOn: [copyStagedJs, jsCodeCoverage, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
+task individualMinify(dependsOn: [copyStagedJs, copyJsForQUnitTest, jsCodeCoverage, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
 
 task combineAppJs(dependsOn: [individualMinify,prepareRequireJsConfig], type: com.eriwen.gradle.js.tasks.RequireJsTask) {
     source = javascript.source.staticjs.js.files   //point to your source files
@@ -668,7 +713,7 @@ task minifyUIFwkImplPartitionJs(dependsOn: [minifyUIFwkPartitionJs],type: com.er
 war.archiveName "omc-ui-framework-web.war"
 
 //copy files without minify when -PdevMode enabled
-task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory,compileSass,jsCodeCoverage]){
+task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory,compileSass,unpackQunitFromArtifactory,jsCodeCoverage]){
     from(webRootSourceDir) {
 	include "**/*"
     }

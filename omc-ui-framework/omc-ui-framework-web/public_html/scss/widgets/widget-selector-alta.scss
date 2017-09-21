@@ -81,7 +81,7 @@
     box-sizing: border-box;
 } 
 
-#widget-selector-searchbox #searchTxt, .widget-selector-searchbox #searchTxt { 
+#widget-selector-searchbox .searchTxt, .widget-selector-searchbox .searchTxt { 
     float: left; 
     padding-left: 5px; 
     border:0;
