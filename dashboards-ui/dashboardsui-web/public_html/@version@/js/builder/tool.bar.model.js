@@ -799,7 +799,7 @@ define(['knockout',
                     "showOnMobile": true,
                     "showSubMenu": false,
                     "showInZdt":true,
-                    "endOfGroup": false
+                    "endOfGroup": self.federationEnabled
                 },
                 {
                     "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),

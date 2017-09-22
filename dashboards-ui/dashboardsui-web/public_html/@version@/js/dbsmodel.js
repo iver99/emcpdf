@@ -502,7 +502,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                             "description": self.createDashboardModel.description(),
                             "enableTimeRange": self.createDashboardModel.isEnableTimeRange() ? "TRUE" : "FALSE",
                             "enableRefresh": self.createDashboardModel.isEnableTimeRange(),
-                            "federationSupported": false};
+                            "federationSupported": "NON_FEDERATION_ONLY"};
             if (!_addeddb['name'] || _addeddb['name'] === "" || _addeddb['name'].length > 64)
             {
                 self.createMessages.push(new oj.Message(getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')));

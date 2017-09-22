@@ -286,6 +286,7 @@ function (ko, $, oj, dfu) {
         self.pageResize = function (){
             $b.triggerBuilderResizeEvent('loading widget list');
         };
+        var federationMode = Builder.isRunningInFederationMode();
          self.widgetSelectorParams = {
                     type: 'ojPopup',
                     dialogId: widgetSelectorDialogId,
@@ -296,7 +297,8 @@ function (ko, $, oj, dfu) {
                     autoCloseDialog: false,
                     widgetHandler: self.widgetPlusHandler,
                     initWidgetDraggable: self.initWidgetDraggable,
-                    buildPageResize:  self.pageResize
+                    buildPageResize:  self.pageResize,
+                    builderFederationMode: federationMode
                 };
     }
     return {"rightPanelWidget": rightPanelWidget};

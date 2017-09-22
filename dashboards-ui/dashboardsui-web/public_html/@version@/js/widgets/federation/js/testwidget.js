@@ -3,13 +3,8 @@ define(["knockout"],
             function TestWidgetViewModel(params) {
                 var self = this;
 
-                self.currentMode = ko.observable("Green Field Mode");
-                self.updateMode = function() {
-                    var fedMode = Builder.isRunningInFederationMode();
-                    if (fedMode === true) {
-                        self.currentMode("Federation Mode");
-                    }
-                };
+                self.federationMode = ko.observable(Builder.isRunningInFederationMode());
+                self.currentModeText = ko.observable(self.federationMode() === true ? "Federation Mode" : "Green Field Mode");
             }
-            return TestWidget;
+            return TestWidgetViewModel;
         });

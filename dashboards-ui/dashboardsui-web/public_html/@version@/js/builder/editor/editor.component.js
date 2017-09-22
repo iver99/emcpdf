@@ -367,6 +367,10 @@ define(['knockout',
                     tile.isOpenInExplorerShown(false);
                     return;
                 }
+                if (tile.federationSupported !== 'NON_FEDERATION_ONLY') {
+                    tile.isOpenInExplorerShown(false);
+                    return;
+                }
                 if (tile.PROVIDER_NAME() === 'TargetAnalytics') {
                     dfu.getSubscribedApps2WithEdition(
                         //successCallback

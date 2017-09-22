@@ -1,3 +1,5 @@
-<div style="width: 100%; heigh:auto">
-    This is a test widget for dashboard federation.<br> Current mode is <span data-bind="text: currentMode"></span>.
+<div style="margin: 10px;">
+    <h2 data-bind="text: currentModeText, style: {color: federationMode() ? 'brown' : 'green'}"></h2>
+    This is a test widget for federation dashboard.<br>
+    Current mode is <span style="font-weight: bold;" data-bind="text: currentModeText"></span>.
 </div>

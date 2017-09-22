@@ -53,6 +53,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                 self.widgetGroupFilterVisible = ko.observable(widgetProviderName && widgetProviderVersion ? false : true);
                 self.searchText = ko.observable("");
                 self.clearButtonVisible = ko.computed(function(){return self.searchText() && '' !== self.searchText() ? true : false;});
+                self.builderInFederationMode = params.builderFederationMode && params.builderFederationMode === true;
 
                 var dfu = new dfumodel(self.userName, self.tenantName);
                 //Append uifwk css file into document head
@@ -355,12 +356,17 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                 function getWidgets() {
                     var widgetsBaseUrl = '/sso.static/savedsearch.widgets';
                     var widgetsUrl = widgetsBaseUrl;
+                    var noFirstUrlParam = true;
                     if (dfu.isDevMode()){
                         widgetsBaseUrl = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
                         widgetsUrl = widgetsBaseUrl;
                         if (includeDashboardIneligible) {
                             widgetsUrl = widgetsBaseUrl + "?includeDashboardIneligible=true";
+                            noFirstUrlParam = false;
                         }
+                    }
+                    if (self.builderInFederationMode) { // currently running in federation mode in builder page
+                        widgetsUrl = widgetsUrl + (noFirstUrlParam ? '?' : '&') + 'federationEnabled=true';
                     }
  
                         return dfu.ajaxWithRetry({
