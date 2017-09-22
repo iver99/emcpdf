@@ -70,6 +70,8 @@ define(['knockout',
 
             self.dashboardsetDescription = ko.observable(ko.unwrap(dashboardInst.description) || "");
 
+            self.federationEnabled = Builder.isRunningInFederationMode();
+
 
             self.dashboardsetConfig = {
                 refresh:ko.observable(dashboardInst.enableRefresh()),
@@ -391,7 +393,7 @@ define(['knockout',
                     "endOfGroup": false,
                     "showOnMobile": true,
                     "showOnViewer":true,
-                    "visibility":visibilityOnDifDevice(true,true) && self.notZdtStatus,
+                    "visibility":visibilityOnDifDevice(true,true) && self.notZdtStatus && !self.federationEnabled,
                     "subMenu": []
                 },
                 {

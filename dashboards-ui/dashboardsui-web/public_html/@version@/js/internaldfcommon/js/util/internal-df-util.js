@@ -103,10 +103,15 @@ define(['knockout',
             };
 
             self.getWidgetsUrl = function(){
+                var federationEnabled = Builder.isRunningInFederationMode();
+                var federationEnabledUrl = "";
+                if (federationEnabled) {
+                    federationEnabledUrl = "?federationEnabled=true";
+                }
                 if (self.isDevMode()){
-                    return self.buildFullUrl(self.getDevData().ssfRestApiEndPoint,"/widgets");
+                    return self.buildFullUrl(self.getDevData().ssfRestApiEndPoint,"/widgets" + federationEnabledUrl);
                 }else{
-                    return '/sso.static/savedsearch.widgets';
+                    return '/sso.static/savedsearch.widgets' + federationEnabledUrl;
                 }
             };
             self.getPreferencesUrl=function(){

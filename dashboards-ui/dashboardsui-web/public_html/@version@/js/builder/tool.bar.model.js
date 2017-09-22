@@ -43,6 +43,7 @@ define(['knockout',
             self.zdtStatus = ko.observable(false);
             self.notZdtStatus = ko.observable(true);
             self.renderDashboardOptsMenu = ko.observable(false);
+            self.federationEnabled = Builder.isRunningInFederationMode();
             var dashboardOptsMenuInitialized = false;
             self.onDashboardOptsMenuClicked = function(){   //trigger event to dashboardset.panels.model to hide some menu items
                 if(dashboardOptsMenuInitialized){
@@ -803,7 +804,7 @@ define(['knockout',
                     "name":"Duplicate",
                     "icon": "dbd-toolbar-icon-duplicate",
                     "title": "",
-                    "disabled": false,
+                    "disabled": self.federationEnabled,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
                     "showInZdt":self.notZdtStatus,
                     "endOfGroup": true && self.notZdtStatus,
@@ -852,7 +853,7 @@ define(['knockout',
                     "name":self.favoriteName,
                     "icon": self.favoritesIcon, //"dbd-toolbar-icon-favorites",
                     "title": "", //self.favoriteLabel,
-                    "disabled": false,
+                    "disabled": self.federationEnabled,
                     "showOnMobile": true,
                     "showSubMenu": false,
                     "showInZdt":self.notZdtStatus,
@@ -865,7 +866,7 @@ define(['knockout',
                     "name":self.dashboardAsHomeName,
                     "icon": self.dashboardsAsHomeIcon,
                     "title": "", //self.setAsHomeLabel,
-                    "disabled": false,
+                    "disabled": self.federationEnabled,
                     "showOnMobile": true,
                     "showSubMenu": false,
                     "showInZdt":self.notZdtStatus,

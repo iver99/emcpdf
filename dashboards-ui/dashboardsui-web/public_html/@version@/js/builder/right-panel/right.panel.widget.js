@@ -296,7 +296,7 @@ function (ko, $, oj, dfu) {
                     autoCloseDialog: false,
                     widgetHandler: self.widgetPlusHandler,
                     initWidgetDraggable: self.initWidgetDraggable,
-                    buildPageResize:  self.pageResize 
+                    buildPageResize:  self.pageResize
                 };
     }
     return {"rightPanelWidget": rightPanelWidget};

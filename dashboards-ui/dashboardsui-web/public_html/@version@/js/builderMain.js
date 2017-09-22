@@ -273,6 +273,16 @@ require(['knockout',
                 Builder.initializeFromCookie();
                 new Builder.DashboardDataSource().loadDashboardData(dsbId, function (kodb) {
                     dashboard = kodb;
+
+                    // check federation modes support
+                    var federationEnabled = Builder.isRunningInFederationMode();
+                    if (federationEnabled && dashboard.federationSupported && dashboard.federationSupported() == 'NON_FEDERATION_ONLY' ||
+                            !federationEnabled && dashboard.federationSupported && dashboard.federationSupported() == 'FEDERATION_ONLY') {
+                        oj.Logger.error("The running mode is not supported by the current dashboard. " +
+                                    "Running mode is federationEnabled=" + federationEnabled, true);
+                        location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG&invalidUrl=" + encodeURIComponent(location.href);
+                    }
+
                     var isUnderSet = ko.unwrap(dashboard.type) === "SET" ? true : false;;
                     normalMode = new Builder.NormalEditorMode();
                     tabletMode = new Builder.TabletEditorMode();

@@ -836,6 +836,12 @@ public class DashboardManager
 		return listDashboards(queryString, offset, pageSize, tenantId, ic, null, null, false);
 	}
 
+
+	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
+											  boolean ic, String orderBy, DashboardsFilter filter) throws DashboardException {
+		return listDashboards(queryString, offset, pageSize, tenantId, ic, orderBy, filter, false);
+	}
+
 	/**
 	 * Returns dashboards for specified query string, by providing page number and page size
 	 *
@@ -907,9 +913,9 @@ public class DashboardManager
 		}
 
 		if (!federationEnabled) {
-			sb.append(" and p.greenfield_supported = 1 ");
+			sb.append(" and (p.federation_supported = 0 or p.federation_supported = 1) ");
 		} else {
-			sb.append(" and p.federation_supported = 1 ");
+			sb.append(" and (p.federation_supported = 1 or p.federation_supported = 2) ");
 		}
 
 		StringBuilder sbApps = new StringBuilder();
@@ -1007,7 +1013,8 @@ public class DashboardManager
 		//			sbQuery.append(sb);
 		sbQuery.insert(0,
 				"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.SHOW_INHOME,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
-						+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE,p.APPLICATION_TYPE ");
+						+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE,"
+						+ "p.APPLICATION_TYPE,p.FEDERATION_SUPPORTED ");
 		String jpqlQuery = sbQuery.toString();
 
 		LOGGER.info("Executing SQL is: " + jpqlQuery);

@@ -74,8 +74,6 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	private String owner;
 	@Column(name = "FEDERATION_SUPPORTED", nullable = false)
 	private Integer federationSupported;
-	@Column(name = "GREENFIELD_SUPPORTED", nullable = false)
-	private Integer greenfieldSupported;
 
 	@Lob
 	@Basic(fetch = FetchType.EAGER)
@@ -103,7 +101,7 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 	public EmsDashboard(Date creationDate, BigInteger dashboardId, BigInteger deleted, String description, Integer enableTimeRange,
 			Integer enableRefresh, Integer enableDescription, Integer enableEntityFilter, Integer isSystem,
 			Integer sharePublic, Date lastModificationDate, String lastModifiedBy, String name, String owner, String screenShot,
-			Integer type, Integer applicationType,Integer showInHome,String extendedOptions)
+			Integer type, Integer applicationType,Integer showInHome,String extendedOptions, Integer federationSupported)
 	{
 		setCreationDate(creationDate);
 		setLastModificationDate(lastModificationDate);
@@ -124,6 +122,7 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 		this.applicationType = applicationType;
 		this.showInHome=showInHome;
 		this.extendedOptions = extendedOptions;
+		this.federationSupported = federationSupported;
 	}
 
 	public EmsDashboardTile addEmsDashboardTile(EmsDashboardTile emsDashboardTile)
@@ -231,10 +230,6 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 
 	public Integer getFederationSupported() {
 		return federationSupported;
-	}
-
-	public Integer getGreenfieldSupported() {
-		return greenfieldSupported;
 	}
 
 	/**
@@ -378,10 +373,6 @@ public class EmsDashboard extends EmBaseEntity implements Serializable
 
 	public void setFederationSupported(Integer federationSupported) {
 		this.federationSupported = federationSupported;
-	}
-
-	public void setGreenfieldSupported(Integer greenfieldSupported) {
-		this.greenfieldSupported = greenfieldSupported;
 	}
 
 }

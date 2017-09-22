@@ -863,5 +863,16 @@ define(['knockout',
                 });
             }
             Builder.registerFunction(loadEntityContext, "loadEntityContext");
+
+            function isRunningInFederationMode() {
+                var urlParam = dfu.getUrlParam("federationEnabled");
+                var federationEnabled = false;
+                if (urlParam && urlParam.toUpperCase() === "TRUE") {
+                    federationEnabled = true;
+                }
+                console.log('Currently it is running in ' + (federationEnabled ? 'federation ' : 'greenfield ') + 'mode');
+                return federationEnabled;
+            }
+            Builder.registerFunction(isRunningInFederationMode, "isRunningInFederationMode");
     }
 );
