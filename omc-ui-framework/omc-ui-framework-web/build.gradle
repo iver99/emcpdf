@@ -18,6 +18,7 @@ def File sourceWebappDir = new File(project.projectDir, 'public_html')
 
 // source directories where jet files are copied
 def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclejet')
+def File sourceCKeditorDesDir = new File(sourceWebappDir, 'libs/@version@/js/ckeditor')
 def File sourceJsCanvgDestDir = new File(sourceWebappDir, 'libs/@version@/js/canvg')
 def File sourceJsCanvasDesDir = new File(sourceWebappDir, 'libs/@version@/js/html2canvas')
 def File sourceQunitDestDir = new File(sourceWebappDir, 'libs/@version@/js/qunit')
@@ -50,6 +51,7 @@ dependencies {
     compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
     compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
 	compile getProjectArtifact('qunit')
+    compile getProjectArtifact('ckeditor')
     providedCompile (project(':dashboards-ui-test-common-api')) //  { transitive = false }
     providedCompile (project(':omc-ui-framework:omc-ui-framework-webutils')) //  { transitive = false }
     compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')
@@ -235,6 +237,45 @@ project.task("cleanFont") << {
 clean.dependsOn cleanJet,cleanFont,cleanQunit
 
 project.task("cleanCompassCss")<<{
+}
+
+//unpack js libs from artifactory
+project.task("unpackJSLibFromArtifactory") << {    
+	def File buildCKeditorUnzipDir = new File(buildDir.absolutePath, 'ckeditor')
+	
+	//first time or if custom cleans removes it
+	sourceCKeditorDesDir.mkdirs()
+
+	configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+	    if (artifact.name.equals('ckeditor_full') && files(sourceCKeditorDesDir.listFiles()).isEmpty()) {
+		logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+		buildCKeditorUnzipDir.mkdirs()
+
+		project.copy {
+		    from project.zipTree(artifact.file.absolutePath)
+		    into buildCKeditorUnzipDir.absolutePath
+		}
+		project.copy {
+		    from buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
+		    into sourceCKeditorDesDir.absolutePath
+		}
+
+		if(!project.hasProperty("devMode")){
+		    def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/ckeditor");
+		    outputs.dir outputDir
+		    project.copy {
+			from buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
+			into outputDir
+		    }
+		}
+		project.delete(buildCKeditorUnzipDir)
+	    }
+	}
+}
+
+project.task("cleanJSLib") << {
+	println 'JS lib ckeditor dir : ' + sourceCKeditorDesDir.absolutePath
+	sourceCKeditorDesDir.deleteDir()
 }
 
 task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
