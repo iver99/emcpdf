@@ -5,6 +5,7 @@ import mockit.Mocked;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.DataManager;
+import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.SyncException;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardRowEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardSetRowEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardTileParamsRowEntity;
@@ -154,10 +155,10 @@ public class TableRowsSynchronizerTest {
         List<DashboardTileParamsRowEntity> dashboardTileParamsRowEntities = new ArrayList<>();
         dashboardTileParamsRowEntities.add(dashboardTileParamsRowEntity);
 
-        new Expectations(){
+       /* new Expectations(){
             {
-                DataManager.getInstance();
-                result = dataManager;
+//                DataManager.getInstance();
+//                result = dataManager;
                 dataManager.syncPreferences(em,anyString, anyString, anyString, anyLong, anyString, anyString,(Integer)any);
                 result = 1;
                 dataManager.syncDashboardTableRow(em,(BigInteger)any, anyString, anyLong, anyString, anyString,anyString, anyString, anyString, (Integer)any, (Integer)any,(Integer)any, anyString, (BigInteger)any, anyLong, (Integer)any, (Integer)any,(Integer)any, (Integer)any, anyString,(Integer)any);
@@ -172,11 +173,9 @@ public class TableRowsSynchronizerTest {
                 dataManager.syncDashboardUserOption(em,anyString,anyLong, (BigInteger)any, anyLong, anyString, (Integer)any, anyString, anyString, anyString, (Integer)any);
                 result = 1;
             }
-        };
+        };*/
 
         tableRowsSynchronizer.sync(tableRowsEntity);
-
-        tableRowsSynchronizer.sync(null);
 
         tableRowsEntity.setEmsDashboard(dashboardRowEntities);
         tableRowsEntity.setEmsDashboardSet(dashboardSetRowEntities);
@@ -187,7 +186,11 @@ public class TableRowsSynchronizerTest {
 
         tableRowsSynchronizer.sync(tableRowsEntity);
 
+    }
 
+    @Test(expectedExceptions = SyncException.class)
+    public void testSync2() throws SyncException {
+        tableRowsSynchronizer.sync(null);
     }
 
 }

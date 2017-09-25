@@ -5,6 +5,9 @@
  * created by LRG using your tasks file.
  * NOTE that the below code expects SAAS_VERSION environment variable to be set correctly.
  */
+ 
+def emcpdfCommonAPIVer=getDependentSdkVersion('com.oracle.emaas.emcpdf.testsdk.ui', 'dashboards-ui-test-common-api', '2.+')
+
 buildscript {
     repositories {
 	maven {
@@ -15,7 +18,7 @@ buildscript {
     }
     dependencies {
 	classpath group: "com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "${devinfraVersion}", transitive: true
-        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+    classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
     }
 }
 apply plugin: 'DevInfraPlugin'
@@ -27,29 +30,36 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest
 
 dependencies
 {
-    	testConfig group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-zdt-test-sdk-integ-tests', version: "${emcpdf_REPO_BID}"
-     	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${emcpdf_REPO_BID}") {transitive = true}
-        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${emcpdf_REPO_BID}") {transitive = true}
-        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${emcpdf_REPO_BID}") {transitive = true}
-        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${emcpdf_REPO_BID}")
-     	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${emcpdf_REPO_BID}") {transitive = true}
-     
+    	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-zdt-test-sdk-integ-tests', version: "${REPO_BID}") {transitive = false}
+     	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}") {transitive = true}
+	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}") {transitive = true}
+	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}") {transitive = true}
+        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${REPO_BID}")
+      	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${REPO_BID}") {transitive = true}
+     	testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
 
 }
 
  
 task emcpdf_zdtPlay(type: EMTest) {
   include "oracle/sysman/emaas/platform/dashboards/testsdk/DashboardOrderWriteCURD.class"  
-  // include "oracle/sysman/emaas/platform/dashboards/test/dashboard/DashboardCRUD.class"
+  useRestAssured = true
 }
 task emcpdf_zdtReplay(type: EMTest) {
   include "oracle/sysman/emaas/platform/dashboards/testsdk/DashboardOrderWriteCURD.class"
-  //include "oracle/sysman/emaas/platform/dashboards/test/dashboard/DashboardCRUD.class"
+  useRestAssured = true
 }
  
 //task emcpdf_zdtPlaySaveState(type: EMTest)
  
 //task emcpdf_zdtReplaySaveState(type: EMTest)
  
-task emcpdf_zdtCompare(type: EMTest)
+task emcpdf_zdtCompare(type: EMTest){
+	include "oracle/sysman/emaas/platform/dashboards/testsdk/DashboardSyncCompareTest.class"
+	useRestAssured = true
+}
 
+task emcpdf_zdtActiveDown(type:EMTest){
+	include  "oracle/sysman/emaas/platform/dashboards/testsdk/testZDTActiveDown.class"
+	useWebdriver = true
+}

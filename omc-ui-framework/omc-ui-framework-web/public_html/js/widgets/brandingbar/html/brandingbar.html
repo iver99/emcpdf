@@ -26,8 +26,8 @@
                 <div class="emaas-appheader-logo" data-bind="attr: {'aria-label': textOracle}">
                     <div class="emaas-appheader-appname-table-cell-baseline">
                         <!--oracle_logo_lrg-->
-                        <img class="emaas-appheader-logo-img"  src="/emsaasui/uifwk/@version@/images/imgbackground.png"
-                         style="background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -158px;height:19px;" width="158" height="19" data-bind="attr: {alt: textOracle}, click: gotoHomePage"/> 
+                        <div class="emaas-appheader-logo-img"
+                            style="background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -158px;height:19px;width:158px;" width="158" height="19" data-bind="attr: {alt: textOracle}, click: gotoHomePage"></div>
                     </div>
                     <div class="emaas-appheader-appname-table-cell-baseline" style="padding-left: 4px">
                         <span class="emaas-appheader-appname" data-bind="text: productName"></span>
@@ -49,7 +49,7 @@
                         </li>
                         <!-- /ko -->
                         <!-- /ko -->
-                    </ul> 
+                    </ul>
 
                     <div class="emaas-appheader-toolbar-container">
                         <!--div class="emaas-appheader-toolbar oj-toolbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}"-->
@@ -109,13 +109,13 @@
             <!-- /ko -->
         </div>  
         <!-- ko if: renderSessionTimeoutDialog -->
-        <div style="display:none;" 
+        <div style="display:none;"
             data-bind="ojComponent:{component: 'ojDialog', 
                 initialVisibility: 'hide', title: sessionTimeoutWarnDialogTitle, resizeBehavior: 'none', cancelBehavior: 'none',
                 rootAttributes: { style: 'width: 450px;'}}, attr: {id: sessionTimeoutWarnDialogId}">   
             <div class="oj-dialog-body" style="height: 50px;" >
                 <div class="emaas-warn-msg-table-cell">
-                    <img width="16" height="16" data-bind="attr: {alt: altTextWarn, src: sessionTimeoutWarnIcon}"/> 
+                    <div width="16" height="16" data-bind="attr: {alt: altTextWarn, style: sessionTimeoutWarnCssStyle}"></div>
                 </div>
                 <div class="emaas-warn-msg-table-cell" style="padding-left: 5px">
                     <span class="emaas-appheader-appname" data-bind="text: sessionTimeoutMsg"></span>
@@ -213,13 +213,13 @@
         <!-- topology --->
         <!-- ko if: isTopologyCompRegistered() !== false -->
         <div id="ude-topology-div" style="height:auto; display: flex; padding-left: 10px; padding-right: 10px; padding-bottom: 5px;"
-             data-bind="visible: isTopologyDisplayed" class="ude-sdk">            
+             data-bind="visible: isTopologyDisplayed" class="ude-sdk">
             <!--<div data-bind="attr: {style: topologyStyle}" style="margin: 0 auto">test div</div>-->
         <div style="height: auto; display: flex; width:100%;
             border-width: 1px; border-color: #d6dfe6; border-style: solid; background-color: white;">
         <div class="ude-topology ude-topology-in-brandingbar"
              style="display:block;float:none;width:100%;"
-             data-bind="component:{name:'emctas-topology', 
+             data-bind="component:{name:'emctas-topology',
              params:{
                    entityQueryVars: queryVars(),
                    entities: entities(),
@@ -256,7 +256,7 @@
                                    'emaas-appheader-message-box-info' : type === 'info'}">
                 <div style="float:left;">
                     <div class="emaas-appheader-message-table-cell" >
-                        <img class="emaas-appheader-message-icon" data-bind="attr: {alt: iconAltText, src: icon, style: imgCssStyle}"/>
+                        <div class="emaas-appheader-message-icon" data-bind="attr: {alt: iconAltText, style: imgCssStyle}"></div>
                     </div>
                     <div class="emaas-appheader-message-table-cell emaas-appheader-message-textbox">
                         <span class="emaas-appheader-message emaas-appheader-message-summary" data-bind="text: summary"></span>
@@ -267,10 +267,9 @@
                 </div>
                 <div style="float:right;padding-right: 20px;">
                     <!--clearEntry_ena-->
-                    <img class="emaas-appheader-message-icon emaas-appheader-message-icon-clear" 
-                         src="/emsaasui/uifwk/@version@/images/imgbackground.png"
-                         style="background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -142px;height:16px;"
-                         data-bind="attr: {alt: $parent.altTextClear}, click: $parent.clearMessage"/>
+                    <div class="emaas-appheader-message-icon emaas-appheader-message-icon-clear" 
+                         style="background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -142px;height:16px;width:16px;display:inline-block;"
+                         data-bind="attr: {alt: $parent.altTextClear}, click: $parent.clearMessage"></div>
                 </div>
             </div>
             <!-- /ko -->
