@@ -153,10 +153,9 @@ public class DashboardRowsComparatorTest
             }
         };
 		DashboardRowsComparator drc = new DashboardRowsComparator();
-		TableRowsEntity tre1 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
-				JSON_RESPONSE_DATA_TABLE);
-		TableRowsEntity tre2 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
-				JSON_RESPONSE_DATA_TABLE);
+		JsonUtil ju = JsonUtil.buildNormalMapper();
+		TableRowsEntity tre1 = ju.fromJson(JSON_RESPONSE_DATA_TABLE, TableRowsEntity.class);
+		TableRowsEntity tre2 = ju.fromJson(JSON_RESPONSE_DATA_TABLE, TableRowsEntity.class);
 		InstancesComparedData<TableRowsEntity> cd = Deencapsulation.invoke(drc, "compareInstancesData",
 				new InstanceData<TableRowsEntity>(null,null, tre1), new InstanceData<TableRowsEntity>(null, null,tre2));
 		// the 2 instances have the same data, so there is no difference from the compared result
@@ -177,8 +176,8 @@ public class DashboardRowsComparatorTest
 		Assert.assertNull(result2.getEmsPreference());
 
 		// let's introduce more 'differece' to instance 1
-		tre1 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance", JSON_RESPONSE_DATA_TABLE);
-		tre2 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance", JSON_RESPONSE_DATA_TABLE);
+		tre1 = ju.fromJson(JSON_RESPONSE_DATA_TABLE, TableRowsEntity.class);
+		tre2 = ju.fromJson(JSON_RESPONSE_DATA_TABLE, TableRowsEntity.class);
 		DashboardRowEntity dre1 = new DashboardRowEntity();
 		dre1.setApplicationType(1);
 		dre1.setDashboardId("1001");
@@ -239,10 +238,8 @@ public class DashboardRowsComparatorTest
 		tre2.getEmsPreference().add(preboth);
 
 		// serialize&de-serialize, to avoid any side effects from above operations on objects
-		tre1 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
-				JsonUtil.buildNormalMapper().toJson(tre1));
-		tre2 = Deencapsulation.invoke(drc, "retrieveRowsEntityFromJsonForSingleInstance",
-				JsonUtil.buildNormalMapper().toJson(tre2));
+		tre1 = ju.fromJson(JsonUtil.buildNormalMapper().toJson(tre1), TableRowsEntity.class);
+		tre2 = ju.fromJson(JsonUtil.buildNormalMapper().toJson(tre2), TableRowsEntity.class);
 		cd = Deencapsulation.invoke(drc, "compareInstancesData", new InstanceData<TableRowsEntity>(null,null, tre1),
 				new InstanceData<TableRowsEntity>(null, null,tre2));
 		result1 = cd.getInstance1().getData();
@@ -264,7 +261,7 @@ public class DashboardRowsComparatorTest
 		Assert.assertNull(result2.getEmsPreference());// preference appear in both side won't appear here
 	}
 
-	@Test
+	/*@Test
 	public void testRetrieveRowsEntityFromJsonForSingleInstance() throws IOException, ZDTException
 	{
 		final HashMap<String, LookupClient> lookupEntry = new HashMap<String, LookupClient>();
@@ -308,7 +305,7 @@ public class DashboardRowsComparatorTest
 		Assert.assertEquals(tre.getEmsPreference().get(1).getPrefValue(), "true");
 		Assert.assertEquals(tre.getEmsPreference().get(1).getCreationDate(), CREATION_DATE);
 		Assert.assertEquals(tre.getEmsPreference().get(1).getLastModificationDate(), LAST_MODIFICATION_DATE);
-	}
+	}*/
 
 	@Test
 	public void testsaveComparatorStatus() throws Exception {
@@ -337,7 +334,7 @@ public class DashboardRowsComparatorTest
             }
         };
         DashboardRowsComparator drc = new DashboardRowsComparator();
-		drc.syncForInstance("tenantId", "userTenant", null, "full","date");
+		drc.syncForInstance("tenantId", "userTenant", null);
 	}
 	
 	@Test
@@ -465,8 +462,8 @@ public class DashboardRowsComparatorTest
         };
 		DashboardRowsComparator drc = new DashboardRowsComparator();
 	
-		drc.compare(null, null, null, "2017-05-27", false, "tenant");
-		drc.compare(null, null, null, "2017-05-27", false, null);
+		drc.compare(null, null, "2017-05-27", false, "tenant");
+		drc.compare(null, null, "2017-05-27", false, null);
 	}
 	
 	@Test

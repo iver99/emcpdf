@@ -155,9 +155,9 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ssfDatautil/*.class"
 
 	//***************below are dashboardscomparator-web project test cases***************//
-	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/*.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/*.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/*.class"
+//	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/**/*.class"
+//	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/exception/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/timer/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/exception/*.class"

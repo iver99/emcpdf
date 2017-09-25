@@ -13,7 +13,17 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.ro
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
- * @author guochen
+ * NOTE: if schema changes, corresponding Entity class need to be updated and equals and hashcode methods should be  rewrited too
+ * USER_NAME
+ * TENANT_ID
+ * DASHBOARD_ID
+ * AUTO_REFRESH_INTERVAL
+ * ACCESS_DATE
+ * IS_FAVORITE
+ * EXTENDED_OPTIONS
+ * CREATION_DATE
+ * LAST_MODIFICATION_DATE
+ * DELETED
  */
 public class DashboardUserOptionsRowEntity implements RowEntity
 {
