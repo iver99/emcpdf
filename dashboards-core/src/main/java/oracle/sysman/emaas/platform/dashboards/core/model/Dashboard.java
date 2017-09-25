@@ -263,10 +263,12 @@ public class Dashboard
 		to.setExtendedOptions(from.getExtendedOptions());
 		to.setApplicationType(from.getApplicationType());
 		FederationSupportedType fst = FederationSupportedType.NON_FEDERATION_ONLY;
-		try {
-			fst = FederationSupportedType.fromValue(from.getFederationSupported());
-		} catch (IllegalArgumentException e) {
-			LOGGER.error("Error to parse federatedSupported value. Default value used.", e);
+		if (from.getFederationSupported() != null) {
+			try {
+				fst = FederationSupportedType.fromValue(from.getFederationSupported());
+			} catch (IllegalArgumentException e) {
+				LOGGER.error("Error to parse federatedSupported value. Default value used.", e);
+			}
 		}
 		to.setFederationSupported(fst);
 		
@@ -415,6 +417,7 @@ public class Dashboard
 		isSystem = Boolean.FALSE;
 		sharePublic = Boolean.FALSE;
 		showInHome=Boolean.TRUE;
+		federationSupported = FederationSupportedType.NON_FEDERATION_ONLY;
 	}
 
 	public Tile addTile(Tile tile)

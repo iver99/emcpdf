@@ -99,10 +99,12 @@ public class Tile
 		tile.setWidgetLinkedDashboard(edt.getWidgetLinkedDashboard());
 		tile.setWidth(edt.getWidth());
 		FederationSupportedType fst = FederationSupportedType.NON_FEDERATION_ONLY;
-		try {
-			fst = FederationSupportedType.fromValue(edt.getFederationSupported());
-		} catch (IllegalArgumentException e) {
-			LOGGER.error("Error to parse federatedSupported value. Default value used.", e);
+		if (edt.getFederationSupported() != null) {
+			try {
+				fst = FederationSupportedType.fromValue(edt.getFederationSupported());
+			} catch (IllegalArgumentException e) {
+				LOGGER.error("Error to parse federatedSupported value. Default value used.", e);
+			}
 		}
 		tile.setFederationSupported(fst);
 		
@@ -741,7 +743,7 @@ public class Tile
 		Integer intIsMaximized = DataFormatUtils.boolean2Integer(isMaximized);
 		Integer intWidgetSupportTimeControl = DataFormatUtils.boolean2Integer(widgetSupportTimeControl);
 		Integer intWidgetDeleted = DataFormatUtils.boolean2Integer(widgetDeleted);
-		Integer intFedSupported = federationSupported.getValue();
+		Integer intFedSupported = federationSupported == null ? FederationSupportedType.NON_FEDERATION_ONLY.getValue() : federationSupported.getValue();
 
 		if (title == null || "".equals(title)) {
 			throw new CommonFunctionalException(
@@ -883,7 +885,7 @@ public class Tile
 		//width = 8;
 		//height = 1;
 		Integer tileType = DataFormatUtils.tileTypeString2Integer(type);
-		Integer fedSupported = federationSupported.getValue();
+		Integer fedSupported = FederationSupportedType.FEDERATION_AND_NON_FEDERATION.getValue();// text widget supports both modes by default
 		// text tile does not support time control
 		Integer supportTimeControl = 0;
 		// whatever the input title is, text tile use the default title

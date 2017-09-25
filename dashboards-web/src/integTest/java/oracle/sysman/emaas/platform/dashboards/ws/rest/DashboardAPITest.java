@@ -448,7 +448,7 @@ public class DashboardAPITest
 				anyDependencyStatus.isDatabaseUp();
 				result = true;
 				mockedDashboardManager.listDashboards(anyString, anyInt, anyInt, anyLong, anyBoolean, anyString,
-						withAny(new DashboardsFilter()));
+						withAny(new DashboardsFilter()), anyBoolean);
 				PaginatedDashboards dashboardsResult = new PaginatedDashboards();
 				List<Dashboard> dashboardList = new ArrayList<>();
 				Dashboard dashboard1 = new Dashboard();
