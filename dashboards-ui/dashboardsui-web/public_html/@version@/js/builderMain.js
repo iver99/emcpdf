@@ -281,6 +281,7 @@ require(['knockout',
                         oj.Logger.error("The running mode is not supported by the current dashboard. " +
                                     "Running mode is federationEnabled=" + federationEnabled, true);
                         location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG&invalidUrl=" + encodeURIComponent(location.href);
+                        return;
                     }
 
                     var isUnderSet = ko.unwrap(dashboard.type) === "SET" ? true : false;;
