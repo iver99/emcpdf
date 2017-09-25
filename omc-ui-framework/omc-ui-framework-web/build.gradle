@@ -134,9 +134,11 @@ project.task("unpackJETFromArtifactory") << {
 project.task("unpackJSLibFromArtifactory") << {
     def File buildJsCanvgUnzipDir = new File(buildDir.absolutePath, 'canvg')
     def File buildJsCanvasUnzipDir = new File(buildDir.absolutePath, 'html2canvas')
+    def File buildCKeditorUnzipDir = new File(buildDir.absolutePath, 'ckeditor')
     //first time or if custom cleans removes it
     sourceJsCanvgDestDir.mkdirs()
     sourceJsCanvasDesDir.mkdirs()
+    sourceCKeditorDesDir.mkdirs()
 
     configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
         if (artifact.name.equals('canvg') && files(sourceJsCanvgDestDir.listFiles()).isEmpty()) {
@@ -183,6 +185,29 @@ project.task("unpackJSLibFromArtifactory") << {
 		    }	
             project.delete(buildJsCanvasUnzipDir)
         }
+        if (artifact.name.equals('ckeditor_full') && files(sourceCKeditorDesDir.listFiles()).isEmpty()) {
+            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+            buildCKeditorUnzipDir.mkdirs()
+
+            project.copy {
+                from project.zipTree(artifact.file.absolutePath)
+                into buildCKeditorUnzipDir.absolutePath
+            }
+            project.copy {
+                from buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
+                into sourceCKeditorDesDir.absolutePath
+            }
+
+            if(!project.hasProperty("devMode")){
+                def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/ckeditor");
+                outputs.dir outputDir
+                project.copy {
+                    from buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
+                    into outputDir
+                }
+            }
+            project.delete(buildCKeditorUnzipDir)
+        }
     }
 }
 
@@ -194,7 +219,8 @@ project.task("cleanJet") << {
     sourceJsCanvgDestDir.deleteDir()
     println 'JS lib html2canvas dir : ' + sourceJsCanvasDesDir.absolutePath
     sourceJsCanvasDesDir.deleteDir()
-
+    println 'JS lib ckeditor dir : ' + sourceCKeditorDesDir.absolutePath
+    sourceCKeditorDesDir.deleteDir()
 }
 
 project.task("unpackFontFromArtifactory") << {    
@@ -237,45 +263,6 @@ project.task("cleanFont") << {
 clean.dependsOn cleanJet,cleanFont,cleanQunit
 
 project.task("cleanCompassCss")<<{
-}
-
-//unpack js libs from artifactory
-project.task("unpackJSLibFromArtifactory") << {    
-	def File buildCKeditorUnzipDir = new File(buildDir.absolutePath, 'ckeditor')
-	
-	//first time or if custom cleans removes it
-	sourceCKeditorDesDir.mkdirs()
-
-	configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-	    if (artifact.name.equals('ckeditor_full') && files(sourceCKeditorDesDir.listFiles()).isEmpty()) {
-		logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-		buildCKeditorUnzipDir.mkdirs()
-
-		project.copy {
-		    from project.zipTree(artifact.file.absolutePath)
-		    into buildCKeditorUnzipDir.absolutePath
-		}
-		project.copy {
-		    from buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
-		    into sourceCKeditorDesDir.absolutePath
-		}
-
-		if(!project.hasProperty("devMode")){
-		    def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/ckeditor");
-		    outputs.dir outputDir
-		    project.copy {
-			from buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
-			into outputDir
-		    }
-		}
-		project.delete(buildCKeditorUnzipDir)
-	    }
-	}
-}
-
-project.task("cleanJSLib") << {
-	println 'JS lib ckeditor dir : ' + sourceCKeditorDesDir.absolutePath
-	sourceCKeditorDesDir.deleteDir()
 }
 
 task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
