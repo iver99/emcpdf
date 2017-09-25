@@ -19,6 +19,8 @@ define([
 'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
 'uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',
 'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html',
+'uifwk/@version@/js/widgets/htmlwidget/htmlwidget-impl',
+'text!uifwk/js/widgets/htmlwidget/html/htmlwidget.html',
 'uifwk/@version@/js/util/ajax-util-impl',
 'uifwk/@version@/js/util/df-util-impl',
 'uifwk/@version@/js/util/logging-util-impl',

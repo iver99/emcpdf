@@ -168,6 +168,7 @@ define({
       "DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_2": " to get started",
       "DBS_BUILDER_BTN_SAVE_DASHBOARD": "Save Dashboard",
       "DBS_BUILDER_BTN_TEXT": "Add Text",
+      "DBS_BUILDER_BTN_ADD_HTML_WIDGET": "Add HTML Widget",
       "DBS_BUILDER_TEXT_WIDGET_PROMPT_STRING": "Start typing...",
       "DBS_BUILDER_SETTINGS": "Settings",
       "DBS_BUILDER_FILTERS": "Filters",

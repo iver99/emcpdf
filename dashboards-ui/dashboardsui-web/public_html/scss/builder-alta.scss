@@ -147,7 +147,7 @@ body, html {
         }
         
         .dashboardTextBtn{
-            .dbd-toolbar-icon-text{
+            .dbd-toolbar-icon-text,.dbd-toolbar-icon-html-widget{
                 height: 30px;
                 &:before{
                     height: 30px;
@@ -323,6 +323,10 @@ body, html {
 
 .dbd-toolbar-icon-text:before {
   content: "\f031";
+}
+
+.dbd-toolbar-icon-html-widget:before {
+  content: "\f1dc";
 }
 
 .dbd-toolbar-icon-edit:before,.fa-pencil-df:before {
