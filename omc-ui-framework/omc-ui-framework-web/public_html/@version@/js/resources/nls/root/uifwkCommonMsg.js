@@ -213,6 +213,8 @@ define({
       "TIME_FILTER_HOURS_FILTER_ERRMSG": "Time range format invalid. Re-enter time range(s).",
       "TIME_FILTER_DAYS_FILTER_ERRMSG": "Select at least one day.",
       "TIME_FILTER_MONTHS_FILTER_ERRMSG": "Select at least one month.",
+      
+      "HTML_WIDGET_PROMPT_STRING": "No Content",
 
       //Misc messages
       "PILL_REMOVE_TITLE": "Remove",

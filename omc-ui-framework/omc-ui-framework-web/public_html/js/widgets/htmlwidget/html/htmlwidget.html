@@ -1,15 +1,22 @@
-<div style='width: 100%; height: 100%;'>
-    <div class="htmlWidgetWrapper">
-        <div data-bind="attr: {id: 'textContentWrapper_'+htmlWidgetId}, click: showTextEditor" style="width: 100%; height: 100%; word-wrap: break-word;">
-            <!-- ko if: emptyContent -->
-            <div style="font-style: italic; color: grey;" data-bind="text: 'DBS_BUILDER_TEXT_WIDGET_PROMPT_STRING'"></div>
-            <!-- /ko -->
-            <!-- ko ifnot: emptyContent -->
-            <div data-bind="html: content()"></div>
-            <!-- /ko -->
-        </div>
-        <div data-bind="attr: {id: 'textEditorWrapper_'+htmlWidgetId}" style="width: 100%; height: 100%; display: none; word-wrap: break-word;">
-            <div id="textEditor" style="width: 100%; height: auto; min-height: 100%;"></div>
-        </div>
+<div class="htmlWidgetWrapper" style="width: 100%; height: 100%;">
+    <!-- ko ifnot: editing -->
+    <div class="oj-flex oj-sm-flex-items-initial" data-bind="attr: {id: 'textContentWrapper_'+htmlWidgetId}" style="width: 100%; height: 100%; word-wrap: break-word; flex-flow: column;">
+        <!-- ko if: emptyContent -->
+        <div style="font-style: italic; color: grey; flex-grow: 1;" data-bind="text: HTML_WIDGET_PROMPT_STRING"></div>
+        <!-- /ko -->
+        <!-- ko ifnot: emptyContent -->
+        <div style="flex-grow: 1;" data-bind="html: content()"></div>
+        <!-- /ko -->
+        <button data-bind="click: editHTMLData">Configure</button>
     </div>
+    <!-- /ko -->
+    <!-- ko if: editing -->
+    <div class="oj-flex oj-sm-flex-items-initial" data-bind="attr: {id: 'textEditorWrapper_'+htmlWidgetId}" style="width: 100%; height: 100%; word-wrap: break-word; flex-flow: column;">
+        <textarea id="textEditor"
+                  data-bind="ojComponent: {component: 'ojTextArea', 
+                                     value: textAreaVal,
+                                     rootAttributes: { style: 'width: 100%; height: auto; max-width: initial; flex-grow: 1;','class': 'oj-flex-item oj-flex oj-sm-flex-items-1'}}"></textarea>
+        <button class="oj-flex-item" data-bind="click: previewHTMLData">Confirm</button>
+    </div>
+    <!-- /ko -->
 </div>

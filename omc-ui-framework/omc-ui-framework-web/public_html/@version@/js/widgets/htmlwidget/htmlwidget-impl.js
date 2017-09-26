@@ -1,9 +1,12 @@
 define('uifwk/@version@/js/widgets/htmlwidget/htmlwidget-impl',
-["require", "knockout", "jquery", "ojs/ojcore", "uifwk/libs/@version@/js/ckeditor/ckeditor"],
-        function (localrequire, ko, $) {
+["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg', "uifwk/libs/@version@/js/DOMPurify-master/dist/purify.min"],
+        function (localrequire, ko, $, oj, nls, DOMPurify) {
             function htmlWidgetViewModel(params) {
                 var self = this;
 
+                self.HTML_WIDGET_PROMPT_STRING = nls.HTML_WIDGET_PROMPT_STRING;
+                self.textAreaVal = ko.observable();
+                self.editing = ko.observable(false);
                 if(!params.tile.content) {
                     params.tile.content = ko.observable();
                 }
@@ -21,72 +24,23 @@ define('uifwk/@version@/js/widgets/htmlwidget/htmlwidget-impl',
                     }
                 });
                 self.htmlWidgetId = 'hahaha';
-                var lang;
-                try {
-                    lang = requirejs.s.contexts._.config.config.i18n.locale;
-                }catch(err) {
-                    lang = $("html").attr("lang") ? $("html").attr("lang") : window.navigator.language;
-                }
-                var configOptions = {
-                    language: lang,
-                    startupFocus: false,
-                    uiColor: "#FFFFFF",
-                    linkShowAdvancedTab: false,
-                    linkShowTargetTab: false,
-                    
-                    extraPlugins: 'sourcedialog',
-                    removePlugins: 'elementspath', //remove default p element
-    //                extraPlugins: 'stylesheetparser',
-                    enterMode: CKEDITOR.ENTER_BR,
-                    shiftEnterMode: CKEDITOR.ENTER_BR,
-                    toolbar: [
-                        { name: 'document', items: [ 'Sourcedialog' ] }
-                    ],
-                    allowedContent: 'a[!href]{*}; abbr[*]; acronym[*]; address[*]; area[*]; article[*]; aside[*]; audio[*]; b[*]; bdi[*]; bdo[*]; big[*]; blink[*]; blockquote[*]; body[*]; br[*]; button[*]; canvas[*]; caption[*]; center[*]; cite[*]; code[*]; col[*]; colgroup[*]; content[*]; data[*]; datalist[*]; dd[*]; decorator[*]; del[*]; details[*]; dfn[*]; dir[*]; div[*]{*}; dl[*]; dt[*]; element[*]; em[*]; fieldset[*]; figcaption[*]; figure[*]; font[*]; footer[*]; form[*]; h1[*]; h2[*]; h3[*]; h4[*]; h5[*]; h6[*]; head[*]; header[*]; hgroup[*]; hr[*]; html[*]; i[*]; img[*]{*}; input[*]; ins[*]; kbd[*]; label[*]; legend[*]; li[*]; main[*]; map[*]; mark[*]; marquee[*]; menu[*]; menuitem[*]; meter[*]; nav[*]; nobr[*]; ol[*]; optgroup[*]; option[*]; output[*]; p[*]; pre[*]; progress[*]; q[*]; rp[*]; rt[*]; ruby[*]; s[*]; samp[*]; section[*]; select[*]; shadow[*]; small[*]; source[*]; spacer[*]; span[*]; strike[*]; strong[*]; style[*]; sub[*]; summary[*]; sup[*]; table[*]; tbody[*]; td[*]; template[*]; textarea[*]; tfoot[*]; th[*]; thead[*]; time[*]; tr[*]; track[*]; tt[*]; u[*]; ul[*]; var[*]; video[*]; wbr'
-
-                };
                 
                 $("#textEditor").attr("id", "textEditor_" + self.htmlWidgetId);
                 $("#textEditor_" + self.htmlWidgetId).attr("contenteditable", "true");
-                var editor = CKEDITOR.inline("textEditor_" + self.htmlWidgetId, configOptions);
-                
-                editor.on('instanceReady', function( evt ) {
-                        var editor = evt.editor;
-
-//                        alert(editor.filter.check( 'img' )); // -> false
-//                        console.log( editor.filter.allowedContent );
-//                        editor.setData( '<h1><i>Foo</i></h1><p class="left"><span>Bar</span> <a href="http://foo.bar">foo</a></p>' );
-//                        editor.setData( '<a href="http://www.baidu.com" onclick="alert(\'hh\');">aaa</a>' );
-//                                                editor.setReadOnly(true);
-
-                        // Editor contents will be:
-                        //'<p><i>Foo</i></p><p>Bar <a href="http://foo.bar">foo</a></p>'
-                        if(!self.emptyContent()){
-                            editor.setData(self.content());
-                            self.content(editor.getData());
-                        }
-                        $('#textEditorWrapper_'+self.htmlWidgetId).hide();
-                        $("#textEditor_" + self.htmlWidgetId).focus();
-                    });
-                
-                editor.on("focus", function() {
-                       this.setData(self.content()); 
-                    });
-                editor.on("blur", function () {
-                        self.content(this.getData());
-                        $('#textContentWrapper_'+self.htmlWidgetId).show();
-                        $('#textEditorWrapper_'+self.htmlWidgetId).hide();
-                    });
+                self.content(DOMPurify.sanitize(self.content()));
+                self.previewHTMLData = function(){
+                    var rawHtml = self.textAreaVal();
+                    var filteredHtml = DOMPurify.sanitize(rawHtml);
+                    self.content(filteredHtml);
+                    self.editing(false);
+                };
 
                 self.showTextEditor = function(data, event) {
-                    //If user clicks on hyperlink, do not enter edit mode.
-                    if(event.target && event.target.tagName === "A") {
-                        return true;
-                    }
-                    $('#textContentWrapper_'+self.htmlWidgetId).hide();
-                    $('#textEditorWrapper_'+self.htmlWidgetId).show();
+                    self.editing(true);
                     $("#textEditor_" + self.htmlWidgetId).focus();
                 };
+                
+                self.editHTMLData = self.showTextEditor;
             }
             return htmlWidgetViewModel;
         });
