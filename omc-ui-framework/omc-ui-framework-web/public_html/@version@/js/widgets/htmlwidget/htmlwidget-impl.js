@@ -1,5 +1,5 @@
 define('uifwk/@version@/js/widgets/htmlwidget/htmlwidget-impl',
-["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
+["require", "knockout", "jquery", "ojs/ojcore", "uifwk/libs/@version@/js/ckeditor/ckeditor"],
         function (localrequire, ko, $) {
             function htmlWidgetViewModel(params) {
                 var self = this;
