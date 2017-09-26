@@ -287,6 +287,7 @@ function (ko, $, oj, dfu) {
             $b.triggerBuilderResizeEvent('loading widget list');
         };
          self.widgetSelectorParams = {
+                    type: 'ojPopup',
                     dialogId: widgetSelectorDialogId,
                     dialogTitle: 'Add Content',
                     userName: dfu.getUserName(),

@@ -477,9 +477,13 @@ public class CommonUIUtils
 		webd.takeScreenShot();
 		
 		webd.isElementPresent("css=" + TimeSelectorUIControls.sApplyBtn);
-		if (webd.isDisplayed("css=" + TimeSelectorUIControls.sErrorMsg)) {			
+		if (webd.isDisplayed("css=" + TimeSelectorUIControls.sErrorMsg) || webd.isDisplayed("css=" + TimeSelectorUIControls.sJetErrorMsg)) {			
 			Assert.assertTrue("true".equals(webd.getAttribute("css=" + TimeSelectorUIControls.sApplyBtn + "@disabled")));
-			return webd.getText("css=" + TimeSelectorUIControls.sErrorMsg);
+			if(webd.isDisplayed("css=" + TimeSelectorUIControls.sErrorMsg)) {
+				return webd.getText("css=" + TimeSelectorUIControls.sErrorMsg);
+			}else {
+				return webd.getText("css=" + TimeSelectorUIControls.sJetErrorMsgDetail);
+			}
 		}
 		else
 		{

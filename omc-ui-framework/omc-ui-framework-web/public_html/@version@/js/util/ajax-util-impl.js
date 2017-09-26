@@ -315,12 +315,12 @@ define([
                         retryOptions.url = args[0];
                     }
                     if (typeof(args[0]) === 'object'){
-                        retryOptions = args[0];
+                        retryOptions = $.extend(true, {}, args[0]);
                     }
                 }
                 else if (argsLength === 2) {
                     if (typeof(args[0]) === 'string' && args[1] !== null && typeof(args[1]) === 'object') {
-                        retryOptions = args[1];
+                        retryOptions = $.extend(true, {}, args[1]);
                         retryOptions.url = args[0];
                     }
                     else if (typeof(args[0]) === 'string' && typeof(args[1]) === 'function') {
@@ -333,14 +333,14 @@ define([
                     }
                     else if (args[0] !== null && typeof(args[0]) === 'object' &&
                             (typeof(args[1]) === 'undefined' || args[1] === null)) {
-                        retryOptions = args[0];
+                        retryOptions = $.extend(true, {}, args[0]);
                     }
                 }
                 else if (argsLength === 3) {
                     if (typeof(args[0]) === 'string' &&
                             typeof(args[1]) === 'function' &&
                             args[2] !== null && typeof(args[2]) === 'object') {
-                        retryOptions = args[2];
+                        retryOptions = $.extend(true, {}, args[2]);
                         retryOptions.url = args[0];
                         retryOptions.success = args[1];
                     }
@@ -353,7 +353,7 @@ define([
                     else if (typeof(args[0]) === 'string' &&
                             (args[1] === null || typeof(args[1]) === 'undefined') &&
                             args[2] !== null && typeof(args[2]) === 'object') {
-                        retryOptions = args[2];
+                        retryOptions = $.extend(true, {}, args[2]);
                         retryOptions.url = args[0];
                     }
                     else if (typeof(args[0]) === 'string' &&

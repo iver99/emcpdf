@@ -123,7 +123,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
     useRestAssured = true
 }
 
-task preProdTests(type: EMTest ){
+task preProdTests_V4(type: EMTest ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         environment "OMC_PROXYHOST", "www-proxy.us.oracle.com"
 	environment "OMC_PROXYPORT", "80"
@@ -138,9 +138,34 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
         test('name': 'DashboardUITest') {
             classes([:]) {
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage_V4')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB')
+            }
+        }
+    }
+    useWebdriver = true
+    useRestAssured = true	
+}
+
+task preProdTests_V1(type: EMTest ){
+options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
+        environment "OMC_PROXYHOST", "www-proxy.us.oracle.com"
+	environment "OMC_PROXYPORT", "80"
+	environment "OMC_PROXYUSER", "oracle"
+	environment "OMC_PROXYPWD", "welcome"
+	environment "WEBDRIVER_PROXY_ENABLE", "true"
+	environment "WEBDRIVER_PROXY_HOST", "www-proxy.us.oracle.com"
+	environment "WEBDRIVER_PROXY_PORT", "80"
+	environment "SKIP_OMCSETUP", "true"
+	environment "SKIP_OMCTEARDOWN", "1"
+	environment "VNC_SIZE", "1600x1200"
+//	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
+        test('name': 'DashboardUITest') {
+            classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage_V1')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB_V1')
             }
         }
     }

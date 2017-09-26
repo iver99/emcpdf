@@ -33,6 +33,8 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 {
 	private static String errormsg_1 = "Date and time must be on or sooner than current date and time.";
 	private static String errormsg_2 = "The start date/time is after the end date/time.";
+	private static String errormsg_3 = "Date and time must be on or later than";
+	private static String errormsg_4 = "Date and time must be on or sooner than";
 	
 	public void initTest(String testName, String url)
 	{
@@ -62,7 +64,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 1, dayAfter, currentDate, false, false);			
 		webd.getLogger().info("Return Date:  " + returnmsg);
 		
-		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()));
+		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()) || returnmsg.trim().contains(errormsg_4));
 
 		webd.shutdownBrowser(true);	
 	}
@@ -89,7 +91,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 1, currentDate, dayAfter, false, false);			
 		webd.getLogger().info("Return Date:  " + returnmsg);
 		
-		Assert.assertTrue(errormsg_1.equals(returnmsg.trim()));
+		Assert.assertTrue(errormsg_1.equals(returnmsg.trim()) || returnmsg.trim().contains(errormsg_4));
 
 		webd.shutdownBrowser(true);	
 	}
@@ -116,7 +118,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 1, currentDate, dayBefore, false, false);			
 		webd.getLogger().info("Return Date:  " + returnmsg);
 		
-		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()));
+		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()) || returnmsg.trim().contains(errormsg_3));
 
 		webd.shutdownBrowser(true);	
 	}	
@@ -143,7 +145,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 3, dayAfter, currentDate, true, false);			
 		webd.getLogger().info("Return Date:  " + returnmsg);
 		
-		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()));
+		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()) || returnmsg.trim().contains(errormsg_4));
 
 		webd.shutdownBrowser(true);	
 	}
@@ -162,15 +164,15 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		
 		c.setTime(now);
 		int day = c.get(Calendar.DATE);
-		c.set(Calendar.DATE, day+1);
+		c.set(Calendar.DATE, day+2);
 		
-		String dayAfter = dateFormat.format(c.getTime());
+		String dayAfter = dateFormat.format(c.getTime());		
 		
 		webd.getLogger().info("Set the end date as current day");
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 3, currentDate, dayAfter,true, false);			
 		webd.getLogger().info("Return Date:  " + returnmsg);
 		
-		Assert.assertTrue(errormsg_1.equals(returnmsg.trim()));
+		Assert.assertTrue(errormsg_1.equals(returnmsg.trim()) || returnmsg.trim().contains(errormsg_4));
 
 		webd.shutdownBrowser(true);	
 	}
@@ -197,7 +199,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 3, currentDate, dayBefore,true, false);			
 		webd.getLogger().info("Return Date:  " + returnmsg);
 		
-		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()));
+		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()) || returnmsg.trim().contains(errormsg_4));
 
 		webd.shutdownBrowser(true);	
 	}
@@ -224,7 +226,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 1, dayAfter, currentDate, false, true);			
 		webd.getLogger().info("Return Date:  " + returnmsg);
 		
-		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()));
+		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()) || returnmsg.trim().contains(errormsg_4));
 
 		webd.shutdownBrowser(true);	
 	}
@@ -251,7 +253,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 1, currentDate, dayAfter,false, true);			
 		webd.getLogger().info("Return Date:  " + returnmsg);
 		
-		Assert.assertTrue(errormsg_1.equals(returnmsg.trim()));
+		Assert.assertTrue(errormsg_1.equals(returnmsg.trim()) || returnmsg.trim().contains(errormsg_4) || errormsg_2.equals(returnmsg.trim()));
 
 		webd.shutdownBrowser(true);	
 	}
@@ -278,7 +280,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 1, currentDate, dayBefore,false, true);			
 		webd.getLogger().info("Return Date:  " + returnmsg);
 		
-		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()));
+		Assert.assertTrue(errormsg_2.equals(returnmsg.trim()) || returnmsg.trim().contains(errormsg_3));
 
 		webd.shutdownBrowser(true);	
 	}

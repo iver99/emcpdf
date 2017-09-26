@@ -49,8 +49,6 @@ define([
 
         self.showTimeFilterError = ko.observable();
 
-        self.tfChangedCallback = params ? params.tfChangedCallback : null;
-
         self.daysOptionAllChecked = ko.computed({
             read: function() {
                 if(self.daysChecked && self.daysChecked().length === self.daysArray.length) {
@@ -163,9 +161,6 @@ define([
                 "daysChecked" : self.daysChecked(),
                 "monthsChecked" : self.monthsChecked()
             };
-        });
-        self.tfChangedSubscriber.subscribe(function() {
-            self.tfChangedCallback && self.tfChangedCallback();
         });
     }
     return AdvancedViewModel;

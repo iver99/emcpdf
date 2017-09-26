@@ -259,6 +259,8 @@ require(['knockout',
                 };
 
                 self.widgetSelectorParams = {
+                    type: 'both',
+                    delayBinding:  true,
                     dialogId: widgetSelectorDialogId,
                     dialogTitle: dialogTitle,
                     affirmativeButtonLabel: dialogConfirmBtnLabel,
@@ -274,11 +276,15 @@ require(['knockout',
     //                ,providerVersion: '1.0'
                 };
 
+                var delayWidgetSelectorBinding = true;
+                var widgetSelectorPopupUtil = new widgetSelectorUtilModel(widgetSelectorDialogId, delayWidgetSelectorBinding);
+
                 self.openWidgetSelectorDialog = function() {
-                    $('#'+widgetSelectorDialogId).ojDialog('open');
+                    widgetSelectorPopupUtil.renderWidgetSelector(function(){
+                        $('#'+widgetSelectorDialogId).ojDialog('open');
+                    });
                 };
                 
-                var widgetSelectorPopupUtil = new widgetSelectorUtilModel(widgetSelectorDialogId);
                 self.openWidgetSelectorList = function() {
                     widgetSelectorPopupUtil.widgetSelector('open', '#add-widget-button2');
                 };

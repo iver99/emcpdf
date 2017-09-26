@@ -4,6 +4,7 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
@@ -77,7 +78,7 @@ public class BugVerification extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_4362");
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_4362_set");
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_4643");
-
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_4699");
 		webd.getLogger().info("All test data have been removed");
 
 		LoginAndLogout.logoutMethod();
@@ -864,5 +865,43 @@ public class BugVerification extends LoginAndLogout
 		webd.click("id=" + DashBoardPageId.DASHBOARDSETOPTIONSMENUID);
 		webd.click("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITCSS);
 		Assert.assertEquals(webd.getValue("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS), "Dashboard_4362_set");
+	}
+
+	@Test(alwaysRun = true)
+	public void testEMCPDF_4699()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test EMCPDF-4699");
+
+		DashboardHomeUtil.gridView(webd);
+
+		
+		webd.getLogger().info("create the dashboard");
+		DashboardHomeUtil.createDashboard(webd, "Dashboard_4699", null);
+		
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "Access Log Error Status Codes");
+		Assert.assertTrue(DashboardBuilderUtil.toggleShareDashboard(webd), "Share dashboard failed!");
+		DashboardBuilderUtil.saveDashboard(webd);
+
+
+	}
+	@Test (dependsOnMethods = { "testEMCPDF_4699" })
+	public void testEMCPDF_4699_1()
+	{
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_admin1", "emaastesttenant1");
+		webd.getLogger().info("start to verify");
+
+		DashboardHomeUtil.gridView(webd);
+
+		
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, "Dashboard_4699");
+		DashboardHomeUtil.selectDashboard(webd,"Dashboard_4699");
+		
+		Assert.assertFalse(webd.isElementPresent(DashBoardPageId_190.CONFIGTILECSS),"The configuration button is enabled");
+		
+		
+
+
 	}
 }

@@ -17,6 +17,8 @@ public class TimeSelectorUIControls
 {
 	// Begin: Text
 	public static final String sErrorMsg = "div.errorMsg";
+	public static final String sJetErrorMsg = "div.oj-message-error";
+	public static final String sJetErrorMsgDetail = "div.oj-message-error .oj-message-content .oj-message-detail span";
 	//public static final String sFilterInfoLabel = "//*[@id='filterInfo']";
 	// End: Text
 
@@ -91,7 +93,7 @@ public class TimeSelectorUIControls
 	// End: Components
 
 	// Begin: Time Filter
-	public static final String sTimeFilterIcon = "img[id^='timeFilterIcon_']";
+	public static final String sTimeFilterIcon = "div[id^='timeFilterIcon_']";
 
 	public static final String sTimeFilterHoursFilter = "div[id^='hoursFilter_']>div>input";
 	public static final String sTimeFilterDaysFilterAll = "input[id^='daysOptionAll_']";

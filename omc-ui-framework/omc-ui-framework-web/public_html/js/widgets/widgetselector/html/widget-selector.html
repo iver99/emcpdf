@@ -1,10 +1,16 @@
+<!-- ko if: renderWidgetSelector -->
+    <!-- ko if: widgetSelectorPopup -->
     <div id="df-widget-selector-popup" data-bind="component: {
                                 name: 'df-widget-selector-popup',
                                 params: widgetSelectorParamsPopup
                             }">
                         </div>
+    <!-- /ko -->
+    <!-- ko if: widgetSelectorDialog -->
     <div id="df-widget-selector-dialog" style="display: none;" data-bind="component: {
                                 name: 'df-widget-selector-dialog',
                                 params: widgetSelectorParamsDialog
                             }">
                         </div>
+    <!-- /ko -->
+<!-- /ko -->

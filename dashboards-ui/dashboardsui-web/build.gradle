@@ -24,12 +24,13 @@ def File sourceWebappDir = new File(project.projectDir, 'public_html')
 def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclejet')
 def File sourceCKeditorDesDir = new File(sourceWebappDir, 'libs/@version@/js/ckeditor')
 def File sourceFontDestDir = new File(sourceWebappDir, 'libs/@version@/css/font-awesome')
-
+def File sourceQunitDestDir = new File(sourceWebappDir, 'libs/@version@/js/qunit')
 // folders for minify, fingereprint js files
 def stagingDir = buildDir.absolutePath+'/staging/public_html'
 def compiledDir = buildDir.absolutePath+'/public_html'
 def webRootSourceDir = 'public_html'
-
+def projectAbsolutePath = project.projectDir.absolutePath.toString();
+def stagingDirForQunit = projectAbsolutePath.substring(0, projectAbsolutePath.indexOf("dashboards-ui"))+'/build/dashboards-ui/public_html';
 configurations {
     restDoc  
     
@@ -37,6 +38,7 @@ configurations {
 
     compass
     jscover  
+    qunit
 }
 
 dependencies {
@@ -62,7 +64,8 @@ dependencies {
         compile getProjectArtifact('oraclejet')     
 		compile getProjectArtifact('font-awesome')   
         compile getProjectArtifact('jmockit')  
-	compile getProjectArtifact('ckeditor')  
+        compile getProjectArtifact('qunit')
+	compile getProjectArtifact('ckeditor')
      
 	ftpAntTask('org.apache.ant:ant-commons-net:12.1.2-0-0') {
 	        module('commons-net:commons-net:1.4.1') {
@@ -106,6 +109,43 @@ javascript.source {
 task cleanJs(type:Delete) {
     delete fileTree(dir: stagingDir)
     delete fileTree(dir: compiledDir)
+    delete fileTree(dir:stagingDirForQunit)
+}
+//unpack Qunit
+project.task("unpackQunitFromArtifactory") << {
+    def File buildQunitUnzipDir = new File(buildDir.absolutePath, 'qunit');
+    sourceQunitDestDir.mkdirs();
+    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+        if(artifact.name.equals('qunit') && files(sourceQunitDestDir.listFiles()).isEmpty()){
+            logger.lifecycle("Unpacking artifact ${artifact.name}, version: ${artifact.moduleVersion.id.version}..")
+            buildQunitUnzipDir.mkdirs()
+            project.copy {
+                from project.zipTree(artifact.file.absolutePath)
+                into buildQunitUnzipDir.absolutePath
+            }
+            project.copy {
+                from buildQunitUnzipDir
+                into sourceQunitDestDir.absolutePath
+            }
+
+            if(!project.hasProperty("devMode")){
+                def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/qunit")
+                outputs.dir outputDir
+                project.copy {
+                    from  buildQunitUnzipDir
+                    into outputDir
+                }
+            }
+            project.delete(buildQunitUnzipDir)
+        }
+    }
+}
+
+
+project.task("cleanQunit") << {
+    println 'Cleaning up qunit directories ...'
+    println 'qunit dir: ' + sourceQunitDestDir.absolutePath
+    sourceQunitDestDir.deleteDir()
 }
 
 //unpack JET
@@ -267,10 +307,10 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs, compileSass]) {//unpackJETFromA
     }
 }
 
-task stageJs(dependsOn:[unpackJETFromArtifactory,unpackFontFromArtifactory,unpackJSLibFromArtifactory,copyJsSource]) {//, unpackJSLibFromArtifactory
+task stageJs(dependsOn:[unpackJETFromArtifactory,unpackFontFromArtifactory,unpackJSLibFromArtifactory,copyJsSource,unpackQunitFromArtifactory]) {//, unpackJSLibFromArtifactory
 }
 
-clean.dependsOn cleanJet, cleanJs, cleanFont,cleanJSLib
+clean.dependsOn cleanJet, cleanJs, cleanFont,cleanJSLib, cleanQunit
 
 task jsCodeCoverage(type:JavaExec, dependsOn:[cleanJs, stageJs]){//copyJsSource]) {
 
@@ -310,6 +350,12 @@ task copyStagedJs(type:Copy, dependsOn:[stageJs]){//[copyJsSource]) {
     into compiledDir
 }
 
+task copyJsForQUnitTest(type:Copy, dependsOn:[copyStagedJs]){
+    from (stagingDir) {
+        include "**/*"
+    }
+    into stagingDirForQunit
+}
 javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
     tasks.add(name: "dominifycachejs${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
     String fileName = "${jsFile.name}"
@@ -380,7 +426,7 @@ javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
     }
 }
 
-task individualUtilMinify(dependsOn:[copyStagedJs, tasks.matching { Task task -> task.name.startsWith("dominify")}])
+task individualUtilMinify(dependsOn:[copyStagedJs,copyJsForQUnitTest, tasks.matching { Task task -> task.name.startsWith("dominify")}])
 
 task prepareRequireJsConfig(type:Copy) {
     from ('.') {
@@ -391,7 +437,7 @@ task prepareRequireJsConfig(type:Copy) {
     into buildDir
 }
 
-task combineAppJs(dependsOn: [jsCodeCoverage,copyStagedJs,prepareRequireJsConfig], type: com.eriwen.gradle.js.tasks.RequireJsTask) {
+task combineAppJs(dependsOn: [jsCodeCoverage,copyStagedJs,copyJsForQUnitTest, prepareRequireJsConfig], type: com.eriwen.gradle.js.tasks.RequireJsTask) {
     source = javascript.source.dev.js.files   //point to your source files
     requirejs.buildprofile = file(buildDir.absolutePath+"/dashboard.build.js")
     outputs.upToDateWhen { false }           //requireJs task does not know how to accurately determine if it is UP-TO-DATE so this line says the task is never up to date.
@@ -580,7 +626,7 @@ task restDoc {
 
 
 //copy files without any convert when -PdevMode enabled
-task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory,unpackFontFromArtifactory,unpackJSLibFromArtifactory,compileSass]){//, unpackJSLibFromArtifactory
+task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory,unpackFontFromArtifactory,unpackJSLibFromArtifactory,compileSass,unpackQunitFromArtifactory]){//, unpackJSLibFromArtifactory
     from('public_html') {
 	include "**/*"
     }
