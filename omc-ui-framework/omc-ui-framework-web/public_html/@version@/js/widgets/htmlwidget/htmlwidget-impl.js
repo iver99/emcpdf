@@ -40,7 +40,11 @@ define('uifwk/@version@/js/widgets/htmlwidget/htmlwidget-impl',
                     $("#textEditor_" + self.htmlWidgetId).focus();
                 };
                 
-                self.editHTMLData = self.showTextEditor;
+                self.editHTMLData = function(data, event) {
+                    self.textAreaVal(self.content());
+                    self.editing(true);
+                    $("#textEditor_" + self.htmlWidgetId).focus();
+                };
             }
             return htmlWidgetViewModel;
         });
