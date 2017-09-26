@@ -48,7 +48,7 @@ public class MetadataRetriever
     public static final String SERVICENAME_APM = "ApmUI";
     public static final String SERVICENAME_ITA = "emcitas-ui-apps";
     public static final String SERVICENAME_LA = "LogAnalyticsUI";
-//    public static final String SERVICENAME_MONITORING = "Monitoring";
+    public static final String SERVICENAME_MONITORING = "MonitoringServiceUI";
     public static final String SERVICENAME_SECURITY_ANALYTICS = "SecurityAnalyticsUI";
     public static final String SERVICENAME_ORCHESTRATION = "CosUIService";
 //    public static final String SERVICENAME_COMPLIANCE = "Compliance";
@@ -68,7 +68,7 @@ public class MetadataRetriever
         APPLICATION_MAP.put(SERVICENAME_APM, DashboardApplicationType.APM);
         APPLICATION_MAP.put(SERVICENAME_ITA, DashboardApplicationType.ITAnalytics);
         APPLICATION_MAP.put(SERVICENAME_LA, DashboardApplicationType.LogAnalytics);
-//        APPLICATION_MAP.put(SERVICENAME_MONITORING, DashboardApplicationType.Monitoring);
+        APPLICATION_MAP.put(SERVICENAME_MONITORING, DashboardApplicationType.Monitoring);
         APPLICATION_MAP.put(SERVICENAME_SECURITY_ANALYTICS, DashboardApplicationType.SecurityAnalytics);
         APPLICATION_MAP.put(SERVICENAME_ORCHESTRATION, DashboardApplicationType.Orchestration);
 //        APPLICATION_MAP.put(SERVICENAME_COMPLIANCE, DashboardApplicationType.Compliance);
@@ -79,7 +79,7 @@ public class MetadataRetriever
         WIDGET_GROUP_MAP.put(SERVICENAME_APM, "APMCS");
         WIDGET_GROUP_MAP.put(SERVICENAME_ITA, "Data Explorer");
         WIDGET_GROUP_MAP.put(SERVICENAME_LA, "Log Analytics");
-        //WIDGET_GROUP_MAP.put(SERVICENAME_MONITORING, "");
+        WIDGET_GROUP_MAP.put(SERVICENAME_MONITORING, "Monitoring");
         WIDGET_GROUP_MAP.put(SERVICENAME_SECURITY_ANALYTICS, "Security Analytics");
         WIDGET_GROUP_MAP.put(SERVICENAME_ORCHESTRATION, "Orchestration");
         //WIDGET_GROUP_MAP.put(SERVICENAME_COMPLIANCE, "");

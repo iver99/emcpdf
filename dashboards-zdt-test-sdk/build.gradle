@@ -2,25 +2,13 @@ apply from: 'test.gradle'
 //Security client version
 ext.emaasSecurityClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
 
-ext.customPomDefinition = {
-    def dependencies = asNode().appendNode('dependencies')
-    configurations.testConfig.allDependencies.each { dep ->
-        if (dep.name != 'unspecified') {
-            def dependency = dependencies.appendNode('dependency')
-            dependency.appendNode('groupId', dep.group)
-            dependency.appendNode('artifactId', dep.name)
-            dependency.appendNode('version', dep.version)
-        }
-    }
-}
-
 
 project.publishing.publications {
      integTest(MavenPublication) {
 				setArtifactId(project.name + '-' + integTestJar.appendix)
                 setGroupId(project.publishGroup)
                 artifact integTestJar.archivePath
-				pom.withXml customPomDefinition
+				
         }
     
         zdtTasksPub(MavenPublication) {
@@ -34,32 +22,26 @@ project.publishing.publications {
         }
 	}
 
-
-
 artifactoryPublish{
     publications('zdtTasksPub')
      publications('integTest')
 }
 
-
-
 dependencies {
-    testConfig project(path: ':dashboards-ui-test-common-api', configuration: 'integTestOutput')  
+    testConfig project('path':':dashboards-ui-test-common-api', 'configuration': 'integTestOutput')
     testConfig getProjectArtifact('jmockit')   	
 	testConfig getProjectArtifact('log4j-api')   	
 	testConfig getProjectArtifact('log4j-core')   	
-	testConfig getProjectArtifact('log4j-slf4j-impl')   
+	testConfig getProjectArtifact('log4j-slf4j-impl')
 }
-
-
-
-
 
 eclipse {
     classpath {
         plusConfigurations += configurations.testConfig //avoid building error in Eclipse
         plusConfigurations += configurations.testNG //avoid building error in Eclipse
+        plusConfigurations += configurations.webdriver
     }
 }
+
 check.dependsOn integTestJar
 build.dependsOn integTestJar

@@ -12,6 +12,7 @@ jar {
 
 
 test {
+	classpath = sourceSets.test.compileClasspath + sourceSets.test.output
 	useTestNG()		
 	{
 		//We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
@@ -43,7 +44,7 @@ ext.emaasRegistryLookupClientVersion = getDependentSdkVersion('com.oracle.emaas.
 ext.emaasRegistryClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+');
  
 dependencies { 
-	 compile configurations.testNG
+	 
        compile project(':dashboards-sdk')
          compile getProjectArtifact('log4j-core')   
         compile getProjectArtifact('log4j-api')   

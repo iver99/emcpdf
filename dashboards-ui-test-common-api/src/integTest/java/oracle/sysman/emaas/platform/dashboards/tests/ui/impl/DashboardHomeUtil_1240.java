@@ -19,7 +19,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 
-public class DashboardHomeUtil_1230 extends DashboardHomeUtil_1170
+public class DashboardHomeUtil_1240 extends DashboardHomeUtil_1170
 {
 	/**
 	 * add filter
@@ -37,21 +37,21 @@ public class DashboardHomeUtil_1230 extends DashboardHomeUtil_1170
 
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId_1230.FILTER_SELECT_ID);
-		driver.click("id=oj-select-choice-" + DashBoardPageId_1230.FILTER_SELECT_ID);
+		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId_1240.FILTER_SELECT_ID);
+		driver.click("id=oj-select-choice-" + DashBoardPageId_1240.FILTER_SELECT_ID);
 
 		switch (filter) {
 			case "favorites":
-				eleXpath = getOptionXpath(driver, DashBoardPageId_1230.FILTER_SELECT_ID, DashBoardPageId_1230.FILTER_FAVORITE);
+				eleXpath = getOptionXpath(driver, DashBoardPageId_1240.FILTER_SELECT_ID, DashBoardPageId_1240.FILTER_FAVORITE);
 				break;
 			case "me":
-				eleXpath = getOptionXpath(driver, DashBoardPageId_1230.FILTER_SELECT_ID, DashBoardPageId_1230.FILTER_ME);
+				eleXpath = getOptionXpath(driver, DashBoardPageId_1240.FILTER_SELECT_ID, DashBoardPageId_1240.FILTER_ME);
 				break;
 			case "oracle":
-				eleXpath = getOptionXpath(driver, DashBoardPageId_1230.FILTER_SELECT_ID, DashBoardPageId_1230.FILTER_ORACLE);
+				eleXpath = getOptionXpath(driver, DashBoardPageId_1240.FILTER_SELECT_ID, DashBoardPageId_1240.FILTER_ORACLE);
 				break;
 			case "share":
-				eleXpath = getOptionXpath(driver, DashBoardPageId_1230.FILTER_SELECT_ID, DashBoardPageId_1230.FILTER_OTHER);
+				eleXpath = getOptionXpath(driver, DashBoardPageId_1240.FILTER_SELECT_ID, DashBoardPageId_1240.FILTER_OTHER);
 				break;
 			default:
 				break;
@@ -67,7 +67,7 @@ public class DashboardHomeUtil_1230 extends DashboardHomeUtil_1170
 		driver.getLogger().info("[DashboardHomeUtil] call isFilterOptionSelected filter: " + filter);
 		Validator.fromValidValues("filterOptions", filter, "favorites", "me", "oracle", "share");
 
-		filterby = driver.getText("id=oj-select-choice-" + DashBoardPageId_1230.FILTER_SELECT_ID).trim();
+		filterby = driver.getText("id=oj-select-choice-" + DashBoardPageId_1240.FILTER_SELECT_ID).trim();
 
 		switch (filter) {
 			case "favorites":
@@ -93,9 +93,9 @@ public class DashboardHomeUtil_1230 extends DashboardHomeUtil_1170
 	{
 		String eleXpath = null;
 		driver.getLogger().info("[DashboardHomeUtil] call resetFilterOptions");
-		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId_1230.FILTER_SELECT_ID);
-		driver.click("id=oj-select-choice-" + DashBoardPageId_1230.FILTER_SELECT_ID);
-		eleXpath = getOptionXpath(driver, DashBoardPageId_1230.FILTER_SELECT_ID, DashBoardPageId_1230.FILTER_ALL);
+		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId_1240.FILTER_SELECT_ID);
+		driver.click("id=oj-select-choice-" + DashBoardPageId_1240.FILTER_SELECT_ID);
+		eleXpath = getOptionXpath(driver, DashBoardPageId_1240.FILTER_SELECT_ID, DashBoardPageId_1240.FILTER_ALL);
 		driver.click(eleXpath);
 		WaitUtil.waitForPageFullyLoaded(driver);
 	}
@@ -111,51 +111,51 @@ public class DashboardHomeUtil_1230 extends DashboardHomeUtil_1170
 		driver.getLogger().info("[DashboardHomeUtil] call sortBy option: " + option);
 		Validator.notEmptyString("option", option);
 
-		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId_1230.SORT_SELECT_ID);
-		driver.click("id=oj-select-choice-" + DashBoardPageId_1230.SORT_SELECT_ID);
+		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId_1240.SORT_SELECT_ID);
+		driver.click("id=oj-select-choice-" + DashBoardPageId_1240.SORT_SELECT_ID);
 
 		if ("default".equals(option)) {
-			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_DEFAULT);
+			eleXpath = getOptionXpath(driver, DashBoardPageId_1240.SORT_SELECT_ID, DashBoardPageId_1240.SORT_DEFAULT);
 			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_NAME_ASC.equals(option)) {
-			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_NAME_ASC);
+			eleXpath = getOptionXpath(driver, DashBoardPageId_1240.SORT_SELECT_ID, DashBoardPageId_1240.SORT_NAME_ASC);
 			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_NAME_DSC.equals(option)) {
-			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_NAME_DSC);
+			eleXpath = getOptionXpath(driver, DashBoardPageId_1240.SORT_SELECT_ID, DashBoardPageId_1240.SORT_NAME_DSC);
 			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_OWNER_ASC.equals(option)) {
-			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_CREATEDBY_ASC);
+			eleXpath = getOptionXpath(driver, DashBoardPageId_1240.SORT_SELECT_ID, DashBoardPageId_1240.SORT_CREATEDBY_ASC);
 			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_OWNER_DSC.equals(option)) {
-			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_CREATEDBY_DSC);
+			eleXpath = getOptionXpath(driver, DashBoardPageId_1240.SORT_SELECT_ID, DashBoardPageId_1240.SORT_CREATEDBY_DSC);
 			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_ASC.equals(option)) {
-			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_CREATEDATE_ASC);
+			eleXpath = getOptionXpath(driver, DashBoardPageId_1240.SORT_SELECT_ID, DashBoardPageId_1240.SORT_CREATEDATE_ASC);
 			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_DSC.equals(option)) {
-			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_CREATEDATE_DSC);
+			eleXpath = getOptionXpath(driver, DashBoardPageId_1240.SORT_SELECT_ID, DashBoardPageId_1240.SORT_CREATEDATE_DSC);
 			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_ASC.equals(option)) {
-			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_LASTMODIFY_ASC);
+			eleXpath = getOptionXpath(driver, DashBoardPageId_1240.SORT_SELECT_ID, DashBoardPageId_1240.SORT_LASTMODIFY_ASC);
 			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC.equals(option)) {
-			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_LASTMODIFY_DSC);
+			eleXpath = getOptionXpath(driver, DashBoardPageId_1240.SORT_SELECT_ID, DashBoardPageId_1240.SORT_LASTMODIFY_DSC);
 			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC.equals(option)) {
-			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_LASTACCESS_ASC);
+			eleXpath = getOptionXpath(driver, DashBoardPageId_1240.SORT_SELECT_ID, DashBoardPageId_1240.SORT_LASTACCESS_ASC);
 			driver.click(eleXpath);
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC.equals(option)) {
-			eleXpath = getOptionXpath(driver, DashBoardPageId_1230.SORT_SELECT_ID, DashBoardPageId_1230.SORT_LASTACCESS_DSC);
+			eleXpath = getOptionXpath(driver, DashBoardPageId_1240.SORT_SELECT_ID, DashBoardPageId_1240.SORT_LASTACCESS_DSC);
 			driver.click(eleXpath);
 		}
 		else {

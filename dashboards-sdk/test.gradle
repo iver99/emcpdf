@@ -41,6 +41,6 @@ dependencies {
             group: 'com.oracle.emaas.emcpsf.sdk', name: 'security-client', version: securityClientVer )
     testConfig getProjectArtifact('emaas-platform-tenant-sdk')
 
-    testCompile configurations.testNG
+    
 }
 build.dependsOn integTestJar

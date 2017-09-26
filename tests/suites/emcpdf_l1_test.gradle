@@ -74,7 +74,7 @@ dependencies {
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${REPO_BID}") {transitive=false}
 	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-web', version: "${REPO_BID}") {transitive=false}
 	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardscomparator-webutils', version: "${REPO_BID}") {transitive=false}
-  
+	testConfig(group: 'com.oracle.emaas.emcpdf.test', name:'dashboards-uitest-integ-tests', version: "${REPO_BID}") {transitive=false}
   testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-web', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${REPO_BID}") {transitive=false}
     testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils', version:"${REPO_BID}") {transitive=false}
@@ -155,9 +155,9 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/ssfDatautil/*.class"
 
 	//***************below are dashboardscomparator-web project test cases***************//
-	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/*.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/*.class"
-	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/*.class"
+//	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/*.class"
+	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/**/*.class"
+//	include "oracle/sysman/emaas/platform/dashboards/comparator/ws/rest/comparator/rows/entities/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/exception/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/timer/*.class"
 	include "oracle/sysman/emaas/platform/dashboards/comparator/exception/*.class"
@@ -263,7 +263,39 @@ task EntityTest(type:EMTest,dependsOn: DEVUiFWKTest){
 
 }
 
-task emcpdf_l1_test(dependsOn: EntityTest)
+task cleanBuild(type: Exec, dependsOn:EntityTest) {
+	def gradleExec = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
+	standardOutput = new ByteArrayOutputStream()
+	errorOutput = standardOutput
+	ignoreExitValue = true
+	workingDir file(project.properties['emdi.GIT_VIEW_ROOT'])
+
+	executable = gradleExec
+	args 'clean', 'build'
+
+	doLast {
+		if (execResult.exitValue != 0) {
+			println(standardOutput.toString())
+			throw new GradleException("exec failed; see output above")
+		}
+	}
+}
+
+File f = new File(project.properties['emdi.GIT_VIEW_ROOT']+"/build/dashboards-ui/public_html/test/qunit.html")
+task QunitTest(type:EMTest, dependsOn: cleanBuild){
+	include "oracle/sysman/emaas/platform/dashboards/test/ui/DashboardQunitTestDriver.class"
+	systemProperty 'qunitTestUrl', "file://" + f.absolutePath
+	useWebdriver = true
+}
+
+File uifwkF = new File(project.properties['emdi.GIT_VIEW_ROOT']+"/build/omc-ui-framwork/public_html/test/qunit.html")
+task UifwkQunitTest(type:EMTest, dependsOn: cleanBuild){
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/UifwkQunitTestDriver.class"
+	systemProperty 'uifwkQunitTestUrl', "file://" + uifwkF.absolutePath
+	useWebdriver = true
+}
+
+task emcpdf_l1_test(dependsOn: [QunitTest, UifwkQunitTest])
 
 if (new File("codeCoverage.gradle").exists()) {
 apply from: "../../codeCoverage/codeCoverage.gradle"

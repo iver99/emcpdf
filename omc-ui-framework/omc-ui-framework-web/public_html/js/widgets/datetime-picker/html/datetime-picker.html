@@ -1,8 +1,8 @@
         <div data-testapiversion="1.17.0" data-bind="attr: {id: 'dateTimePicker_' + randomId}" style="display: table; padding: 0 5px;">
             <span class="oj-select-choice"  style="width: auto; display: inline-block; cursor: pointer;" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime">
-                <img class="info-badge" src="/emsaasui/uifwk/@version@/images/imgbackground.png" style="position:absolute; height:16px;width:16px;vertical-align:top;margin:8px;background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -46px;" data-bind="style: {display: showBadge()?'inline':'none'},event: {mouseover: badgeMouseOverHandler, mouseout: badgeMouseOutHandler}"/>
+                <div  class="info-badge" style="position:absolute; height:16px;width:16px;vertical-align:top;margin:8px;background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -46px;" data-bind="style: {display: showBadge()?'inline':'none'},event: {mouseover: badgeMouseOverHandler, mouseout: badgeMouseOutHandler}"></div>
                 <div data-bind="ojComponent:{component: 'ojPopup',tail: 'simple'}" class="badge-popup-message" style="display: block;padding:0; max-width: 340px;">
-                    <img src="/emsaasui/uifwk/@version@/images/imgbackground.png" style="height:16px;width:16px;vertical-align:top;background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -46px;"/>
+                    <div style="height:16px;width:16px;vertical-align:top;background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -46px;"></div>
                     <div style="margin: 0 0 0 7px; padding: 0; display: inline-block;">
                         <span data-bind="text: badgeMsgTitle" class="badge-message-summary"></span><br>
                         <span class="badge-message-detail" data-bind="text: badgeTimeInfo"></span>
@@ -78,7 +78,7 @@
                     <div style="height: 21px; margin: 0 auto;">
                         <span style="display: inline-block; padding: 5px 5px 0px;" tabindex="0" data-bind="click: timeFilterControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {timeFilterControl();}}}, visible: enableTimeFilter, css: timeFilterIconCss, attr: {'aria-label': timeFilterAlt}">
                             <!--func_gear_16_ena-->
-                            <img data-bind="attr: {id: 'timeFilterIcon_'+randomId, alt: timeFilterAlt, title: timeFilterIconTitle}" src="/emsaasui/uifwk/@version@/images/imgbackground.png" style="background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -126px;height:16px;width:16px;"/>
+                            <div data-bind="attr: {id: 'timeFilterIcon_'+randomId, alt: timeFilterAlt, title: timeFilterIconTitle}" style="background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -126px;height:16px;width:16px;"></div>
                         </span>
                     </div>
 
@@ -164,7 +164,7 @@
                             <span class="time-filter-latest-tooltip" data-bind="text: nls.DATETIME_PICKER_RADIO_LATEST_HELP, css: {'latest-enabled': enableLatestOnCustomPanel()}"></span>
                         </div>                                                    
                         <!-- /ko -->
-                        
+
                         <hr>
                         
                         <span style="margin-top: 0px;" class="relRadios">
@@ -235,5 +235,5 @@
                 </div>
             </div>
             <!-- /ko -->
-            
+
         </div>

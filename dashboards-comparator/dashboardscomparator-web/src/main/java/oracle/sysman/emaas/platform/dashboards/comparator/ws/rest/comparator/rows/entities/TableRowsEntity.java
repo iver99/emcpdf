@@ -10,9 +10,9 @@
 
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities;
 
-import java.util.List;
-
 import org.codehaus.jackson.annotate.JsonProperty;
+
+import java.util.List;
 
 /**
  * Class that represents the retrieved data from one OMC instance, including the data rows for DF tables
@@ -63,49 +63,43 @@ public class TableRowsEntity
 			if (other.emsDashboard != null) {
 				return false;
 			}
-		}
-		else if (!emsDashboard.equals(other.emsDashboard)) {
+		} else if (!emsDashboard.equals(other.emsDashboard)) {
 			return false;
 		}
-		
+
 		if (emsDashboardSet == null) {
 			if (other.emsDashboardSet != null) {
 				return false;
 			}
-		}
-		else if (!emsDashboardSet.equals(other.emsDashboardSet)) {
+		} else if (!emsDashboardSet.equals(other.emsDashboardSet)) {
 			return false;
 		}
 		if (emsDashboardTile == null) {
 			if (other.emsDashboardTile != null) {
 				return false;
 			}
-		}
-		else if (!emsDashboardTile.equals(other.emsDashboardTile)) {
+		} else if (!emsDashboardTile.equals(other.emsDashboardTile)) {
 			return false;
 		}
 		if (emsDashboardTileParams == null) {
 			if (other.emsDashboardTileParams != null) {
 				return false;
 			}
-		}
-		else if (!emsDashboardTileParams.equals(other.emsDashboardTileParams)) {
+		} else if (!emsDashboardTileParams.equals(other.emsDashboardTileParams)) {
 			return false;
 		}
 		if (emsDashboardUserOptions == null) {
 			if (other.emsDashboardUserOptions != null) {
 				return false;
 			}
-		}
-		else if (!emsDashboardUserOptions.equals(other.emsDashboardUserOptions)) {
+		} else if (!emsDashboardUserOptions.equals(other.emsDashboardUserOptions)) {
 			return false;
 		}
 		if (emsPreference == null) {
 			if (other.emsPreference != null) {
 				return false;
 			}
-		}
-		else if (!emsPreference.equals(other.emsPreference)) {
+		} else if (!emsPreference.equals(other.emsPreference)) {
 			return false;
 		}
 		return true;

@@ -81,7 +81,7 @@
     box-sizing: border-box;
 } 
 
-#widget-selector-searchbox #searchTxt, .widget-selector-searchbox #searchTxt { 
+#widget-selector-searchbox .searchTxt, .widget-selector-searchbox .searchTxt { 
     float: left; 
     padding-left: 5px; 
     border:0;
@@ -338,9 +338,6 @@
     cursor: default;
 }
 
-.oj-popup-content{
-        padding: 0;
-    }
 .widget-selector-main-new{
     .widget-selector-searchbox .widget-searchtxt-without-filter { 
        width: 506px;

@@ -350,6 +350,11 @@ body, html {
     width: 16px;
 }
 
+.tile-menu-img {
+    display: inline-block;
+    height: 35px;
+}
+
 .dbd-toolbar-icon-delete:before {//func_trashcan_16_ena
     content:" ";
     background:url(../images/dfSprite.png) no-repeat 0px -416px;height:16px;padding-left:18px;
@@ -369,6 +374,11 @@ body, html {
     content:" ";
     background:url(../images/dfSprite.png) no-repeat 0px -240px;height:16px;padding-left:18px;
 }
+
+#dbd-set-option .dbd-toolbar-icon-home {
+    padding-top: 3px;
+}
+
 .dbd-toolbar-icon-home:before {//func_home_16_ena
     content:" ";
     background:url(../images/dfSprite.png) no-repeat 0px -896px;height:16px;padding-left:18px;
@@ -804,6 +814,12 @@ body, html {
     .dbd-resize-handler-placeholder.cursor-resize-right-bottom{
         cursor:default;
     }
+    .dbd-resize-arrow-icon{
+        display:none;
+    }
+}
+.dbd-tile-container:hover .dbd-resize-arrow-icon{
+    display:block;
 }
 .dbd-tile-container.tile-border-highlight{
     border: 2px solid #3085C7;

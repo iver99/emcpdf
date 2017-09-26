@@ -116,7 +116,7 @@ public class WidgetSelectorUtil_171 extends WidgetSelectorUtil_Version implement
 		return tileTitles.get(index);
 	}
 
-	private void searchWidget(WebDriver driver, String widgetName)
+	protected void searchWidget(WebDriver driver, String widgetName)
 	{
 		driver.waitForElementPresent(DashBoardPageId.WIDGET_SELECTOR_WIDGET_AREA);
 		driver.clear(DashBoardPageId.WIDGET_SELECTOR_SEARCH_INPUT_LOCATOR);

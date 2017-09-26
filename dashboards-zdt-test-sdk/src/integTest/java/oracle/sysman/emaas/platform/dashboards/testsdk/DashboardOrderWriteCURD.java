@@ -208,69 +208,6 @@ public class DashboardOrderWriteCURD
 	}
 
 	@Test
-	public void dashboardLastAccess()
-	{
-		try {
-			System.out.println("------------------------------------------");
-			System.out
-			.println("Access the system dashboard, then verify the system dashboard is the first one in dashboard list");
-			Response res3 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("/dashboards/1");
-			System.out.println("Status code is: " + res3.getStatusCode());
-			Assert.assertTrue(res3.getStatusCode() == 200);
-
-			Response res4 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("/dashboards");
-			System.out.println("Status code is: " + res4.getStatusCode());
-			Assert.assertTrue(res4.getStatusCode() == 200);
-			Assert.assertEquals(res4.jsonPath().get("dashboards.name[0]"), "Enterprise Overview");
-			Assert.assertEquals(res4.jsonPath().getString("dashboards.id[0]"), "1");
-			Assert.assertEquals(res4.jsonPath().get("dashboards.name[1]"), "Test_LastAccess");
-			//Assert.assertEquals(res4.jsonPath().getString("dashboards.id[1]"), dashboard_id);
-
-			System.out.println("Access the created dashboard, then verify the dashboard is the first one in dashboard list");
-			Response res5 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().put("/dashboards/2/quickUpdate");
-			System.out.println("Status code is: " + res5.getStatusCode());
-			Assert.assertTrue(res5.getStatusCode() == 200);
-
-			Response res6 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("/dashboards");
-			System.out.println("Status code is: " + res6.getStatusCode());
-			Assert.assertTrue(res6.getStatusCode() == 200);
-			Assert.assertEquals(res6.jsonPath().get("dashboards.name[0]"), "Performance Analytics: Database");
-			Assert.assertEquals(res6.jsonPath().getString("dashboards.id[0]"), "2");
-			Assert.assertEquals(res6.jsonPath().get("dashboards.name[1]"), "Enterprise Overview");
-			Assert.assertEquals(res6.jsonPath().getString("dashboards.id[1]"), "1");
-
-		}
-		catch (Exception ex) {
-			Assert.fail(ex.getLocalizedMessage());
-		}
-
-	}
-
-	@Test
 	public void optionsCRUD()
 	{
 		String tmp_dsbid = "";
@@ -303,7 +240,7 @@ public class DashboardOrderWriteCURD
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).body(jsonString1).when().post("/" + tmp_dsbid + "/optionss");
+							"Authorization", authToken).body(jsonString1).when().post("dashboards/" + tmp_dsbid + "/options");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
@@ -321,7 +258,7 @@ public class DashboardOrderWriteCURD
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).body(jsonString2).when().put("/" + tmp_dsbid + "/optionss");
+							"Authorization", authToken).body(jsonString2).when().put("dashboards/" + tmp_dsbid + "/options");
 			System.out.println(res2.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
@@ -338,7 +275,7 @@ public class DashboardOrderWriteCURD
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("/" + tmp_dsbid + "/options");
+							"Authorization", authToken).when().get("dashboards/" + tmp_dsbid + "/options");
 			System.out.println(res3.asString());
 			System.out.println("==GET operation is done");
 			System.out.println("											");

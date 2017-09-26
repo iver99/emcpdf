@@ -161,6 +161,10 @@ define(['knockout',
                         if($b.getDashboardTilesViewModel().timePeriod()!==omcTimeConstants.QUICK_PICK.CUSTOM) {
                             $b.getDashboardTilesViewModel().initEnd(new Date());
                         }
+                        if((!self.isUnderSet) && $("#emaas-appheader-timecxt").children().get(0)){
+                            $b.triggerEvent($b.EVENT_AUTO_REFRESHING_PAGE, "auto-refreshing page");
+                            ko.contextFor($("#emaas-appheader-timecxt").children().get(0)).$component.applyClick();
+                        }
                         if($("#dtpicker_"+self.dashboardId).children().get(0)) {
                             $b.triggerEvent($b.EVENT_AUTO_REFRESHING_PAGE, "auto-refreshing page");
                             ko.contextFor($("#dtpicker_"+self.dashboardId).children().get(0)).$component.applyClick();
