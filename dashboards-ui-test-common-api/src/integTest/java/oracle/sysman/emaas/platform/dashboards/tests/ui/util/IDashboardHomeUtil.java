@@ -187,21 +187,24 @@ public interface IDashboardHomeUtil extends IUiTestCommonAPI
 
 	/**
 	 * @param driver
-	 *            @
+	 * @param sortBy
+	 * 			  Create By - asc, dsc	 *            
 	 */
-	public void sortListViewByCreateBy(WebDriver driver);
+	public void sortListViewByCreateBy(WebDriver driver, String sortBy);
 
 	/**
 	 * @param driver
-	 *            @
+	 * @param sortBy
+	 * 			  Last Modified By - asc, dsc
 	 */
-	public void sortListViewByLastModified(WebDriver driver);
+	public void sortListViewByLastModified(WebDriver driver, String sortBy);
 
 	/**
 	 * @param driver
-	 *            @
+	 * @param sortBy
+	 * 			  By Name - asc, dsc
 	 */
-	public void sortListViewByName(WebDriver driver);
+	public void sortListViewByName(WebDriver driver, String sorBy);
 
 	/**
 	 * wait the dashboard by name

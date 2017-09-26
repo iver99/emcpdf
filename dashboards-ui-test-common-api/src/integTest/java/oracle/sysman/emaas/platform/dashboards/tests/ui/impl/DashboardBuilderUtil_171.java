@@ -222,9 +222,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	@Override
 	public void deleteDashboard(WebDriver driver)
 	{
-		driver.getLogger().info("deleteDashboard started");
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		//	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.BUILDEROPTIONSMENULOCATOR)));
+		driver.getLogger().info("deleteDashboard started");		
 		driver.waitForElementVisible("xpath=" + DashBoardPageId.BUILDEROPTIONSMENULOCATOR);
 		WaitUtil.waitForPageFullyLoaded(driver);
 		driver.click(DashBoardPageId.BUILDEROPTIONSMENULOCATOR);

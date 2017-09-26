@@ -19,31 +19,19 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import com.oracle.sysman.uifwk.qatools.jetutils.*;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-import org.openqa.selenium.JavascriptExecutor;
+import org.testng.Assert;
 
 public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements IDashboardHomeUtil
 {
-	private static final Logger LOGGER = LogManager.getLogger(DashboardHomeUtil_171.class);
-
-	//	public static void createDashboardSet(WebDriver driver, String name, String descriptions, Boolean displayDesc,
-	//			Boolean selectorRefreshcontrol)
-	//	{
-	//
-	//	}
+	private static final Logger LOGGER = LogManager.getLogger(DashboardHomeUtil_171.class);	
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#closeOverviewPage(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
@@ -381,9 +369,6 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	@Override
 	public void search(WebDriver driver, String searchString) 
     {
-        org.openqa.selenium.WebDriver openDriver;
-        openDriver = driver.getWebDriver();
-
 		driver.getLogger().info("[DashboardHomeUtil] call search searchString: " + searchString);
 		Validator.notEmptyString("searchString", searchString);
 		driver.getLogger().info("[DashboardHomeUtil] call search");
@@ -391,9 +376,9 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.getElement(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR).clear();
 		driver.click(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR);
 		driver.sendKeys(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR, searchString);
-        //driver.click(DashBoardPageId.SEARCHDASHBOARDSEARCHBTNLOCATOR);
+        
 		driver.waitForServer();
-        ((JavascriptExecutor) openDriver).executeScript("arguments[0].click();", openDriver.findElement(By.xpath(DashBoardPageId.SEARCHDASHBOARDSEARCHBTNLOCATOR)));
+		driver.evalJavascript("arguments[0].click();", driver.getElement(DashBoardPageId.SEARCHDASHBOARDSEARCHBTNLOCATOR));
 		WaitUtil.waitForPageFullyLoaded(driver);
 	}
 
@@ -505,23 +490,24 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#sortListViewByCreateBy(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void sortListViewByCreateBy(WebDriver driver)
-	{
-
+	public void sortListViewByCreateBy(WebDriver driver, String sortBy)
+	{		
+		JetTable jettbl = new JetTable(driver, DashBoardPageId.LISTVIEWTABLELOCATORCSS);
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableCreatedByHeader");
 		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLECREATEDBYHEADERLOCATOR);
 
-		WebElement tableHeader = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.LISTVIEWTABLECREATEDBYHEADERLOCATOR));
-		WebElement tableSort = tableHeader.findElement(By.cssSelector(DashBoardPageId.LISTVIEWSORTLOCATORCSS));
-
-		Actions actions = new Actions(driver.getWebDriver());
-		driver.getLogger().info("Focus to the table header");
-		actions.moveToElement(tableHeader).build().perform();		
-		driver.getLogger().info("Click Sort icon");
-		actions.moveToElement(tableSort).click().perform();
-
-		driver.takeScreenShot();
-
+		if("asc".equals(sortBy))
+		{
+			jettbl.sortAscending(1);
+		}
+		else if("dsc".equals(sortBy))
+		{
+			jettbl.sortDescending(1);
+		}
+		else
+		{
+			Assert.fail("Wrong sortBy: "+ sortBy+", please use 'acs' for sort ascending or 'dsc' for sort descending");
+		}
 		WaitUtil.waitForPageFullyLoaded(driver);		
 	}
 
@@ -529,45 +515,50 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#sortListViewByLastModified(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void sortListViewByLastModified(WebDriver driver)
+	public void sortListViewByLastModified(WebDriver driver, String sortBy)
 	{
+		JetTable jettbl = new JetTable(driver, DashBoardPageId.LISTVIEWTABLELOCATORCSS);
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableLastModifiedHeader");
 		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR);
 
-		WebElement tableHeader = driver.getWebDriver().findElement(
-				By.xpath(DashBoardPageId.LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR));
-		WebElement tableSort = tableHeader.findElement(By.cssSelector(DashBoardPageId.LISTVIEWSORTLOCATORCSS));
-
-		Actions actions = new Actions(driver.getWebDriver());
-		driver.getLogger().info("Focus to the table header");
-		actions.moveToElement(tableHeader).build().perform();
-		driver.getLogger().info("Click Sort icon");
-		actions.moveToElement(tableSort).click().perform();
-		WaitUtil.waitForPageFullyLoaded(driver);
+		if("asc".equals(sortBy))
+		{
+			jettbl.sortAscending(2);
+		}
+		else if("dsc".equals(sortBy))
+		{
+			jettbl.sortDescending(2);
+		}
+		else
+		{
+			Assert.fail("Wrong sortBy: "+ sortBy+", please use 'acs' for sort ascending or 'dsc' for sort descending");
+		}
+		WaitUtil.waitForPageFullyLoaded(driver);	
 	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#sortListViewByName(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
-	public void sortListViewByName(WebDriver driver)
+	public void sortListViewByName(WebDriver driver, String sortBy)
 	{
+		JetTable jettbl = new JetTable(driver, DashBoardPageId.LISTVIEWTABLELOCATORCSS);
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableNameHeader");
-		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLENAMEHEADERLOCATOR);
-
-		WebElement tableHeader = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.LISTVIEWTABLENAMEHEADERLOCATOR));
-		WebElement tableSort = tableHeader.findElement(By.cssSelector(DashBoardPageId.LISTVIEWSORTLOCATORCSS));
-
-		Actions actions = new Actions(driver.getWebDriver());
-		driver.getLogger().info("Focus to the table header");
-		actions.moveToElement(tableHeader).build().perform();
+		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLENAMEHEADERLOCATOR);		
 		
-		driver.getLogger().info("Click Sort icon");
-		actions.moveToElement(tableSort).click().perform();
-		driver.waitForServer();	
-		driver.takeScreenShot();		
-		driver.savePageToFile();
-		
+		if("asc".equals(sortBy))
+		{
+			jettbl.sortAscending(0);
+		}
+		else if("dsc".equals(sortBy))
+		{
+			jettbl.sortDescending(0);
+		}
+		else
+		{
+			Assert.fail("Wrong sortBy: "+ sortBy+", please use 'acs' for sort ascending or 'dsc' for sort descending");
+		}
+		WaitUtil.waitForPageFullyLoaded(driver);
 	}
 
 	/* (non-Javadoc)
@@ -603,10 +594,9 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON)); // click delete
 
 				driver.waitForElementPresent(convertCss(DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG));
-				driver.getLogger().info("foucus on the delete button");				
-				driver.getWebDriver().findElement(By.name(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM)).sendKeys(Keys.TAB);
-
-				//driver.focus(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); //focus on the delete button
+				driver.getLogger().info("foucus on the delete button");
+				driver.sendKeys(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM), Keys.TAB);
+				
 				driver.getLogger().info("click on the delete button");
 				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM)); // confirm to delete
 
@@ -647,8 +637,6 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 
 				driver.getLogger().info("click on the delete button");
 				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM)); // confirm to delete
-				//				WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-				//wait.until(ExpectedConditions.invisibilityOfElementLocated(BycssSelector(DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG));
 				driver.waitForElementNotVisible("css=" + DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG);
 				break;
 			}
@@ -665,22 +653,6 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		}
 
 		return null;
-	}
-
-	private boolean isAttribtuePresent(WebElement element, String attribute)
-	{
-		Boolean result = false;
-		try {
-			String value = element.getAttribute(attribute);
-			if (value != null) {
-				result = true;
-			}
-		}
-		catch (Exception e) {
-			LOGGER.info("context", e);
-		}
-
-		return result;
 	}
 
 	protected String convertName(String name)

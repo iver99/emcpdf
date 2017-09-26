@@ -796,9 +796,6 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		Validator.notEmptyString("dashboardName", dashboardName);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		//		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		//		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(DashBoardPageId_190.DASHBOARDSETNAVSCONTAINERCSS)));
-		//		driver.takeScreenShot();
 		driver.waitForElementVisible("css=" + DashBoardPageId_190.DASHBOARDSETNAVSCONTAINERCSS);
 
 		WebElement targetTab = null;

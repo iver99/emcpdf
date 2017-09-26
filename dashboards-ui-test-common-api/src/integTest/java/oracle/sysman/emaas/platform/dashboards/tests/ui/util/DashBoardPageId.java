@@ -111,6 +111,7 @@ public class DashBoardPageId
 	public static final String LISTVIEWTABLECREATEDBYHEADERLOCATOR = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'oj-table-column-header-cell') and @abbr='Created By']";
 	public static final String LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'oj-table-column-header-cell') and @abbr='Last Modified']";
 	public static final String LISTVIEWSORTLOCATORCSS = "a.oj-table-column-header-asc-link";
+	public static final String LISTVIEWTABLELOCATORCSS = "table.oj-table-element";
 	//Dashboard
 	public static final String DASHBOARDNAMELOCATOR = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele') and (@aria-label = '_name_' or text() = '_name_')]";//[contains(@class, 'dbs-dsbnameele')]//text()[. = '_name_']";//*[contains(@class, 'icon-listview-16')]";
 
