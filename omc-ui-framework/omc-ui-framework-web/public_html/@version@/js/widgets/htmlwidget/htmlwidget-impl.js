@@ -1,5 +1,5 @@
 define('uifwk/@version@/js/widgets/htmlwidget/htmlwidget-impl',
-["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg', "uifwk/libs/@version@/js/DOMPurify-master/dist/purify.min"],
+["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg', "uifwk/libs/@version@/js/DOMPurify/purify"],
         function (localrequire, ko, $, oj, nls, DOMPurify) {
             function htmlWidgetViewModel(params) {
                 var self = this;
