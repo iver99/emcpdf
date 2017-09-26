@@ -399,7 +399,8 @@ define(['knockout',
                         PROVIDER_ASSET_ROOT: "assetRoot",
 //                        WIDGET_EDITABLE: "true",
                         content: null,
-                        type: "TEXT_WIDGET"
+                        type: "TEXT_WIDGET",
+                        federationSupported: "FEDERATION_AND_NON_FEDERATION"
                     };
                     self.tilesViewModel.appendNewTile(textWidget.WIDGEET_NAME, textWidget.WIDGEET_DESCRIPTION, 4, 2, ko.toJS(textWidget));
                 }
