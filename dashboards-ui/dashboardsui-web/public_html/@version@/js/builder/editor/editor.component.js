@@ -367,7 +367,7 @@ define(['knockout',
                     tile.isOpenInExplorerShown(false);
                     return;
                 }
-                if (tile.federationSupported !== 'NON_FEDERATION_ONLY') {
+                if (tile.federationSupported && tile.federationSupported() !== 'NON_FEDERATION_ONLY') {
                     tile.isOpenInExplorerShown(false);
                     return;
                 }

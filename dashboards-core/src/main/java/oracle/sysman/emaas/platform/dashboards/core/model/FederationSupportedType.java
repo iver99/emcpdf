@@ -70,7 +70,7 @@ public enum FederationSupportedType {
 		if (value == FEDERATION_ONLY.value) {
 			return FEDERATION_ONLY_STRING;
 		}
-		throw new IllegalArgumentException("Invalid DashboardApplicationType type value: " + value);
+		throw new IllegalArgumentException("Invalid FederationSupportedType type value: " + value);
 	}
 
 	public int getValue()
