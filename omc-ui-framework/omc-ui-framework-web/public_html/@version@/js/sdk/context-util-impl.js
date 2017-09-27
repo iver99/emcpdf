@@ -1334,7 +1334,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
 //                return getIndividualContext('entity', 'entityName');
 //            };
 
-            self.setEntityFilterExpression = function (tagExpression, source) {
+            self._setEntityFilterExpression = function (tagExpression, source) {
                 if (self._getEntityFilterExpression() !== tagExpression) {
                     if (self.getCompositeMeId()) {
                         self.clearCompositeContext(source);
