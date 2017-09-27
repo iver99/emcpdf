@@ -72,6 +72,10 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                 self.beforeOpenDialog = function(event, ui) {
                     self.refreshWidgets();
                 };
+                self.onOpenDialog = function(event, ui) {
+                    var popupWrapperId = "#" + self.dialogId + "_wrapper>.oj-popup-content";
+                    $(popupWrapperId).length > 0 && $(popupWrapperId).css("padding", "0");
+                };
                 self.itemOnly = function(context){
                         return context['leaf'];
                 };
