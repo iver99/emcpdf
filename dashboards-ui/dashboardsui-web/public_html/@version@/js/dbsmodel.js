@@ -437,6 +437,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
             self.datasource['pagingDS'].remove(self.selectedDashboard().dashboardModel,
                    {
                         success: function () {
+                            conformButton.removeAttr('disabled');
                             self.confirmDialogModel.close();
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
