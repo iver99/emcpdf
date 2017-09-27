@@ -1354,8 +1354,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     globalMenuIdHrefMapping['omc_root_alerts'] = fetchLinkFromRegistrationData(data, 'homeLinks', 'EventUI');
                     globalMenuIdHrefMapping['omc_root_dashboards'] = '/emsaasui/emcpdfui/home.html';
                     //hard-code url for federated OOB dashboard for now
-                    globalMenuIdHrefMapping['omc_federatedview_grp_overview'] = '/emsaasui/emcpdfui/builder.html?dashboardId=66&federationEnabled=true';
-                    globalMenuIdHrefMapping['omc_federatedview_grp_alerts'] = '/emsaasui/emcpdfui/builder.html?dashboardId=67&federationEnabled=true';
+                    globalMenuIdHrefMapping['omc_federatedview_grp_overview'] = '/emsaasui/emcpdfui/builder.html?dashboardId=67&federationEnabled=true';
+                    globalMenuIdHrefMapping['omc_federatedview_grp_alerts'] = '/emsaasui/emcpdfui/builder.html?dashboardId=90000&federationEnabled=true';
                     globalMenuIdHrefMapping['omc_root_dataexplorer'] = fetchLinkFromRegistrationData(data, 'visualAnalyzers', 'TargetAnalytics');
                     globalMenuIdHrefMapping['omc_root_APM'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'ApmUI');
                     globalMenuIdHrefMapping['omc_root_Monitoring'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI');
