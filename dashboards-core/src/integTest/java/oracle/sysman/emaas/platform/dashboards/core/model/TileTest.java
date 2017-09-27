@@ -70,12 +70,14 @@ public class TileTest
 		tile.setWidgetUniqueId("ss");
 		tile.setWidgetViewmode("ss");
 		tile.setWidth(2);
+		tile.setFederationSupported(FederationSupportedType.FEDERATION_AND_NON_FEDERATION);
 		Assert.assertNotNull(tile.getWidgetSupportTimeControl());
 		Assert.assertNotNull(tile.getWidgetUniqueId());
 		Assert.assertNotNull(tile.getWidgetViewmode());
 		Assert.assertNotNull(tile.getLastModificationDate());
 		Assert.assertNotNull(tile.getLastModifiedBy());
 		Assert.assertNotNull(tile.getWidgetLinkedDashboard());
+		Assert.assertNotNull(tile.getFederationSupported());
 		Assert.assertNull(tile.getParameter("NonExit"));
 		Assert.assertNull(tile.removeParameter("NonExit"));
 

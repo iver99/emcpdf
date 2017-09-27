@@ -1017,7 +1017,7 @@ public class DashboardManager
 						+ "p.APPLICATION_TYPE,p.FEDERATION_SUPPORTED ");
 		String jpqlQuery = sbQuery.toString();
 
-		LOGGER.info("Executing SQL is: " + jpqlQuery);
+		LOGGER.debug("Executing SQL is: " + jpqlQuery);
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);	
 		EntityManager em = dsf.getEntityManager();
 		try {
@@ -1039,7 +1039,7 @@ public class DashboardManager
 			StringBuilder sbCount = new StringBuilder(sb);
 			sbCount.insert(0, "select count(*) ");
 			String jpqlCount = sbCount.toString();
-			LOGGER.info(jpqlCount);
+			LOGGER.debug(jpqlCount);
 			Query countQuery = em.createNativeQuery(jpqlCount);
 			initializeQueryParams(countQuery, paramList);
 			Long totalResults = 0L;
