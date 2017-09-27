@@ -246,6 +246,8 @@ require(['knockout',
         window.dfBootstrapDataReceived.done(function () {
             ko.mapping = km;
             var dsbId = dfu.getUrlParam("dashboardId");
+            // check federation modes support
+            var federationEnabled = Builder.isRunningInFederationMode();
             var dashboard = null;
             var mode = null, normalMode = null, tabletMode = null;
             var timeSelectorModel = null;
@@ -274,8 +276,6 @@ require(['knockout',
                 new Builder.DashboardDataSource().loadDashboardData(dsbId, function (kodb) {
                     dashboard = kodb;
 
-                    // check federation modes support
-                    var federationEnabled = Builder.isRunningInFederationMode();
                     if (federationEnabled && dashboard.federationSupported && dashboard.federationSupported() == 'NON_FEDERATION_ONLY' ||
                             !federationEnabled && dashboard.federationSupported && dashboard.federationSupported() == 'FEDERATION_ONLY') {
                         oj.Logger.error("The running mode is not supported by the current dashboard. " +
@@ -365,6 +365,10 @@ require(['knockout',
 
 			    function DashboardsetHeaderViewModel() {
 			        var self = this;
+                                var omcCurrentMenuId = menuUtil.OMCMenuConstants.GLOBAL_DASHBOARDS;
+                                if(federationEnabled === true) {
+                                    omcCurrentMenuId = menuUtil.OMCMenuConstants.GLOBAL_FEDERATEDVIEW;
+                                }
 			        self.userName = dfu.getUserName();
 			        self.tenantName = dfu.getTenantName();
 			        self.appId = "Dashboard";
@@ -375,7 +379,7 @@ require(['knockout',
 				    isAdmin:true,
 				    showGlobalContextBanner: ko.observable(false),
                                     omcHamburgerMenuOptIn: true,
-                                    omcCurrentMenuId: menuUtil.OMCMenuConstants.GLOBAL_DASHBOARDS,
+                                    omcCurrentMenuId: omcCurrentMenuId,
                                     showTimeSelector: ko.observable(false),
 				    timeSelectorParams: {
 				        startDateTime: ko.observable(null),

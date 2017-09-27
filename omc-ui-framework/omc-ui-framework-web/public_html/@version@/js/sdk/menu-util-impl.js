@@ -22,6 +22,7 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 'GLOBAL_HOME': 'omc_root_home',
                 'GLOBAL_ALERTS': 'omc_root_alerts',
                 'GLOBAL_DASHBOARDS': 'omc_root_dashboards',
+                'GLOBAL_FEDERATEDVIEW': 'omc_root_federatedview',
                 'GLOBAL_DATAEXPLORER': 'omc_root_dataexplorer',
                 'GLOBAL_APM': 'omc_root_APM',
                 'GLOBAL_MONITORING': 'omc_root_Monitoring',
