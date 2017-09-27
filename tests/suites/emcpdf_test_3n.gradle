@@ -173,6 +173,7 @@ task QATest(type:EMTest,dependsOn:[omcSetup,suitePricingV4Tests]) {
 	include "oracle/sysman/emaas/platform/dashboards/test/preference/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/screenshot/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/TenantSubscriptions.class"
+	include "oracle/sysman/emaas/platform/dashboards/test/offboard/*"
 
 	useRestAssured=true
 	ext.set("testType", "integration")
