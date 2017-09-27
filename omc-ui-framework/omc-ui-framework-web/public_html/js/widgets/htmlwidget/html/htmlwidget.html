@@ -7,7 +7,7 @@
         <!-- ko ifnot: emptyContent -->
         <div style="flex-grow: 1;" data-bind="html: content()"></div>
         <!-- /ko -->
-        <button data-bind="click: editHTMLData">Configure</button>
+        <button data-bind="click: editHTMLData" style="width: 200px; align-self: center;">Configure</button>
     </div>
     <!-- /ko -->
     <!-- ko if: editing -->
@@ -16,7 +16,7 @@
                   data-bind="ojComponent: {component: 'ojTextArea', 
                                      value: textAreaVal,
                                      rootAttributes: { style: 'width: 100%; height: auto; max-width: initial; flex-grow: 1;','class': 'oj-flex-item oj-flex oj-sm-flex-items-1'}}"></textarea>
-        <button class="oj-flex-item" data-bind="click: previewHTMLData">Confirm</button>
+        <button class="oj-flex-item" data-bind="click: previewHTMLData" style="width: 200px; align-self: center;">Confirm</button>
     </div>
     <!-- /ko -->
 </div>
