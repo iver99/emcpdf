@@ -22,13 +22,10 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.resource.*;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CreateSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSystemDashboardException;
-import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.*;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableDescriptionState;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableEntityFilterState;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
-import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
-import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
-import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
@@ -625,6 +622,26 @@ public class DashboardAPI extends APIBase
 				}
 			});
 
+			Future<List<Preference>> featurePreferences = pool.submit(new Callable<List<Preference>>() {
+				@Override
+				public List<Preference> call() throws Exception {
+					try {
+						LOGGER.info("Parallel request to get preference settings for features...");
+						long startPrefs = System.currentTimeMillis();
+						List<String> prefKeys = Arrays.asList(Preference.PREF_KEY_HM_DBMGMT_SHOW, Preference.PREF_KEY_HM_FEDERATION_SHOW);
+						Long internalTenantId = DashboardAPI.this.getTenantId(tenantIdParam);
+						UserContext.setCurrentUser(curUser);
+						List<Preference> prefs = PreferenceManager.getInstance().getPreferenceByMultipleKeys(prefKeys, internalTenantId);
+						long endPrefs = System.currentTimeMillis();
+						LOGGER.info("Time to get features preferences: {}ms. Retrieved data is: {}", (endPrefs - startPrefs), prefs);
+						return prefs;
+					} catch (Exception e) {
+						LOGGER.error("Error occurred when retrieving feature preferences settings using parallel request!", e);
+						throw e;
+					}
+				}
+			});
+
 			Future<Dashboard> futureDashboard = null;
 			try {
 				if (!DependencyStatus.getInstance().isDatabaseUp()) {
@@ -752,6 +769,27 @@ public class DashboardAPI extends APIBase
 				LOGGER.error(e);
 			}
 
+			List<PreferenceEntity> prefs = new ArrayList<PreferenceEntity>();
+			try {
+				if(featurePreferences!=null){
+					List<Preference> prefList = featurePreferences.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					if (prefList != null) {
+						for (Preference pref : prefList) {
+							prefs.add(new PreferenceEntity(pref));
+						}
+					}
+					LOGGER.debug("Preference settings data is {}", prefList);
+				}
+			} catch (InterruptedException e) {
+				LOGGER.error(e);
+			} catch (ExecutionException e) {
+				LOGGER.error(e.getCause() == null ? e : e.getCause());
+			}catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				featurePreferences.cancel(true);
+				LOGGER.error(e);
+			}
+
 			sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
 			if (userInfo != null || userGrants != null) {
 				String userInfoRes = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity(userInfo, userGrants));
@@ -788,14 +826,20 @@ public class DashboardAPI extends APIBase
 					updateDashboardAllHref(dbd, curTenant);
 				}
 			}catch (ExecutionException e) {
-			LOGGER.error(e.getCause() == null? e : e.getCause());
-		}catch (InterruptedException e) {
-			LOGGER.error(e);
-		}catch(TimeoutException e){
-			//if timeout, and the task is still running, attempt to stop the task
-			futureDashboard.cancel(true);
-			LOGGER.error(e);
-		}
+				LOGGER.error(e.getCause() == null? e : e.getCause());
+			}catch (InterruptedException e) {
+				LOGGER.error(e);
+			}catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureDashboard.cancel(true);
+				LOGGER.error(e);
+			}
+
+			if (prefs != null) {
+				sb.append("window._uifwk.cachedData.preferences=");
+				sb.append(JsonUtil.buildNormalMapper().toJson(prefs));
+				sb.append(";");
+			}
 
 			LOGGER.info("Retrieving combined data cost {}ms", (System.currentTimeMillis() - begin));
 			return Response.ok(sb.toString()).build();
