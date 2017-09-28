@@ -293,6 +293,7 @@ public class ConfigurationAPI extends APIBase
 						long startPrefs = System.currentTimeMillis();
 						List<String> prefKeys = Arrays.asList(Preference.PREF_KEY_HM_DBMGMT_SHOW, Preference.PREF_KEY_HM_FEDERATION_SHOW);
 						Long internalTenantId = ConfigurationAPI.this.getTenantId(tenantIdParam);
+						UserContext.setCurrentUser(curUser);
 						List<Preference> prefs = PreferenceManager.getInstance().getPreferenceByMultipleKeys(prefKeys, internalTenantId);
 						long endPrefs = System.currentTimeMillis();
 						_LOGGER.info("Time to get features preferences: {}ms. Retrieved data is: {}", (endPrefs - startPrefs), prefs);
