@@ -55,6 +55,7 @@ define({
       "BRANDING_BAR_MESSAGE_BOX_TEXT_SHOW_FIRST":"Show first {0} only",
       "BRANDING_BAR_MESSAGE_BOX_TITLE_SHOW_MORE":"Click to show all messages",
       "BRANDING_BAR_MESSAGE_BOX_TITLE_SHOW_FIRST":"Click to show first {0} messages only",
+      "BRANDING_BAR_MESSAGE_BOX_VIEW_JOB_DETAILS":"View more details.",
       "BRANDING_BAR_CLOUD_SERVICE_NAME_APM": "APM",
       "BRANDING_BAR_CLOUD_SERVICE_NAME_SA": "Security",
       "BRANDING_BAR_SESSION_TIMEOUT_DIALOG_TILE": "Session Expired",

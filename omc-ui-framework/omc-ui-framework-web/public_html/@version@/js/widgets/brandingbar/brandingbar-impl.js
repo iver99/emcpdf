@@ -475,6 +475,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     params.maxMessageDisplayCount : 3);
             self.showMoreLinkTxt = nls.BRANDING_BAR_MESSAGE_BOX_TEXT_SHOW_MORE;
             self.showMoreLinkTitle = nls.BRANDING_BAR_MESSAGE_BOX_TITLE_SHOW_MORE;
+            self.MESSAGE_BOX_VIEW_JOB_DETAILS = nls.BRANDING_BAR_MESSAGE_BOX_VIEW_JOB_DETAILS;
             self.showFirstNOnlyTxt = msgUtil.formatMessage(nls.BRANDING_BAR_MESSAGE_BOX_TEXT_SHOW_FIRST, maxMsgDisplayCnt);
             self.showFirstNOnlyTitle = msgUtil.formatMessage(nls.BRANDING_BAR_MESSAGE_BOX_TITLE_SHOW_FIRST, maxMsgDisplayCnt);
             self.sessionTimeoutWarnDialogTitle = nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_TILE;
@@ -1267,6 +1268,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     message.type = data.type;
                     message.summary = data.summary;
                     message.detail = data.detail;
+                    message.link = data.link;
                     message.category = data.category;
                     if (data.type && data.type.toUpperCase() === 'ERROR') {
                         message.iconAltText = self.altTextError;
