@@ -148,47 +148,6 @@ public class PreferenceAPI extends APIBase
 	}
 
 	@GET
-	@Path("multiple")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response queryPreferenceByMultipleKeys(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-										 @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-										 @QueryParam("keys") List<String> keys)
-	{
-		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/preferences/{}", keys);
-		PreferenceManager pm = PreferenceManager.getInstance();
-		try {
-			if (!DependencyStatus.getInstance().isDatabaseUp())  {
-				LOGGER.error("Error to call [GET] /v1/preferences/{}: database is down", keys);
-				throw new DatabaseDependencyUnavailableException();
-			}
-			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(tenantIdParam, userTenant);
-			if (keys == null || keys.size() == 0) {
-				throw new PreferenceNotFoundException();
-			}
-			LOGGER.info("Multiple input keys are specified. Query preference by multiple IDs {}", StringUtil.arrayToCommaDelimitedString(keys.toArray()));
-			List<Preference> prefs = pm.getPreferenceByMultipleKeys(keys, tenantId);
-			return Response.ok(getJsonUtil().toJson(prefs)).build();
-		}
-		catch (PreferenceNotFoundException e){
-			//in order to suppress error information in log files, do not log stack trace info
-			LOGGER.warn("Specific preference is not found for id {}",keys);
-			return buildErrorResponse(new ErrorEntity(e));
-		}
-		catch (DashboardException e) {
-			LOGGER.error(e.getLocalizedMessage(), e);
-			return buildErrorResponse(new ErrorEntity(e));
-		}
-		catch (BasicServiceMalfunctionException e) {
-			LOGGER.error(e.getLocalizedMessage(), e);
-			return buildErrorResponse(new ErrorEntity(e));
-		}
-		finally {
-			clearUserContext();
-		}
-	}
-
-	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryPreferences(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer)

@@ -23,6 +23,9 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
  */
 public class Preference
 {
+	public static final String PREF_KEY_HM_DBMGMT_SHOW = "uifwk.hm.dbmgmt.show";
+	public static final String PREF_KEY_HM_FEDERATION_SHOW = "uifwk.hm.federation.show";
+
 	public static final String KEY_REGEX = "[\\w\\-\\.]{1,256}"; // a to Z _ - .
 
 	public static Preference valueOf(EmsPreference ep)
