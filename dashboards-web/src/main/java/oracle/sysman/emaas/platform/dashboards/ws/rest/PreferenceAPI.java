@@ -16,6 +16,7 @@ import java.util.List;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -108,14 +109,50 @@ public class PreferenceAPI extends APIBase
 			clearUserContext();
 		}
 	}
-
 	@GET
-	@Path("{keys}")
+	@Path("{key}")
 	//@Path("{key: [\\w\\-\\.]{1,256}}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryPreferenceByKey(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("keys") List<String> keys)
+			@PathParam("key") String key)
+	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/preferences/{}", key);
+		PreferenceManager pm = PreferenceManager.getInstance();
+		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [GET] /v1/preferences/{}: database is down", key);
+				throw new DatabaseDependencyUnavailableException();
+			}
+			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+			Preference input = pm.getPreferenceByKey(key, tenantId);
+			return Response.ok(getJsonUtil().toJson(input)).build();
+		}
+		catch (PreferenceNotFoundException e){
+			//in order to suppress error information in log files, do not log stack trace info
+			LOGGER.warn("Specific preference is not found for id {}",key);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
+		}
+	}
+
+	@GET
+	@Path("multiple")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response queryPreferenceByMultipleKeys(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+										 @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+										 @QueryParam("keys") List<String> keys)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/preferences/{}", keys);
 		PreferenceManager pm = PreferenceManager.getInstance();
@@ -129,15 +166,9 @@ public class PreferenceAPI extends APIBase
 			if (keys == null || keys.size() == 0) {
 				throw new PreferenceNotFoundException();
 			}
-			if (keys.size() == 1) {
-				LOGGER.info("One input key is specified. Query preference by single ID {}", keys.get(0));
-				Preference input = pm.getPreferenceByKey(keys.get(0), tenantId);
-				return Response.ok(getJsonUtil().toJson(input)).build();
-			} else {
-				LOGGER.info("Multiple input keys are specified. Query preference by multiple IDs {}", StringUtil.arrayToCommaDelimitedString(keys.toArray()));
-				List<Preference> prefs = pm.getPreferenceByMultipleKeys(keys, tenantId);
-				return Response.ok(getJsonUtil().toJson(prefs)).build();
-			}
+			LOGGER.info("Multiple input keys are specified. Query preference by multiple IDs {}", StringUtil.arrayToCommaDelimitedString(keys.toArray()));
+			List<Preference> prefs = pm.getPreferenceByMultipleKeys(keys, tenantId);
+			return Response.ok(getJsonUtil().toJson(prefs)).build();
 		}
 		catch (PreferenceNotFoundException e){
 			//in order to suppress error information in log files, do not log stack trace info
