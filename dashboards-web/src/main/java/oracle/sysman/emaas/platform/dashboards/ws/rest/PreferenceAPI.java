@@ -30,6 +30,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DatabaseDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.PreferenceNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Preference;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
@@ -109,28 +110,38 @@ public class PreferenceAPI extends APIBase
 	}
 
 	@GET
-	@Path("{key}")
+	@Path("{keys}")
 	//@Path("{key: [\\w\\-\\.]{1,256}}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryPreferenceByKey(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("key") String key)
+			@PathParam("keys") List<String> keys)
 	{
-		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/preferences/{}", key);
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/preferences/{}", keys);
 		PreferenceManager pm = PreferenceManager.getInstance();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp())  {
-				LOGGER.error("Error to call [GET] /v1/preferences/{}: database is down", key);
+				LOGGER.error("Error to call [GET] /v1/preferences/{}: database is down", keys);
 				throw new DatabaseDependencyUnavailableException();
 			}
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
-			Preference input = pm.getPreferenceByKey(key, tenantId);
-			return Response.ok(getJsonUtil().toJson(input)).build();
+			if (keys == null || keys.size() == 0) {
+				throw new PreferenceNotFoundException();
+			}
+			if (keys.size() == 1) {
+				LOGGER.info("One input key is specified. Query preference by single ID {}", keys.get(0));
+				Preference input = pm.getPreferenceByKey(keys.get(0), tenantId);
+				return Response.ok(getJsonUtil().toJson(input)).build();
+			} else {
+				LOGGER.info("Multiple input keys are specified. Query preference by multiple IDs {}", StringUtil.arrayToCommaDelimitedString(keys.toArray()));
+				List<Preference> prefs = pm.getPreferenceByMultipleKeys(keys, tenantId);
+				return Response.ok(getJsonUtil().toJson(prefs)).build();
+			}
 		}
 		catch (PreferenceNotFoundException e){
 			//in order to suppress error information in log files, do not log stack trace info
-			LOGGER.warn("Specific preference is not found for id {}",key);
+			LOGGER.warn("Specific preference is not found for id {}",keys);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (DashboardException e) {
