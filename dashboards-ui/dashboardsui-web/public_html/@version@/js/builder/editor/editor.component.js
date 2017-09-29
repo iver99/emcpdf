@@ -242,6 +242,9 @@ define(['knockout',
                     if(targets && targets()){
                         link += "&targets="+encodeURI(JSON.stringify(targets()));
                     }
+                    if(Builder.isRunningInFederationMode()){
+                        link += "&federationEnabled=true";
+                    }
                     return link;
                 } else
                     return "#";

@@ -55,6 +55,10 @@ define(['dashboards/dbsmodel',
             if (dfu.isDevMode()) {
                 var serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards?limit=" + self.LOADDASHBOARDLIMIT + "&offset=" + offset + "&orderBy=default");
             }
+            var federationEnabled = Builder.isRunningInFederationMode();
+            if (federationEnabled) {
+                serviceUrl = serviceUrl + "&federationEnabled=true";
+            }
             loadDashboardReqSent = true;
             dfu.ajaxWithRetry({
                             url: queryStr? serviceUrl + '&queryString=' + queryStr : serviceUrl,
