@@ -8,12 +8,14 @@ define(['knockout',
         'ojs/ojcore',
         'dfutil',
         'uifwk/js/util/screenshot-util',
-        'uifwk/js/sdk/context-util'
+        'uifwk/js/sdk/context-util',
+        'uifwk/js/sdk/menu-util'
     ],
-    function(ko, $, oj, dfu, ssu, contextModel) {
+    function(ko, $, oj, dfu, ssu, contextModel, menuModel) {
         function DuplicateDashboardModel($b) {
             var self = this;
             var ctxUtil = new contextModel();
+            var menuUtil = new menuModel();
             self.tilesViewModel = $b.getDashboardTilesViewModel();
             self.tracker = ko.observable();
             self.errorMessages = ko.observableArray([]);
@@ -123,6 +125,7 @@ define(['knockout',
                             console.log("As currently it's running in " + (federationEnabled?'federation ':'non-federation ') + 'mode, duplication operation is navigating to the same mode' );
                             if (federationEnabled) {
                                 url = url + "&federationEnabled=true";
+                                menuUtil.fireFederatedDsbChangedEvent();
                             }
                             window.location.href = ctxUtil.appendOMCContext(url, true, true, true);
                         }
