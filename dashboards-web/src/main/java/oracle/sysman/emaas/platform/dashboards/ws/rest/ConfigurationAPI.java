@@ -11,9 +11,7 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 
 import javax.ws.rs.GET;
@@ -36,6 +34,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.model.PreferenceEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.TenantSubscriptionsAPI.SubscribedAppsEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.preferences.FeatureShowPreferences;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
 import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.TenantSubscriptionInfo;
@@ -291,10 +290,9 @@ public class ConfigurationAPI extends APIBase
 					try {
 						_LOGGER.info("Parallel request to get preference settings for features...");
 						long startPrefs = System.currentTimeMillis();
-						List<String> prefKeys = Arrays.asList(Preference.PREF_KEY_HM_DBMGMT_SHOW, Preference.PREF_KEY_HM_FEDERATION_SHOW);
 						Long internalTenantId = ConfigurationAPI.this.getTenantId(tenantIdParam);
 						UserContext.setCurrentUser(curUser);
-						List<Preference> prefs = PreferenceManager.getInstance().getPreferenceByMultipleKeys(prefKeys, internalTenantId);
+						List<Preference> prefs = FeatureShowPreferences.getFeatureShowPreferences(internalTenantId);
 						long endPrefs = System.currentTimeMillis();
 						_LOGGER.info("Time to get features preferences: {}ms. Retrieved data is: {}", (endPrefs - startPrefs), prefs);
 						return prefs;
