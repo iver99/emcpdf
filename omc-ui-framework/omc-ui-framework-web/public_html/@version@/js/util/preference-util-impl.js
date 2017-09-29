@@ -22,14 +22,14 @@ function(ko, $, ajaxUtilModel)
      * @param {type} async
      * @returns {undefined}
      */
-    PreferenceUtility.prototype.getHMItemShowPreference = function(key,successCallback, errorCallback) {
+    PreferenceUtility.prototype.getHMItemShowPreference = function(key, successCallback, errorCallback) {
         var self = this;
         if(key) {
             if(window._uifwk && window._uifwk.cachedData && ko.unwrap(window._uifwk.cachedData.preferences)) {
                 var preferences = ko.unwrap(window._uifwk.cachedData.preferences);
                 for(var i in preferences) {
                     if(preferences[i].key === key) {
-                        callback(preferences[i].value);
+                        successCallback(preferences[i].value);
                         return;
                     }
                 }

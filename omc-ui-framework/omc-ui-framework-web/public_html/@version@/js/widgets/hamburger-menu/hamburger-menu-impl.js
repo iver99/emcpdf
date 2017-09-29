@@ -934,7 +934,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         //remove "Federated View" from HM if it is configured not to show
                         if(self.showFederatedView === "false") {
                             var index = findAppItemIndex(rootMenuData, "omc_root_federatedview");
-                            rootMenuData.splice(index,1);
+                            index && rootMenuData.splice(index,1);
                         }
                         fetchGlobalMenuLinks(self.registration);
                         for (var k = 0; k < rootMenuData.length; ++k) {
