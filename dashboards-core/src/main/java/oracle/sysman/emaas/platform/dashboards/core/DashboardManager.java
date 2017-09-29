@@ -1747,7 +1747,6 @@ LOGGER.info("Order by for dashboard list: orderBy {}, isUnion {}, federationEnab
 			//default order by
 			if (isUnion) {
                 sb.append("p.application_Type, p.type DESC, lower(p.name), p.name, CASE WHEN p.access_Date IS NULL THEN 0 ELSE 1 END DESC, p.access_Date DESC");
-				return sb.toString();
 			}
 			else {
                 sb.append("p.application_Type, p.type DESC, lower(p.name), p.name, CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC");
