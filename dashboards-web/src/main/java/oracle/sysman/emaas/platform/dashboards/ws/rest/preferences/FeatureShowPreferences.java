@@ -6,6 +6,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Preference;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +29,9 @@ public class FeatureShowPreferences {
             }
         }
         if (!keySet.isEmpty()) {
+            if (prefs == null) {
+                prefs = new ArrayList<Preference>();
+            }
             // some preference keys are not found in database, use default values instead
             for (String notFoundKey : keySet) {
                 Preference p = new Preference();
