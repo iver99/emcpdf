@@ -1226,9 +1226,9 @@ public class DataManager
 				.setParameter(16, enableDescription)
 				.setParameter(17, extendedOptions)			
 				.setParameter(18, showInHome)
-				.setParameter(19, dashboardId)
-				.setParameter(20, tenantId)
-				.setParameter(21, federationSupported);
+				.setParameter(19, federationSupported)
+				.setParameter(20, dashboardId)
+				.setParameter(21, tenantId);
 		result = query.executeUpdate();
 		return result;
 	}
@@ -1279,10 +1279,10 @@ public class DataManager
 				.setParameter(30, widgetDeleted)
 				.setParameter(31, widgetDeletionDate)
 				.setParameter(32, deleted)
-				.setParameter(33, tileId)
-				.setParameter(34, dashboardId)
-				.setParameter(35, tenantId)
-				.setParameter(36, federationSupported);
+				.setParameter(33, federationSupported)
+				.setParameter(34, tileId)
+				.setParameter(35, dashboardId)
+				.setParameter(36, tenantId);
 		result = query.executeUpdate();
 		return result;
 	}
