@@ -77,8 +77,8 @@ public class offboardTenant
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", "CloudServices",
-							"Authorization", authToken).when().delete("/tool/offboard/tenantid");
-			
+							"Authorization", authToken).when().delete("/tool/offboard/" + tenantid);
+	
 			Assert.assertTrue(res3.getStatusCode() == 200);					
 		}
 		catch (Exception e) {
