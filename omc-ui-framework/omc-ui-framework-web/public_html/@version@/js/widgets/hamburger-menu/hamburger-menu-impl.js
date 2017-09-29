@@ -40,6 +40,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 var sessionCacheAllServiceDataKey = 'all_service_data';
                 var sessionCacheFavoriteDashboardKey = 'favorite_dashboards';
                 var sessionCacheShowFederatedViewKey = "show_federated_view";
+                var sessionCacheFederatedDashboardKey = 'federated_dashboards';
                 var omcMenuSeparatorId = 'omc_service_menu_separator';
                 
                 var userName = params.userName;
@@ -211,8 +212,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     {'id': 'omc_root_dashboards', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_DASHBOARDS_LABEL, 'externalUrl': '#'},
 //                    {'id': 'omc_root_savedsearches', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_SAVEDSEARCH_LABEL, 'externalUrl': '#'},
                     {'id': 'omc_root_federatedview', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_FEDERATEDVIEW_LABEL, 'externalUrl': '#', children: [
-                            {'id': 'omc_federatedview_grp_overview', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_FEDERATEDVIEW_OVERVIEW_LABEL, 'externalUrl': '#'},
-                            {'id': 'omc_federatedview_grp_alerts', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_FEDERATEDVIEW_ALERTS_LABEL, 'externalUrl': '#'}
+                            {'id': 'omc_federatedview_grp_40000', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_FEDERATEDVIEW_OVERVIEW_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_federatedview_grp_90000', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_FEDERATEDVIEW_ALERTS_LABEL, 'externalUrl': '#'}
                     ]},
                     {'id': 'omc_root_dataexplorer', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_DATAEXPLORER_LABEL, 'externalUrl': '#'},
                     {'id': 'omc_root_divider', type: 'divider', 'label': '', 'externalUrl': '#'},
@@ -335,7 +336,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     });
                     return dfdGetFavoriteDsb;
                 }
-
+                
                 function updateFavoriteDsb(toRefresh){
                     function updateFavoriteDsbInServiceMenuData(){
                         var menuId = findAppItemIndex(rootMenuData, 'omc_root_dashboards');
@@ -371,6 +372,77 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 menuUtil.subscribeFavoriteDsbChangedEvent(function(){
                     updateFavoriteDsb(true);
                 });
+                
+                //Get federated dashboards
+                function getFederatedDsb(forceRefresh) {
+                    var dfdGetFederatedDsb = $.Deferred();
+                    if(!forceRefresh && self.federatedDsb){
+                        dfdGetFederatedDsb.resolve();//use the cached data
+                        return dfdGetFederatedDsb;
+                    }
+                    self.federatedDsb = [];
+                    var header = dfu.getDefaultHeader();
+                    //TO DO: change below rest api to get federated dashboard
+                    var url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards") : '/sso.static/dashboards.service';
+                    url+='?federationEnabled=true';
+                    dfu.ajaxWithRetry(url, {
+                        type: 'get',
+                        dataType: 'json',
+                        contentType: "application/json",
+                        headers: header,
+                        success: function (data) {
+                            $.each(data.dashboards, function (idx, dsb) {
+                                self.federatedDsb.push({name: dsb.name, href: "/emsaasui/emcpdfui/builder.html?dashboardId="+dsb.id+"&federationEnabled=true"});
+                            });
+                            sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheFederatedDashboardKey, self.federatedDsb);
+                            dfdGetFederatedDsb.resolve();
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            oj.Logger.error("Failed to load federated dashboards due to error: " + textStatus);
+                            dfdGetFederatedDsb.resolve();
+                        }
+                    });
+                    return dfdGetFederatedDsb;
+                }
+                
+                function updateFederatedDsb(toRefresh, toExpand){
+                    function updateFederatedDsbInServiceMenuData(){
+                        var menuId = findAppItemIndex(rootMenuData, 'omc_root_federatedview');
+                        if(self.federatedDsb){
+                            self.serviceMenuData[menuId].children = [];
+                            $.each(self.federatedDsb, function (idx, dsb) {
+                                self.serviceMenuData[menuId].children.push({'appId': 'FederatedDashboard', 'id': 'omc_federatedview_grp_' + idx, type: 'menu_item', 'label': dsb.name, 'externalUrl': dsb.href, 'disabled': false});
+                            });
+                        }else{
+                            delete self.serviceMenuData[menuId].children;
+                        }
+                    }
+                    if(toRefresh){
+                        $.when(getFederatedDsb(toRefresh)).done(function(){
+                            updateFederatedDsbInServiceMenuData();
+                            var menuId = findAppItemIndex(rootMenuData, 'omc_root_federatedview');
+                            var item = self.serviceMenuData[menuId];
+                            var menuItem = getMenuItem(item);
+                            $.each(omcMenus, function(idx, _item){
+                                if(menuItem.attr && _item.attr && _item.attr.id === menuItem.attr.id){
+                                    omcMenus[idx] = menuItem;
+                                }
+                            });
+                            self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+//                            $("#omcMenuNavList").ojNavigationList("refresh");
+                            if(toExpand) {
+                                setTimeout(function() {$("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", "omc_root_federatedview", true);}, 1);
+                            }
+                            sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusDataKey, omcMenus);
+                            sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheServiceMenuDataKey, self.serviceMenuData);
+                        });
+                    }else{
+                        updateFederatedDsbInServiceMenuData();
+                    }
+                }
+                menuUtil.subscribeFederatedDsbChangedEvent(function(){
+                    updateFederatedDsb(true, false);
+                });
 
                 //Get vanity base URLs for all subscribed services
                 function fetchBaseVanityUrls() {
@@ -398,7 +470,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     self.serviceMenuToLoad = [];
                     self.serviceMenuDeferLoad = [];
                     if (allServiceMenus && allServiceMenus.length > 0) {
-                        if ($.inArray(serviceAppId, ['Error', 'Dashboard']) === -1) {
+                        if ($.inArray(serviceAppId, ['Error', 'Dashboard', 'FederatedDashboard']) === -1) {
                             if (currentMenuId && currentMenuId.indexOf('omc_root_admin_') === 0) {
                                 self.serviceMenuToLoad = $.extend([], allServiceMenus);
                             }
@@ -828,6 +900,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     self.userRoles = cachedMenus[sessionCacheUserRolesKey];
                     self.favoriteDsb = cachedMenus[sessionCacheFavoriteDashboardKey];
                     self.showFederatedView = cachedMenus[sessionCacheShowFederatedViewKey];
+                    self.federatedDsb = cachedMenus[sessionCacheFederatedDashboardKey];
                     self.allServiceData = cachedMenus[sessionCacheAllServiceDataKey];
 
                     function refreshHamburgerMenuFromCache() {
@@ -941,7 +1014,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 function isAppSubscribed(appId) {
                     if (self.subscribedApps) {
                         for (var i = 0; i < self.subscribedApps.length; i++) {
-                            if (self.subscribedApps[i].id === appId || 'Dashboard' === appId) {
+                            if (self.subscribedApps[i].id === appId || 'Dashboard' === appId || 'FederatedDashboard' === appId) {
                                 return true;
                             }
                         }
@@ -1382,8 +1455,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     globalMenuIdHrefMapping['omc_root_alerts'] = fetchLinkFromRegistrationData(data, 'homeLinks', 'EventUI');
                     globalMenuIdHrefMapping['omc_root_dashboards'] = '/emsaasui/emcpdfui/home.html';
                     //hard-code url for federated OOB dashboard for now
-                    globalMenuIdHrefMapping['omc_federatedview_grp_overview'] = '/emsaasui/emcpdfui/builder.html?dashboardId=40000&federationEnabled=true';
-                    globalMenuIdHrefMapping['omc_federatedview_grp_alerts'] = '/emsaasui/emcpdfui/builder.html?dashboardId=90000&federationEnabled=true';
+                    globalMenuIdHrefMapping['omc_federatedview_grp_40000'] = '/emsaasui/emcpdfui/builder.html?dashboardId=40000&federationEnabled=true';
+                    globalMenuIdHrefMapping['omc_federatedview_grp_90000'] = '/emsaasui/emcpdfui/builder.html?dashboardId=90000&federationEnabled=true';
                     globalMenuIdHrefMapping['omc_root_dataexplorer'] = fetchLinkFromRegistrationData(data, 'visualAnalyzers', 'TargetAnalytics');
                     globalMenuIdHrefMapping['omc_root_APM'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'ApmUI');
                     globalMenuIdHrefMapping['omc_root_Monitoring'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI');
@@ -1503,6 +1576,13 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         event.stopPropagation();
                         self.preventExpandForAPMLabel = false;
                         return false;
+                    }else if(ui.key === "omc_root_federatedview") {
+                        //Load federated dashboards list first if it is not loaded
+                        if(!self.federatedDsb) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            updateFederatedDsb(true, true);
+                        }
                     }
                     else if (ui.key.indexOf("omc_root_") > -1 && ui.key.indexOf("omc_root_admin") < 0) {
                         var appId = ui.key.substring(9);
