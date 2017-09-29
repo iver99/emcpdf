@@ -22,13 +22,10 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.resource.*;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CreateSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSystemDashboardException;
-import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.*;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableDescriptionState;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableEntityFilterState;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
-import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
-import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
-import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
@@ -1526,6 +1523,7 @@ public class DashboardAPI extends APIBase
 		newTile.setHeight(2);
 		newTile.setWidgetSource(1);
 		newTile.setType(0); //DEFAULT
+		newTile.setFederationSupported(ed.getFederationSupported() == null ? FederationSupportedType.NON_FEDERATION_ONLY.getValue() : ed.getFederationSupported());
 		//dashboard is empty
 		if((tileList == null) || tileList.isEmpty()){
 			tileList = new ArrayList<>();

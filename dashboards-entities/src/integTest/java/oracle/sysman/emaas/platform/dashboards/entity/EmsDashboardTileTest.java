@@ -274,6 +274,12 @@ public class EmsDashboardTileTest {
     }
 
     @Test
+    public void testGetFederationSupported() {
+        emsDashboardTile.setFederationSupported(1);
+        Assert.assertEquals(emsDashboardTile.getFederationSupported(),new Integer(1));
+    }
+
+    @Test
     public void testRemoveEmsDashboardTileParams() {
         List<EmsDashboardTileParams> list = new ArrayList<EmsDashboardTileParams>();
         list.add(emsDashboardTileParams);

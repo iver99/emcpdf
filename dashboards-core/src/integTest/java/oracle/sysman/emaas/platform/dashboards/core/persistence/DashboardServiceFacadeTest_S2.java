@@ -14,6 +14,7 @@ import javax.persistence.EntityTransaction;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import oracle.sysman.emaas.platform.dashboards.core.BaseTest;
+import oracle.sysman.emaas.platform.dashboards.core.model.FederationSupportedType;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
@@ -162,6 +163,7 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		tile.setWidgetHistogram("widgetHistogram");
 		tile.setWidgetSupportTimeControl(1);
 		tile.setWidgetLinkedDashboard(BigInteger.valueOf(1L));
+		tile.setFederationSupported(FederationSupportedType.NON_FEDERATION_ONLY.getValue());
 		return tile;
 	}
 

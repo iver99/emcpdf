@@ -10,6 +10,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import oracle.sysman.emaas.platform.dashboards.core.BaseTest;
+import oracle.sysman.emaas.platform.dashboards.core.model.FederationSupportedType;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.IdGenerator;
 import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
@@ -126,6 +127,7 @@ public class DashboardServiceFacadeTest extends BaseTest
 		//d.setTenantId("11");
 		d.setScreenShot("slslslslsl");
 		d.setType(0);
+		d.setFederationSupported(FederationSupportedType.NON_FEDERATION_ONLY.getValue());
 		return d;
 	}
 
@@ -161,6 +163,7 @@ public class DashboardServiceFacadeTest extends BaseTest
 		tile.setWidgetSupportTimeControl(1);
 		tile.setWidgetLinkedDashboard(BigInteger.valueOf(1L));
 		tile.setWidgetDeleted(0);
+		tile.setFederationSupported(FederationSupportedType.NON_FEDERATION_ONLY.getValue());
 		return tile;
 	}
 
