@@ -363,7 +363,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     var header = dfu.getDefaultHeader();
                     //TO DO: change below rest api to get federated dashboard
                     var url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards") : '/sso.static/dashboards.service';
-                    url+='?federationEnabled=true';
+                    url+='?orderBy=default&federationEnabled=true';
                     dfu.ajaxWithRetry(url, {
                         type: 'get',
                         dataType: 'json',
