@@ -800,7 +800,7 @@ define(['knockout',
                     "showOnMobile": true,
                     "showSubMenu": false,
                     "showInZdt":true,
-                    "endOfGroup": self.federationEnabled
+                    "endOfGroup": false
                 },
                 {
                     "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
@@ -809,7 +809,7 @@ define(['knockout',
                     "name":"Duplicate",
                     "icon": "dbd-toolbar-icon-duplicate",
                     "title": "",
-                    "disabled": self.federationEnabled,
+                    "disabled": false,
                     "showOnMobile": self.tilesViewModel.isMobileDevice !== "true",
                     "showInZdt":self.notZdtStatus,
                     "endOfGroup": true && self.notZdtStatus,
