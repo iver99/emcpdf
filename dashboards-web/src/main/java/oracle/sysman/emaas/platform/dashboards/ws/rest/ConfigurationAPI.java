@@ -34,6 +34,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.model.PreferenceEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.TenantSubscriptionsAPI.SubscribedAppsEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.preferences.FeatureShowPreferences;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
 import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.TenantSubscriptionInfo;
@@ -291,27 +292,7 @@ public class ConfigurationAPI extends APIBase
 						long startPrefs = System.currentTimeMillis();
 						Long internalTenantId = ConfigurationAPI.this.getTenantId(tenantIdParam);
 						UserContext.setCurrentUser(curUser);
-						List<Preference> prefs = PreferenceManager.getInstance().getPreferenceByMultipleKeys(Preference.FEATURE_SHOW_PREF_SUPPORTED_KEYS, internalTenantId);
-						// if any key isn't found from database, we use default values then
-						Set<String> keySet = new HashSet<String>(Preference.FEATURE_SHOW_PREF_DEFAULT_VALUES.keySet());
-						if (prefs != null) {
-							for (Preference p : prefs) {
-								String key = p.getKey();
-								keySet.remove(key);
-								_LOGGER.info("Found pref key {} from database, put to returned value", key);
-							}
-						}
-						if (!keySet.isEmpty()) {
-							// some preference keys are not found in database, use default values instead
-							for (String notFoundKey : keySet) {
-								Preference p = new Preference();
-								p.setKey(notFoundKey);
-								String value = Preference.FEATURE_SHOW_PREF_DEFAULT_VALUES.get(notFoundKey);
-								p.setValue(value);
-								prefs.add(p);
-								_LOGGER.info("Didn't found pref value for key {} from database, use default value {} for it", notFoundKey, value);
-							}
-						}
+						List<Preference> prefs = FeatureShowPreferences.getFeatureShowPreferences(internalTenantId);
 						long endPrefs = System.currentTimeMillis();
 						_LOGGER.info("Time to get features preferences: {}ms. Retrieved data is: {}", (endPrefs - startPrefs), prefs);
 						return prefs;

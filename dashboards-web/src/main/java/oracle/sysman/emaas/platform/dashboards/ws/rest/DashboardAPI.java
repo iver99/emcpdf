@@ -34,6 +34,7 @@ import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.*;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.preferences.FeatureShowPreferences;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.ssfDatautil.SSFDataUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
@@ -628,10 +629,9 @@ public class DashboardAPI extends APIBase
 					try {
 						LOGGER.info("Parallel request to get preference settings for features...");
 						long startPrefs = System.currentTimeMillis();
-						List<String> prefKeys = Arrays.asList(Preference.PREF_KEY_HM_DBMGMT_SHOW, Preference.PREF_KEY_HM_FEDERATION_SHOW);
 						Long internalTenantId = DashboardAPI.this.getTenantId(tenantIdParam);
 						UserContext.setCurrentUser(curUser);
-						List<Preference> prefs = PreferenceManager.getInstance().getPreferenceByMultipleKeys(prefKeys, internalTenantId);
+						List<Preference> prefs = FeatureShowPreferences.getFeatureShowPreferences(internalTenantId);
 						long endPrefs = System.currentTimeMillis();
 						LOGGER.info("Time to get features preferences: {}ms. Retrieved data is: {}", (endPrefs - startPrefs), prefs);
 						return prefs;
