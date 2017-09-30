@@ -129,6 +129,9 @@ define(['knockout',
                     return '/sso.static/dashboards.preferences';
                 }
             };
+            self.getHMItemShowPreferenceSync=function(key) {
+                return prefUtilModel.getHMItemShowPreferenceSync(key);
+            };
 
             self.getSubscribedappsUrl=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear

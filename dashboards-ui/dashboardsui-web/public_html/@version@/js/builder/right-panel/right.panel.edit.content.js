@@ -56,6 +56,12 @@ define(['dashboards/dbsmodel',
                 var serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards?limit=" + self.LOADDASHBOARDLIMIT + "&offset=" + offset + "&orderBy=default");
             }
             var federationEnabled = Builder.isRunningInFederationMode();
+            var isFederationShowInUI = dfu.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
+            if (showFederationInHM) {
+                federationEnabledUrl = "&federationFeatureShowInUi=true";
+            } else {
+                federationEnabledUrl = "&federationFeatureShowInUi=false";
+            }
             if (federationEnabled) {
                 serviceUrl = serviceUrl + "&federationEnabled=true";
             }
