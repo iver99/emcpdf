@@ -20,9 +20,9 @@ function(ko, $, ajaxUtilModel)
         this.getHMItemShowPreference(key, function(value) {
             dfd.resolve(value);
         }, function() {
-            dfd.resolve();
+            dfd.reject();
         });
-        return getPref.promise();
+        return dfd;
     }
     
     /**
