@@ -1570,6 +1570,7 @@ public class DashboardAPI extends APIBase
 		newTile.setHeight(2);
 		newTile.setWidgetSource(1);
 		newTile.setType(0); //DEFAULT
+		newTile.setFederationSupported(ed.getFederationSupported() == null ? FederationSupportedType.NON_FEDERATION_ONLY.getValue() : ed.getFederationSupported());
 		//dashboard is empty
 		if((tileList == null) || tileList.isEmpty()){
 			tileList = new ArrayList<>();

@@ -894,7 +894,7 @@ public class DashboardManager
 		sb = new StringBuilder(" from Ems_Dashboard p  ");
 
 		boolean joinOptions = false;
-		if (getListDashboardsOrderBy(orderBy, false).toLowerCase().contains("access_date")) {
+		if (getListDashboardsOrderBy(orderBy, false, federationEnabled).toLowerCase().contains("access_date")) {
 			joinOptions = true;
 		}
 		if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
@@ -1009,7 +1009,7 @@ public class DashboardManager
 		//query
 		StringBuilder sbQuery = new StringBuilder(sb);
 		//order by
-		sbQuery.append(getListDashboardsOrderBy(orderBy, false));
+		sbQuery.append(getListDashboardsOrderBy(orderBy, false, federationEnabled));
 		//			sbQuery.append(sb);
 		sbQuery.insert(0,
 				"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.SHOW_INHOME,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
@@ -1691,8 +1691,9 @@ public class DashboardManager
 		return index;
 	}
 
-	private String getListDashboardsOrderBy(String orderBy, boolean isUnion)
+	private String getListDashboardsOrderBy(String orderBy, boolean isUnion, boolean federationEnabled)
 	{
+LOGGER.info("Order by for dashboard list: orderBy {}, isUnion {}, federationEnabled {}", orderBy, isUnion, federationEnabled);
 		if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME.equals(orderBy)
 				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_ASC.equals(orderBy)) {
 			return " order by nlssort(name,'NLS_SORT=GENERIC_M'), p.dashboard_Id DESC";
@@ -1739,13 +1740,18 @@ public class DashboardManager
 			return " order by lower(p.owner) DESC, p.owner DESC, lower(p.name), p.name, p.dashboard_Id DESC";
 		}
 		else {
+            StringBuilder sb = new StringBuilder(" order by ");
+            if (federationEnabled) {
+                sb.append("p.is_system DESC, ");
+            }
 			//default order by
 			if (isUnion) {
-				return " order by p.application_Type, p.type DESC, lower(p.name), p.name, CASE WHEN p.access_Date IS NULL THEN 0 ELSE 1 END DESC, p.access_Date DESC";
+                sb.append("p.application_Type, p.type DESC, lower(p.name), p.name, CASE WHEN p.access_Date IS NULL THEN 0 ELSE 1 END DESC, p.access_Date DESC");
 			}
 			else {
-				return " order by p.application_Type, p.type DESC, lower(p.name), p.name, CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC";
+                sb.append("p.application_Type, p.type DESC, lower(p.name), p.name, CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC");
 			}
+            return sb.toString();
 		}
 	}
 
