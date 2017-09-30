@@ -859,13 +859,14 @@ public class DashboardAPI extends APIBase
 			@QueryParam("queryString") String queryString, @DefaultValue("") @QueryParam("limit") Integer limit,
 			@DefaultValue("0") @QueryParam("offset") Integer offset,
 			@DefaultValue(DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME) @QueryParam("orderBy") String orderBy,
-			@QueryParam("filter") String filterString, @DefaultValue("false") @QueryParam("federationEnabled") String federationEnabled
+			@QueryParam("filter") String filterString, @DefaultValue("false") @QueryParam("federationEnabled") String federationEnabled,
+			@DefaultValue("false") @QueryParam("federationFeatureShow") String federationFeatureShow
 	/*@QueryParam("types") String types, @QueryParam("appTypes") String appTypes, @QueryParam("owners") String owners,
 	@QueryParam("onlyFavorites") Boolean onlyFavorites*/)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
-				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&filter={}", queryString,
-				limit, offset, orderBy, filterString);
+				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&filter={}&federationEnabled={}&federationFeatureShow={}",
+				queryString, limit, offset, orderBy, filterString, federationEnabled, federationFeatureShow);
 		logkeyHeaders("queryDashboards()", userTenant, tenantIdParam);
 		String qs = null;
 		try {
@@ -878,6 +879,10 @@ public class DashboardAPI extends APIBase
 		boolean federationMode = false;
 		if (Boolean.TRUE.toString().equalsIgnoreCase(federationEnabled)) {
 			federationMode = true;
+		}
+		boolean federationFeatureShowInUi = false;
+		if (Boolean.TRUE.toString().equalsIgnoreCase(federationFeatureShow)) {
+			federationFeatureShowInUi = true;
 		}
 
 		try {
@@ -895,7 +900,7 @@ public class DashboardAPI extends APIBase
 			//filter.setIncludedTypesFromString(types);
 			//filter.setIncludedFavorites(onlyFavorites);
 			filter.initializeFilters(filterString);
-			PaginatedDashboards pd = manager.listDashboards(qs, offset, limit, tenantId, true, orderBy, filter, federationMode);
+			PaginatedDashboards pd = manager.listDashboards(qs, offset, limit, tenantId, true, orderBy, filter, federationMode, federationFeatureShowInUi);
 			if (pd != null && pd.getDashboards() != null) {
 				for (Dashboard d : pd.getDashboards()) {
 					updateDashboardAllHref(d, tenantIdParam);

@@ -13,6 +13,17 @@ function(ko, $, ajaxUtilModel)
         this.prefRestApiUrl = prefRestApiUrl;
         this.requestHeader = requestHeader;
     };
+
+
+    PreferenceUtility.prototype.getHMItemShowPreferenceSync = function(key) {
+        var dfd = $.Deferred();
+        this.getHMItemShowPreference(key, function(value) {
+            dfd.resolve(value);
+        }, function() {
+            dfd.resolve();
+        });
+        return getPref.promise();
+    }
     
     /**
      * Get preference value to decide show or hide an Item in HM root menu. By default, it is hidden.

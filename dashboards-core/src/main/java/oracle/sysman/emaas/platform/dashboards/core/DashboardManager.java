@@ -833,13 +833,13 @@ public class DashboardManager
 	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
 			boolean ic) throws DashboardException
 	{
-		return listDashboards(queryString, offset, pageSize, tenantId, ic, null, null, false);
+		return listDashboards(queryString, offset, pageSize, tenantId, ic, null, null, false, false);
 	}
 
 
 	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
 											  boolean ic, String orderBy, DashboardsFilter filter) throws DashboardException {
-		return listDashboards(queryString, offset, pageSize, tenantId, ic, orderBy, filter, false);
+		return listDashboards(queryString, offset, pageSize, tenantId, ic, orderBy, filter, false, false);
 	}
 
 	/**
@@ -852,10 +852,12 @@ public class DashboardManager
 	 * @param tenantId
 	 * @param ic
 	 *            ignore case or not
+	 * @param federationEnabled used to indicate if currently it's running in federation mode or not (greenfield mode) when federation feature is enalbed (shown in UI)
+	 * @param federationFeatureShowInUi used to indicate if federation feature is enabled or not (shown in UI)
 	 * @return
 	 */
 	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
-			boolean ic, String orderBy, DashboardsFilter filter, boolean federationEnabled) throws DashboardException
+			boolean ic, String orderBy, DashboardsFilter filter, boolean federationEnabled, boolean federationFeatureShowInUi) throws DashboardException
 	{
 		LOGGER.debug(
 				"Listing dashboards with parameters: queryString={}, offset={}, pageSize={}, tenantId={}, ic={}, orderBy={}, filter={}",
@@ -912,10 +914,14 @@ public class DashboardManager
 			sb.append(" and p.show_inhome = 1 ");
 		}
 
-		if (!federationEnabled) {
-			sb.append(" and (p.federation_supported = 0 or p.federation_supported = 1) ");
+		if (!federationFeatureShowInUi) {	// federation actually not supported
+			sb.append(" and (p.federation_supported = 0) ");
 		} else {
-			sb.append(" and (p.federation_supported = 1 or p.federation_supported = 2) ");
+			if (!federationEnabled) { // running in non federation mode when federation feature suported
+				sb.append(" and (p.federation_supported = 0 or p.federation_supported = 1) ");
+			} else { // running in federation mode when federation feature suported
+				sb.append(" and (p.federation_supported = 1 or p.federation_supported = 2) ");
+			}
 		}
 
 		StringBuilder sbApps = new StringBuilder();

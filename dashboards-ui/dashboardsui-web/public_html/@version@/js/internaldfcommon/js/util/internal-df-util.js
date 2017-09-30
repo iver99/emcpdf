@@ -8,10 +8,11 @@ define(['knockout',
         'uifwk/js/util/df-util',
         'uifwk/js/util/usertenant-util',
         'uifwk/js/util/ajax-util',
-        'uifwk/js/util/message-util'
+        'uifwk/js/util/message-util',
+        'uifwk/js/util/preference-util'
     ],
 
-    function(ko, $, dfumodel, userTenantUtilModel, ajaxUtilModel, msgUtilModel)
+    function(ko, $, dfumodel, userTenantUtilModel, ajaxUtilModel, msgUtilModel, prefUtilModel)
     {
         function InternalDashboardFrameworkUtility() {
             var self = this;
@@ -105,8 +106,14 @@ define(['knockout',
             self.getWidgetsUrl = function(){
                 var federationEnabled = Builder.isRunningInFederationMode();
                 var federationEnabledUrl = "";
+                var showFederationInHM = prefUtilModel.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
+                if (showFederationInHM) {
+                    federationEnabledUrl = "?federationFeatureShowInUi=true";
+                } else {
+                    federationEnabledUrl = "?federationFeatureShowInUi=false";
+                }
                 if (federationEnabled) {
-                    federationEnabledUrl = "?federationEnabled=true";
+                    federationEnabledUrl += "&federationEnabled=true";
                 }
                 if (self.isDevMode()){
                     return self.buildFullUrl(self.getDevData().ssfRestApiEndPoint,"/widgets" + federationEnabledUrl);

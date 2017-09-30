@@ -4,8 +4,9 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
     'uifwk/@version@/js/util/df-util-impl', 
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
-    'uifwk/@version@/js/util/typeahead-search-impl', 
+    'uifwk/@version@/js/util/typeahead-search-impl',
     'uifwk/@version@/js/util/mobile-util-impl',
+    'uifwk/@version@/js/util/preference-util-impl',
     'ojs/ojselectcombobox',
     'ojs/ojpopup',
     'ojs/ojinputtext',
@@ -13,7 +14,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
     'ojs/ojlistview', 
     'ojs/ojjsontreedatasource'
     ],
-        function (ko, $, dfumodel, oj, nls, typeaheadsearch, mbu) {
+        function (ko, $, dfumodel, oj, nls, typeaheadsearch, mbu, prefUtilModel) {
             function WidgetSelectorPopupViewModel(params) {
                 var self = this;
                 new typeaheadsearch(); //Initialize typeahead search
@@ -371,6 +372,13 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     }
                     if (self.builderInFederationMode) { // currently running in federation mode in builder page
                         widgetsUrl = widgetsUrl + (noFirstUrlParam ? '?' : '&') + 'federationEnabled=true';
+                        noFirstUrlParam = false;
+                    }
+                    var showFederationInHM = prefUtilModel.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
+                    if (showFederationInHM) {
+                        widgetsUrl = widgetsUrl + (noFirstUrlParam ? '?' : '&') + "federationFeatureShowInUi=true";
+                    } else {
+                        widgetsUrl = widgetsUrl + (noFirstUrlParam ? '?' : '&') + "federationFeatureShowInUi=false";
                     }
  
                         return dfu.ajaxWithRetry({

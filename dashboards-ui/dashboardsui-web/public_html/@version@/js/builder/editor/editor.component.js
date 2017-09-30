@@ -239,11 +239,11 @@ define(['knockout',
                     if((dashboard.enableTimeRange()==="TRUE" || Builder.isTimeRangeAvailInUrl()===true)&& timeSelectorModel && timeSelectorModel.viewStart()){
                         link += '&startTime='+timeSelectorModel.viewStart().getTime()+'&endTime='+timeSelectorModel.viewEnd().getTime();
                     }
-                    if(targets && targets()){
-                        link += "&targets="+encodeURI(JSON.stringify(targets()));
-                    }
                     if(Builder.isRunningInFederationMode()){
                         link += "&federationEnabled=true";
+                    }
+                    if(targets && targets()){
+                        link += "&targets="+encodeURI(JSON.stringify(targets()));
                     }
                     return link;
                 } else
