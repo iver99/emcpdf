@@ -23,6 +23,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 var prefUtil = new pfumodel(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
                 var userTenantUtil = new utModel();
                 var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
+                var prefKeyFederatedViewId = "uifwk.hm.federation.show";
                 var isSetAsHomeChecked = false;
                 var omcHomeUrl = null;
                 var menuUtil = new menumodel();
@@ -38,6 +39,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 var sessionCacheUserRolesKey = 'user_roles';
                 var sessionCacheAllServiceDataKey = 'all_service_data';
                 var sessionCacheFavoriteDashboardKey = 'favorite_dashboards';
+                var sessionCacheShowFederatedViewKey = "show_federated_view";
                 var sessionCacheFederatedDashboardKey = 'federated_dashboards';
                 var omcMenuSeparatorId = 'omc_service_menu_separator';
                 
@@ -239,7 +241,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             {'id': 'omc_root_admin_grp_Compliance', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_COMPLIANCE_ADMIN_LABEL, 'externalUrl': '#'}
                     ]}
                 ];
-                
+                                
                 var defaultMenuIds = ['omc_root_home',
                     'omc_root_alerts',
                     'omc_root_dashboards',
@@ -255,6 +257,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 
                 self.privilegeList = null;
                 self.subscribedApps = [];
+                self.showFederatedView = null;
                 self.serviceMenuData = [];
                 self.baseVanityUrls = null;
                 self.userRoles = null;
@@ -284,6 +287,24 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                     
                     return dfdGetUserRoles;
+                }
+                
+                function getShowFederatedViewValue() {
+                    var dfdGetHMItemPref = $.Deferred();
+                    if(!self.showFederatedView) {
+                        function succCallback(data) {
+                            self.showFederatedView = data;
+                            dfdGetHMItemPref.resolve();
+                        }
+                        function errorCallback() {
+                            self.showFederatedView = "false"; //Hide menu item in HM by defauult
+                            dfdGetHMItemPref.resolve();
+                        }
+                        prefUtil.getHMItemShowPreference(prefKeyFederatedViewId, succCallback, errorCallback);
+                    }else {
+                        dfdGetHMItemPref.resolve();
+                    }
+                    return dfdGetHMItemPref;
                 }
                 
                 //Get favorite dashboards
@@ -878,7 +899,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     self.baseVanityUrls = cachedMenus[sessionCacheBaseVanityUrlsKey];
                     self.userRoles = cachedMenus[sessionCacheUserRolesKey];
                     self.favoriteDsb = cachedMenus[sessionCacheFavoriteDashboardKey];
-                    self.federatedDsb = cachedMenus[sessionCacheFederatedDashboardKey]
+                    self.showFederatedView = cachedMenus[sessionCacheShowFederatedViewKey];
+                    self.federatedDsb = cachedMenus[sessionCacheFederatedDashboardKey];
                     self.allServiceData = cachedMenus[sessionCacheAllServiceDataKey];
 
                     function refreshHamburgerMenuFromCache() {
@@ -899,7 +921,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 }
                 //otherwise, get all service menus from service registries
                 else {
-                    $.when(loadServiceMenus(), getUserGrants(), getSubscribedApps(), fetchBaseVanityUrls(), getUserRoles(), getFavoriteDsb()).done(function() {
+                    $.when(loadServiceMenus(), getUserGrants(), getSubscribedApps(), fetchBaseVanityUrls(), getUserRoles(), getFavoriteDsb(), getShowFederatedViewValue()).done(function() {
                         if (hitErrorsWhenLoading) {
                             //Show error message to warn user
                             msgUtil.showMessage({
@@ -909,6 +931,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             });
                         }
 
+                        //remove "Federated View" from HM if it is configured not to show
+                        if(self.showFederatedView === "false") {
+                            var index = findAppItemIndex(rootMenuData, "omc_root_federatedview");
+                            index && rootMenuData.splice(index,1);
+                        }
                         fetchGlobalMenuLinks(self.registration);
                         for (var k = 0; k < rootMenuData.length; ++k) {
 //                            rootMenuData[k].externalUrl = globalMenuIdHrefMapping[rootMenuData[k].id] ? globalMenuIdHrefMapping[rootMenuData[k].id] : '#';
@@ -935,6 +962,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheBaseVanityUrlsKey, self.baseVanityUrls);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheUserRolesKey, self.userRoles);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheFavoriteDashboardKey, self.favoriteDsb);
+                        sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheShowFederatedViewKey, self.showFederatedView);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheAllServiceDataKey, self.allServiceData);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                         self.hamburgerMenuLoaded(true);
