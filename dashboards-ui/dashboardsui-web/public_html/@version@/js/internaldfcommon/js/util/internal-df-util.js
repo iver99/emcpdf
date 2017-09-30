@@ -107,11 +107,16 @@ define(['knockout',
                 var federationEnabled = Builder.isRunningInFederationMode();
                 var federationEnabledUrl = "";
                 var showFederationInHM = prefUtilModel.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
-                if (showFederationInHM) {
-                    federationEnabledUrl = "?federationFeatureShowInUi=true";
-                } else {
-                    federationEnabledUrl = "?federationFeatureShowInUi=false";
-                }
+                showFederationInHM.done(function(showInUI) {
+                    if (showInUI) {
+                        federationEnabledUrl = "?federationFeatureShowInUi=true";
+                    } else {
+                        federationEnabledUrl = "?federationFeatureShowInUi=false";
+                    }
+                })
+                .fail(function(){
+                        federationEnabledUrl = "?federationFeatureShowInUi=false";
+                });
                 if (federationEnabled) {
                     federationEnabledUrl += "&federationEnabled=true";
                 }

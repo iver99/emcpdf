@@ -375,11 +375,16 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                         noFirstUrlParam = false;
                     }
                     var showFederationInHM = prefUtilModel.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
-                    if (showFederationInHM) {
-                        widgetsUrl = widgetsUrl + (noFirstUrlParam ? '?' : '&') + "federationFeatureShowInUi=true";
-                    } else {
-                        widgetsUrl = widgetsUrl + (noFirstUrlParam ? '?' : '&') + "federationFeatureShowInUi=false";
-                    }
+                    showFederationInHM.done(function(showInUI) {
+                        if (showInUI) {
+                            widgetsUrl = widgetsUrl + (noFirstUrlParam ? '?' : '&') + "federationFeatureShowInUi=true";
+                        } else {
+                            widgetsUrl = widgetsUrl + (noFirstUrlParam ? '?' : '&') + "federationFeatureShowInUi=false";
+                        }
+                    })
+                    .fail(function(){
+                            widgetsUrl = widgetsUrl + (noFirstUrlParam ? '?' : '&') + "federationFeatureShowInUi=false";
+                    });
  
                         return dfu.ajaxWithRetry({
                             url: widgetsUrl,
