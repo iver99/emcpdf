@@ -28,6 +28,7 @@ define(['knockout',
             var userName = getUserName(userTenant);
             var tenantName = userTenant && userTenant.tenant ? userTenant.tenant : null;
             var dfu = new dfumodel(userName, tenantName);
+            var prefUtil = new prefUtilModel(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
             var isDevMode=dfu.isDevMode();
             var devData = dfu.getDevData();
             if (isDevMode){
@@ -104,27 +105,32 @@ define(['knockout',
             };
 
             self.getWidgetsUrl = function(){
+                var dfdgetWidgetsUrl = $.Deferred();
+
                 var federationEnabled = Builder.isRunningInFederationMode();
                 var federationEnabledUrl = "";
-                var showFederationInHM = prefUtilModel.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
+                var showFederationInHM = prefUtil.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
                 showFederationInHM.done(function(showInUI) {
                     if (showInUI) {
                         federationEnabledUrl = "?federationFeatureShowInUi=true";
-                    } else {
-                        federationEnabledUrl = "?federationFeatureShowInUi=false";
+                        if (federationEnabled) {
+                            federationEnabledUrl += "&federationEnabled=true";
+                        }
+                    }
+                    if (self.isDevMode()){
+                        dfdgetWidgetsUrl.resolve(self.buildFullUrl(self.getDevData().ssfRestApiEndPoint,"/widgets" + federationEnabledUrl));
+                    }else{
+                        dfdgetWidgetsUrl.resolve('/sso.static/savedsearch.widgets' + federationEnabledUrl);
                     }
                 })
                 .fail(function(){
-                        federationEnabledUrl = "?federationFeatureShowInUi=false";
+                    if (self.isDevMode()){
+                        dfdgetWidgetsUrl.resolve(self.buildFullUrl(self.getDevData().ssfRestApiEndPoint,"/widgets" + federationEnabledUrl));
+                    }else{
+                        dfdgetWidgetsUrl.resolve('/sso.static/savedsearch.widgets' + federationEnabledUrl);
+                    }
                 });
-                if (federationEnabled) {
-                    federationEnabledUrl += "&federationEnabled=true";
-                }
-                if (self.isDevMode()){
-                    return self.buildFullUrl(self.getDevData().ssfRestApiEndPoint,"/widgets" + federationEnabledUrl);
-                }else{
-                    return '/sso.static/savedsearch.widgets' + federationEnabledUrl;
-                }
+                return dfdgetWidgetsUrl;
             };
             self.getPreferencesUrl=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
@@ -135,7 +141,7 @@ define(['knockout',
                 }
             };
             self.getHMItemShowPreferenceSync=function(key) {
-                return prefUtilModel.getHMItemShowPreferenceSync(key);
+                return prefUtil.getHMItemShowPreferenceSync(key);
             };
 
             self.getSubscribedappsUrl=function(){

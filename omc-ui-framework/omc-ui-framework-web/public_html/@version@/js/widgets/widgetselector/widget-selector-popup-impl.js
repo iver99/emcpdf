@@ -57,6 +57,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                 self.builderInFederationMode = params.builderFederationMode && params.builderFederationMode === true;
 
                 var dfu = new dfumodel(self.userName, self.tenantName);
+                var prefUtil = new prefUtilModel(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
                 //Append uifwk css file into document head
                 dfu.loadUifwkCss();
 
@@ -374,7 +375,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                         widgetsUrl = widgetsUrl + (noFirstUrlParam ? '?' : '&') + 'federationEnabled=true';
                         noFirstUrlParam = false;
                     }
-                    var showFederationInHM = prefUtilModel.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
+                    var showFederationInHM = prefUtil.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
                     showFederationInHM.done(function(showInUI) {
                         if (showInUI) {
                             widgetsUrl = widgetsUrl + (noFirstUrlParam ? '?' : '&') + "federationFeatureShowInUi=true";

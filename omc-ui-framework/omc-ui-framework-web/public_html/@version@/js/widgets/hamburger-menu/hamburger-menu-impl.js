@@ -383,8 +383,20 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     self.federatedDsb = [];
                     var header = dfu.getDefaultHeader();
                     //TO DO: change below rest api to get federated dashboard
+                    var federationFeatureShow = prefUtil.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
+                    var federationFeatureShowUrl = "";
+                    federationFeatureShow.done(function(showInUI) {
+                        if (showInUI && showInUI.toUpperCase() === "TRUE") {
+                            federationFeatureShowUrl = "&federationFeatureShowInUi=true";
+                        } else {
+                            federationFeatureShowUrl = "&federationFeatureShowInUi=false";
+                        }
+                    })
+                    .fail(function(){
+                        federationFeatureShowUrl = "&federationFeatureShowInUi=false";
+                    });
                     var url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards") : '/sso.static/dashboards.service';
-                    url+='?orderBy=default&federationEnabled=true';
+                    url+='?orderBy=default&federationEnabled=true' + federationFeatureShowUrl;
                     dfu.ajaxWithRetry(url, {
                         type: 'get',
                         dataType: 'json',
@@ -1455,19 +1467,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     globalMenuIdHrefMapping['omc_root_alerts'] = fetchLinkFromRegistrationData(data, 'homeLinks', 'EventUI');
                     globalMenuIdHrefMapping['omc_root_dashboards'] = '/emsaasui/emcpdfui/home.html';
                     //hard-code url for federated OOB dashboard for now
-                    var isFederationShowInUI = prefUtil.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
-                    isFederationShowInUI.done(function(showInUI) {
-                        if (showInUI && showInUI.toUpperCase() === "TRUE") {
-                            federationShowUrl = "&federationFeatureShowInUi=true";
-                        } else {
-                            federationShowUrl = "&federationFeatureShowInUi=false";
-                        }
-                    })
-                    .fail(function(){
-                        federationShowUrl = "&federationFeatureShowInUi=false";
-                    });
-                    globalMenuIdHrefMapping['omc_federatedview_grp_40000'] = '/emsaasui/emcpdfui/builder.html?dashboardId=40000&federationEnabled=true'+federationShowUrl;
-                    globalMenuIdHrefMapping['omc_federatedview_grp_90000'] = '/emsaasui/emcpdfui/builder.html?dashboardId=90000&federationEnabled=true'+federationShowUrl;
+                    globalMenuIdHrefMapping['omc_federatedview_grp_40000'] = '/emsaasui/emcpdfui/builder.html?dashboardId=40000&federationEnabled=true';
+                    globalMenuIdHrefMapping['omc_federatedview_grp_90000'] = '/emsaasui/emcpdfui/builder.html?dashboardId=90000&federationEnabled=true';
                     globalMenuIdHrefMapping['omc_root_dataexplorer'] = fetchLinkFromRegistrationData(data, 'visualAnalyzers', 'TargetAnalytics');
                     globalMenuIdHrefMapping['omc_root_APM'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'ApmUI');
                     globalMenuIdHrefMapping['omc_root_Monitoring'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI');
