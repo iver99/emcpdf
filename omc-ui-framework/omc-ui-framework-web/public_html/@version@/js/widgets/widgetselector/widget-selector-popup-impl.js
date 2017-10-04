@@ -377,7 +377,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     }
                     var showFederationInHM = prefUtil.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
                     showFederationInHM.done(function(showInUI) {
-                        if (showInUI) {
+                        if (showInUI && showInUI.toUpperCase() === "TRUE") {
                             widgetsUrl = widgetsUrl + (noFirstUrlParam ? '?' : '&') + "federationFeatureShowInUi=true";
                         }
                     });

@@ -111,7 +111,7 @@ define(['knockout',
                 var federationEnabledUrl = "";
                 var showFederationInHM = prefUtil.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
                 showFederationInHM.done(function(showInUI) {
-                    if (showInUI) {
+                    if (showInUI && showInUI.toUpperCase() === "TRUE") {
                         federationEnabledUrl = "?federationFeatureShowInUi=true";
                         if (federationEnabled) {
                             federationEnabledUrl += "&federationEnabled=true";
