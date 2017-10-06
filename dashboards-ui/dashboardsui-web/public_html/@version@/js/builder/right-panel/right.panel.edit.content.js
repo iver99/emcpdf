@@ -57,42 +57,42 @@ define(['dashboards/dbsmodel',
             }
             var federationEnabled = Builder.isRunningInFederationMode();
             var isFederationShowInUI = dfu.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
-            if (showFederationInHM) {
-                federationEnabledUrl = "&federationFeatureShowInUi=true";
-            } else {
-                federationEnabledUrl = "&federationFeatureShowInUi=false";
-            }
-            if (federationEnabled) {
-                serviceUrl = serviceUrl + "&federationEnabled=true";
-            }
-            loadDashboardReqSent = true;
-            dfu.ajaxWithRetry({
-                            url: queryStr? serviceUrl + '&queryString=' + queryStr : serviceUrl,
-                            headers: dfu.getDashboardsRequestHeader(),
-                            contentType:'application/json',
-                            success: function(data, textStatus) {
-                                if(!loadDashboardReqSent){
-                                    return;
-                                }
-                                totalResults = data.totalResults;
-                                if(page === 1){
-                                    !queryStr && self.allDashboards(data.dashboards);
-                                    self.dashboards(data.dashboards.slice(0));
-                                }else{
-                                    if(!queryStr){
-                                        self.allDashboards(self.allDashboards().concat(data.dashboards));
+            isFederationShowInUI.done(function(showInUI) {
+                if (showInUI && showInUI.toUpperCase() === "TRUE") {
+                    serviceUrl = serviceUrl + "&federationFeatureShowInUi=true";
+                    if (federationEnabled) {
+                        serviceUrl = serviceUrl + "&federationEnabled=true";
+                    }
+                }
+                loadDashboardReqSent = true;
+                dfu.ajaxWithRetry({
+                                url: queryStr? serviceUrl + '&queryString=' + queryStr : serviceUrl,
+                                headers: dfu.getDashboardsRequestHeader(),
+                                contentType:'application/json',
+                                success: function(data, textStatus) {
+                                    if(!loadDashboardReqSent){
+                                        return;
                                     }
-                                    self.dashboards(self.dashboards().concat(data.dashboards.slice(0)));
-                                }
-                                loadDashboardReqSent = false;
-                                sucCallback && sucCallback();
-                            },
-                            error: function(xhr, textStatus, errorThrown){
-                                oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
-                                loadDashboardReqSent = false;
-                            },
-                            async: page===1?false:true
-                        });
+                                    totalResults = data.totalResults;
+                                    if(page === 1){
+                                        !queryStr && self.allDashboards(data.dashboards);
+                                        self.dashboards(data.dashboards.slice(0));
+                                    }else{
+                                        if(!queryStr){
+                                            self.allDashboards(self.allDashboards().concat(data.dashboards));
+                                        }
+                                        self.dashboards(self.dashboards().concat(data.dashboards.slice(0)));
+                                    }
+                                    loadDashboardReqSent = false;
+                                    sucCallback && sucCallback();
+                                },
+                                error: function(xhr, textStatus, errorThrown){
+                                    oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
+                                    loadDashboardReqSent = false;
+                                },
+                                async: page===1?false:true
+                            });
+            });
         }
         
 

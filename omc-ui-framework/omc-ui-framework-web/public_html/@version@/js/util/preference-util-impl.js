@@ -20,7 +20,7 @@ function(ko, $, ajaxUtilModel)
         this.getHMItemShowPreference(key, function(value) {
             dfd.resolve(value);
         }, function() {
-            dfd.reject();
+            dfd.resolve();
         });
         return dfd;
     }
