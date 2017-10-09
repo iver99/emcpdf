@@ -263,8 +263,8 @@
                         <!-- ko if: detail && detail !== '' -->
                         <span class="emaas-appheader-message emaas-appheader-message-detail" data-bind="text: detail"></span>
                         <!-- /ko -->
-                        <!-- ko if: link && link !== '' -->
-                        <a class="emaas-appheader-message emaas-appheader-message-link" data-bind="text: $parent.MESSAGE_BOX_VIEW_JOB_DETAILS, attr: {href: link}"></a>
+                        <!-- ko if: link && link !== '' && link.text && link.href -->
+                        <a class="emaas-appheader-message emaas-appheader-message-link" data-bind="text: link.text, attr: {href: link.href}"></a>
                         <!-- /ko -->
                     </div>
                 </div>
