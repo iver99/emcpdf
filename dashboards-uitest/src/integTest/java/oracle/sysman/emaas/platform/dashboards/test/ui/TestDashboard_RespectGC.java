@@ -90,7 +90,7 @@ public class TestDashboard_RespectGC extends LoginAndLogout
 		webd.getLogger().info("Change the time range, verify the url will be changed");
 		GlobalContextUtil.setTimeRange(webd, TimeRange.NewLast7Days);
 
-		String currentURL = webd.getWebDriver().getCurrentUrl();
+		String currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_7_DAY"), true);
 
 		//open the widget
@@ -125,67 +125,67 @@ public class TestDashboard_RespectGC extends LoginAndLogout
 		
 		webd.getLogger().info("Set Last 15 mins");
 		TimeSelectorUtil.setTimeRange(webd, TimeRange.Last15Mins);
-		String currentURL = webd.getWebDriver().getCurrentUrl();
+		String currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_15_MINUTE"), true);
 
 		webd.getLogger().info("Set Last 30 mins");
 		TimeSelectorUtil.setTimeRange(webd, TimeRange.Last30Mins);
-		currentURL = webd.getWebDriver().getCurrentUrl();
+		currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_30_MINUTE"), true);
 		
 		webd.getLogger().info("Set Last 60 mins");
 		TimeSelectorUtil.setTimeRange(webd, TimeRange.NewLast60Mins);
-		currentURL = webd.getWebDriver().getCurrentUrl();
+		currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_60_MINUTE"), true);
 		
 		webd.getLogger().info("Set Last 8 hours");
 		TimeSelectorUtil.setTimeRange(webd, TimeRange.Last8Hours);
-		currentURL = webd.getWebDriver().getCurrentUrl();
+		currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_8_HOUR"), true);
 		
 		webd.getLogger().info("Set Last 24 hours");
 		TimeSelectorUtil.setTimeRange(webd, TimeRange.Last24Hours);
-		currentURL = webd.getWebDriver().getCurrentUrl();
+		currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_24_HOUR"), true);
 		
 		webd.getLogger().info("Set Last 7 days");
 		TimeSelectorUtil.setTimeRange(webd, TimeRange.NewLast7Days);
-		currentURL = webd.getWebDriver().getCurrentUrl();
+		currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_7_DAY"), true);
 		
 		webd.getLogger().info("Set Last 14 days");
 		TimeSelectorUtil.setTimeRange(webd, TimeRange.Last14Days);
-		currentURL = webd.getWebDriver().getCurrentUrl();
+		currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_14_DAY"), true);
 		
 		webd.getLogger().info("Set custom Last 8 mins");
 		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 8, TimeUnit.Minute);
-		currentURL = webd.getWebDriver().getCurrentUrl();
+		currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_8_MINUTE"), true);
 		
 		webd.getLogger().info("Set custom Last 14 hours");
 		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 14, TimeUnit.Hour);
-		currentURL = webd.getWebDriver().getCurrentUrl();
+		currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_14_HOUR"), true);
 		
 		webd.getLogger().info("Set custom Last 5 days");
 		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 5, TimeUnit.Day);
-		currentURL = webd.getWebDriver().getCurrentUrl();
+		currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_5_DAY"), true);
 		
 		webd.getLogger().info("Set custom Last 3 weeks");
 		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 3, TimeUnit.Week);
-		currentURL = webd.getWebDriver().getCurrentUrl();
+		currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_3_WEEK"), true);
 		
 		webd.getLogger().info("Set custom Last 6 months");
 		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 6, TimeUnit.Month);
-		currentURL = webd.getWebDriver().getCurrentUrl();
+		currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_6_MONTH"), true);
 		
 		webd.getLogger().info("Set custom Last 2 years");
 		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 2, TimeUnit.Year);
-		currentURL = webd.getWebDriver().getCurrentUrl();
+		currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_2_YEAR"), true);		
 	}
 }

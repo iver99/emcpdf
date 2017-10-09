@@ -350,8 +350,8 @@ body, html {
     width: 16px;
 }
 
-.tile-menu-img {
-    display: inline-block;
+.tile-menu-img>div, tile-menu-img>i {
+    vertical-align: middle;
     height: 35px;
 }
 

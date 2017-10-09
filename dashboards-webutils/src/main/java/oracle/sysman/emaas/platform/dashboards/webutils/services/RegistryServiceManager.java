@@ -222,6 +222,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_REFRESH_NLS = NAV_API_BASE + "refresh/nls";
 	private static final String NAV_REFRESH_WIDGET_CACHE = NAV_API_BASE + "refresh/widgetcache";
 	private static final String NAV_TOOL = NAV_API_BASE + "tool";
+	
+    // rel : tenant.offboard
+    private static final String INTERNALAPI_TENANT_OFFBOARD = "tenant.offboard";
+    private static final String NAV_TOOL_TENANT_OFFBOARD = NAV_API_BASE + "tool/offboard";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
@@ -536,6 +540,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
             }
             if (applicationUrlHttp != null) {
                 links.add(new Link().withRel("tool").withHref(applicationUrlHttp + NAV_TOOL));
+            }
+            if (applicationUrlHttp != null) {
+                links.add(new Link().withRel(INTERNALAPI_TENANT_OFFBOARD).withHref(applicationUrlHttp + NAV_TOOL_TENANT_OFFBOARD));
             }
 
 			InfoManager.getInstance().getInfo().setLinks(links);

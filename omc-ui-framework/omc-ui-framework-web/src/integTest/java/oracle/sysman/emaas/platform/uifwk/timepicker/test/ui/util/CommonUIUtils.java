@@ -377,7 +377,7 @@ public class CommonUIUtils
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());			
 		}		
 		try {
 			if(DateOnly){
@@ -393,7 +393,7 @@ public class CommonUIUtils
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		
 		try {
@@ -406,7 +406,7 @@ public class CommonUIUtils
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		
 		webd.getLogger().info("start:"+start);
@@ -444,11 +444,7 @@ public class CommonUIUtils
 
 		//set start date time and end date time
 		webd.getLogger().info("Verify if custom panpel displayed...");
-		WebDriverWait wdwait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wdwait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(TimeSelectorUIControls.sPickPanel)));
-		//webd.isDisplayed(TimeSelectorUIControls.sPickPanel);
-		webd.takeScreenShot();
-		webd.savePageToFile();
+		webd.waitForElementVisible("css=" + TimeSelectorUIControls.sPickPanel);
 
 		if(DateOnly)
 		{

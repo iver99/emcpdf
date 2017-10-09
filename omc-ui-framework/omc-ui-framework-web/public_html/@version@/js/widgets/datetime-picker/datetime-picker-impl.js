@@ -295,10 +295,12 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         $(eleId + " .oj-inputdatetime-input-container").after(buildErrorMsgHtml(self.errorMsg, msgDetail));
                     }
                     for(var i in timeInputErrorObj) {
-                       if(i !== inputId) {
-                           timeInputErrorObj[i](0);
-                           //remove error message of corrsponding date/time input box
-                           $("#" + i + "_" + self.randomId + " .oj-messaging-inline-container.omc-time-picker").remove();
+                        if(i !== inputId) {
+                            if(timeInputErrorObj[i]() !== 3) {
+                                timeInputErrorObj[i](0);
+                                //remove error message of corrsponding date/time input box
+                                $("#" + i + "_" + self.randomId + " .oj-messaging-inline-container.omc-time-picker").remove();
+                            }
                        }
                     }
                     

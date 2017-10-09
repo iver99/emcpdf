@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
@@ -15,12 +14,9 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -150,9 +146,8 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.getLogger().info("Get narrower widgets");
 		for (int i = 1; i <= 4; i++) {
 			DashboardBuilderUtil.resizeWidget(webd, widgetName, DashboardBuilderUtil.TILE_NARROWER);
-
-
 		}
+		
 		webd.getLogger().info("Finished to get narrower widgets");
 
 		webd.getLogger().info("Get wider widgets");
@@ -184,6 +179,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.getLogger().info("Verfiy if the OOB dashboard can be deleted");
 		DashboardHomeUtil.search(webd, "Application Performance Monitoring");
 		webd.click(DashBoardPageId.INFOBTNID);
+		
 		WebElement removeButton = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RMBTNID));
 		Assert.assertFalse(removeButton.isEnabled(), "delete is enabled for OOB dashboard");
 	}
@@ -299,11 +295,8 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 
 		webd.getLogger().info("Verfiy the favortie checkbox is checked");
 		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites option is NOT checked");
-		//		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
-		//		Assert.assertTrue(el.isSelected());
-
+		
 		webd.getLogger().info("Verfiy the dashboard is favorite");
-		//DashboardHomeUtil.search(webd, dbName_favorite);
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_favorite), "Can not find the dashboard");
 
 		webd.getLogger().info("Open the dashboard");
@@ -320,21 +313,16 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		BrandingBarUtil.visitMyFavorites(webd);
 		webd.getLogger().info("Verfiy the favortie checkbox is checked");
 		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites option is NOT checked");
-		//		el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
-		//		Assert.assertTrue(el.isSelected());
+		
 		webd.getLogger().info("Verfiy the dashboard is not favorite");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_favorite),
 				"The dashboard is still my favorite dashboard");
-		//		DashboardHomeUtil.search(webd, dbName_favorite);
-		//		Assert.assertEquals(webd.getAttribute(DashBoardPageId.DashboardSerachResult_panelID + "@childElementCount"), "0");
-		//		webd.getLogger().info("no favorite dashboard");
-
+		
 		//delete the dashboard
 		webd.getLogger().info("start to delete the dashboard");
-
-		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.FAVORITE_BOXID));
-		if (el.isSelected()) {
-			el.click();
+		
+		if (webd.isSelected("id=" + DashBoardPageId.FAVORITE_BOXID)) {
+			webd.click("id=" + DashBoardPageId.FAVORITE_BOXID);
 		}
 		DashboardHomeUtil.deleteDashboard(webd, dbName_favorite, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 		webd.getLogger().info("the dashboard has been deleted");
@@ -600,12 +588,15 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashboardBuilderUtil.restoreWidget(webd, "Host Logs Trend", 0);
 
 		//verify the edit/add button not displayed in the page: [changed] element does not exist
-		List<WebElement> addButtons = webd.getWebDriver().findElements(By.xpath("//button[@title='Add Content']"));
-		Assert.assertFalse(addButtons != null && addButtons.size() > 0, "Unexpected: Add button exists in system dashboard set");
-
-		List<WebElement> editButtons = webd.getWebDriver().findElements(By.xpath("//button[@title='Edit Settings']"));
-		Assert.assertFalse(editButtons != null && editButtons.size() > 0,
-				"Unexpected: Edit button exists in system dashboard set");
+		if(webd.getElementCount("//button[@title='Add Content']")>0)
+		{
+			Assert.fail("Unexpected: Add button exists in system dashboard");
+		}
+		
+		if(webd.getElementCount("//button[@title='Edit Settings']")>0)
+		{
+			Assert.fail("Unexpected: Edit button exists in system dashboard");
+		}
 	}
 
 	//test maxmize/restore widget in self created dashboard
@@ -648,15 +639,12 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertTrue(webd.isDisplayed("css=" + ".dbd-widget[data-tile-name=\"All Logs Trend\"]"),
 				"Widget 'All Logs Trend' is not displayed");
 
-		//verify the edit/add button displayed in the page
-		WebElement addButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));
-		Assert.assertTrue(addButton.isDisplayed(), "Add button isn't displayed in system dashboard set");
-
-		WebElement editButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));
-		Assert.assertTrue(editButton.isDisplayed(), "Edit button isn't displayed in system dashboard set");
+		//verify the edit/add button displayed in the page		
+		Assert.assertTrue(webd.isDisplayed("//button[@title='Add Content']"), "Add button isn't displayed in system dashboard set");
+		Assert.assertTrue(webd.isDisplayed("//button[@title='Edit Settings']"), "Edit button isn't displayed in system dashboard set");
 	}
 
-	@Test
+	//@Test
 	public void testSaveConfirmation()
 	{
 		dbName_saveConfirmation = "TestSaveConfirmation-" + DashBoardUtils.generateTimeStamp();
@@ -694,8 +682,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 
 		//verify if in the home page
 		webd.getLogger().info("Verify if in the home page");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DASHBOARDDISPLAYPANELCSS)));
+		webd.waitForElementPresent("css=" + PageId.DASHBOARDDISPLAYPANELCSS);
 	}
 
 	@Test
@@ -873,14 +860,14 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		}
 		catch (ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		try {
 			dTmpEnd = fmt.parse(tmpEndDate);
 		}
 		catch (ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 
 		String tmpStartDateNew = df.format(dTmpStart);
@@ -900,12 +887,11 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 
 		//verify the url
 		webd.switchToWindow();
-		//WaitUtil.waitForPageFullyLoaded(webd);
 		webd.getLogger().info("Wait for the widget loading....");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
+		webd.waitForServer();
+		webd.waitForElementPresent("//*[@id='srchSrch']");
 
-		String url = webd.getWebDriver().getCurrentUrl();
+		String url = webd.getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		if (!url.substring(url.indexOf("emsaasui") + 9).contains(
 				"startTime%3D" + String.valueOf(StartTimeStamp) + "%26endTime%3D" + String.valueOf(EndTimeStamp))) {
@@ -939,3 +925,4 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.isElementPresent(DashBoardPageId.DASHBOARDOFLONGNAMELOCATOR);	
     }
 }
+
