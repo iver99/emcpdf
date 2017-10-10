@@ -378,7 +378,8 @@ require(['knockout',
 				    showEntitySelector: ko.observable(false),
 				    entityContextParams: {
 				        readOnly: false
-				    }
+				    },
+                                    updateGlobalContextByTopologySelection: true
 			        };
 
                                 function onElementHeightChange($node, callback){
