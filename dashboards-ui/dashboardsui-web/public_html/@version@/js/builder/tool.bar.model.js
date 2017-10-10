@@ -292,8 +292,8 @@ define(['knockout',
 
 
             self.handleDashboardSave = function() {
-                self.dashboardName($('#dbsHNameIn').val()); //temporary solution for: input value change made by selenium webdriver cannot be subscribed by knockout. same as the line below
-                self.dashboardDescription($('#editDbdDscp').val());
+                $('#dbsHNameIn').length > 0 && self.dashboardName($('#dbsHNameIn').val()); //temporary solution for: input value change made by selenium webdriver cannot be subscribed by knockout. same as the line below
+                $('#editDbdDscp').length > 0 && self.dashboardDescription($('#editDbdDscp').val());
                 var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
                 outputData.eventType = "SAVE";
 
