@@ -63,9 +63,12 @@ public class TestDashboard extends LoginAndLogout
 
 		//Create dashboard
 		DashboardHomeUtil.createDashboard(webd, dbName, null, DashboardHomeUtil.DASHBOARD);
+		
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, null, true),
 				"Create dashboard failed!");
-		
+		DashboardBuilderUtil.saveDashboard(webd);
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, null, true),
+				"Save Dashboard Failed!");
 		DashboardBuilderUtil.respectGCForEntity(webd);			
 	}
 	

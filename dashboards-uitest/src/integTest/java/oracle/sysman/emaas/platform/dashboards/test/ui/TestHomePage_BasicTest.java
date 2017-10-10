@@ -5,6 +5,7 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashboardPageId_1230;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.testng.Assert;
@@ -115,6 +116,14 @@ public class TestHomePage_BasicTest extends LoginAndLogout
 
 		BrandingBarUtil.userMenuOptions(webd, BrandingBarUtil.USERMENU_OPTION_ABOUT);
 
+	}
+	@Test(alwaysRun = true)
+	public void testUserMenuItem(){
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testUserMenu");
+		BrandingBarUtil.verifyUserMenuItemByTest(webd, DashboardPageId_1230.BRANDINGBARUSERMENUITEMHELP, "Help");
+		BrandingBarUtil.verifyUserMenuItemByTest(webd, DashboardPageId_1230.BRANDINGBARUSERMENUITEMABOUT, "About");
+		BrandingBarUtil.verifyUserMenuItemByTest(webd, DashboardPageId_1230.BRANDINGBARUSERMENUITEMLOGOUT, "Sign Out");
 	}
 
 	@Test(alwaysRun = true)

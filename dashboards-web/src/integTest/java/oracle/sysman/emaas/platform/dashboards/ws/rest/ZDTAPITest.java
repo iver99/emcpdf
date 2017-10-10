@@ -1,9 +1,15 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
+import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.DataManager;
+import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.HalfSyncException;
+import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.NoComparedResultException;
+import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.SyncException;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.TableRowsSynchronizer;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardRowEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardSetRowEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardTileParamsRowEntity;
@@ -16,6 +22,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -86,11 +93,11 @@ public class ZDTAPITest {
         zdtapi.getEntitiesCount( "2017-05-27");
     }
 
-    @Test
+   /* @Test
     public void testSync(@Mocked final PersistenceManager persistenceManager, 
 			@Mocked final EntityManager em) throws Exception {
-        zdtapi.sync("full", "2017-05-12 14:14:21");
-    }
+        zdtapi.sync();
+    }*/
     
     @Test
     public void testSplitTableRowEntity() {
@@ -116,24 +123,39 @@ public class ZDTAPITest {
     	zdtapi.splitTableRowEntity(entity);
     }
     
-    @Test
-    public void testSync2(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager em) throws Exception {
+    /*@Test
+    public void testHalfSync(@Mocked final PersistenceManager persistenceManager,
+                             @Mocked final EntityManager em, @Mocked final JsonUtil jsonUtil) throws Exception {
         final List<Map<String, Object>> comparedDataToSync = new ArrayList<Map<String, Object>>();
-        Map<String, Object> comparedData = new HashMap<String, Object>();
-        comparedData.put("COMPARISON_RESULT", "{ \"EMS_DASHBOARD_SET\": [{\"DASHBOARD_SET_ID\": \"888888\",\"TENANT_ID\": 1565220054,\"SUB_DASHBOARD_ID\": \"9999999\",\"POSITION\": 0,\"CREATION_DATE\": \"2017-03-17 07:46:51.07\",\"LAST_MODIFICATION_DATE\": \"2017-03-17 07:46:51.07\",\"DELETED\": \"0\"}]}");
+        final Map<String, Object> comparedData = new HashMap<String, Object>();
+//        comparedData.put("COMPARISON_RESULT", "{ \"EMS_DASHBOARD_SET\": [{\"DASHBOARD_SET_ID\": \"888888\",\"TENANT_ID\": 1565220054,\"SUB_DASHBOARD_ID\": \"9999999\",\"POSITION\": 0,\"CREATION_DATE\": \"2017-03-17 07:46:51.07\",\"LAST_MODIFICATION_DATE\": \"2017-03-17 07:46:51.07\",\"DELETED\": \"0\"}]}");
+        comparedData.put("SYNC_RESULT", 1);
         comparedData.put("COMPARISON_DATE", "2017-05-12 15:20:21");
         comparedDataToSync.add(comparedData);
+        final Map<String, Object> halfSyncRecord = new HashMap<>();
+        halfSyncRecord.put("SYNC_RESULT", 1);
+        halfSyncRecord.put("COMPARISON_DATE", "2017-05-12 15:20:21");
+        final TableRowsEntity data = new TableRowsEntity();
     	new Expectations() {
     		{
     			DataManager.getInstance();
                 result = dataManager;
-                dataManager.getComparedDataToSync(em, anyString);
-                result = comparedDataToSync;
+                dataManager.checkHalfSyncRecord(em);
+                result = comparedData;
+                dataManager.getHalfSyncedComparedData(em, anyString);
+                result = halfSyncRecord;
+                JsonUtil.buildNormalMapper();
+                result = jsonUtil;
+
+                jsonUtil.fromJson(anyString,TableRowsEntity.class);
+                result = data;
+
+//                dataManager.getComparedDataToSync(em, anyString);
+//                result = comparedDataToSync;
     		}
     	};
-    	zdtapi.sync(null, "2017-05-12 15:29:23");
-    }
+    	zdtapi.sync();
+    }*/
     
     @Test
     public void testGetAllTenants(@Mocked final PersistenceManager persistenceManager, 
@@ -211,6 +233,116 @@ public class ZDTAPITest {
     	String json  = "{ \"comparisonType\":\"full\",\"comparisonResult\":\"{}\",\"divergencePercentage\":0.11,\"nextScheduledComparisonDateTime\":\"2017-05-12 15:20:21\"}";
     	JSONObject object = new JSONObject(json);
     	zdtapi.saveComparatorData(object);
+    }
+
+    @Test
+    public void testHalfSync1(@Mocked final PersistenceManager persistenceManager,
+                              @Mocked final EntityManager em, @Mocked final JsonUtil jsonUtil) throws Exception {
+        final List<Map<String, Object>> comparedDataToSync = new ArrayList<Map<String, Object>>();
+        final Map<String, Object> comparedData = new HashMap<String, Object>();
+//        comparedData.put("COMPARISON_RESULT", "{ \"EMS_DASHBOARD_SET\": [{\"DASHBOARD_SET_ID\": \"888888\",\"TENANT_ID\": 1565220054,\"SUB_DASHBOARD_ID\": \"9999999\",\"POSITION\": 0,\"CREATION_DATE\": \"2017-03-17 07:46:51.07\",\"LAST_MODIFICATION_DATE\": \"2017-03-17 07:46:51.07\",\"DELETED\": \"0\"}]}");
+        comparedData.put("SYNC_RESULT", 1);
+        comparedData.put("COMPARISON_DATE", "2017-05-12 15:20:21");
+        comparedDataToSync.add(comparedData);
+        final Map<String, Object> halfSyncRecord = new HashMap<>();
+        halfSyncRecord.put("COMPARISON_RESULT","data...");
+        final TableRowsEntity data = new TableRowsEntity();
+        new Expectations() {
+            {
+                DataManager.getInstance();
+                result = dataManager;
+                dataManager.checkHalfSyncRecord(em);
+                result = comparedData;
+                dataManager.getHalfSyncedComparedData(em, anyString);
+                result =halfSyncRecord;
+                JsonUtil.buildNormalMapper();
+                result = jsonUtil;
+
+                jsonUtil.fromJson(anyString,TableRowsEntity.class);
+                result = data;
+            }
+        };
+        zdtapi.sync();
+    }
+
+    @Test
+    public void testHalfSyncException(@Mocked final PersistenceManager persistenceManager,
+                                      @Mocked final EntityManager em, @Mocked final JsonUtil jsonUtil) throws Exception {
+        final List<Map<String, Object>> comparedDataToSync = new ArrayList<Map<String, Object>>();
+        final Map<String, Object> comparedData = new HashMap<String, Object>();
+//        comparedData.put("COMPARISON_RESULT", "{ \"EMS_DASHBOARD_SET\": [{\"DASHBOARD_SET_ID\": \"888888\",\"TENANT_ID\": 1565220054,\"SUB_DASHBOARD_ID\": \"9999999\",\"POSITION\": 0,\"CREATION_DATE\": \"2017-03-17 07:46:51.07\",\"LAST_MODIFICATION_DATE\": \"2017-03-17 07:46:51.07\",\"DELETED\": \"0\"}]}");
+        comparedData.put("SYNC_RESULT", 1);
+        comparedData.put("COMPARISON_DATE", "2017-05-12 15:20:21");
+        comparedDataToSync.add(comparedData);
+        final Map<String, Object> halfSyncRecord = new HashMap<>();
+        halfSyncRecord.put("COMPARISON_RESULT","data...");
+        final TableRowsEntity data = new TableRowsEntity();
+        new Expectations() {
+            {
+                DataManager.getInstance();
+                result = dataManager;
+                dataManager.checkHalfSyncRecord(em);
+                result = comparedData;
+                dataManager.getHalfSyncedComparedData(em, anyString);
+                result = new SyncException("error");
+            }
+        };
+        zdtapi.sync();
+
+        new Expectations() {
+            {
+                DataManager.getInstance();
+                result = dataManager;
+                dataManager.checkHalfSyncRecord(em);
+                result = new HalfSyncException("error");
+            }
+        };
+        zdtapi.sync();
+
+        new Expectations() {
+            {
+                DataManager.getInstance();
+                result = dataManager;
+                dataManager.checkHalfSyncRecord(em);
+                result = comparedData;
+                dataManager.getHalfSyncedComparedData(em, anyString);
+                result = new NoComparedResultException("error");
+            }
+        };
+        zdtapi.sync();
+    }
+
+    @Test
+    public void testSync2(@Mocked final PersistenceManager persistenceManager,
+                          @Mocked final EntityManager em, @Mocked final JsonUtil jsonUtil,final @Mocked TableRowsSynchronizer zdtSynchronizer) throws HalfSyncException, IOException, SyncException, NoComparedResultException {
+        final List<Map<String, Object>> comparedDataToSyn  = new ArrayList<>();
+        final Map<String, Object> map = new HashMap<>();
+        map.put("COMPARISON_RESULT","result");
+        map.put("COMPARISON_DATE","date");
+        comparedDataToSyn.add(map);
+        final TableRowsEntity data = new TableRowsEntity();
+        List<DashboardRowEntity> dashboardRowEntity = new ArrayList<>();
+        dashboardRowEntity.add(new DashboardRowEntity());
+        data.setEmsDashboard(dashboardRowEntity);
+        new Expectations() {
+            {
+                DataManager.getInstance();
+                result = dataManager;
+                dataManager.checkHalfSyncRecord(em);
+                result = null;
+                dataManager.getComparedDataToSync(em, anyString);
+                result = comparedDataToSyn;
+
+            }
+        };
+        zdtapi.sync();
+
+    }
+
+    @Test
+    public void testGetComparedDateforSync(){
+        Deencapsulation.invoke(zdtapi, "getComparedDateforSync", String.class,String.class);
+        Deencapsulation.invoke(zdtapi, "getComparedDateforSync", "date1","date2");
     }
    
 

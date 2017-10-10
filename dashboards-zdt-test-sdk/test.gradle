@@ -1,37 +1,18 @@
-
 sourceSets {
     integTest {
         java.srcDir 'src/integTest/java'
-        compileClasspath = configurations.testNG+configurations.restAssured + configurations.testConfig
+        compileClasspath = configurations.testNG+configurations.restAssured + configurations.testConfig+ configurations.webdriver
     }
 }
-
 
 task integTestJar (type:Jar) {
     from sourceSets.integTest.output
     appendix = 'integ-tests'
 }
 dependencies {
-
 	testConfig project(':dashboards-entities') { transitive = false }
 	testConfig project(':dashboards-core')   { transitive = false }
 	testConfig project(':dashboards-web')   { transitive = false }
-	testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5')  { transitive = false }
-	testConfig(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17'){ transitive = false }
-	testConfig(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1'){ transitive = false }
-	testConfig(group: 'org.codehaus.jettison', name: 'jettison', version: '1.3.4'){ transitive = false }
-	testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
+	testConfig project('path':':dashboards-ui-test-common-api', 'configuration': 'integTestOutput')
 
-	testConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13'){ transitive = false }
-	testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){ transitive = false }
-	testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){ transitive = false }
-        testConfig(group: 'commons-logging', name:'commons-logging', version:'1.1.1'){ transitive = false }
-	testConfig(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.+'){ transitive = false }
-	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
-	testConfig('com.sun.jersey:jersey-servlet:1.17.1') { transitive = false }
-	testConfig('com.sun.jersey:jersey-server:1.17.1') { transitive = false }
-//        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "1.0.+")
-//        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "1.0.+")
-//        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "1.0.+")
-//	testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){ transitive = false }
 }

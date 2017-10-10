@@ -12,12 +12,20 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.ro
 
 
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import java.math.BigInteger;
 
 /**
- * @author guochen
+ * NOTE: if schema changes, corresponding Entity class need to be updated and equals and hashcode methods should be  rewrited too
+ * PARAM_NAME
+ * TENANT_ID
+ * IS_SYSTEM
+ * PARAM_TYPE
+ * PARAM_VALUE_STR
+ * PARAM_VALUE_NUM
+ * PARAM_VALUE_TIMESTAMP
+ * TILE_ID
+ * CREATION_DATE
+ * LAST_MODIFICATION_DATE
+ * DELETED
  */
 public class DashboardTileParamsRowEntity implements RowEntity
 {
@@ -243,7 +251,7 @@ public class DashboardTileParamsRowEntity implements RowEntity
 	{
 		return "DashboardTileParamsRowEntity [tileId=" + tileId + ", paramName=" + paramName + ", tenantId=" + tenantId
 				+ ", isSystem=" + isSystem + ", paramType=" + paramType + ", paramValueStr=" + paramValueStr + ", paramValueNum="
-				+ paramValueNum + ", paramValueTimestamp=" + paramValueTimestamp + ", creationDate=" + creationDate + ", lastModificationDate=" + lastModificationDate+ "]";
+				+ paramValueNum + ", paramValueTimestamp=" + paramValueTimestamp + ", creationDate=" + creationDate + ", deleted=" + deleted + " lastModificationDate=" + lastModificationDate+ "]";
 	}
 
 	@Override

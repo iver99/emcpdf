@@ -463,6 +463,9 @@ require(['knockout',
 
                                         $("#loading").hide();
                                         $('#globalBody').show(function(){
+                                            console.time("BuilderCompleteLogging");
+                                            oj.Logger.warn("****Dashboard initialization is done without problem (dashboard ID is " + dsbId + ")****", true, true);
+                                            console.timeEnd("BuilderCompleteLogging");
                                             if(!$("#hamburgerButton")[0]){
                                                 return; //hamburger menu disabled
                                             }

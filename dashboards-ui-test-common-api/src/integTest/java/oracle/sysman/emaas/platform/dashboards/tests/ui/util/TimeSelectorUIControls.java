@@ -93,7 +93,7 @@ public class TimeSelectorUIControls
 	// End: Components
 
 	// Begin: Time Filter
-	public static final String sTimeFilterIcon = "img[id^='timeFilterIcon_']";
+	public static final String sTimeFilterIcon = "div[id^='timeFilterIcon_']";
 
 	public static final String sTimeFilterHoursFilter = "div[id^='hoursFilter_']>div>input";
 	public static final String sTimeFilterDaysFilterAll = "input[id^='daysOptionAll_']";

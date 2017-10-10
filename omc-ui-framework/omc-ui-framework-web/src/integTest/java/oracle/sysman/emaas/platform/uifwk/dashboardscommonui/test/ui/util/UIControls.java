@@ -45,7 +45,7 @@ public class UIControls
 	//End: Icon
 
 	//Begin: Images
-	public static final String SORACLEIMAGE = ".emaas-appheader-appname-table-cell-baseline>img";///html/body/div[2]/header/div/div[1]/div[1]/div[1]/div[1]/img";
+	public static final String SORACLEIMAGE = ".emaas-appheader-appname-table-cell-baseline>div";///html/body/div[2]/header/div/div[1]/div[1]/div[1]/div[1]/img";
 	public static final String SWIDGETSELECT = "/html/body/div[1]/div[2]/div/div[2]/div[1]/div[2]/ul/li[1]/a/div";
 	//End: Images
 

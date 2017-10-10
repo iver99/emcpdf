@@ -293,6 +293,10 @@ public class BrandingBarUtil
 		bu.userMenuOptions(driver, option);
 	}
 
+	public static void verifyUserMenuItemByTest(WebDriver driver, String item, String text){
+		IBrandingBarUtil bu = new UtilLoader<IBrandingBarUtil>().loadUtil(driver, IBrandingBarUtil.class);
+		bu.verifyUserMenuItemByText(driver, item, text);
+	}
 	/**
 	 * Navigate to the specified administration page by given link name
 	 *

@@ -60,6 +60,7 @@ public class RowEntityComparator<T extends RowEntity>
 	/**
 	 * Compare the 2 list of elements, and return a pair of lists, that contains elements inside one (original) list but not
 	 * inside another list
+	 * for example, if list1 contains [1,2,3,4,5], list2 contains [2,3,4,5,6], it will return {list1:[1],list2:[6]}
 	 *
 	 * @param list1
 	 * @param list2

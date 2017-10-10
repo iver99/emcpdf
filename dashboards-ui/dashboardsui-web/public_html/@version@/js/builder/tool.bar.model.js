@@ -161,6 +161,10 @@ define(['knockout',
                         if($b.getDashboardTilesViewModel().timePeriod()!==omcTimeConstants.QUICK_PICK.CUSTOM) {
                             $b.getDashboardTilesViewModel().initEnd(new Date());
                         }
+                        if((!self.isUnderSet) && $("#emaas-appheader-timecxt").children().get(0)){
+                            $b.triggerEvent($b.EVENT_AUTO_REFRESHING_PAGE, "auto-refreshing page");
+                            ko.contextFor($("#emaas-appheader-timecxt").children().get(0)).$component.applyClick();
+                        }
                         if($("#dtpicker_"+self.dashboardId).children().get(0)) {
                             $b.triggerEvent($b.EVENT_AUTO_REFRESHING_PAGE, "auto-refreshing page");
                             ko.contextFor($("#dtpicker_"+self.dashboardId).children().get(0)).$component.applyClick();
@@ -288,8 +292,8 @@ define(['knockout',
 
 
             self.handleDashboardSave = function() {
-                self.dashboardName($('#dbsHNameIn').val()); //temporary solution for: input value change made by selenium webdriver cannot be subscribed by knockout. same as the line below
-                self.dashboardDescription($('#editDbdDscp').val());
+                $('#dbsHNameIn').length > 0 && self.dashboardName($('#dbsHNameIn').val()); //temporary solution for: input value change made by selenium webdriver cannot be subscribed by knockout. same as the line below
+                $('#editDbdDscp').length > 0 && self.dashboardDescription($('#editDbdDscp').val());
                 var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
                 outputData.eventType = "SAVE";
 

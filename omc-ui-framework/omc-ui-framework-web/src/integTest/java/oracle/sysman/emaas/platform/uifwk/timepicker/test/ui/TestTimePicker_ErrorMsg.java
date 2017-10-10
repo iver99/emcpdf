@@ -164,9 +164,9 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		
 		c.setTime(now);
 		int day = c.get(Calendar.DATE);
-		c.set(Calendar.DATE, day+1);
+		c.set(Calendar.DATE, day+2);
 		
-		String dayAfter = dateFormat.format(c.getTime());
+		String dayAfter = dateFormat.format(c.getTime());		
 		
 		webd.getLogger().info("Set the end date as current day");
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 3, currentDate, dayAfter,true, false);			
