@@ -28,13 +28,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/v1/logging")
 public class LoggingAPI
 {
 	private @Context HttpServletRequest request;
 	private static Logger mLogger = LogManager.getLogger(LoggingAPI.class.getName());
-
+	private static final String FEATURE_LOG_NAME = "oracle.sysman.emaas.platform.dashboards.feature.log";
+	private static Logger fLogger = LogManager.getLogger(FEATURE_LOG_NAME);
 	/**
 	 * Receive the logs and log them.
 	 */
@@ -117,5 +119,28 @@ public class LoggingAPI
 		}
 
 		return currentLogLevel;
+	}
+
+	/**
+	 * EMCPDF-3673, Log the Feature Usage of Menu Items
+	 * @param jsonReceived
+	 * @return
+	 */
+	@POST
+	@Path("/feature/logs")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response logFeatureMsg(JSONObject jsonReceived)
+	{
+		fLogger.info("Request '/feature/logs' API at ", System.currentTimeMillis());
+		fLogger.error("test error msg");
+		fLogger.warn("test warn msg");
+		try {
+			String tenantId = jsonReceived.getString("tenantId");
+		} catch (JSONException e) {
+			fLogger.error(e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"msg\": \"Error occurred when save feature log\"}").build();
+		}
+		return Response.status(Response.Status.OK).entity("{\"msg\": \"success\"}").build();
 	}
 }

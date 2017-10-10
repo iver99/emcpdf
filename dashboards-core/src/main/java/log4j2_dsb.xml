@@ -117,7 +117,7 @@
 		<Logger name="oracle.sysman.emaas.platform.dashboards.webutils" level="INFO">
     		<AppenderRef ref="ASYNC_STARTUP_SHUTDOWN_LOG"/>
 		</Logger>
-		<Logger name="oracle.sysman.emaas.platform.dashboards.feature" level="INFO">
+		<Logger name="oracle.sysman.emaas.platform.dashboards.feature.log" level="INFO">
 			<AppenderRef ref="ASYNC_FEATURE_LOG"/>
 		</Logger>
 		<Logger name="oracle.sysman.emaas.platform.dashboards" level="INFO"/>
