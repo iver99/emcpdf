@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <EMaaSManifest>
 <Application Name="Platform" Version="1.0.0">
-<Service Name="DashboardService-ui" Version="1.23.0" type="app">
+<Service Name="DashboardService-ui" Version="1.24.0" type="app">
 	<artifact name="softwarejson" loc="software-definitions/DashboardService-ui.json"/> 
         <artifact name="cookbook" loc="dashboards-chef/cookbook-emcs-dashboardService-ui"/>
         <artifact name="software" loc="dashboards-ui/deploy-list.xml"/>
@@ -14,7 +14,7 @@
         <artifact name="cookbook" loc="dashboards-chef/cookbook-emcs-dashboardService-api"/>
         <artifact name="software" loc="dashboards-ee/deploy-list.xml"/>
 </Service>
-<Service Name="OMC-UI-Framework" Version="1.23.0" type="app">
+<Service Name="OMC-UI-Framework" Version="1.24.0" type="app">
         <artifact name="softwarejson" loc="software-definitions/OMC-UI-Framework.json"/> 
         <artifact name="cookbook" loc="dashboards-chef/cookbook-emcs-omc-ui-framework"/>
         <artifact name="software" loc="omc-ui-framework/deploy-list.xml"/>
