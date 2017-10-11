@@ -1228,9 +1228,13 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 self.beforeCollapse = function(event, ui) {
                     if (ui.key === rootCompositeMenuid) {
 //                        currentCompositeParentId && self.selectedItem(currentCompositeParentId);
+                        var _currentCompositeParentId = currentCompositeParentId;
                         clearCompositeMenuItems();
                         self.expanded([]);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                        
+                        setTimeout(function() {$("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", _currentCompositeParentId, true)}, 1);
+
                         window._uifwk.isCompositeMenuShown = false;
                         //$("#omcMenuNavList").ojNavigationList("refresh");
                         if (window._uifwk.compositeMenuCollapseCallback) {
