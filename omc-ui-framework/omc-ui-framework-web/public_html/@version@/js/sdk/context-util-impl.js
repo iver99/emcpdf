@@ -1203,8 +1203,13 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     meIds = entityMEIDs.join();
                     _meIds = entityMEIDs.sort().join();
                 }
-                var currentEntityIds = self.getEntityMeIds();
-                if (_meIds !== (currentEntityIds ? currentEntityIds.sort().join() : null)) {
+                var currentEntityIds = self.getEntityMeIds() ? self.getEntityMeIds().sort().join() : null;
+                if (_meIds !== currentEntityIds) {
+                    var omcContext = self.getOMCContext();
+                    //Fix EMCPDF-4727: if no composite in GC and entity meids are changed, update previousCompositeMeId
+                    if(!self.getCompositeMeId()) {
+                        omcContext.previousCompositeMeId = currentEntityIds;
+                    }
                     console.log("****************** updating entity ids");
                     setIndividualContext('entity', 'entityMEIDs', meIds, true, true, false, source);
                     //Set entity meIds will reset the cached entity objects, 
