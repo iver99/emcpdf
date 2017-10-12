@@ -112,6 +112,8 @@ dependencies {
     providedCompile project(':dashboards-core')  
     providedCompile project(':dashboards-webutils')
     providedCompile project(':dashboards-sdk')
+    providedCompile getProjectArtifact('log4j-core')
+    providedCompile getProjectArtifact('log4j-api')
     providedCompile getProjectArtifact('servlet-api')   
     providedCompile getProjectArtifact('jersey-client')   
     providedCompile getProjectArtifact('jersey-core')   
