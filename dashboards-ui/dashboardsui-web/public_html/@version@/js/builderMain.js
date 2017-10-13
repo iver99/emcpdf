@@ -367,7 +367,9 @@ require(['knockout',
 			        var self = this;
                                 var omcCurrentMenuId = menuUtil.OMCMenuConstants.GLOBAL_DASHBOARDS;
                                 if(federationEnabled === true) {
-                                    omcCurrentMenuId = menuUtil.OMCMenuConstants.GLOBAL_FEDERATEDVIEW;
+//                                    omcCurrentMenuId = menuUtil.OMCMenuConstants.GLOBAL_FEDERATEDVIEW;
+                                    //Select federated dashboard in HM
+                                    omcCurrentMenuId = "omc_federatedview_grp_" + ko.unwrap(dashboard.id);
                                 }
 			        self.userName = dfu.getUserName();
 			        self.tenantName = dfu.getTenantName();
