@@ -9,11 +9,12 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
     'uifwk/@version@/js/sdk/menu-util-impl',
     'uifwk/@version@/js/sdk/SessionCacheUtil',
     'uifwk/@version@/js/util/usertenant-util-impl',
+    'uifwk/@version@/js/sdk/logging-feature-usage-util-impl',
     'uifwk/@version@/js/util/message-util-impl'
     //'ojs/ojnavigationlist',
     //'ojs/ojjsontreedatasource'
     ],
-        function ($, oj, ko, nls, dfumodel, pfumodel, ctxmodel, menumodel, sessionCacheModel, utModel, msgModel) {
+        function ($, oj, ko, nls, dfumodel, pfumodel, ctxmodel, menumodel, sessionCacheModel, utModel, _emJETFeatureUsageLogger, msgModel) {
             function HamburgerMenuViewModel(params) {
                 var self = this;
                 var userName = params.userName;
@@ -39,6 +40,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 var sessionCacheAllServiceDataKey = 'all_service_data';
                 var sessionCacheFavoriteDashboardKey = 'favorite_dashboards';
                 var omcMenuSeparatorId = 'omc_service_menu_separator';
+                var featureUsageLogReceiver = "/sso.static/dashboards.logging/feature/logs";
+                if (dfu.isDevMode()){
+                    featureUsageLogReceiver = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"logging/feature/logs");
+                }
+                _emJETFeatureUsageLogger.initialize(featureUsageLogReceiver, 60000, 20000, 8, userTenantUtil.getUserTenant().tenantUser);
                 
                 var userName = params.userName;
                 var tenantName = params.tenantName;
@@ -1307,6 +1313,20 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             uifwkControlled = true;
                         }
                         if (uifwkControlled) {
+                            var itemTrack = [];
+                            for (var j = 0; j < self.serviceMenuData.length; j++) {
+                                itemTrack = findItemTrack(self.serviceMenuData[j], data.id);
+                                if (itemTrack.length > 0) {
+                                    break;
+                                } else {
+                                    itemTrack = [];
+                                }
+                            }
+                            var trackLabelList = [];
+                            itemTrack.forEach(function(item){
+                                trackLabelList.push(item.label);
+                            });
+                            _emJETFeatureUsageLogger.metricFeatureUsage({type: _emJETFeatureUsageLogger.featureUsageLogType.HAMBURGER_MENU, msg: trackLabelList.join('->')});
                             var linkHref = item.externalUrl;
                             if(self.hrefMap && self.hrefMap[data.id]){
                                 $("a#"+data.id)[0].href = self.hrefMap[data.id];

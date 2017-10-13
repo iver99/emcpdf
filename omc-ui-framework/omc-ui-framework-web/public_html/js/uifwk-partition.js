@@ -2,6 +2,7 @@ define([
 'uifwk/js/util/ajax-util',
 'uifwk/js/util/df-util',
 'uifwk/js/util/logging-util',
+'uifwk/js/sdk/logging-feature-usage-util',
 'uifwk/js/util/message-util',
 'uifwk/js/util/mobile-util',
 'uifwk/js/util/preference-util',
