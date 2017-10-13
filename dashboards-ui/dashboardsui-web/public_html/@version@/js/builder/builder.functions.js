@@ -791,7 +791,11 @@ define(['knockout',
                         if(val === "GC") {
                             val = "TRUE";
                         }
-                    }                
+                    }
+                    //In federation mode, entity selector doen't support federated entities. So entity context shouldn't load
+                    if(Builder.isRunningInFederationMode()) {
+                        val = "FALSE";
+                    }
                     if(val === "GC") { //Respect entity context in global context
                         //Set both of respectOMCApplicationContext and respectOMCEntityContext to true
                         ctxUtil.respectOMCApplicationContext(true);

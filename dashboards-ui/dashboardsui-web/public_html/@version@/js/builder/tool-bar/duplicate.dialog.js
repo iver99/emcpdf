@@ -89,6 +89,10 @@ define(['knockout',
                 newDashboard.enableRefresh = (enableRefresh === true || enableRefresh === "TRUE" || enableRefresh === "true") ? "true" : "false";
                 newDashboard.systemDashboard = "false";
                 newDashboard.showInHome=false;
+                //If dup a dashboard in federated mode, the new dashboard can only run in federated mode. In this mode, entity selector should be disabled.
+                if(Builder.isRunningInFederationMode()) {
+                    newDashboard.enableEntityFilter = "FALSE";
+                }
                 if (!selectedDashboardInst().toolBarModel.duplicateInSet()) {
                     newDashboard.showInHome = true;
                 }
