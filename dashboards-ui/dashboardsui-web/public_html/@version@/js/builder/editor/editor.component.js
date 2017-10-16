@@ -450,36 +450,40 @@ define(['knockout',
                             _context["time"] = {};
                         }
                         
-                        if(dashboard.enableEntityFilter() === "FALSE") {
+                        if(dashboard.enableEntityFilter() === "FALSE" && $.isFunction(tile.getWidgetEntityContext)) {
                             //Get widget's definition entity context and update _context
                             console.log("Get widget entity context, result is ");
                             var _entityCtx = tile.getWidgetEntityContext();
                             console.log(_entityCtx);
-                            if(_entityCtx.compositeMEID) {
-                                _context["composite"]["compositeMEID"] = _entityCtx.compositeMEID;
-                            }
-                            if(_entityCtx.entityMEIDs && $.isArray(_entityCtx.entityMEIDs) && _entityCtx.entityMEIDs.length > 0) {
-                                _context["entity"]["entityMEIDs"] = _entityCtx.entityMEIDs;
+                            if(_entityCtx) {
+                                if(_entityCtx.compositeMEID) {
+                                    _context["composite"]["compositeMEID"] = _entityCtx.compositeMEID;
+                                }
+                                if(_entityCtx.entityMEIDs && $.isArray(_entityCtx.entityMEIDs) && _entityCtx.entityMEIDs.length > 0) {
+                                    _context["entity"]["entityMEIDs"] = _entityCtx.entityMEIDs;
+                                }
                             }
                             
                         }
                         
-                        if(dashboard.enableTimeRange() === "FALSE") {
+                        if(dashboard.enableTimeRange() === "FALSE" && $.isFunction(tile.getWidgetTimeContext)) {
                             //Get widget's definition time context and update _context
                             console.log("Get widget time context, result is ");
                             var _timeCtx = tile.getWidgetTimeContext();
                             console.log(_timeCtx);
-                            if(_timeCtx.timePeriod === "LATEST" || cxtUtil.isValidTimePeriod(_timeCtx.timePeriod)) {
-                                _context["time"]["timePeriod"] = _timeCtx.timePeriod;
-                                _context["time"]["startTime"] = null;
-                                _context["time"]["endTime"] = null;
-                            }else if(_timeCtx.timePeriod === "CUSTOM") {
-                                _context["time"]["timePeriod"] = _timeCtx.timePeriod;
-                                _context["time"]["startTime"] = _timeCtx.startTime;
-                                _context["time"]["endTime"] = _timeCtx.endTime;
-                            }else {
-                                console.error("Widget returned invalid time period: " + _timeCtx.timePeriod);
-                                oj.Logger.error("Widget returned invalid time period: " + _timeCtx.timePeriod);
+                            if(_timeCtx) {
+                                if(_timeCtx.timePeriod === "LATEST" || cxtUtil.isValidTimePeriod(_timeCtx.timePeriod)) {
+                                    _context["time"]["timePeriod"] = _timeCtx.timePeriod;
+                                    _context["time"]["startTime"] = null;
+                                    _context["time"]["endTime"] = null;
+                                }else if(_timeCtx.timePeriod === "CUSTOM") {
+                                    _context["time"]["timePeriod"] = _timeCtx.timePeriod;
+                                    _context["time"]["startTime"] = _timeCtx.startTime;
+                                    _context["time"]["endTime"] = _timeCtx.endTime;
+                                }else {
+                                    console.error("Widget returned invalid time period: " + _timeCtx.timePeriod);
+                                    oj.Logger.error("Widget returned invalid time period: " + _timeCtx.timePeriod);
+                                }
                             }
                         }
                         
