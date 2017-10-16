@@ -460,7 +460,7 @@ require(['knockout',
                                         var dashboardTitleModel = new DashboardTitleModel(dashboard);
                                         ko.applyBindings(dashboardTitleModel, $("title")[0]);
                                         var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
-                                        _emJETFeatureUsageLogger.metricFeatureUsage({type: _emJETFeatureUsageLogger.featureUsageLogType.DASHBOARD, msg: dashboard.name()});
+                                        _emJETFeatureUsageLogger.metricFeatureUsage({type: (dashboard.systemDashboard && dashboard.systemDashboard())? _emJETFeatureUsageLogger.featureUsageLogType.OOB_DASHBOARD : _emJETFeatureUsageLogger.featureUsageLogType.CUSTOM_DASHBOARD , msg: dashboard.name()});
                                         var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
                                         ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
                                         dashboardsetToolBarModel.initializeDashboardset();

@@ -14,7 +14,7 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
         // Custom logger.
         var customFeatureUsageLogger = {};
 
-        customFeatureUsageLogger.featureUsageLogType = {DASHBOARD: 'DBD', HAMBURGER_MENU: 'HBGMENU'};
+        customFeatureUsageLogger.featureUsageLogType = {OOB_DASHBOARD: 'OOB-DBD', CUSTOM_DASHBOARD: 'CUSTOM-DBD', HAMBURGER_MENU: 'HBGMENU'};
 
         //
         // Methods defined on the custom logger, as required by JET's oj.logger.
