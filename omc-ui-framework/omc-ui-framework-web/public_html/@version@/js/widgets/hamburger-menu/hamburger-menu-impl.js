@@ -44,7 +44,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 if (dfu.isDevMode()){
                     featureUsageLogReceiver = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"logging/feature/logs");
                 }
-                _emJETFeatureUsageLogger.initialize(featureUsageLogReceiver, 60000, 20000, 8, userTenantUtil.getUserTenant().tenantUser);
+                _emJETFeatureUsageLogger.initialize(featureUsageLogReceiver, 60000, 20000, 10, userTenantUtil.getUserTenant().tenantUser);
                 
                 var userName = params.userName;
                 var tenantName = params.tenantName;

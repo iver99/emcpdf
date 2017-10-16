@@ -304,7 +304,7 @@ require(['knockout',
                             //require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
                             //TargetSelectorUtils.registerComponents();
                             logger.initialize(logReceiver, 300000, 20000, 80, dfu.getUserTenant().tenantUser);
-                            _emJETFeatureUsageLogger.initialize(dfu.getFeatureUsageLogUrl(), 300000, 20000, 80, dfu.getUserTenant().tenantUser);
+                            _emJETFeatureUsageLogger.initialize(dfu.getFeatureUsageLogUrl(), 300000, 20000, 10, dfu.getUserTenant().tenantUser);
                             // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                             // If you comment the line below, our current log calls will not be output!
                             logger.setLogLevel(oj.Logger.LEVEL_WARN);
