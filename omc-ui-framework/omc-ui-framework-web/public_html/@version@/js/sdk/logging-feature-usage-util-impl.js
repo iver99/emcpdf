@@ -49,6 +49,9 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
         var logsCacheLimit = 20;
         // Last time we sent to server
         var logsCacheLastTimeWeSent = 1;
+        
+        var logAutoSendTimer = null;
+        var logSaveOnPageLeaveIsBind = false;
 
         var logOwner = "UnknownTenant.UnknownUser";
         var tenantName = "UnknownTenant";
@@ -177,14 +180,20 @@ define(['ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-impl', 'uifwk/@version@
             logsCacheLastTimeWeSent = new Date().getTime();
 
             // Ensure logs are sent at least in this frequency.
-            setInterval(_sendBeforeTooLong, logsCacheFrequency);
+            if(logAutoSendTimer){
+                clearInterval(logAutoSendTimer);
+            }
+            logAutoSendTimer = setInterval(_sendBeforeTooLong, logsCacheFrequency);
 
-            // Send cached logs to server on leaving page.
-            $(window).bind("beforeunload", function(){
-                if(logsCache.length > 0){
-                    _sendToServer(true);
-                }
-            });
+            if(!logSaveOnPageLeaveIsBind){
+                // Send cached logs to server on leaving page.
+                $(window).bind("beforeunload", function(){
+                    if(logsCache.length > 0){
+                        _sendToServer(true);
+                    }
+                });
+                logSaveOnPageLeaveIsBind = true;
+            }
         };
 
         return customFeatureUsageLogger;
