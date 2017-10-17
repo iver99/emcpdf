@@ -44,6 +44,7 @@ define(['knockout',
             $b.registerObject(self, 'DashboardTilesViewModel');
             self.scrollbarWidth = uiutil.getScrollbarWidth();
             self.isUnderSet = ko.unwrap(dashboardInst.type) === "SET" ? true : false;
+            self.isRunningInFederationMode = Builder.isRunningInFederationMode();
 
             widgetAreaContainer = $b.findEl('.widget-area');
 

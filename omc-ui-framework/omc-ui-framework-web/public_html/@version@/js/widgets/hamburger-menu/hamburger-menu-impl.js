@@ -404,7 +404,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         headers: header,
                         success: function (data) {
                             $.each(data.dashboards, function (idx, dsb) {
-                                self.federatedDsb.push({name: dsb.name, href: "/emsaasui/emcpdfui/builder.html?dashboardId="+dsb.id+"&federationEnabled=true"});
+                                self.federatedDsb.push({id: dsb.id, name: dsb.name, href: "/emsaasui/emcpdfui/builder.html?dashboardId="+dsb.id+"&federationEnabled=true"});
                             });
                             sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheFederatedDashboardKey, self.federatedDsb);
                             dfdGetFederatedDsb.resolve();
@@ -423,7 +423,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         if(self.federatedDsb){
                             self.serviceMenuData[menuId].children = [];
                             $.each(self.federatedDsb, function (idx, dsb) {
-                                self.serviceMenuData[menuId].children.push({'appId': 'FederatedDashboard', 'id': 'omc_federatedview_grp_' + idx, type: 'menu_item', 'label': dsb.name, 'externalUrl': dsb.href, 'disabled': false});
+                                self.serviceMenuData[menuId].children.push({'appId': 'FederatedDashboard', 'id': 'omc_federatedview_grp_' + dsb.id, type: 'menu_item', 'label': dsb.name, 'externalUrl': dsb.href, 'disabled': false});
                             });
                         }else{
                             delete self.serviceMenuData[menuId].children;

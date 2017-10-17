@@ -222,7 +222,7 @@
                             <!-- /ko -->
                             <!-- /ko -->
 
-                            <!--ko if: dashboard.enableEntityFilter && ((dashboard.enableEntityFilter() === 'TRUE') || (isUnderSet && dashboard.enableEntityFilter() === 'GC')) -->
+                            <!--ko if: !isRunningInFederationMode && dashboard.enableEntityFilter && ((dashboard.enableEntityFilter() === 'TRUE') || (isUnderSet && dashboard.enableEntityFilter() === 'GC')) -->
                             <div class="df-target-selector">   
                                 <emcta-target-selector data-bind="attr: {id: 'tsel_'+dashboard.id()}"
                                                        params="returnFunction: returnFromTsel,
@@ -249,7 +249,7 @@
                         <!-- ko if:$root.isEmpty() -->
                         <div class="tooltip-add-widget" style="padding-top: 64px; text-align: center">
                             <!--add-widget-tooltip-->
-                            <div style="background: url('@version@/images/dfSprite.png') no-repeat 0px -1064px;height:220px;width:220px; margin-bottom:20px;"  width="220px" height="220px" margin-bottom="30px" data-bind="attr:{alt:oj.Translations.getTranslatedString('Add content to dashboard')}"></div>
+                            <div style="background: url('@version@/images/dfSprite.png') no-repeat 0px -1064px;height:220px;width:220px; margin: 20px auto;"  width="220px" height="220px" margin-bottom="30px" data-bind="attr:{alt:oj.Translations.getTranslatedString('Add content to dashboard')}"></div>
                             <p style="font-size: 24px; font-weight: 400;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></p>
                             <!-- ko if:($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) -->
                             <p style="font-size: 16px;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1')"></p>
@@ -957,18 +957,18 @@
                                             <div class="oj-flex" >
                                                 <div class="oj-flex-item">
                                                     <span class="oj-choice-row" style="margin: 8px 0 20px 0;">
-                                                        <input id="entitySupport" class="oj-checkbox" type="checkbox" data-bind="checked: rightPanelFilter.entitySupport">
+                                                        <input id="entitySupport" class="oj-checkbox" type="checkbox" data-bind="checked: rightPanelFilter.entitySupport, disable: rightPanelFilter.isRunningInFederationMode">
                                                         <label for="entitySupport" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENTITY_SUPPORT_MULTIPLE')"></label>
                                                     </span>   
                                                 </div>
                                                 <div class="oj-flex-item">
                                                     <div data-bind="ojComponent: {component: 'ojRadioset', value: rightPanelFilter.enableEntityFilter,rootAttributes: {'style': 'max-width: 263px;'}}" >
                                                         <span class="oj-choice-row">
-                                                            <input id="enableEntityFilter" type="radio" name="enableEntityFilter" value="ON">
+                                                            <input id="enableEntityFilter" type="radio" name="enableEntityFilter" value="ON" data-bind="disable: rightPanelFilter.isRunningInFederationMode">
                                                             <label for="enableEntityFilter" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENABLE_ENTITIES')"></label>
                                                         </span>
                                                         <span class="oj-choice-row">
-                                                            <input id="enableGCEntities" type="radio" name="enableEntityFilter" value="GC" data-bind="disable: $data.isDashboardSet()">
+                                                            <input id="enableGCEntities" type="radio" name="enableEntityFilter" value="GC" data-bind="disable: $data.isDashboardSet() || rightPanelFilter.isRunningInFederationMode">
                                                             <label for="enableGCEntities" data-bind="text: getNlsString('DSB_BUILDER_EDIT_ENABLE_GC_ENTITIES')"></label>
                                                         </span>
                                                         <span class="oj-choice-row">

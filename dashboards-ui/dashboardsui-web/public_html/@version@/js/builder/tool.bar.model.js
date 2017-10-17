@@ -9,6 +9,7 @@ define(['knockout',
         'idfbcutil',
         'uifwk/js/util/screenshot-util',
         'uifwk/js/sdk/context-util',
+        'uifwk/js/sdk/menu-util',
         'ojs/ojcore',
         'builder/tool-bar/edit.dialog',
         'builder/tool-bar/duplicate.dialog',
@@ -17,11 +18,12 @@ define(['knockout',
         'builder/builder.core',
         'builder/dashboardDataSource/dashboard.datasource'
     ],
-    function(ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu, zdtUtilModel) {
+    function(ko, $, dfu, idfbcutil, ssu, cxtModel, menuModel, oj, ed, dd, pfu, zdtUtilModel) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
         var cxtUtil = new cxtModel();
+        var menuUtil = new menuModel();
         var omcTimeConstants = cxtUtil.OMCTimeConstants;
 
         function ToolBarModel($b,dashboardSetOptions) {
@@ -201,6 +203,9 @@ define(['knockout',
                     type: 'DELETE',
                     headers: dfu.getDashboardsRequestHeader(),
                     success: function (result) {
+                        //Fire event to refresh "Federated dashboard" and "Favorite dashabord" in HM
+                        menuUtil.fireFederatedDsbChangedEvent();
+                        menuUtil.fireFavoriteDsbChangedEvent();
                         if (selectedDashboardInst().toolBarModel.isUnderSet) {
                             var removeId = selectedDashboardInst().toolBarModel.dashboardId;
                             var selectedTab = $('#dashboardTab-' + removeId);
@@ -212,7 +217,7 @@ define(['knockout',
                                 localStorage.deleteHomeDbd=true;
                             }
                             window.location = cxtUtil.appendOMCContext( document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html', true, true, true);
-                        }     
+                        }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {}
                 });
@@ -293,8 +298,8 @@ define(['knockout',
 
 
             self.handleDashboardSave = function() {
-                self.dashboardName($('#dbsHNameIn').val()); //temporary solution for: input value change made by selenium webdriver cannot be subscribed by knockout. same as the line below
-                self.dashboardDescription($('#editDbdDscp').val());
+                $('#dbsHNameIn').length > 0 && self.dashboardName($('#dbsHNameIn').val()); //temporary solution for: input value change made by selenium webdriver cannot be subscribed by knockout. same as the line below
+                $('#editDbdDscp').length > 0 && self.dashboardDescription($('#editDbdDscp').val());
                 var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
                 outputData.eventType = "SAVE";
 

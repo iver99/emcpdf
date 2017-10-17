@@ -354,7 +354,7 @@ public class VerifyOOB extends LoginAndLogout
 		VerifyOOBUtil.verifyDatabaseOperations(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyDatabaseSecurity_GridView()
 	{
 		//initTest
@@ -373,7 +373,7 @@ public class VerifyOOB extends LoginAndLogout
 		VerifyOOBUtil.verifyDatabaseSecurity(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyDatabaseSecurity_ListView()
 	{
 		//initTest
@@ -392,7 +392,7 @@ public class VerifyOOB extends LoginAndLogout
 		VerifyOOBUtil.verifyDatabaseSecurity(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyDatabaseSecurity_WithFilter_GridView()
 	{
 		//initTest
@@ -415,7 +415,7 @@ public class VerifyOOB extends LoginAndLogout
 		VerifyOOBUtil.verifyDatabaseSecurity(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyDatabaseSecurity_WithFilter_ListView()
 	{
 		//initTest
@@ -438,7 +438,7 @@ public class VerifyOOB extends LoginAndLogout
 		VerifyOOBUtil.verifyDatabaseSecurity(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyDNS_GridView()
 	{
 		//initTest
@@ -457,7 +457,7 @@ public class VerifyOOB extends LoginAndLogout
 		VerifyOOBUtil.verifyDNS(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyDNS_ListView()
 	{
 		//initTest
@@ -476,7 +476,7 @@ public class VerifyOOB extends LoginAndLogout
 		VerifyOOBUtil.verifyDNS(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyDNS_WithFilter_GridView()
 	{
 		//initTest
@@ -499,7 +499,7 @@ public class VerifyOOB extends LoginAndLogout
 		VerifyOOBUtil.verifyDNS(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyDNS_WithFilter_ListView()
 	{
 		//initTest
@@ -692,7 +692,7 @@ public class VerifyOOB extends LoginAndLogout
 		VerifyOOBUtil.verifyExadataHealth(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyFirewall_GridView()
 	{
 		//initTest
@@ -711,7 +711,7 @@ public class VerifyOOB extends LoginAndLogout
 		VerifyOOBUtil.verifyFirewall(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyFirewall_ListView()
 	{
 		//initTest
@@ -730,7 +730,7 @@ public class VerifyOOB extends LoginAndLogout
 		VerifyOOBUtil.verifyFirewall(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyFirewall_WithFilter_GridView()
 	{
 		//initTest
@@ -753,7 +753,7 @@ public class VerifyOOB extends LoginAndLogout
 		VerifyOOBUtil.verifyFirewall(webd);
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void verifyFirewall_WithFilter_ListView()
 	{
 		//initTest
