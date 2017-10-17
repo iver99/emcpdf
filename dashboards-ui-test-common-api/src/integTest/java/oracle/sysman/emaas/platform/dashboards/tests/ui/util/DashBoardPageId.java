@@ -335,6 +335,8 @@ public class DashBoardPageId
 	public static final String TEXTWIDGETCONTENTCSS = "div[id^='textContentWrapper_']";
 	public static final String TEXTWIDGETEDITORCSS = "div[id^='textEditorWrapper_'] .cke_editable";
 	public static final String TEXTCONTENTCSS = "div[data-bind=\"html: content()\"]";
+	public static final String TEXTWIDGETCONTENTXPATH = "//div[contains(@id, 'textContentWrapper_')]";
+	public static final String TEXTWIDGETEDITORXPATH = "//div[contains(@class, 'cke_editable')]";
 
 	public static final String TEXTCONTENT1 = "//div[contains(@id, 'textContentWrapper_')]/div/a[1]";
 	public static final String TEXTCONTENT2 = "//div[contains(@id, 'textContentWrapper_')]/div/a[2]";

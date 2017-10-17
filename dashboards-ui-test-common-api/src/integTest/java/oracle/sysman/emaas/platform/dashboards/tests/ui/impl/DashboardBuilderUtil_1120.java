@@ -24,7 +24,7 @@ public class DashboardBuilderUtil_1120 extends DashboardBuilderUtil_1100
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
 		driver.click(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
-		String realName = driver.getElement(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR).getAttribute("title");
+		String realName = driver.getAttribute(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR + "@title");
 		if (!dashboardName.equals(realName)) {
 			driver.getLogger().info(
 					"DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected dashboard name is "
@@ -33,7 +33,7 @@ public class DashboardBuilderUtil_1120 extends DashboardBuilderUtil_1100
 		}
 
 		driver.waitForElementPresent(DashBoardPageId_1120.BUILDERDESCRIPTIONTEXTLOCATOR);		
-		String realDesc = driver.getElement(DashBoardPageId_1120.BUILDERDESCRIPTIONTEXTLOCATOR).getAttribute("title");
+		String realDesc = driver.getAttribute(DashBoardPageId_1120.BUILDERDESCRIPTIONTEXTLOCATOR + "@title");
 		if (description == null || "".equals(description)) {
 			if (realDesc != null && !"".equals(realDesc.trim())) {
 				driver.getLogger().info(

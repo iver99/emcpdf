@@ -14,6 +14,7 @@ import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DelayedPressEnterThread;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
@@ -657,9 +658,10 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.getLogger().info("DashboardBuilderUtil print dashboard started");
 		driver.click(DashBoardPageId.BUILDEROPTIONSMENULOCATOR);
 		DelayedPressEnterThread thr = new DelayedPressEnterThread("DelayedPressEnterThread", 5000);
-		driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.BUILDEROPTIONSPRINTLOCATORCSS)).click();
-		driver.takeScreenShot();
-		driver.savePageToFile();
+//		driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.BUILDEROPTIONSPRINTLOCATORCSS)).click();
+//		driver.takeScreenShot();
+//		driver.savePageToFile();
+		driver.click("css=" + DashBoardPageId.BUILDEROPTIONSPRINTLOCATORCSS);
 		driver.getLogger().info("DashboardBuilderUtil print completed");
 	}
 
@@ -672,38 +674,39 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		int waitTime = 5000;
 
 		//click all tabs
-		WebElement dashboardSetContainer = driver.getWebDriver().findElement(
-				By.cssSelector(DashBoardPageId.DASHBOARDSETNAVSCONTAINERCSS));
-		if (dashboardSetContainer == null) {
-			throw new NoSuchElementException("removeDashboardInSet: the dashboard navigator container is not found");
-		}
-
-		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.isEmpty()) {
-			throw new NoSuchElementException("addNewDashboardToSet: the dashboard navigators is not found");
-		}
-		for (WebElement nav : navs) {
-			nav.click();
-			WaitUtil.waitForPageFullyLoaded(driver);
-			driver.takeScreenShot();
-			driver.savePageToFile();
-			driver.getLogger().info("printDashboardSet has click on the dashboard selection tab named");
-		}
+//		WebElement dashboardSetContainer = driver.getWebDriver().findElement(
+//				By.cssSelector(DashBoardPageId.DASHBOARDSETNAVSCONTAINERCSS));
+//		if (dashboardSetContainer == null) {
+//			throw new NoSuchElementException("removeDashboardInSet: the dashboard navigator container is not found");
+//		}
+//
+//		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DASHBOARDSETNAVSCSS));
+//		if (navs == null || navs.isEmpty()) {
+//			throw new NoSuchElementException("addNewDashboardToSet: the dashboard navigators is not found");
+//		}
+//		for (WebElement nav : navs) {
+//			nav.click();
+//			WaitUtil.waitForPageFullyLoaded(driver);
+//			driver.takeScreenShot();
+//			driver.savePageToFile();
+//			driver.getLogger().info("printDashboardSet has click on the dashboard selection tab named");
+//		}
+		
+		driver.clickAll("css=" + DashBoardPageId.DASHBOARDSETNAVSCSS);
 
 		//click print
 		WaitUtil.waitForPageFullyLoaded(driver);
 		driver.waitForElementPresent("id=" + DashBoardPageId.DASHBOARDSETOPTIONSMENUID);
 		driver.click("id=" + DashBoardPageId.DASHBOARDSETOPTIONSMENUID);
 		driver.waitForElementPresent("css=" + DashBoardPageId.DASHBOARDSETOPTIONSPRINTCSS);
-		driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.DASHBOARDSETOPTIONSPRINTCSS)).click();
+		driver.click("css=" + DashBoardPageId.DASHBOARDSETOPTIONSPRINTCSS);
+//		driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.DASHBOARDSETOPTIONSPRINTCSS)).click();
 		//have to use thread sleep to wait for the print window(windows dialog) to appear
 		try {
 			Thread.sleep(waitTime);
 		}
 		catch (InterruptedException e) {
-			LOGGER.info("context", e);
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			driver.getLogger().info(e.getLocalizedMessage());
 		}
 		driver.getLogger().info("DashboardBuilderUtil print set completed");
 	}
@@ -734,14 +737,14 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			case REFRESH_DASHBOARD_SETTINGS_OFF:
 				driver.check(DashBoardPageId.BUILDEROPTIONSAUTOREFRESHOFFLOCATOR);
 				driver.waitForElementPresent(DashBoardPageId.BUILDERAUTOREFRESHOFFSELECTEDLOCATOR);
-				driver.takeScreenShot();
-				driver.savePageToFile();
+//				driver.takeScreenShot();
+//				driver.savePageToFile();
 				break;
 			case REFRESH_DASHBOARD_SETTINGS_5MIN:
 				driver.check(DashBoardPageId.BUILDEROPTIONSAUTOREFRESHON5MINLOCATOR);
 				driver.waitForElementPresent(DashBoardPageId.BUILDERAUTOREFRESHON5MINSELECTEDLOCATOR);
-				driver.takeScreenShot();
-				driver.savePageToFile();
+//				driver.takeScreenShot();
+//				driver.savePageToFile();
 				break;
 			default:
 				break;
@@ -1457,13 +1460,12 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 
 	private boolean isRightDrawerVisible(WebDriver driver)
 	{
-		WebElement rightDrawerPanel = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RIGHTDRAWERPANELCSS));
-		boolean isDisplayed = "none".equals(rightDrawerPanel.getCssValue("display")) != true;
-		driver.getLogger().info("isRightDrawerVisible,the isDisplayed value is " + isDisplayed);
+		boolean isDisplayed = "none".equals(driver.getCssValue("css=" + DashBoardPageId.RIGHTDRAWERPANELCSS, "display")) != true;
+        driver.getLogger().info("DashboardBuilderUtil.isRightDrawerVisible,the isDisplayed value is " + isDisplayed);
 
-		boolean isWidthValid = "0px".equals(rightDrawerPanel.getCssValue("width")) != true;
-		driver.getLogger().info("isRightDrawerVisible,the isWidthValid value is " + isWidthValid);
-
+        boolean isWidthValid = "0px".equals(driver.getCssValue("css=" + DashBoardPageId.RIGHTDRAWERPANELCSS, "width")) != true;
+        driver.getLogger().info("DashboardBuilderUtil.isRightDrawerVisible,the isWidthValid value is " + isWidthValid);
+        
 		return isDisplayed && isWidthValid;
 	}
 
@@ -1473,9 +1475,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		if (isRightDrawerVisible(driver) == false) {
 			driver.click("css=" + DashBoardPageId.RIGHTDRAWERTOGGLEBTNCSS);
 			driver.getLogger().info("[DashboardBuilderUtil] triggered showRightDrawer.");
-
 		}
-
 	}
 
 	protected void hideRightDrawer(WebDriver driver)
@@ -1485,7 +1485,6 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			driver.click("css=" + DashBoardPageId.RIGHTDRAWERTOGGLEBTNCSS);
 			driver.getLogger().info("[DashboardBuilderUtil] triggered hideRightDrawer.");
 		}
-
 	}
 
 	@Override

@@ -1,16 +1,11 @@
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
-import java.util.List;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.*;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
 import org.testng.Assert;
 
 public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
@@ -22,7 +17,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 				"DashboardBuilderUtil.addLinkToWidgetTitle started for widgetName=" + widgetName + ", index=" + index
 						+ ", dashboardName=" + dashboardName);
 		Validator.notEmptyString("widgetName", widgetName);
-		Validator.equalOrLargerThan0("index", index);
+		Validator.equalOrLargerThan("index", index, 1);
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
 		driver.waitForElementVisible(DashBoardPageId_190.BUILDERTILESEDITAREA);
@@ -44,44 +39,33 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		}
 
 		if(dashboardName != null && !dashboardName.isEmpty()){
-			WebElement searchInput = driver.getElement("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
-			// focus on search input box
-			WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-			wait.until(ExpectedConditions.elementToBeClickable(searchInput));
-
-			Actions actions = new Actions(driver.getWebDriver());
-			actions.moveToElement(searchInput).build().perform();
-			searchInput.clear();
+			
+			driver.moveToElement("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
+			driver.clear("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
 			WaitUtil.waitForPageFullyLoaded(driver);
-			actions.moveToElement(searchInput).build().perform();
+			
+			driver.moveToElement("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
 			driver.click("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR)));
-			searchInput.sendKeys(dashboardName);
-			driver.waitForServer();
-			driver.takeScreenShot();
-			driver.savePageToFile();
-			//verify input box value
-			Assert.assertEquals(searchInput.getAttribute("value"), dashboardName);
+			driver.waitForElementVisible("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR);
+			driver.sendKeys("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR, dashboardName);		
 
-			WebElement searchButton = driver.getElement("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBTNCSSLOCATOR);
+			//verify input box value
+			Assert.assertEquals(driver.getAttribute("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR + "@value"), dashboardName);
+
 			driver.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBTNCSSLOCATOR);
-			searchButton.click();
+			driver.click("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBTNCSSLOCATOR);
 			//wait for ajax resolved
 			WaitUtil.waitForPageFullyLoaded(driver);
-			driver.takeScreenShot();
-			driver.savePageToFile();
-			
+						
 			driver.getLogger().info("[DashboardHomeUtil] start to add link");
-			List<WebElement> matchingWidgets = driver.getWebDriver().findElements(
-					By.cssSelector(DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR));
-			if (matchingWidgets == null || matchingWidgets.isEmpty()) {
+			int matchWidegtCount = driver.getElementCount("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR);
+			if (matchWidegtCount <= 0) {
 				throw new NoSuchElementException("Right drawer content for search string =" + dashboardName + " is not found");
 			}
 			WaitUtil.waitForPageFullyLoaded(driver);
 
-			Actions builder = new Actions(driver.getWebDriver());
 			try {
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR)));
+				driver.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR);
 				driver.click("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR);
 
 				driver.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTADDBTNCSSLOCATOR);
@@ -97,34 +81,35 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 	}
 
 	@Override
-	public void addLinkToWidgetTitle(WebDriver driver, String widgetName, String dashboardName){
-		addLinkToWidgetTitle(driver, widgetName, 0, dashboardName);
+	public void addLinkToWidgetTitle(WebDriver driver, String widgetName, String dashboardName)
+	{
+		addLinkToWidgetTitle(driver, widgetName, 1, dashboardName);
 	}
 
 	@Override
-	public boolean verifyLinkOnWidgetTitle(WebDriver driver, String widgetName, int index, String dashboardName){
+	public boolean verifyLinkOnWidgetTitle(WebDriver driver, String widgetName, int index, String dashboardName)
+	{
 		driver.getLogger().info(
 				"DashboardBuilderUtil.verifyLinkOnWidgetTitle started for widgetName=" + widgetName + ", index=" + index
 						+ ", linked dashboardName=" + dashboardName);
 		Validator.notEmptyString("widgetName", widgetName);
-		Validator.equalOrLargerThan0("index", index);
+		Validator.equalOrLargerThan("index", index, 1);
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId_190.BUILDERTILESEDITAREA)));
+		driver.waitForElementVisible(DashBoardPageId_190.BUILDERTILESEDITAREA);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		String titleTitlesLocator = String.format(DashBoardPageId_1200.BUILDERLINKEDTILETITLELOCATOR, widgetName);
-		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.cssSelector(titleTitlesLocator));
-		if (tileTitles == null || tileTitles.size() <= index) {
+		int titleCount = driver.getElementCount(titleTitlesLocator);
+		if (titleCount < index) {
 			driver.getLogger().info(
 					"verifyLinkOnWidgetTitle compelted and returns false. Expected linked dashboardName is " + dashboardName
 							+ ", actual it is not linked.");
 			return false;
 		}else {
-			tileTitles.get(index).click();
+			driver.click("xpath=(" +titleTitlesLocator+")[" + index + "]");
 			WaitUtil.waitForPageFullyLoaded(driver);
-			String realName = driver.getElement(DashBoardPageId.BUILDERNAMETEXTLOCATOR).getAttribute("title");
+			String realName = driver.getAttribute(DashBoardPageId.BUILDERNAMETEXTLOCATOR+"@titile");
 			if (!dashboardName.equals(realName)) {
 				driver.getLogger().info(
 						"verifyLinkOnWidgetTitle compelted and returns false. Expected linked dashboardName is " + dashboardName
@@ -137,7 +122,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 
 	@Override
 	public boolean verifyLinkOnWidgetTitle(WebDriver driver, String widgetName, String dashboardName){
-		return verifyLinkOnWidgetTitle(driver, widgetName, 0, dashboardName);
+		return verifyLinkOnWidgetTitle(driver, widgetName, 1, dashboardName);
         }
 
 	@Override
@@ -146,37 +131,33 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		driver.getLogger().info("add text widget started");
 		driver.waitForElementPresent("css=" + DashBoardPageId.DASHBOARDADDTEXTWIDGETCSS);
 		
+		driver.click("css=" + DashBoardPageId.DASHBOARDADDTEXTWIDGETCSS);
 		WaitUtil.waitForPageFullyLoaded(driver);
-		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
-		WebElement textButton = selectedDashboardEl.findElement(By.cssSelector(DashBoardPageId.DASHBOARDADDTEXTWIDGETCSS));
-		textButton.click();
-		driver.waitForServer();
-		driver.takeScreenShot();
-		driver.savePageToFile();
 		driver.getLogger().info("add text widget compelted");
 	}
 	
 	@Override
 	public void editTextWidgetAddContent(WebDriver driver, int index, String content)
 	{
+		driver.getLogger().info(
+				"DashboardBuilderUtil.editTextWidgetAddContent started for Content=" + content + ", index=" + index);
+		
+		Validator.equalOrLargerThan("index", index, 1);
+		
 		driver.getLogger().info("editTextWidgetAddContent started");
-		//find current dashboard
-		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
+		
 		//click content wrapper area to load ckeditor
 		driver.waitForElementPresent("css=" + DashBoardPageId.TEXTWIDGETCONTENTCSS);
-		WebElement widget = selectedDashboardEl.findElements(By.cssSelector(DashBoardPageId.TEXTWIDGETCONTENTCSS)).get(index-1);
-		widget.click();
+		
+		driver.click("xpath=("+ DashBoardPageId.TEXTWIDGETCONTENTXPATH +")[" + index +"]");
+
 		//input text string to editor area
 		driver.waitForElementPresent("css=" + DashBoardPageId.TEXTWIDGETEDITORCSS);
-		widget = selectedDashboardEl.findElements(By.cssSelector(DashBoardPageId.TEXTWIDGETEDITORCSS)).get(index-1);
-		widget.clear();
-		widget.click();
-		widget.sendKeys(content);
-		
-		driver.waitForServer();
-		
-		driver.takeScreenShot();
-		driver.savePageToFile();
+		driver.clear("xpath=("+ DashBoardPageId.TEXTWIDGETEDITORXPATH +")[" + index +"]");
+		driver.click("xpath=("+ DashBoardPageId.TEXTWIDGETEDITORXPATH +")[" + index +"]");
+		driver.sendKeys("xpath=("+ DashBoardPageId.TEXTWIDGETEDITORXPATH +")[" + index +"]", content);
+		WaitUtil.waitForPageFullyLoaded(driver);
+
 		driver.getLogger().info("editTextWidgetAddContent completed");
 	}
 	
@@ -186,16 +167,12 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		driver.getLogger().info(
 				"DashboardBuilderUtil.clickLinkOnWidgetTitle started for widgetName=" + widgetName + ", index=" + index);
 		Validator.notEmptyString("widgetName", widgetName);
-		Validator.equalOrLargerThan0("index", index);
+		Validator.equalOrLargerThan("index", index, 1);
 		
 		if(hasWidgetLink(driver, widgetName, index))
-		{
+		{			
 			String titleTitlesLocator = String.format(DashBoardPageId_1200.BUILDERLINKEDTILETITLELOCATOR, widgetName);
-			List<WebElement> tileTitles = driver.getWebDriver().findElements(By.cssSelector(titleTitlesLocator));
-			
-			tileTitles.get(index).click();
-			driver.takeScreenShot();
-			driver.savePageToFile();			
+			driver.click("xpath=(" + titleTitlesLocator + ")[" + index + "]");
 		}
 		else
 		{
@@ -214,16 +191,15 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		driver.getLogger().info(
 				"DashboardBuilderUtil.isWidgetHasLink started for widgetName=" + widgetName + ", index=" + index);
 		Validator.notEmptyString("widgetName", widgetName);
-		Validator.equalOrLargerThan0("index", index);
+		Validator.equalOrLargerThan("index", index, 1);
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId_190.BUILDERTILESEDITAREA)));
+		driver.waitForElementVisible(DashBoardPageId_190.BUILDERTILESEDITAREA);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		String titleTitlesLocator = String.format(DashBoardPageId_1200.BUILDERLINKEDTILETITLELOCATOR, widgetName);
-		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.cssSelector(titleTitlesLocator));
-		if (tileTitles == null || tileTitles.size() <= index) {
+		int titleCount = driver.getElementCount(titleTitlesLocator);
+		if (titleCount < index) {
 			driver.getLogger().info(
 					"isWidgetHasLink compelted and returns false. There is no link in the widget");
 			return false;
@@ -234,7 +210,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		
 	@Override
 	public boolean hasWidgetLink(WebDriver driver, String widgetName){
-		return hasWidgetLink(driver, widgetName, 0);
+		return hasWidgetLink(driver, widgetName, 1);
 	}
 	
 	@Override
@@ -243,15 +219,11 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		driver.getLogger().info("add image in Text Widget");
 		
 		Validator.notEmptyString("URL", url);
-		Validator.equalOrLargerThan0("index", index);
-
-		//find current dashboard
-		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
+		Validator.equalOrLargerThan("index", index, 1);
 
 		//click content wrapper area to load ckeditor
 		driver.waitForElementPresent("css=" + DashBoardPageId.TEXTWIDGETCONTENTCSS);
-		WebElement widget = selectedDashboardEl.findElements(By.cssSelector(DashBoardPageId.TEXTWIDGETCONTENTCSS)).get(index-1);
-		widget.click();
+		driver.click("xpath=("+ DashBoardPageId.TEXTWIDGETCONTENTXPATH +")[" + index +"]");
 
 		driver.waitForElementPresent("css=" + DashBoardPageId.IMAGEICONCSS);
 
@@ -278,30 +250,26 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 	public void addLinkInTextWidget(WebDriver driver, int index, String url, String option)
 	{
 		driver.getLogger().info("add link in Text Widget");
-		
-		//find current dashboard
-		WebElement selectedDashboardEl = getSelectedDashboardEl(driver);
-		
+		Validator.equalOrLargerThan("index", index, 1);		
+	
 		//click content wrapper area to load ckeditor
 		driver.waitForElementPresent("css=" + DashBoardPageId.TEXTWIDGETCONTENTCSS);
-		WebElement widget = selectedDashboardEl.findElements(By.cssSelector(DashBoardPageId.TEXTWIDGETCONTENTCSS)).get(index-1);
-		widget.click();
+		driver.click("xpath=("+ DashBoardPageId.TEXTWIDGETCONTENTXPATH +")[" + index +"]");
 		
-		driver.waitForElementPresent("css=" + DashBoardPageId.LINKICONCSS);
-		
+		driver.waitForElementPresent("css=" + DashBoardPageId.LINKICONCSS);		
 	 	driver.click("css=" + DashBoardPageId.LINKICONCSS);
 	 	
 	 	driver.waitForElementPresent("css=" + DashBoardPageId.LINKDIALOGCSS);
-	 	
-	 	driver.click(DashBoardPageId.PROTOCOLOPTION);	 		 	
+ 	 	driver.click(DashBoardPageId.PROTOCOLOPTION);	 		 	
 	 	
 	 	switch(option)
 	 	{
 	 		case DashBoardPageId.PROTOCOLOPTION_HTTP:
-	 			driver.getLogger().info("Click http protocol");	 			
+	 			driver.getLogger().info("Click http protocol");
+	 			driver.select("css=select.cke_dialog_ui_input_select", "value=http://");
 				
-	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.HTTPCSS)).findElement(By.xpath("..")).click();
-	 			driver.click("css=" + DashBoardPageId.HTTPCSS);
+//	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.HTTPCSS)).findElement(By.xpath("..")).click();
+//	 			driver.click("css=" + DashBoardPageId.HTTPCSS);
 			    
 	 			break;
 	 		case DashBoardPageId.PROTOCOLOPTION_HTTPS:
