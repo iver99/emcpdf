@@ -90,13 +90,23 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 	public void testClickAddEntityMenuItem()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "");
-		webd.getLogger().info("start to test in testClickAddEntityMenuItem()");
-		WaitUtil.waitForPageFullyLoaded(webd);
-
-		BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
-		BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ADD_ENTITY);
-		WaitUtil.waitForPageFullyLoaded(webd);
-		CommonUIUtils.verifyURL_WithPara(webd, "monitoringservicesui/cms/global-index.html?root=cmsConfigureEntityDiscovery");
+	    webd.getLogger().info("start to test in testClickAddEntityMenuItem()");
+	    WaitUtil.waitForPageFullyLoaded(webd);
+	    BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
+	    webd.capturePageState();
+	    String url = webd.getAttribute("omc_root_admin_addentity@href");
+	    webd.getLogger().info("The URL is:"+ url);
+	    webd.capturePageState();
+	    BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ADD_ENTITY);
+	    WaitUtil.waitForPageFullyLoaded(webd);
+	    String currurl = webd.getWebDriver().getCurrentUrl();
+	    String currurl1 = currurl.substring(0,currurl.indexOf("&"));
+	    if(currurl1.equalsIgnoreCase(url)){
+	    	webd.getLogger().info("The url is correct");	
+	    }
+	    else{
+	    Assert.assertTrue(currurl1.contains("cmsConfigureEntityDiscovery"), "The url is incorrect");
+	    }
 	}
 
 	@Test(alwaysRun = true)
