@@ -263,7 +263,7 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the url of opened page
-		CommonUIUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ocs");
+		CommonUIUtils.verifyURL_WithPara(webd, "cosUi/wfDashboard.html");
 	}
 
 	@Test(alwaysRun = true)

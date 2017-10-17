@@ -341,7 +341,7 @@ public class TestWelcomePage extends LoginAndLogout
 		WelcomeUtil.visitOrchestration(webd);
 
 		//verify the url of opened page
-		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ocs");
+		DashBoardUtils.verifyURL_WithPara(webd, "cosUi/wfDashboard.html");
 
 		webd.getLogger().info("Test open Security Analytics in welcome page finished!!!");
 	}
