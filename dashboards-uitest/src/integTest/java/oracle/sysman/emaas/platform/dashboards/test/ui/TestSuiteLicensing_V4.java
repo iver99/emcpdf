@@ -140,7 +140,7 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		webd.getLogger().info("Test opening Data Explorers-Search in welcome page finished!!!");
 	}
 
-	//@Test(alwaysRun = true)
+	@Test(alwaysRun = true)
 	public void testOpenInfrastructureMonitoringPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
