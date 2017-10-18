@@ -103,6 +103,12 @@ public class TestDashBoard_SimpleCRUD extends LoginAndLogout
 		webd.getLogger().info("verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noDesc, null, true), "Create dashboard failed!");
 
+		//verify the get started icon -- EMCPDF-4953
+		webd.getLogger().info("Verify get started icon is centralized");
+		webd.isDisplayed("css=" + PageId.DASHBOARD_GET_START_ICON_CSS);
+		String iconAttr = webd.getAttribute("css=" + PageId.DASHBOARD_GET_START_ICON_CSS+"@style").trim();
+		Assert.assertTrue(iconAttr.contains("margin: 20px auto"));
+
 		//verify the refresh option
 		webd.getLogger().info("Verify the default refersh option is 5 mins");
 		Assert.assertTrue(
