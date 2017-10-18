@@ -139,7 +139,7 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 
 		//Verify the time range in UDE page
 		webd.getLogger().info("Verify the time range in LA page");
-		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last 90 days"), true);
+		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel_V2(webd).contains("Last 90 days"), true);
 
 		//to verify jira EMCPDF-3338
 		//back to dashboard page and verify the time in widget
@@ -206,8 +206,8 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 
 		//Verify the time range in UDE page
 		webd.getLogger().info("Verify the time range in UDE page");
-		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last week")
-				|| GlobalContextUtil.getTimeRangeLabel(webd).contains("Last 7 days"), true);
+		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel_V2(webd).contains("Last week")
+				|| GlobalContextUtil.getTimeRangeLabel_V2(webd).contains("Last 7 days"), true);
 
 		//to verify jira EMCPDF-3338
 		//back to dashboard page and verify the time in widget
@@ -266,7 +266,7 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 
 		//Verify the time range in UDE page
 		webd.getLogger().info("Verify the time range in LA page");
-		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last 90 days"), true);
+		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel_V2(webd).contains("Last 90 days"), true);
 
 		//to verify jira EMCPDF-3338
 		//back to dashboard page and verify the time in widget
@@ -332,8 +332,8 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 
 		//Verify the time range in UDE page
 		webd.getLogger().info("Verify the time range in UDE page");
-		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last week")
-				|| GlobalContextUtil.getTimeRangeLabel(webd).contains("Last 7 days"), true);
+		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel_V2(webd).contains("Last week")
+				|| GlobalContextUtil.getTimeRangeLabel_V2(webd).contains("Last 7 days"), true);
 
 		//to verify jira EMCPDF-3338
 		//back to dashboard page and verify the time in widget
