@@ -3,8 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1180;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+
 import org.testng.Assert;
 
 /**
@@ -25,9 +24,8 @@ public class BrandingBarUtil_1230 extends BrandingBarUtil_1180 {
         driver.click(DashBoardPageId.BRAND_BAR_USER_MENU);
         Assert.assertTrue(driver.isDisplayed("id=" + DashBoardPageId.USERMENUPOPUPID));
         driver.getLogger().info("User menu popup is displayed.");
-        WebElement menuItem = driver.getWebDriver().findElement(By.cssSelector(item));
-        driver.takeScreenShot();
-        Assert.assertTrue(text.equals(menuItem.getText()));
+//        WebElement menuItem = driver.getWebDriver().findElement(By.cssSelector(item));
+        Assert.assertTrue(text.equals(driver.getText("css=" + item)));
         driver.getLogger().info("verifyUserMenuItemByText finished");
     }
 

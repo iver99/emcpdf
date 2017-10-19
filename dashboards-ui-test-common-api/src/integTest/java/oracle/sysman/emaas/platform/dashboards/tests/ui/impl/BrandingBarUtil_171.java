@@ -16,14 +16,10 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 
 public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBrandingBarUtil
-{
-
-	private static final Logger LOGGER = LogManager.getLogger(BrandingBarUtil_171.class);
+{	
 	static final String BRANDINGBARSERVICENAMEXPATH = "//div[@id='emaas-appheader-bar']/div[@class='emaas-appheader-logo']/div[@class='emaas-appheader-appname emaas-appheader-appname-twoline']/span";
 
 	/* (non-Javadoc)
