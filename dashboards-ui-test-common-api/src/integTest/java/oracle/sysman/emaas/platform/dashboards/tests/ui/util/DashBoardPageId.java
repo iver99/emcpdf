@@ -503,6 +503,7 @@ public class DashBoardPageId
 	public static final String USERMENUPOPUPID = "emaasAppheaderGlobalNavMenuId";
 	// Dashboard Home
 	public static final String DASHBOARD_GRID_TABLE_CSS = ".dbs-summaries-container";
+	public static final String DASHBOARD_IN_GRID_TABLE_XPATH = "//div[@class='dbs-summaries-container']/a/div";
 
 	public static final String DASHBOARD_LIST_TABLE = "table[aria-label='Dashboards Table']";
 	public static final String DASHBOARD_HOME_DELETE_BUTTON = "dsbinfopop_delete";

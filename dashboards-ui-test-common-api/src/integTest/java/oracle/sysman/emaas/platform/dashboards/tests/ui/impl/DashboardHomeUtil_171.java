@@ -21,8 +21,6 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import com.oracle.sysman.uifwk.qatools.jetutils.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -31,15 +29,12 @@ import org.testng.Assert;
 
 public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements IDashboardHomeUtil
 {
-	private static final Logger LOGGER = LogManager.getLogger(DashboardHomeUtil_171.class);	
-
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#closeOverviewPage(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
 	@Override
 	public void closeOverviewPage(WebDriver driver)
 	{
-
 		if (driver.isDisplayed(DashBoardPageId.OVERVIEWCLOSEID)) {
 			driver.getLogger().info("before clicking overview button");
 			driver.click(DashBoardPageId.OVERVIEWCLOSEID);
@@ -53,7 +48,6 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	public void createDashboard(WebDriver driver, String name, String descriptions)
 	{
 		createDashboard(driver, name, descriptions, TYPE_DASHBOARD);
-
 	}
 
 	/* (non-Javadoc)
@@ -83,7 +77,6 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.click(convertID(DashBoardPageId.DASHOKBUTTONID));
 		driver.setPageLoadDetector(BuildPageLoadDetector.class);
 		driver.setPageLoadDetector(null);
-
 	}
 
 	/* (non-Javadoc)
@@ -93,7 +86,6 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	public void createDashboardSet(WebDriver driver, String name, String descriptions)
 	{
 		createDashboard(driver, name, descriptions, TYPE_DASHBOARDSET);
-
 	}
 
 	/* (non-Javadoc)
@@ -115,8 +107,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 			listView(driver);
 			deleteDashboardInList(driver, dashboardName);
 		}
-		driver.takeScreenShot();
-		driver.savePageToFile();
+		WaitUtil.waitForPageFullyLoaded(driver);
 	}
 
 	/* (non-Javadoc)
@@ -246,30 +237,29 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.getLogger().info("[DashboardHomeUtil] call isFilterOptionSelected filter: " + filter);
 		Validator.notEmptyString("filter", filter);
 		if ("apm".equals(filter)) {
-			return driver.getElement(DashBoardPageId.FILTERAPMLOCATOR).isSelected();
+			return driver.isSelected(DashBoardPageId.FILTERAPMLOCATOR);
 		}
 		else if ("la".equals(filter)) {
-			return driver.getElement(DashBoardPageId.FILTERLALOCATOR).isSelected();
+			return driver.isSelected(DashBoardPageId.FILTERLALOCATOR);
 		}
 		else if ("ita".equals(filter)) {
-			return driver.getElement(DashBoardPageId.FILTERITALOCATOR).isSelected();
+			return driver.isSelected(DashBoardPageId.FILTERITALOCATOR);
 		}
 		else if ("oracle".equals(filter)) {
-			return driver.getElement(DashBoardPageId.FILTERORACLELOCATOR).isSelected();
+			return driver.isSelected(DashBoardPageId.FILTERORACLELOCATOR);
 		}
 		else if ("share".equals(filter)) {
-			return driver.getElement(DashBoardPageId.FILTERSHARELOCATOR).isSelected();
+			return driver.isSelected(DashBoardPageId.FILTERSHARELOCATOR);
 		}
 		else if ("me".equals(filter)) {
-			return driver.getElement(DashBoardPageId.FILTERMELOCATOR).isSelected();
+			return driver.isSelected(DashBoardPageId.FILTERMELOCATOR);
 		}
 		else if ("favorites".equals(filter)) {
-			return driver.getElement(DashBoardPageId.FILTERFAVORITELOCATOR).isSelected();
+			return driver.isSelected(DashBoardPageId.FILTERFAVORITELOCATOR);
 		}
 		else {
 			throw new IllegalArgumentException("Unkonw filter option: " + filter);
 		}
-
 	}
 
 	/* (non-Javadoc)
@@ -278,32 +268,24 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	@Override
 	public List<String> listDashboardNames(WebDriver driver)
 	{
-		driver.waitForServer();
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
 		List<String> names = new ArrayList<String>();
-		List<WebElement> eles = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.DASHBOARDNAMECONTAINERS));
-		for (int i = 1; i <= eles.size(); i++) {
-			String locator = DashBoardPageId.DASHBOARDNAMEINDEXLOCATOR.replaceFirst("_index_", String.valueOf(i));
+		int eles = driver.getElementCount(DashBoardPageId.DASHBOARDNAMECONTAINERS);
+		String locator = null;
+		for (int i = 1; i <= eles; i++) {
+			locator = DashBoardPageId.DASHBOARDNAMEINDEXLOCATOR.replaceFirst("_index_", String.valueOf(i));
 			driver.getLogger().info("Get dahsbord name for: " + locator);
 			driver.waitForElementPresent(locator);
-			driver.waitForServer();
-			WebElement ele = driver.getElement(locator);
-			driver.waitForServer();
-			String name = getElementAttribtue(ele, "aria-label");
+			
+			WaitUtil.waitForPageFullyLoaded(driver);	
+
+			String name = driver.getAttribute(locator + "@aria-label");
 			if (name == null) {
-				name = ele.getText();
+				name = driver.getText(locator);
 			}
 			names.add(name);
-		}
-		/*
-		for (WebElement e : eles) {
-			//String name = e.getAttribute("aria-label");
-			if (isAttribtuePresent(e, "aria-label")) {
-				names.add(e.getAttribute("aria-label"));
-			}
-			else {
-				names.add(e.getText());
-			}
-		}*/
+		}		
 		return names;
 	}
 
@@ -328,37 +310,37 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 
 		driver.getLogger().info("[DashboardHomeUtil] call resetFilterOptions");
 		driver.waitForElementPresent(DashBoardPageId.FILTERAPMLOCATOR);
-		WebElement el = driver.getElement(DashBoardPageId.FILTERAPMLOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		
+		if (driver.isSelected(DashBoardPageId.FILTERAPMLOCATOR)) {
+			driver.click(DashBoardPageId.FILTERAPMLOCATOR);
 		}
-		el = driver.getElement(DashBoardPageId.FILTERLALOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		
+		if (driver.isSelected(DashBoardPageId.FILTERLALOCATOR)) {
+			driver.click(DashBoardPageId.FILTERLALOCATOR);
 		}
-		el = driver.getElement(DashBoardPageId.FILTERITALOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		
+		if (driver.isSelected(DashBoardPageId.FILTERITALOCATOR)) {
+			driver.click(DashBoardPageId.FILTERITALOCATOR);
 		}
-		el = driver.getElement(DashBoardPageId.FILTERORCHESTRATIONLOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		
+		if (driver.isSelected(DashBoardPageId.FILTERORCHESTRATIONLOCATOR)) {
+			driver.click(DashBoardPageId.FILTERORCHESTRATIONLOCATOR);
 		}
-		el = driver.getElement(DashBoardPageId.FILTERORACLELOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		
+		if (driver.isSelected(DashBoardPageId.FILTERORACLELOCATOR)) {
+			driver.click(DashBoardPageId.FILTERORACLELOCATOR);
 		}
-		el = driver.getElement(DashBoardPageId.FILTERSHARELOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		
+		if (driver.isSelected(DashBoardPageId.FILTERSHARELOCATOR)) {
+			driver.click(DashBoardPageId.FILTERSHARELOCATOR);
 		}
-		el = driver.getElement(DashBoardPageId.FILTERMELOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		
+		if (driver.isSelected(DashBoardPageId.FILTERMELOCATOR)) {
+			driver.click(DashBoardPageId.FILTERMELOCATOR);
 		}
-		el = driver.getElement(DashBoardPageId.FILTERFAVORITELOCATOR);
-		if (el.isSelected()) {
-			el.click();
+		
+		if (driver.isSelected(DashBoardPageId.FILTERFAVORITELOCATOR)) {
+			driver.click(DashBoardPageId.FILTERFAVORITELOCATOR);
 		}
 		WaitUtil.waitForPageFullyLoaded(driver);
 	}
@@ -386,17 +368,16 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#selectDashboard(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
 	 */
 	@Override
-         public void selectDashboard(WebDriver driver, String dashboardName) 
-         {
-                   driver.getLogger().info("[DashboardHomeUtil] call selectDashboard dashboardName: " + dashboardName);
-                   String indicator = DashBoardPageId.DASHBOARDNAMELOCATOR.replace("_name_", dashboardName);
-                   driver.setPageLoadDetector(BuildPageLoadDetector.class);
-                   driver.waitForElementEnabled(indicator);
-                   driver.click(indicator);
-                   driver.waitForServer();
-                   driver.setPageLoadDetector(null);
-         }
-
+	public void selectDashboard(WebDriver driver, String dashboardName)
+	{
+		driver.getLogger().info("[DashboardHomeUtil] call selectDashboard dashboardName: " + dashboardName);
+		String indicator = DashBoardPageId.DASHBOARDNAMELOCATOR.replace("_name_", dashboardName);
+		driver.setPageLoadDetector(BuildPageLoadDetector.class);
+		driver.waitForElementEnabled(indicator);
+		driver.click(indicator);
+		driver.waitForServer();
+		driver.setPageLoadDetector(null);
+	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardHomeUtil#selectOOB(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
@@ -408,10 +389,10 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		Validator.notEmptyString("dashboardName", dashboardName);
 		String indicator = driver.isElementPresent(DashBoardPageId.OOBDASHBOARDNAMELOCATORLISTVIEW) ? DashBoardPageId.OOBDASHBOARDNAMELOCATOR
 				.replace("_name_", dashboardName) : DashBoardPageId.OOBDASHBOARD_LIST_LINK.replace("_name_", dashboardName);
-				if (!driver.isElementPresent(indicator)) {
-					throw new NoSuchElementException("Dashboard not exists. Name: " + dashboardName);
-				}
-				driver.click(indicator);
+		if (!driver.isElementPresent(indicator)) {
+			throw new NoSuchElementException("Dashboard not exists. Name: " + dashboardName);
+		}
+		driver.click(indicator);
 	}
 
 	/* (non-Javadoc)
@@ -433,12 +414,10 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		else if (DASHBOARD_QUERY_ORDER_BY_NAME_ASC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYNAMEASCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYNAMEASCLOCATOR);
-
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_NAME_DSC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYNAMEDSCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYNAMEDSCLOCATOR);
-
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_OWNER_ASC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYCREATEDBYASCLOCATOR);
@@ -448,7 +427,6 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		else if (DASHBOARD_QUERY_ORDER_BY_OWNER_DSC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYCREATEDBYDSCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYCREATEDBYDSCLOCATOR);
-
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_ASC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYCREATEDATEASCLOCATOR);
@@ -458,27 +436,22 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		else if (DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_DSC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYCREATEDATEDSCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYCREATEDATEDSCLOCATOR);
-
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_ASC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYLASTMODIFIEDASCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYLASTMODIFIEDASCLOCATOR);
-
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYLASTMODIFIEDDSCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYLASTMODIFIEDDSCLOCATOR);
-
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYLASTACCESSASCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYLASTACCESSASCLOCATOR);
-
 		}
 		else if (DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYLASTACCESSDSCLOCATOR);
 			driver.click(DashBoardPageId.SORTBYLASTACCESSDSCLOCATOR);
-
 		}
 		else {
 			throw new IllegalArgumentException("Unknow Sort by option: " + option);
@@ -585,11 +558,12 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 
 	private void deleteDashboardInGrid(WebDriver driver, String dashboardName)
 	{
-		WebElement gridTable = driver.getElement(convertCss(DashBoardPageId.DASHBOARD_GRID_TABLE_CSS));
-		List<WebElement> dashboardList = gridTable.findElements(By.tagName("div"));
-		for (WebElement dashboard : dashboardList) {
-			if (dashboardName.equals(dashboard.getAttribute("aria-label"))) {
-				dashboard.findElement(By.cssSelector("button")).click(); // click "i" button
+		driver.waitForElementVisible(convertCss(DashBoardPageId.DASHBOARD_GRID_TABLE_CSS));
+		
+		int dashboardsCount = driver.getElementCount("xpath=" + DashBoardPageId.DASHBOARD_IN_GRID_TABLE_XPATH);
+		for(int i=1; i<=dashboardsCount; i++) {
+			if (dashboardName.equals(driver.getAttribute("xpath=(" + DashBoardPageId.DASHBOARD_IN_GRID_TABLE_XPATH +")[" + i + "]"))) {
+				driver.click("xpath=(" + DashBoardPageId.DASHBOARD_IN_GRID_TABLE_XPATH +")[" + i + "]//button"); // click "i" button
 
 				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON)); // click delete
 
@@ -605,10 +579,30 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 				break;
 			}
 		}
+//		WebElement gridTable = driver.getElement(convertCss(DashBoardPageId.DASHBOARD_GRID_TABLE_CSS));
+//		List<WebElement> dashboardList = gridTable.findElements(By.tagName("div"));
+//		for (WebElement dashboard : dashboardList) {
+//			if (dashboardName.equals(dashboard.getAttribute("aria-label"))) {
+//				dashboard.findElement(By.cssSelector("button")).click(); // click "i" button
+//
+//				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON)); // click delete
+//
+//				driver.waitForElementPresent(convertCss(DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG));
+//				driver.getLogger().info("foucus on the delete button");
+//				driver.sendKeys(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM), Keys.TAB);
+//				
+//				driver.getLogger().info("click on the delete button");
+//				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM)); // confirm to delete
+//
+//				driver.getLogger().info("wait for the popup dialog close");				
+//				driver.waitForElementNotVisible("css=" + DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG);
+//				break;
+//			}
+//		}
 	}
 
 	private void deleteDashboardInList(WebDriver driver, String dashboardName)
-	{
+	{		
 		// find table
 		WebElement listTable = driver.getElement(convertCss(DashBoardPageId.DASHBOARD_LIST_TABLE));
 		// find the column index of both "Name" & button
@@ -641,23 +635,10 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 				break;
 			}
 		}
-	}
-
-	private String getElementAttribtue(WebElement element, String attribute)
-	{
-		try {
-			return element.getAttribute(attribute);
-		}
-		catch (Exception e) {
-			LOGGER.info("context", e);
-		}
-
-		return null;
-	}
+	}	
 
 	protected String convertName(String name)
 	{
 		return "name=" + name;
 	}
-
 }
