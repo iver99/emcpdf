@@ -39,7 +39,7 @@ def emcpsmRegClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'regi
 def emcpsmRegLookupClientVer = getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')
 def emcpdfDashboardSdkVer = getDependentSdkVersion('com.oracle.emaas.emcpdf', 'dashboards-sdk', '1.+')
 def emcpsfSdkVer =  getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
-def emcpsrvsPlatformSdkVer = getDependentSdkVersion('com.oracle.emaas.emcpsrvs.sdk', 'emaas-platform-tenant-sdk', '2.0.+')
+def emcpsrvsPlatformSdkVer = getDependentSdkVersion('com.oracle.emaas.emcpsrvs.sdk', 'emaas-platform-tenant-sdk', '2.1.+')
 def emaasGatewayClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpgw.sdk', 'gateway-client', '1.+');
 
 dependencies {
