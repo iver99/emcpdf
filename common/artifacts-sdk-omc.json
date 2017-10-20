@@ -1,18 +1,12 @@
 {
 	"deploy_application-emclas": {
 		"method": "artifactFilterSdkVersion",
-		"group": "com.oracle.emaas.emclas",
-		"name": "deploy_application",
-		"version": "1.+",
-		"ext": "xml",
+		"group": "com.oracle.emaas.emclas", "name": "deploy_application", "version": "1.+", "ext": "xml",
 		"transitive": false
 	},
 	"deploy_application-emcpa": {
 		"method": "artifactFilterSdkVersion",
-		"group": "com.oracle.emaas.emcpa",
-		"name": "deploy_application",
-		"version": "1.+",
-		"ext": "xml",
+		"group": "com.oracle.emaas.emcpa", "name": "deploy_application", "version": "1.+", "ext": "xml",
 		"transitive": false
 	},
 	"registry-client": {
@@ -33,35 +27,26 @@
 		"method": "artifactFilterSdkVersion",
 		"group": "com.oracle.emaas.emcpsrvs.sdk",
 		"name": "emaas-platform-tenant-sdk",
-		"version": "2.0.+",
+		"version": "2.1.+",
 		"transitive": false
 	},
         "multi-instances-sdk": {
                 "method": "artifactFilterSdkVersion",
-                "group": "com.oracle.emaas.emcpcs.sdk",
-                "name": "multi-instances-sdk",
-                "version": "1.0.+",
+                "group": "com.oracle.emaas.emcpcs.sdk", "name": "multi-instances-sdk", "version": "1.0.+",
                 "transitive": false
         },
 	"security-client": {
 		"method": "artifactFilterSdkVersion",
-		"group": "com.oracle.emaas.emcpsf.sdk",
-		"name": "security-client",
-		"version": "1.+",
+		"group": "com.oracle.emaas.emcpsf.sdk",	"name": "security-client", "version": "1.+",
 		"transitive": false
 	},
 	"emcs-targetselector": {
 		"method": "artifactFilterSdkVersion",
-		"group": "com.oracle.emaas.emctas.tgtsel",
-		"name": "emcs-targetselector",
-		"version": "1.9.0+",
-		"ext": "zip",
+		"group": "com.oracle.emaas.emctas.tgtsel", "name": "emcs-targetselector", "version": "1.9.0+", "ext": "zip",
 		"transitive": false
 	},
 	"omctfSetupTestSDK": { 
-		"group": "com.oracle.omc.omctf.testsdk", 
-		"name": "omctf_omcsetup", 
-		"version": "1.+", 
+		"group": "com.oracle.omc.omctf.testsdk", "name": "omctf_omcsetup", "version": "1.+",
 		"transitive": "true" 
 	}
 }
