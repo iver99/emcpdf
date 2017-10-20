@@ -1,11 +1,34 @@
 { 
+"#": "-- see https://confluence.oraclecorp.com/confluence/display/DevTools/Gradle+Common+Build+Framework+--+CBF#GradleCommonBuildFramework--CBF-PUB_USE_ARTIFACTSartifactspecfilesfortheCBF",
+"#": "-- see https://confluence.oraclecorp.com/confluence/display/DevTools/CBF+User+Guide#CBFUserGuide-Setandreferenceartifactspecs(GAV)fordependencies",
+"#": "=======================================================================",
+"#": "Format -- <artifactName>: { <artifactSpecMap> },",
+ 
+"#": "-- keep each section sorted by <artifactName>",
+"#": "-- <artifactName> is typically the name field or plugin name for plugins, but it can be any string,",
+"#": "   and as a Map key it must be kept unique (eg. by adding suffix '-...')",
+ 
+"#": "-- version field is evaluated as a double quoted string",
+"#": "-- builtin property <artifactName>Version overrides the version field for the <artifactName> artifact spec",
+ 
+"#": "-- transitive field is true by default",
+ 
+"#": "=====================================================================",
+"#": "SDK EM internal artifacts",
+"#": "have a group matching com.oracle.em*",
+"#": "-- entries must have a dynamic version containing '+', not a fixed version",
+"#": "-- method field should be artifactFilterSdkVersion",
+
+
 "deploy_application-emclas": { "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emclas", "name": "deploy_application", "version": "1.+", "ext": "xml", "transitive": false },
 "deploy_application-emcpa": { "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emcpa", "name": "deploy_application", "version": "1.+", "ext": "xml", "transitive": false },
-"registry-client": { "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emcpsm", "name": "registry-client", "version": "${getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-client', '1.+')}", "transitive": false },
-"registry-lookup-client": { "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emcpsm", "name": "registry-lookup-client", "version": "${getDependentSdkVersion('com.oracle.emaas.emcpsm', 'registry-lookup-client', '1.+')}", "transitive": false },
 "emaas-platform-tenant-sdk": { "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emcpsrvs.sdk", "name": "emaas-platform-tenant-sdk", "version": "2.0.+", "transitive": false },
-"multi-instances-sdk": { "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emcpcs.sdk", "name": "multi-instances-sdk", "version": "1.0.+", "transitive": false },
-"security-client": { "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emcpsf.sdk", "name": "security-client", "version": "1.+", "transitive": false },
 "emcs-targetselector": { "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emctas.tgtsel", "name": "emcs-targetselector", "version": "1.9.0+", "ext": "zip", "transitive": false },
-"omctfSetupTestSDK": { "method": "artifactFilterSdkVersion", "group": "com.oracle.omc.omctf.testsdk", "name": "omctf_omcsetup", "version": "1.+", "transitive": "true" }
+"gateway-client": { "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emcpgw.sdk", "name": "gateway-client", "version": "1.+", "transitive": false },
+"multi-instances-sdk": { "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emcpcs.sdk", "name": "multi-instances-sdk", "version": "1.0.+", "transitive": false },
+"omctfSetupTestSDK": { "method": "artifactFilterSdkVersion", "group": "com.oracle.omc.omctf.testsdk", "name": "omctf_omcsetup", "version": "1.+", "transitive": true },
+"registry-client": { "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emcpsm", "name": "registry-client", "version": "1.+", "transitive": false },
+"registry-lookup-client": { "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emcpsm", "name": "registry-lookup-client", "version": "1.+", "transitive": false },
+"security-client": { "method": "artifactFilterSdkVersion", "group": "com.oracle.emaas.emcpsf.sdk", "name": "security-client", "version": "1.+", "transitive": false }
+
 }
