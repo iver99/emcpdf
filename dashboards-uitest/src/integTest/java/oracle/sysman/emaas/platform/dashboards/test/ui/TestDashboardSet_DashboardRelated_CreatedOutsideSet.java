@@ -34,8 +34,8 @@ public class TestDashboardSet_DashboardRelated_CreatedOutsideSet extends LoginAn
 	@BeforeClass
 	public void createTestData()
 	{
-		dbsetName = "DashboardSet_DashboardRelatedTest-OutsideSet" + generateTimeStamp();
-		dbName = "Dashboard_CreatedOutsideSet-" + generateTimeStamp();
+		dbsetName = "DashboardSet_DashboardRelatedTest-OutsideSet" + DashBoardUtils.generateTimeStamp();
+		dbName = "Dashboard_CreatedOutsideSet-" + DashBoardUtils.generateTimeStamp();
 		String dbsetDesc = "Test the dashboard set";
 
 		//init the test
@@ -274,10 +274,5 @@ public class TestDashboardSet_DashboardRelated_CreatedOutsideSet extends LoginAn
 		webd.getLogger().info("Verify if the dashboard exists in the dashborad set");
 		Assert.assertFalse(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName), "Dashboard is in the dashboard set");
 
-	}
-
-	private String generateTimeStamp()
-	{
-		return String.valueOf(System.currentTimeMillis());
 	}
 }

@@ -16,11 +16,7 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -266,8 +262,8 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 
 		//verify if in the home page
 		webd.getLogger().info("Verify delete successfully and back to the home page");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DASHBOARDDISPLAYPANELCSS)));
+		webd.waitForServer();
+		webd.waitForElementPresent("css=" + PageId.DASHBOARDDISPLAYPANELCSS);
 
 		//verify if in the dashboar set has been deleted
 		webd.getLogger().info("Verify if the dashboard has been deleted");

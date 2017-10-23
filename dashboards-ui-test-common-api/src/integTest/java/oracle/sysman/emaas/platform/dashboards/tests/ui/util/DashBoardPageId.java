@@ -338,6 +338,10 @@ public class DashBoardPageId
 	public static final String TEXTCONTENT1 = "//div[contains(@id, 'textContentWrapper_')]/div/a[1]";
 	public static final String TEXTCONTENT2 = "//div[contains(@id, 'textContentWrapper_')]/div/a[2]";
 	public static final String LINKICONCSS = ".cke_button__link";         // "//a[@title='Link']";
+	public static final String TARGETCSS = "a[id^='cke_target_']";
+	public static final String TARGETOPTION = "//div[contains(@class, 'cke_dialog_ui_select')]/label[text()='Target']/following-sibling::*//div[contains(@class, 'cke_dialog_ui_input_select')]";
+	public static final String NEWTABCSS = ".cke_dialog_ui_input_select option[value='_blank']";
+	public static final String SAMETABCSS = ".cke_dialog_ui_input_select option[value='_self']";
 	public static final String LINKDIALOGCSS = "div.cke_dialog_body";
 	public static final String PROTOCOLOPTION = "//div[contains(@class, 'cke_dialog_ui_select')]/label[text()='Protocol']/following-sibling::*//div[contains(@class, 'cke_dialog_ui_input_select')]";
 	public static final String PROTOCOLOPTION_HTTP = "http://";

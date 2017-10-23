@@ -15,7 +15,6 @@ import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.Common
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.UIControls;
 
-import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -26,7 +25,6 @@ public class HamburgerMenu_RegisterServiceMenu extends LoginAndLogout
 {
 	public void initTest(String testName, String queryString)
 	{
-
 		loginHamburgerMenu(this.getClass().getName() + "." + testName, queryString);
 		CommonUIUtils.loadWebDriver(webd);
 	}
@@ -117,8 +115,9 @@ public class HamburgerMenu_RegisterServiceMenu extends LoginAndLogout
 		//click the 'Show Composite' button
 		webd.getLogger().info("Click the 'Show Composite' button");
 		String indicator = UIControls.SGENERATEMENUBTN.replace("_name_", "Register Service Menu");
-		//webd.click("css=" + indicator);
-		webd.getWebDriver().findElement(By.cssSelector(indicator)).click();
+		
+		webd.click("css=" + indicator);
+		
 		//check the hamburger menu
 		webd.getLogger().info("Check the menu items in hamburger menu");
 		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, serviceMenuItem));

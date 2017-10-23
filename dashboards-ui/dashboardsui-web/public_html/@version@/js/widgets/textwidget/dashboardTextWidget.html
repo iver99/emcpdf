@@ -1,6 +1,6 @@
 <div style='width: 100%; height: 100%;'>
     <div class="textWidgetWrapper">
-        <div data-bind="attr: {id: 'textContentWrapper_'+textWidgetId}, click: showTextEditor" style="width: 100%; height: 100%; word-wrap: break-word;">
+        <div data-bind="attr: {id: 'textContentWrapper_'+textWidgetId}, event: {dblclick: textWidgetDblClickHandler}, click: textWidgetClickHandler" style="width: 100%; height: 100%; word-wrap: break-word;">
             <!-- ko if: emptyContent -->
             <div style="font-style: italic; color: grey;" data-bind="text: getNlsString('DBS_BUILDER_TEXT_WIDGET_PROMPT_STRING')"></div>
             <!-- /ko -->
