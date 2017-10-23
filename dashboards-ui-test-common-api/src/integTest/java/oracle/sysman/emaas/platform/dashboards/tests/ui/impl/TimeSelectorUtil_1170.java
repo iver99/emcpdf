@@ -124,8 +124,7 @@ public class TimeSelectorUtil_1170 extends TimeSelectorUtil_1160
 					clickApplyButton(webd);
 				}
 
-				return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1)
-						.getText();
+				return webd.getText("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + Index + "]");
 			case Custom:
 				try {
 					throw new Exception("Please use setCustomTime API to set Custom Range");

@@ -10,19 +10,12 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorUIControls;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 {
@@ -312,9 +305,11 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 		webd.sendKeys("css=" + TimeSelectorUIControls.sFlexRelTimeVal, String.valueOf(relTimeVal));
 
 		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sFlexRelTimeOpt);
-		webd.click("css=" + TimeSelectorUIControls.sFlexRelTimeOpt);
-		String optionLocator = getOptionsLocator(webd, relTimeUnit.getTimeUnit());
-		webd.click("css=" + optionLocator);
+//		webd.click("css=" + TimeSelectorUIControls.sFlexRelTimeOpt);
+//		String optionLocator = getOptionsLocator(webd, relTimeUnit.getTimeUnit());
+//		webd.click("css=" + optionLocator);
+		
+		webd.select(TimeSelectorUIControls.sFlexRelTimeOpt, "value='" + relTimeUnit.getTimeUnit() + "'");
 
 		try {
 			clickApplyButton(webd);
@@ -435,8 +430,7 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 					throw new Exception("Please use setCustomTime API to set Custom Range");
 				}
 				catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					webd.getLogger().info(e.getLocalizedMessage());
 				}
 			default:
 				break;
@@ -481,15 +475,5 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 	public String setTimeRange(WebDriver webd, TimeRange rangeoption)
 	{
 		return setTimeRange(webd, 1, rangeoption);
-	}
-
-	private String getOptionsLocator(WebDriver driver, String option)
-	{
-		String optionLocator = TimeSelectorUIControls.sFlexRelTimeOptList + "[value='" + option + "']";
-		WebElement li = driver.getWebDriver().findElement(By.cssSelector(optionLocator));
-		List<WebElement> list = driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sFlexRelTimeOptList));
-		int index = list.indexOf(li);
-
-		return TimeSelectorUIControls.sFlexRelTimeOptStart + (index + 1) + TimeSelectorUIControls.sFlexRelTimeOptEnd;
 	}
 }
