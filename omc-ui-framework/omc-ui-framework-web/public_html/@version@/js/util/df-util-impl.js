@@ -177,9 +177,10 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
              * @param {String} serviceName
              * @param {String} version
              * @param {String} rel
+             * @param {Boolean} useApiGWLookup
              * @returns {String} result
              */
-            self.discoverUrl = function (serviceName, version, rel) {
+            self.discoverUrl = function (serviceName, version, rel, useApiGWLookup) {
                 if (serviceName === null || serviceName === undefined) {
                     oj.Logger.error("Error: Failed to discover URL, serviceName=" + serviceName);
                     return null;
@@ -188,11 +189,13 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                     oj.Logger.error("Error: Failed to discover URL, version=" + version);
                     return null;
                 }
+                //By default useApiGWLookup is false
+                useApiGWLookup = (useApiGWLookup === true) ? true : false;
 
                 var result = null;
-                var url = self.LOOKUP_REST_URL_BASE + "endpoint?serviceName=" + serviceName + "&version=" + version;
+                var url = self.LOOKUP_REST_URL_BASE + "endpoint?serviceName=" + serviceName + "&version=" + version + "&useApiGWLookup=" + useApiGWLookup;
                 if (typeof rel === "string") {
-                    url = self.LOOKUP_REST_URL_BASE + "link?serviceName=" + serviceName + "&version=" + version + "&rel=" + rel;
+                    url = self.LOOKUP_REST_URL_BASE + "link?serviceName=" + serviceName + "&version=" + version + "&rel=" + rel + "&useApiGWLookup=" + useApiGWLookup;
                 }
 
                 self.ajaxWithRetry(url, {
@@ -229,9 +232,10 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
              * @param {String} version
              * @param {String} rel
              * @param {Function} callbackFunc
+             * @param {Boolean} useApiGWLookup
              * @returns
              */
-            self.discoverUrlAsync = function (serviceName, version, rel, callbackFunc) {
+            self.discoverUrlAsync = function (serviceName, version, rel, callbackFunc, useApiGWLookup) {
                 if (!$.isFunction(callbackFunc)) {
                     oj.Logger.error("Invalid callback function: " + callbackFunc);
                     return;
@@ -244,10 +248,13 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                     oj.Logger.error("Error: Failed to discover URL, version=" + version);
                     return;
                 }
+                
+                //By default useApiGWLookup is false
+                useApiGWLookup = (useApiGWLookup === true) ? true : false;
 
-                var url = self.LOOKUP_REST_URL_BASE + "endpoint?serviceName=" + serviceName + "&version=" + version;
+                var url = self.LOOKUP_REST_URL_BASE + "endpoint?serviceName=" + serviceName + "&version=" + version + "&useApiGWLookup=" + useApiGWLookup;
                 if (typeof rel === "string") {
-                    url = self.LOOKUP_REST_URL_BASE + "link?serviceName=" + serviceName + "&version=" + version + "&rel=" + rel;
+                    url = self.LOOKUP_REST_URL_BASE + "link?serviceName=" + serviceName + "&version=" + version + "&rel=" + rel + "&useApiGWLookup=" + useApiGWLookup;
                 }
 
                 self.ajaxWithRetry(url, {
@@ -282,9 +289,10 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
              * @param {String} serviceName
              * @param {String} version
              * @param {String} rel
+             * @param {Boolean} useApiGWLookup
              * @returns {String} result
              */
-            self.discoverLinkWithRelPrefix = function (serviceName, version, rel) {
+            self.discoverLinkWithRelPrefix = function (serviceName, version, rel, useApiGWLookup) {
                 if (typeof serviceName !== "string") {
                     oj.Logger.error("Error: Failed to discover Link (with Rel Prefix), serviceName=" + serviceName);
                     return null;
@@ -298,8 +306,11 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                     oj.Logger.error("Error: Failed to discover Link (with Rel Prefix), rel=" + rel);
                     return null;
                 }
+                //By default useApiGWLookup is false
+                useApiGWLookup = (useApiGWLookup === true) ? true : false;
+                
                 var result = null;
-                var url = self.LOOKUP_REST_URL_BASE + "linkWithRelPrefix?serviceName=" + serviceName + "&version=" + version + "&rel=" + rel;
+                var url = self.LOOKUP_REST_URL_BASE + "linkWithRelPrefix?serviceName=" + serviceName + "&version=" + version + "&rel=" + rel + "&useApiGWLookup=" + useApiGWLookup;
 
                 self.ajaxWithRetry(url, {
                     type: 'get',
@@ -329,9 +340,10 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
              * @param {String} version
              * @param {String} rel
              * @param {Function} callbackFunc
+             * @param {Boolean} useApiGWLookup
              * @returns
              */
-            self.discoverLinkWithRelPrefixAsync = function (serviceName, version, rel, callbackFunc) {
+            self.discoverLinkWithRelPrefixAsync = function (serviceName, version, rel, callbackFunc, useApiGWLookup) {
                 if (!$.isFunction(callbackFunc)) {
                     oj.Logger.error("Invalid callback function: " + callbackFunc);
                     return;
@@ -349,8 +361,10 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                     oj.Logger.error("Error: Failed to discover Link (with Rel Prefix), rel=" + rel);
                     return;
                 }
+                //By default useApiGWLookup is false
+                useApiGWLookup = (useApiGWLookup === true) ? true : false;
 
-                var url = self.LOOKUP_REST_URL_BASE + "linkWithRelPrefix?serviceName=" + serviceName + "&version=" + version + "&rel=" + rel;
+                var url = self.LOOKUP_REST_URL_BASE + "linkWithRelPrefix?serviceName=" + serviceName + "&version=" + version + "&rel=" + rel + "&useApiGWLookup=" + useApiGWLookup;
                 self.ajaxWithRetry(url, {
                     type: 'get',
                     dataType: 'json',
@@ -1083,6 +1097,15 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                         window._uifwk.cachedData.isFetchingRegistrations = true;
                         if (!window._uifwk.cachedData.registrations) {
                             window._uifwk.cachedData.registrations = ko.observable();
+                        }else{
+                            if (!$.isFunction(window._uifwk.cachedData.registrations));{
+                                console.info("EMCPDF-5019 is hit: BEGIN");
+                                console.info("registrations data: "+JSON.stringify(window._uifwk.cachedData.registrations));
+                                console.info("toSendAsync: "+toSendAsync);
+                                console.info("successCallback: "+successCallback);
+                                console.info("errorCallback: "+errorCallback);
+                                console.info("EMCPDF-5019 is hit: END");
+                            }                            
                         }
                         if (!window._uifwk.cachedData.errGetRegistration) {
                             window._uifwk.cachedData.errGetRegistration = ko.observable(false);
@@ -1092,6 +1115,12 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                         }
 
                         function doneCallback(data, textStatus, jqXHR) {
+                            if (!$.isFunction(window._uifwk.cachedData.registrations));{
+                                console.info("EMCPDF-5019 is hit 2: BEGIN");
+                                console.info("data: "+JSON.stringify(data));
+                                console.info(jqXHR);
+                                console.info("EMCPDF-5019 is hit 2: END");
+                            }                            
                             window._uifwk.cachedData.registrations(data);
                             window._uifwk.cachedData.isFetchingRegistrations = false;
                             successCallback(data, textStatus, jqXHR);

@@ -44,7 +44,6 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_saveConfirmation = "";
 	private String dbName_longName = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNam";
 
-
 	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
 	private final String OOBDesc = "Displays the current health of your Oracle middleware ecosystem";
@@ -925,4 +924,3 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.isElementPresent(DashBoardPageId.DASHBOARDOFLONGNAMELOCATOR);	
     }
 }
-
