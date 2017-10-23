@@ -12,12 +12,9 @@ package oracle.sysman.emaas.platform.dashboards.test.ui;
 
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
-import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.*;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -36,6 +33,8 @@ public class TestGlobalContext_TimeRange extends LoginAndLogout
 	public static String DSBNAME = "";
 	public static String StartTimeStamp = "";
 	public static String EndTimeStamp = "";
+	public static String dsb_4757 = "";
+	public static String dsb_4757_withWidget = "";
 
 	public void initTest(String testName)
 	{
@@ -117,6 +116,8 @@ public class TestGlobalContext_TimeRange extends LoginAndLogout
 		webd.getLogger().info("Start to remove the test data...");
 
 		DashBoardUtils.deleteDashboard(webd, DSBNAME);
+		DashBoardUtils.deleteDashboard(webd, dsb_4757);
+		DashBoardUtils.deleteDashboard(webd, dsb_4757_withWidget);
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -180,7 +181,7 @@ public class TestGlobalContext_TimeRange extends LoginAndLogout
 		urlVerification("emcta/ta/analytics.html", StartTimeStamp,EndTimeStamp);
 	}
 
-	//@Test(alwaysRun = true)
+	@Test(alwaysRun = true)
 	public void testGlocalContext_TimeRange_Monitoring()
 	{
 		//Initialize the test
@@ -236,10 +237,159 @@ public class TestGlobalContext_TimeRange extends LoginAndLogout
 		webd.getLogger().info("Verify the URL");
 		urlVerification("complianceuiservice/index.html", StartTimeStamp,EndTimeStamp);
 	}
+
+	@Test(alwaysRun = true)
+	public void testEMCPDF_4757_withoutWidget()
+	{
+		dsb_4757 = "Test EMCPDF-4757 - " + DashBoardUtils.generateTimeStamp();
+
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testEMCPDF_4757_withoutWidget");
+
+		//switch to grid view
+		webd.getLogger().info("In Grid View");
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webd, dsb_4757,"");
+
+		//configure glocal context
+		webd.getLogger().info("Respect GC of Entities");
+		DashboardBuilderUtil.respectGCForEntity(webd);
+
+		webd.getLogger().info("Set Time Selector as : Use time range on dashboard page");
+		DashboardBuilderUtil.showTimeRangeFilter(webd, true);
+
+		//get the time range of the time selector
+		webd.getLogger().info("Get the time range set in the time selector");
+		String timeRange_in_df = TimeSelectorUtil.getTimeRangeLabel(webd).trim().trim().split(":")[0];
+		webd.getLogger().info("Time Range in DF: "+ timeRange_in_df);
+
+		//navigate to UDE page
+		webd.getLogger().info("Navigate to UDE page");
+		BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.ROOT_MENU_DATAEXPLORER);
+
+		//change the time range in UDE
+		webd.getLogger().info("Change the time range in UDE page");
+		TimeSelectorUtil.setTimeRange(webd, ITimeSelectorUtil.TimeRange.Last90Days);
+
+		//back to Dahboard home page
+		webd.getLogger().info("Back to dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//open the dashboard
+		webd.getLogger().info("Open the dashboard created");
+		DashboardHomeUtil.selectDashboard(webd, dsb_4757);
+
+		//verify the time range not changed
+		webd.getLogger().info("Verify the time range not changed");
+		String currentTimeRange = TimeSelectorUtil.getTimeRangeLabel(webd).trim().trim().split(":")[0];
+		Assert.assertEquals(timeRange_in_df, currentTimeRange);
+
+		//verify the URL in builder page
+		webd.getLogger().info("Verify the URL");
+		String currentUrl = webd.getCurrentUrl();
+		if (!currentUrl.substring(currentUrl.indexOf("emsaasui") + 9).contains("timePeriod%3DLAST_90_DAY%26")) {
+			Assert.fail("Wrong time period");
+		}
+
+		//change the time range in dashboard
+		webd.getLogger().info("Change the time range");
+		TimeSelectorUtil.setTimeRange(webd, ITimeSelectorUtil.TimeRange.NewLast7Days);
+
+		currentUrl = webd.getCurrentUrl();
+		if (!currentUrl.substring(currentUrl.indexOf("emsaasui") + 9).contains("timePeriod%3DLAST_90_DAY%26")) {
+			Assert.fail("Wrong time period");
+		}
+	}
+
+	@Test(alwaysRun = true)
+	public void testEMCPDF_4757_withWidget()
+	{
+		dsb_4757_withWidget = "Test EMCPDF-4757 With Widget - " + DashBoardUtils.generateTimeStamp();
+
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testEMCPDF_4757_withWidget");
+
+		//switch to grid view
+		webd.getLogger().info("In Grid View");
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webd, dsb_4757_withWidget,"");
+
+		webd.getLogger().info("Add widget to the dashboard");
+		DashboardBuilderUtil.addWidgetToDashboard(webd, "Treemap");
+		DashboardBuilderUtil.saveDashboard(webd);
+
+		//configure glocal context
+		webd.getLogger().info("Respect GC of Entities");
+		DashboardBuilderUtil.respectGCForEntity(webd);
+
+		webd.getLogger().info("Set Time Selector as : Use time range on dashboard page");
+		DashboardBuilderUtil.showTimeRangeFilter(webd, true);
+
+		//get the time range of the time selector
+		webd.getLogger().info("Get the time range set in the time selector");
+		String timeRange_in_df = TimeSelectorUtil.getTimeRangeLabel(webd).trim().split(":")[0];
+		webd.getLogger().info("Time Range in DF: "+ timeRange_in_df);
+
+		//navigate to UDE page
+		webd.getLogger().info("Navigate to UDE page");
+		BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.ROOT_MENU_DATAEXPLORER);
+
+		//change the time range in UDE
+		webd.getLogger().info("Change the time range in UDE page");
+		TimeSelectorUtil.setTimeRange(webd, ITimeSelectorUtil.TimeRange.Last90Days);
+
+		//back to Dahboard home page
+		webd.getLogger().info("Back to dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//open the dashboard
+		webd.getLogger().info("Open the dashboard created");
+		DashboardHomeUtil.selectDashboard(webd, dsb_4757_withWidget);
+
+		//verify the time range not changed
+		webd.getLogger().info("Verify the time range not changed");
+		String currentTimeRange = TimeSelectorUtil.getTimeRangeLabel(webd).trim().split(":")[0];
+		Assert.assertEquals(timeRange_in_df, currentTimeRange);
+
+		//verify the time in widget
+		webd.getLogger().info("Verify the time in the widget");
+		String timerange = webd.evalJavascript("return window._contextPassedToWidgetsAtPageLoad && window._contextPassedToWidgetsAtPageLoad.timeSelector && window._contextPassedToWidgetsAtPageLoad.timeSelector.viewTimePeriod()");
+		webd.getLogger().info(timerange);
+		Assert.assertEquals(timerange, "LAST_14_DAY");
+
+		//verify the URL in builder page
+		webd.getLogger().info("Verify the URL");
+		String currentUrl = webd.getCurrentUrl();
+		if (!currentUrl.substring(currentUrl.indexOf("emsaasui") + 9).contains("timePeriod%3DLAST_90_DAY%26")) {
+			Assert.fail("Wrong time period");
+		}
+
+		//change the time range in dashboard
+		webd.getLogger().info("Change the time range");
+		TimeSelectorUtil.setTimeRange(webd, ITimeSelectorUtil.TimeRange.NewLast7Days);
+		webd.waitForServer();
+
+		//timerange = webd.evalJavascript("return window._contextPassedToWidgetsAtPageLoad && window._contextPassedToWidgetsAtPageLoad.timeSelector && window._contextPassedToWidgetsAtPageLoad.timeSelector.viewTimePeriod()");
+		//webd.getLogger().info(timerange);
+		//Assert.assertEquals(timerange, "LAST_7_DAY");
+
+		currentUrl = webd.getCurrentUrl();
+		if (!currentUrl.substring(currentUrl.indexOf("emsaasui") + 9).contains("timePeriod%3DLAST_90_DAY%26")) {
+			Assert.fail("Wrong time period");
+		}
+	}
 	
 	private void urlVerification(String serviceURL, String StartTimeStamp, String EndTimeStamp)
 	{
-		String url = webd.getWebDriver().getCurrentUrl();
+		String url = webd.getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		if (!url.substring(url.indexOf("emsaasui") + 9).contains(serviceURL)) {
 			Assert.fail("Wrong Service URL");

@@ -18,6 +18,7 @@ import java.util.*;
 public class LinkedHashMapCache extends AbstractCache{
     private static final Logger LOGGER = LogManager.getLogger(LinkedHashMapCache.class);
 
+    private final Object lock = new Object();
     private CacheStatus cacheStatus;
     private LinkedHashMap<Object, CachedItem> cacheMap;
     private String name;
@@ -98,7 +99,9 @@ public class LinkedHashMapCache extends AbstractCache{
             LOGGER.debug("Put action for key {} will not executed as cache status is not available", key);
             return;
         }
-        cacheMap.put(key, new CachedItem(key,value));
+        synchronized (lock){
+            cacheMap.put(key, new CachedItem(key,value));
+        }
         LOGGER.debug("CachedItem with key {} and value {} is [cached] into cache group {}",key,value,name);
     }
 
@@ -109,7 +112,9 @@ public class LinkedHashMapCache extends AbstractCache{
             return;
         }
         super.evict(key);
-        cacheMap.remove(key);
+        synchronized (lock){
+            cacheMap.remove(key);
+        }
         LOGGER.debug("Cached Item with key {} is [evicted] from cache group {}",key,name);
     }
 

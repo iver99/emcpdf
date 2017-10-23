@@ -162,7 +162,7 @@ dependencies {
 //	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1') { transitive = false }
 	
 //	providedCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:"${emaasRegistryLookupClientVersion}") { transitive = false }
-//	providedCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
+//	providedCompile(group: 'com.oracle.emaas.emcpsrvs.sdk', name:'emaas-platform-tenant-sdk', version:'2.1.+') { transitive = false }
 	
 
 

@@ -6,10 +6,10 @@
         <artifact name="cookbook" loc="dashboards-chef/cookbook-emcs-dashboardService-ui"/>
         <artifact name="software" loc="dashboards-ui/deploy-list.xml"/>
 	<DependsOn>
-            <Service Name="DashboardService-API" Version="1.23.0" type="schema,app"/>
+            <Service Name="DashboardService-API" Version="1.24.0" type="schema,app"/>
          </DependsOn>
 </Service>
-<Service Name="DashboardService-API" Version="1.23.0" type="schema,app">
+<Service Name="DashboardService-API" Version="1.24.0" type="schema,app">
         <artifact name="softwarejson" loc="software-definitions/DashboardService-API.json"/> 
         <artifact name="cookbook" loc="dashboards-chef/cookbook-emcs-dashboardService-api"/>
         <artifact name="software" loc="dashboards-ee/deploy-list.xml"/>
@@ -19,7 +19,7 @@
         <artifact name="cookbook" loc="dashboards-chef/cookbook-emcs-omc-ui-framework"/>
         <artifact name="software" loc="omc-ui-framework/deploy-list.xml"/>
         <DependsOn>
-            <Service Name="DashboardService-API" Version="1.23.0" type="schema,app"/>
+            <Service Name="DashboardService-API" Version="1.24.0" type="schema,app"/>
          </DependsOn>
 </Service>
 

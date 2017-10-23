@@ -111,4 +111,7 @@ public class PageId
 
 	
 	public static final String DASHBOARD_CREATE_DIALOG_CANCEL_CSS = "#cancelCreateDsb";
+
+	//get started icon in builder page
+	public static final String DASHBOARD_GET_START_ICON_CSS = ".tooltip-add-widget div";
 }

@@ -161,6 +161,28 @@ public class GlobalContextUtil_1130 extends GlobalContextUtil_Version implements
 		webd.getLogger().info("Method not available in the current version");
 		return "";
 	}
+	
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#getTimeRangeLabel(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public String getTimeRangeLabel_V2(WebDriver webd)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#getTimeRangeLabel(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int)
+	 */
+	@Override
+	public String getTimeRangeLabel_V2(WebDriver webd, int index)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
+	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#hideTopology(oracle.sysman.qatool.uifwk.webdriver.WebDriver)

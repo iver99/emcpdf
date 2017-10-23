@@ -141,6 +141,8 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage_V4')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_BuilderPage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoardSet_BuilderPage')
             }
         }
     }
@@ -166,6 +168,8 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage_V1')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB_V1')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_BuilderPage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoardSet_BuilderPage')
             }
         }
     }
