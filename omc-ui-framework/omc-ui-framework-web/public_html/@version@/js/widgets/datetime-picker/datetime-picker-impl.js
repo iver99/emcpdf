@@ -178,7 +178,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                 self.inputDateConverter = oj.Validation.converterFactory("dateTime").createConverter(inputDateOption);
                 self.dateConverter = oj.Validation.converterFactory("dateTime").createConverter(dateOption);
                 self.timeConverterMinute = oj.Validation.converterFactory("dateTime").createConverter({pattern: 'hh:mm a'});
-                self.timeConverterMillisecond = oj.Validation.converterFactory("dateTime").createConverter({pattern: 'hh:mm:ss:SSS a'});
+                self.timeConverterMillisecond = oj.Validation.converterFactory("dateTime").createConverter({pattern: 'hh:mm:ss.SSS a'});
                 self.timeConverter = ko.observable(self.timeConverterMinute);
                 self.showTimeAtMillisecond = ko.observable(false);
                 self.showLatestOnCustomPanel = ko.observable(false);

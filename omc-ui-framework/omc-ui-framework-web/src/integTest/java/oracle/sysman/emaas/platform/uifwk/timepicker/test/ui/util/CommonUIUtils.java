@@ -54,7 +54,7 @@ public class CommonUIUtils
 				.getText();
 
 		driver.getLogger().info("TimePickerLabel: " + strTimePickerText);
-		Assert.assertEquals(strTimePickerText, TimeSelectorUtil.getTimeRangeLabel(driver, index));
+		Assert.assertEquals(strTimePickerText, TimeSelectorUtil.getTimeRangeLabel_V2(driver, index));
 
 		String timeRange = option.getRangeOption();
 
@@ -68,7 +68,7 @@ public class CommonUIUtils
 		}
 		else {
 			if (MillionSeconds) {
-				fmt = new SimpleDateFormat("MMM d, yyyy h:mm:ss:SSS a");
+				fmt = new SimpleDateFormat("MMM d, yyyy h:mm:ss.SSS a");
 			}
 			else {
 				fmt = new SimpleDateFormat("MMM d, yyyy h:mm a");
@@ -191,7 +191,7 @@ public class CommonUIUtils
 				.getText();
 
 		driver.getLogger().info("TimePickerLabel: " + strTimePickerText);
-		Assert.assertEquals(strTimePickerText, TimeSelectorUtil.getTimeRangeLabel(driver, index));
+		Assert.assertEquals(strTimePickerText, TimeSelectorUtil.getTimeRangeLabel_V2(driver, index));
 
 		String timeRange = "";
 
@@ -231,7 +231,7 @@ public class CommonUIUtils
 		}
 		else {
 			if (MillionSeconds) {
-				fmt = new SimpleDateFormat("MMM d, yyyy h:mm:ss:SSS a");
+				fmt = new SimpleDateFormat("MMM d, yyyy h:mm:ss.SSS a");
 			}
 			else {
 				fmt = new SimpleDateFormat("MMM d, yyyy h:mm a");
@@ -368,7 +368,7 @@ public class CommonUIUtils
 			startDate = timeFormatChange(webd, startDateTime, "MM/dd/yy", "MM/dd/yyyy");
 			}
 			else if(MillionSecond){
-				start = timeFormatChange(webd, startDateTime, "MM/dd/yy hh:mm:ss:SSS a", "MM/dd/yyyy hh:mm:ss:SSS a");
+				start = timeFormatChange(webd, startDateTime, "MM/dd/yy hh:mm:ss.SSS a", "MM/dd/yyyy hh:mm:ss.SSS a");
 			}
 			else
 			{
@@ -384,7 +384,7 @@ public class CommonUIUtils
 				endDate = timeFormatChange(webd, endDateTime, "MM/dd/yy", "MM/dd/yyyy");
 				}
 				else if(MillionSecond){
-					end = timeFormatChange(webd, endDateTime, "MM/dd/yy hh:mm:ss:SSS a", "MM/dd/yyyy hh:mm:ss:SSS a");
+					end = timeFormatChange(webd, endDateTime, "MM/dd/yy hh:mm:ss.SSS a", "MM/dd/yyyy hh:mm:ss.SSS a");
 				}
 				else
 				{

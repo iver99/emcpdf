@@ -99,7 +99,7 @@ public class TestDashboard_RespectGC extends LoginAndLogout
 
 		WaitUtil.waitForPageFullyLoaded(webd);
 
-		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last 7 days"), true);
+		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel_V2(webd).contains("Last 7 days"), true);
 	}
 	
 	@Test(alwaysRun = true)

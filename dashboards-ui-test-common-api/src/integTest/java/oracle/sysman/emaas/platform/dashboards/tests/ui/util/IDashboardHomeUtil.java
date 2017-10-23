@@ -38,6 +38,7 @@ public interface IDashboardHomeUtil extends IUiTestCommonAPI
 	public static final String DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC = "last_modification_date_dsc";
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_ASC = "owner_asc";
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_DSC = "owner_dsc";
+	public static final String DASHBOARD_QUERY_ORDER_BY_DEFAULT = "default";
 
 	public void closeOverviewPage(WebDriver driver);
 

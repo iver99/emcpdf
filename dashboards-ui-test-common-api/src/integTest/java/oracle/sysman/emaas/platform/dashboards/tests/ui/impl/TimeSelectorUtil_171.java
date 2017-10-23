@@ -63,6 +63,20 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		return "";
 	}
 
+	@Override
+	public String getTimeRangeLabel_V2(WebDriver webd)
+	{
+		return getTimeRangeLabel_V2(webd, 1);
+	}
+
+	@Override
+	public String getTimeRangeLabel_V2(WebDriver webd, int index)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		webd.getLogger().info("Method not available in the current version");
+		return "";
+	}
+	
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil#setCustomTime(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int, java.lang.String, java.lang.String)
 	 */

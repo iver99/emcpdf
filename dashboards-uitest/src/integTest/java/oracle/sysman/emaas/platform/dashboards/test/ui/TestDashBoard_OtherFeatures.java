@@ -53,7 +53,10 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_textWidget_multiLink = "";
 	private String dbName_textWidget_order = "";
 	private String dbName_textWidget_empty = "";
-
+	private String dbName_textWidget_clickLink1 = "";
+	private String dbName_textWidget_clickLink2 = "";
+	private String dbName_textWidget_clickImage = "";
+	
 	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
 	private final String OOBDesc = "Displays the current health of your Oracle middleware ecosystem";
@@ -1097,8 +1100,11 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		
 		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTP);	
 		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
-				
-		webd.click("css=" + DashBoardPageId.TEXTCONTENTCSS);		
+		
+		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
+		
+		DashboardBuilderUtil.switchTextWidgetToEditMode(webd, 1);
+		
 		webd.getWebDriver().switchTo().activeElement().sendKeys(Keys.ENTER);
 		webd.getWebDriver().switchTo().activeElement().sendKeys(Keys.ARROW_UP);
 		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
@@ -1229,5 +1235,91 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		//verify the text widget
 		webd.getLogger().info("Verify the text widget in the dashboard");		
 		Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTWIDGETCONTENTCSS).trim(), "Start typing...");
+	}
+	
+	//@Test
+	public void testTextWidget_clickLink()
+	{
+		dbName_textWidget_clickLink1 = "Dashboard_textWidget_clickLink-" + DashBoardUtils.generateTimeStamp();
+		
+		String dbDesc = "Add text widget into dashboard, test click link, open it with new window";
+		
+		String urlString = "emsaasui/uifwk/images/o_logo.png";
+		String url = "";		
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test link in testTextWidget");
+
+		DashboardHomeUtil.gridView(webd);
+		
+		String currentUrl = webd.getWebDriver().getCurrentUrl();
+		url = (currentUrl.substring(8, currentUrl.indexOf("emsaasui"))).concat(urlString);
+
+		webd.getLogger().info("Create the dashboard, then to add text widget");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_clickLink1, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_clickLink1, dbDesc, true), "Create dashboard failed!");		
+		
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
+		
+		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTPS);	
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+		
+		DashboardBuilderUtil.saveDashboard(webd);	
+		
+		webd.click(DashBoardPageId.TEXTCONTENT1);	
+		
+		webd.switchToWindow();
+		
+		DashBoardUtils.verifyURL(webd, "uifwk/images/o_logo.png");
+		webd.takeScreenShot();
+		
+		webd.switchToMainWindow();
+		
+		//webd.switchToParentWindow();
+	}
+	
+	//@Test
+	public void testTextWidget_clickImage()
+	{
+		dbName_textWidget_clickImage = "Dashboard_textWidgetClickImage-" + DashBoardUtils.generateTimeStamp();
+		
+		String dbDesc = "Add text widget into dashboard, test click image, open it with new window";
+		String urlString = "emsaasui/uifwk/images/o_logo.png";
+		String url = "";
+		String alternativeText = "test_image";
+		
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test image in testTextWidget");
+
+		DashboardHomeUtil.gridView(webd);
+		
+		String currentUrl = webd.getWebDriver().getCurrentUrl();
+		url = (currentUrl.substring(0, currentUrl.indexOf("emsaasui"))).concat(urlString);
+
+		webd.getLogger().info("Create the dashboard, then to add text widget");
+		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_clickImage, dbDesc, DashboardHomeUtil.DASHBOARD);
+		
+		webd.getLogger().info("Verify the dashboard created Successfully");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_clickImage, dbDesc, true), "Create dashboard failed!");		
+		
+		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
+		
+		DashboardBuilderUtil.addImageInTextWidget(webd, 1, url, alternativeText);
+		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);	
+		
+		DashboardBuilderUtil.saveDashboard(webd);	
+		
+		webd.waitForServer();
+		webd.click("css=" + DashBoardPageId.IMAGESCSS);
+		
+		webd.switchToWindow();
+		
+		DashBoardUtils.verifyURL(webd, "uifwk/images/o_logo.png");
+		webd.takeScreenShot();
+		
+		webd.switchToMainWindow();
+	//	webd.switchToParentWindow();
 	}
 }
