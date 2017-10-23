@@ -11,9 +11,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.EntitySelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeUnit;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
-import org.openqa.selenium.JavascriptExecutor;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -94,17 +92,11 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 		webd.getLogger().info("Save the dashboard");
 		DashboardBuilderUtil.saveDashboard(webd);
 
-		((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
-
-		//Verify "All Entities " button
-		//webd.getLogger().info("Verify All Entities button displayed in builder");
-		//Assert.assertTrue(webd.isDisplayed(PageId.ENTITYBUTTON), "'All Entities' button isn't displayed in self dashboard");
+		webd.evalJavascript("scroll(0,0)");
 
 		webd.getLogger().info("Verify Entity displayed in glocal context bar");
 		Logger Logger = java.util.logging.Logger.getLogger("entities");
-		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "Entity not in GC bar");
 		Assert.assertFalse(EntitySelectorUtil.validateReadOnlyMode(webd, Logger), "Entity not in GC bar");
-
 	}
 
 	@Test
@@ -136,18 +128,18 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 		webd.getLogger().info("Save the dashboard");
 		DashboardBuilderUtil.saveDashboard(webd);
 
-		String currentURL = webd.getWebDriver().getCurrentUrl();
+		String currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_90_DAY"), true);
 
 		//open the widget
 		webd.getLogger().info("Open the widget");
 		DashboardBuilderUtil.openWidget(webd, widgetName_LA);
 
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 
 		//Verify the time range in UDE page
 		webd.getLogger().info("Verify the time range in LA page");
-		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last 90 days"), true);
+		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel_V2(webd).contains("Last 90 days"), true);
 
 		//to verify jira EMCPDF-3338
 		//back to dashboard page and verify the time in widget
@@ -166,14 +158,10 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, dbRespectGCTimeRangeName_LA);
 
 		webd.getLogger().info("Verify the time in widget");
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 
 		//verify if the widget exsits then execute js to get time range in widget
-
-		String timerange = ((JavascriptExecutor) webd.getWebDriver())
-				.executeScript(
-						"return window._contextPassedToWidgetsAtPageLoad && window._contextPassedToWidgetsAtPageLoad.timeSelector && window._contextPassedToWidgetsAtPageLoad.timeSelector.viewTimePeriod()")
-						.toString();
+		String timerange = webd.evalJavascript("return window._contextPassedToWidgetsAtPageLoad && window._contextPassedToWidgetsAtPageLoad.timeSelector && window._contextPassedToWidgetsAtPageLoad.timeSelector.viewTimePeriod()").toString();
 		webd.getLogger().info(timerange);
 		Assert.assertEquals(timerange, "LAST_90_DAY");
 	}
@@ -207,19 +195,19 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 		webd.getLogger().info("Save the dashboard");
 		DashboardBuilderUtil.saveDashboard(webd);
 
-		String currentURL = webd.getWebDriver().getCurrentUrl();
+		String currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_7_DAY"), true);
 
 		//open the widget
 		webd.getLogger().info("Open the widget");
 		DashboardBuilderUtil.openWidget(webd, widgetName_UDE);
 
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 
 		//Verify the time range in UDE page
 		webd.getLogger().info("Verify the time range in UDE page");
-		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last week")
-				|| GlobalContextUtil.getTimeRangeLabel(webd).contains("Last 7 days"), true);
+		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel_V2(webd).contains("Last week")
+				|| GlobalContextUtil.getTimeRangeLabel_V2(webd).contains("Last 7 days"), true);
 
 		//to verify jira EMCPDF-3338
 		//back to dashboard page and verify the time in widget
@@ -230,14 +218,10 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, dbRespectGCTimeRangeName_UDE);
 
 		webd.getLogger().info("Verify the time in widget");
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 
 		//verify if the widget exsits then execute js to get time range in widget
-
-		String timerange = ((JavascriptExecutor) webd.getWebDriver())
-				.executeScript(
-						"return window._contextPassedToWidgetsAtPageLoad && window._contextPassedToWidgetsAtPageLoad.timeSelector && window._contextPassedToWidgetsAtPageLoad.timeSelector.viewTimePeriod()")
-						.toString();
+		String timerange = webd.evalJavascript("return window._contextPassedToWidgetsAtPageLoad && window._contextPassedToWidgetsAtPageLoad.timeSelector && window._contextPassedToWidgetsAtPageLoad.timeSelector.viewTimePeriod()").toString();
 		webd.getLogger().info(timerange);
 		Assert.assertEquals(timerange, "LAST_7_DAY");
 	}
@@ -271,18 +255,18 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 		webd.getLogger().info("Save the dashboard");
 		DashboardBuilderUtil.saveDashboard(webd);
 
-		String currentURL = webd.getWebDriver().getCurrentUrl();
+		String currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_90_DAY"), false);
 
 		//open the widget
 		webd.getLogger().info("Open the widget");
 		DashboardBuilderUtil.openWidget(webd, widgetName_LA);
 
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 
 		//Verify the time range in UDE page
 		webd.getLogger().info("Verify the time range in LA page");
-		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last 90 days"), true);
+		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel_V2(webd).contains("Last 90 days"), true);
 
 		//to verify jira EMCPDF-3338
 		//back to dashboard page and verify the time in widget
@@ -300,17 +284,12 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, dbName_LAWidget);
 
 		webd.getLogger().info("Verify the time in widget");
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 
 		//verify if the widget exsits then execute js to get time range in widget
-
-		String timerange = ((JavascriptExecutor) webd.getWebDriver())
-				.executeScript(
-						"return window._contextPassedToWidgetsAtPageLoad && window._contextPassedToWidgetsAtPageLoad.timeSelector && window._contextPassedToWidgetsAtPageLoad.timeSelector.viewTimePeriod()")
-				.toString();
+		String timerange = webd.evalJavascript("return window._contextPassedToWidgetsAtPageLoad && window._contextPassedToWidgetsAtPageLoad.timeSelector && window._contextPassedToWidgetsAtPageLoad.timeSelector.viewTimePeriod()").toString();
 		webd.getLogger().info(timerange);
 		Assert.assertEquals(timerange, "LAST_90_DAY");
-
 	}
 
 	//case to verify jira EMCPDF-3338
@@ -342,19 +321,19 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 		webd.getLogger().info("Save the dashboard");
 		DashboardBuilderUtil.saveDashboard(webd);
 
-		String currentURL = webd.getWebDriver().getCurrentUrl();
+		String currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_7_DAY"), false);
 
 		//open the widget
 		webd.getLogger().info("Open the widget");
 		DashboardBuilderUtil.openWidget(webd, widgetName_UDE);
 
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 
 		//Verify the time range in UDE page
 		webd.getLogger().info("Verify the time range in UDE page");
-		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel(webd).contains("Last week")
-				|| GlobalContextUtil.getTimeRangeLabel(webd).contains("Last 7 days"), true);
+		Assert.assertEquals(GlobalContextUtil.getTimeRangeLabel_V2(webd).contains("Last week")
+				|| GlobalContextUtil.getTimeRangeLabel_V2(webd).contains("Last 7 days"), true);
 
 		//to verify jira EMCPDF-3338
 		//back to dashboard page and verify the time in widget
@@ -364,14 +343,10 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd, dbName_UDEWidget);
 
 		webd.getLogger().info("Verify the time in widget");
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 
 		//verify if the widget exsits then execute js to get time range in widget
-
-		String timerange = ((JavascriptExecutor) webd.getWebDriver())
-				.executeScript(
-						"return window._contextPassedToWidgetsAtPageLoad && window._contextPassedToWidgetsAtPageLoad.timeSelector && window._contextPassedToWidgetsAtPageLoad.timeSelector.viewTimePeriod()")
-				.toString();
+		String timerange = webd.evalJavascript("return window._contextPassedToWidgetsAtPageLoad && window._contextPassedToWidgetsAtPageLoad.timeSelector && window._contextPassedToWidgetsAtPageLoad.timeSelector.viewTimePeriod()").trim();
 		webd.getLogger().info(timerange);
 		Assert.assertEquals(timerange, "LAST_7_DAY");
 	}

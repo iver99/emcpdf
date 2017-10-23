@@ -196,12 +196,6 @@ public class DashboardServiceFacade
 		return emsDashboard;
 	}
 
-	/** <code>select o from EmsDashboard o</code> */
-	public List<EmsDashboard> getEmsDashboardFindAll()
-	{
-		return em.createNamedQuery("EmsDashboard.findAll", EmsDashboard.class).getResultList();
-	}
-
 	public void removePreferenceByKey(String userName, String key, long tenantId)
 	{
 		String sql = "select * from ems_preference p where p.user_Name ='"+userName+"' and p.pref_key = '"+key+"' and (p.tenant_id="
