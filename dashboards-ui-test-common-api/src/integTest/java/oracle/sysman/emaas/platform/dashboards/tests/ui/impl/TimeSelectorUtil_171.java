@@ -75,16 +75,14 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 			start = timeFormatChange(webd, startDateTime, "MM/dd/yy hh:mm a", "MM/dd/yyyy hh:mm a");
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		String end = null;
 		try {
 			end = timeFormatChange(webd, endDateTime, "MM/dd/yy hh:mm a", "MM/dd/yyyy hh:mm a");
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		webd.getLogger().info("the start time in dashboard is:" + start + ",the end time in dashboard is:" + end);
 		webd.getLogger().info("we are going to set the custom time in dashboard page");
@@ -93,8 +91,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 			clickTimePicker(webd, index);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 		webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
@@ -122,11 +119,9 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 
 		//set start date time and end date time
 		webd.getLogger().info("Verify if custom panpel displayed...");
-		WebDriverWait wdwait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wdwait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(TimeSelectorUIControls.sPickPanel)));
-		//webd.isDisplayed(TimeSelectorUIControls.sPickPanel);
-		webd.takeScreenShot();
-		webd.savePageToFile();
+		webd.waitForElementVisible("css=" + TimeSelectorUIControls.sPickPanel);
+		WaitUtil.waitForPageFullyLoaded(webd);
+		
 		webd.getLogger().info("Input the start date time and end date time...");
 		webd.click("css=" + TimeSelectorUIControls.sStartDateInput);
 		webd.clear("css=" + TimeSelectorUIControls.sStartDateInput);
@@ -140,32 +135,15 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.click("css=" + TimeSelectorUIControls.sEndTimeInput);
 		webd.clear("css=" + TimeSelectorUIControls.sEndTimeInput);
 		webd.sendKeys("css=" + TimeSelectorUIControls.sEndTimeInput, endTime);
-		webd.takeScreenShot();
-		webd.savePageToFile();
-
-		//		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-		//			try {
-		//				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
-		//			}
-		//			catch (Exception e) {
-		//				// TODO Auto-generated catch block
-		//				e.printStackTrace();
-		//			}
-		//			return null;
-		//		}
-		//		else {
+		
 		try {
 			clickApplyButton(webd);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
-		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
-				.get(index - 1).getText();
+		String returnTimeRange = webd.getText("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + index + "]");
 		return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a", index);
-		//		}
-
 	}
 
 	/* (non-Javadoc)
@@ -186,15 +164,13 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 			startDate = timeFormatChange(webd, startDate, "MM/dd/yy", "MM/dd/yyyy");
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		try {
 			endDate = timeFormatChange(webd, endDate, "MM/dd/yy", "MM/dd/yyyy");
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		webd.getLogger().info("the start date in dashboard is:" + startDate + ",the end date in dashboard is:" + endDate);
 		webd.getLogger().info("we are going to set the custom time in dashboard page");
@@ -203,8 +179,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 			clickTimePicker(webd, index);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 		webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
@@ -232,7 +207,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		//			}
 		//			catch (Exception e) {
 		//				// TODO Auto-generated catch block
-		//				e.printStackTrace();
+		//				webd.getLogger().info(e.getLocalizedMessage());
 		//			}
 		//			return null;
 		//		}
@@ -242,12 +217,10 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
-		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
-				.get(index - 1).getText();
+		String returnTimeRange =webd.getText("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + index + "]");
 		return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy", "MMM d, yyyy", index);
-		//		}
 	}
 
 	@Override
@@ -462,14 +435,13 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 				}
 				catch (Exception e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					webd.getLogger().info(e.getLocalizedMessage());
 				}
 			default:
 				break;
 
 		}
-		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
-				.get(Index - 1).getText();
+		String returnTimeRange = webd.getText("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + Index + "]");
 
 		if (returnTimeRange.startsWith(rangeoption.getRangeOption() + ":")) {
 			return dateConvert(webd, returnTimeRange, rangeoption, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a", Index);
@@ -550,22 +522,20 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 
 				webd.click("css=" + TimeSelectorUIControls.sTimeRange_Latest);
 
-				return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(index - 1)
-						.getText();
+				return webd.getText("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + index + "]");
 			case Custom:
 				try {
 					throw new Exception("Please use setCustomTime API to set Custom Range");
 				}
 				catch (Exception e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					webd.getLogger().info(e.getLocalizedMessage());
 				}
 			default:
 				break;
 
 		}
-		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
-				.get(index - 1).getText();
+		String returnTimeRange = webd.getText("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + index + "]");
 
 		if (returnTimeRange.startsWith(rangeOption.getRangeOption() + ":")) {
 			//dateConvert with date only
@@ -751,8 +721,6 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.clear("css=" + TimeSelectorUIControls.sTimeFilterHoursFilter);
 		webd.sendKeys("css=" + TimeSelectorUIControls.sTimeFilterHoursFilter, hoursInput);
 		webd.getLogger().info("Set hours to exclude finished!");
-		webd.takeScreenShot();
-		webd.savePageToFile();
 	}
 
 	private void setMonthsToExclude(WebDriver webd, int[] monthsToExclude)
@@ -793,14 +761,12 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 						+ webd.getText(TimeSelectorUIControls.sErrorMsg));
 			}
 			catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				webd.getLogger().info(e.getLocalizedMessage());
 			}
 		}
 		else {
 			webd.getLogger().info("Click Apply button");
 			webd.click("css=" + TimeSelectorUIControls.sApplyBtn);
-
 		}
 	}
 
@@ -815,7 +781,8 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 	{
 		//click the datetimepicker component
 		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sTimeRangeBtn);
-		webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1).click();
+		webd.click("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + Index + "]");
+//		webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1).click();
 
 	}
 

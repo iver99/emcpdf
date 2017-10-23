@@ -24,19 +24,26 @@ public class TimeSelectorUIControls
 
 	// Begin: InputText
 	public static final String sStartDateInput = "input[id^='inputStartDate_']";
+	public static final String sStartDateInput_XPATH = "//input[contains(@id, 'inputStartDate_')]";
 
 	public static final String sStartTimeInput = "input[id^='inputStartTime_'].oj-inputdatetime-input";
+	public static final String sStartTimeInput_XPATH = "//input[contains(@id,'inputStartTime_')]";
+	
 	public static final String sEndDateInput = "input[id^='inputEndDate_']";
+	public static final String sEndDateInput_XPATH = "//input[contains(@id, 'inputEndDate_')]";
+	
 	public static final String sEndTimeInput = "input[id^='inputEndTime_'].oj-inputdatetime-input";
-	//public static final String sTimeExcludedInput = "input.oj-col.oj-sm-10.oj-md-10.oj-inputtext-input";
+	public static final String sEndTimeInput_XPATH = "//input[contains(@id,'inputEndTime_')]";
 	// End: InputText
 	// Begin: Button
 	public static final String sApplyBtn = "button[id^='applyButton']";
 
 	public static final String sCancelBtn = "button[id^='cancelButton']";
 	public static final String sDateTimePick = "[id^='dateTimePicker_']";
+	public static final String sDateTimePick_XPATH = "//div[contains(@id,'dateTimePicker_')]";
 
 	public static final String sTimeRangeBtn = ".oj-select-choice[id^='dropDown']";//".dropdown[id^='dropDown']";"[id^='dateTimePicker_'] .oj-select-choice .oj-select-arrow";
+	public static final String sTimeRangeBtn_XPATH = "//span[@class='oj-select-choice'][contains(@id,'dropDown')]"; 
 	public static final String sDisplayDateTime = "[id^='dateTimePicker_'] .oj-select-choice .oj-select-chosen";
 	//	public static final String sFilterInfoIndicator = "[id^='tfInfoIndicator_'].time-filter-indicator";
 	//	public static final String sFilterInfo = "div[id^='tfInfo_'] [data-bind='html: timeFilterInfo']";
