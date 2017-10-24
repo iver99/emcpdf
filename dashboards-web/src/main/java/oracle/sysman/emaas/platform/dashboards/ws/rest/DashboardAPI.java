@@ -236,6 +236,7 @@ public class DashboardAPI extends APIBase
 	* */
 	@DELETE
 	@Path("/{namePattern}")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Response deleteDashboardByNamePattern(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 												 @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
 												 @PathParam("namePattern") String namePattern)
@@ -250,8 +251,6 @@ public class DashboardAPI extends APIBase
 			logkeyHeaders("deleteDashboardByNamePattern()", userTenant, tenantIdParam);
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
-//			 change this line to return a list of dash board
-//			Dashboard dsb = manager.getDashboardById(dashboardId, tenantId);
 			List<Dashboard> dsb_list = manager.getDashboardsByNameAndPattern(namePattern,tenantId);
 			for(Dashboard dsb : dsb_list){
 				if (dsb != null && dsb.getIsSystem() != null && dsb.getIsSystem()) {
@@ -261,7 +260,8 @@ public class DashboardAPI extends APIBase
 				BigInteger dashboardId = dsb.getDashboardId();
 				manager.deleteDashboard(dashboardId, tenantId);
 			}
-			return Response.status(Status.OK).build(/*dashboad list*/);
+			//return Response.status(Status.OK).build(/*dashboad list*/);
+			return Response.ok(getJsonUtil().toJson(dsb_list)).build();
 		}
 		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
