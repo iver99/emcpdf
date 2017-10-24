@@ -252,9 +252,11 @@ public class DashboardAPI extends APIBase
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
 			List<Dashboard> dsb_list = manager.getDashboardsByNameAndPattern(namePattern,tenantId);
+			if(dsb_list.isEmpty())
+				throw new DashboardNotFoundException();
 			for(Dashboard dsb : dsb_list){
 				if (dsb != null && dsb.getIsSystem() != null && dsb.getIsSystem()) {
-					//log warn
+					LOGGER.warn("Oracle's dashboard is not supported to be deleted");
 					throw new DeleteSystemDashboardException();
 				}
 				BigInteger dashboardId = dsb.getDashboardId();
@@ -263,11 +265,18 @@ public class DashboardAPI extends APIBase
 			//return Response.status(Status.OK).build(/*dashboad list*/);
 			return Response.ok(getJsonUtil().toJson(dsb_list)).build();
 		}
+		catch (DashboardNotFoundException e) {
+			LOGGER.error(e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+        catch (DeleteSystemDashboardException e) {
+            LOGGER.error(e.getLocalizedMessage(), e);
+            return buildErrorResponse(new ErrorEntity(e));
+        }
 		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
-		//(DeleteSystemDashboardException)
 		catch (BasicServiceMalfunctionException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
