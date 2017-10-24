@@ -422,6 +422,32 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     var titleListMap = [{title: createByMeTitle, list: widgetsCreatedByME}, {title: createByOracleTitle, list: widgetsCreatedByOracle}, {title: createByOthersTitle, list: widgetsCreatedByOthers}];
                     //FOR TEST ADD THE SYSTEM WIDGET TO EVERY GROUP TO BE MODIFIED
                     var initWidgetsDataSource = [];
+                    if(data[0].WIDGET_NAME !== 'HTML Widget'){
+                        var tempData = $.extend(true, {}, data[0]);
+                        tempData = $.extend(true, tempData, {
+                            WIDGET_UNIQUE_ID: 2,
+                            WIDGET_NAME: 'HTML Widget',
+                            WIDGET_DESCRIPTION: 'Text Widget provided by Oracle',
+                            WIDGET_OWNER: 'ORACLE',
+                            WIDGET_CREATION_TIME: '2017-06-18T00:00:00:000Z',
+                            WIDGET_SOURCE: 0,
+                            WIDGET_GROUP_NAME: 'Dashboard',
+    //                        WIDGET_SCREENSHOT_HREF: null,
+                            WIDGET_SUPPORT_TIME_CONTROL: 0,
+                            WIDGET_KOC_NAME: 'df-htmlwidget',
+                            WIDGET_TEMPLATE: 'uifwk/js/widgets/htmlwidget/html/htmlwidget.html',
+                            WIDGET_VIEWMODEL: 'uifwk/js/widgets/htmlwidget/js/htmlwidget.js',
+                            PROVIDER_NAME: "Dashboard-UI",
+                            PROVIDER_VERSION: '1.0',
+                            PROVIDER_ASSET_ROOT: 'assetRoot',
+                            content: null,
+                            type: 'TEXT_WIDGET',
+                            WIDGET_EDITABLE: 'false',
+                            highlightedName: 'HTML Widget',
+                            highlightedSource: 'Dashboard'
+                        });
+                        data.unshift(tempData);
+                    }
                     if(isOnSearching){
                         $.each($.grep(data, function(n){return n.WIDGET_OWNER === "ORACLE"}),function(n,value){
                             widgetsCreatedByOracle.push({"attr":value});                        
