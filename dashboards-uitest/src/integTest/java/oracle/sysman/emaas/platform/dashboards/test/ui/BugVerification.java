@@ -399,14 +399,14 @@ public class BugVerification extends LoginAndLogout
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Databases");
 		WaitUtil.waitForPageFullyLoaded(webd);
 		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, OOB_idx, "04/07/2016 12:00 AM", "04/14/2016 12:30 PM"), "The return date time is null");
-		Assert.assertEquals(TimeSelectorUtil.getTimeRangeLabel(webd, OOB_idx).contains("Custom"), true);
+		Assert.assertEquals(TimeSelectorUtil.getTimeRangeLabel_V2(webd, OOB_idx).contains("Custom"), true);
 
 		//set & verify custom time range for new added dashboard
 		webd.getLogger().info("Select the new created dashboard in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Dashboard_3660");
 		WaitUtil.waitForPageFullyLoaded(webd);
 		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, newdsb_idx, "05/08/2016 12:00 AM", "05/15/2016 13:30 PM"), "The return date time is null");
-		Assert.assertEquals(TimeSelectorUtil.getTimeRangeLabel(webd, newdsb_idx).contains("Custom"), true);
+		Assert.assertEquals(TimeSelectorUtil.getTimeRangeLabel_V2(webd, newdsb_idx).contains("Custom"), true);
 
 	}
     

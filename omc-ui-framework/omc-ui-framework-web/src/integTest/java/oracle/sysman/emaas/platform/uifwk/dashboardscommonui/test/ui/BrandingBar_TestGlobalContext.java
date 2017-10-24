@@ -42,7 +42,7 @@ public class BrandingBar_TestGlobalContext extends LoginAndLogout
 		CommonUIUtils.addWidget(webd);
 
 		//verify the result
-		String timeRange = GlobalContextUtil.getTimeRangeLabel(webd).trim();
+		String timeRange = GlobalContextUtil.getTimeRangeLabel_V2(webd).trim();
 		Assert.assertTrue(timeRange.contains("Last year"));
 
 		String currurl = webd.getCurrentUrl();

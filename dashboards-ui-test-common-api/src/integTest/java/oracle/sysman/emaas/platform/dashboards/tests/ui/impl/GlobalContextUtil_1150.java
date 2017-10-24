@@ -39,6 +39,26 @@ public class GlobalContextUtil_1150 extends GlobalContextUtil_1130
 		// TODO Auto-generated method stub
 		return TimeSelectorUtil.getTimeRangeLabel(webd, index);
 	}
+	
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#getTimeRangeLabel(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public String getTimeRangeLabel_V2(WebDriver webd)
+	{
+		return TimeSelectorUtil.getTimeRangeLabel_V2(webd);
+
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#getTimeRangeLabel(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int)
+	 */
+	@Override
+	public String getTimeRangeLabel_V2(WebDriver webd, int index)
+	{
+		// TODO Auto-generated method stub
+		return TimeSelectorUtil.getTimeRangeLabel_V2(webd, index);
+	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IGlobalContextUtil#setCustomTime(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int, java.lang.String, java.lang.String)

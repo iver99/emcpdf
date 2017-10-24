@@ -276,6 +276,12 @@ public class DashboardBuilderUtil
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		dbu.setEntitySupport(driver, mode);
 	}
+	
+	public static void switchTextWidgetToEditMode(WebDriver driver, int index)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.switchTextWidgetToEditMode(driver, index);
+	}
 
 	public static boolean showEntityFilter(WebDriver driver, boolean showEntityFilter)
 	{

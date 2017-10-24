@@ -45,7 +45,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.compositeCxtText = ko.observable();
             self.entitiesList = ko.observableArray();
             self.timeCxtText = ko.observable();
-
+            self.messageTimeOutEventList = [];
             self.renderEmaasAppheaderGlobalNavMenu = ko.observable(false);
 
             self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
@@ -160,6 +160,18 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 refreshOMCContext();
             }
             self.showGlobalContextBanner.subscribe(function (newValue) {
+                if (newValue === true) {
+                    //In case showGlobalContextBanner is initialized to false, and updated to true during page loading,
+                    //we need to restore topology display status from window session storage
+                    if (!self.isTopologyDisplayed()) {
+                        restoreTopologyDisplayStatus();
+                    }
+                    refreshOMCContext();
+                }
+            });
+            
+            //Fix EMCPDF-5021: OMC context should be refreshed if entity selector switched from "hide" to "show" while global context banner is unchanged
+            self.showEntitySelector.subscribe(function (newValue) {
                 if (newValue === true) {
                     //In case showGlobalContextBanner is initialized to false, and updated to true during page loading,
                     //we need to restore topology display status from window session storage
@@ -1334,9 +1346,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
                     //Remove message automatically if remove delay time is set
                     if (data.removeDelayTime && typeof (data.removeDelayTime) === 'number') {
-                        setTimeout(function () {
+                        var timeout = setTimeout(function () {
                             removeMessage(message);
                         }, data.removeDelayTime);
+                        
+                        var messageTimeOutEvent ={
+                                                    "messageId": message.id, 
+                                                    "timeout": timeout
+                                                };
+                        self.messageTimeOutEventList.push(messageTimeOutEvent);
                     }
 
                     //Fire message change event
@@ -1406,6 +1424,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
                 //Fire message change event
                 fireMessageChangeEvent('Delete', data.id);
+                for(var i in self.messageTimeOutEventList){
+                    var currentTimeOutEvent = self.messageTimeOutEventList[i];
+                    if(data.id === currentTimeOutEvent.messageId){
+                        clearTimeout(currentTimeOutEvent.timeout);
+                        self.messageTimeOutEventList.splice(i,1);
+                        console.log("clear the message time out event");
+                    }
+                }
             }
 
             function removeItemByValue(obj, value)
