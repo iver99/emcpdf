@@ -1,5 +1,5 @@
-define(['dfutil', 'ojs/ojcore', 'jquery', 'knockout', 'uifwk/js/sdk/context-util', 'uifwk/js/util/preference-util', 'ojs/ojpagingcontrol', 'ojs/ojknockout-model'],
-       function(dfu, oj, $, ko, cxtModel, prefUtilModel)
+define(['dfutil', 'ojs/ojcore', 'jquery', 'knockout', 'uifwk/js/sdk/context-util', 'ojs/ojpagingcontrol', 'ojs/ojknockout-model'],
+       function(dfu, oj, $, ko, cxtModel)
 {
 
 /**
@@ -197,7 +197,6 @@ DashboardPaging.prototype.getPage = function()
   return this._page;
 };
 
-var prefUtil = new prefUtilModel(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
 DashboardPaging.prototype.setPage = function(v, opts)
 {
   var self = this, options = opts || {}, value = parseInt(v, 10),
@@ -226,13 +225,7 @@ DashboardPaging.prototype.setPage = function(v, opts)
   return new Promise(function(resolve, reject)
   {
     $("#loading").show();
-    var showFederationInHM = prefUtil.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
-    showFederationInHM.done(function(showInUI) {
-        var federationFeatureShowInUi = false;
-        if (showInUI && showInUI.toUpperCase() === "TRUE") {
-            federationFeatureShowInUi = true;
-        }
-        self.fetch({'startIndex': self._startIndex, 'silent': options['silent'], 'federationFeatureShowInUi': federationFeatureShowInUi,
+        self.fetch({'startIndex': self._startIndex, 'silent': options['silent'],
             'success': function() {
                 $("#loading").hide();
                 DashboardPaging.superclass.handleEvent.call(self, oj.PagingModel.EventType['PAGE'], {'page' : self._page, 'previousPage' : previousPage});
@@ -255,7 +248,6 @@ DashboardPaging.prototype.setPage = function(v, opts)
                 reject(null);
             }
         } );
-    });
   });
 };
 
