@@ -1,6 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.ui.web;
 
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,5 +35,11 @@ public class GzipFilterTest {
 			  times = 1;
 		  }
 	  };
+  }
+  @Test(groups = {"s2"})
+  public void testInitDestroy(@Mocked FilterConfig arg0) throws ServletException{
+	  GzipFilter filter = new GzipFilter();
+	  filter.init(arg0);
+	  filter.destroy();
   }
 }

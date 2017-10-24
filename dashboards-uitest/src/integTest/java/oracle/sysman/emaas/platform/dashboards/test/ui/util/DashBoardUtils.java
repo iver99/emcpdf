@@ -59,15 +59,14 @@ public class DashBoardUtils
 				BrandingBarUtil.toggleHamburgerMenu(webdriver);
 			}
 			webdriver.getLogger().info("Click Dashboards menu item to back to dashboard home page");
-			webdriver.getWebDriver().findElement(By.cssSelector("#omc_root_dashboards>span")).click();
+			webdriver.click("css=#omc_root_dashboards>span");
 		}
 		else {
 			webdriver.getLogger().info("Click Compass icon to display menu of branding bar");
-			webdriver.getWebDriver().findElement(By.xpath(PageId.COMPASSICON)).click();
-			WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(PageId.DASHBOARDLINK)));
+			webdriver.click(PageId.COMPASSICON);
+			
 			webdriver.getLogger().info("Click Dashboard link to back to dashboard home page");
-			webdriver.getWebDriver().findElement(By.xpath(PageId.DASHBOARDLINK)).click();
+			webdriver.click(PageId.DASHBOARDLINK);
 		}
 	}
 
@@ -114,15 +113,17 @@ public class DashBoardUtils
 
 	public static void handleAlert(WebDriver webdriver)
 	{
-		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
-		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-
-		//Accepting alert.
-		webdriver.getLogger().info("foucus on the alert");
-		alert = webdriver.getWebDriver().switchTo().alert();
-
-		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
-		alert.accept();
+//		WebDriverWait wait = new WebDriverWait(webdriver.getWebDriver(), 900L);
+//		Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+//
+//		//Accepting alert.
+//		webdriver.getLogger().info("foucus on the alert");
+//		alert = webdriver.getWebDriver().switchTo().alert();
+//
+//		webdriver.getLogger().info("click button on the dialog, should navigate to the home page");
+//		alert.accept();
+		webdriver.waitForServer();
+		webdriver.getAlert().accept();
 	}
 
 	/**
@@ -452,12 +453,10 @@ public class DashBoardUtils
 	public static boolean verfiyShareOptionDisabled()
 	{
 		driver.getLogger().info("Click the option icon of Dashboard Set");
-		driver.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
 		driver.click("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		driver.getLogger().info("Click Edit icon");
-		driver.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONSEDIT_CSS);
 		driver.click("css=" + PageId.DASHBOARDSETOPTIONSEDIT_CSS);
 
 		driver.getLogger().info("Expand Share options");
@@ -495,12 +494,10 @@ public class DashBoardUtils
 		}
 
 		String titleXpath = tileTitles.get(index).toString();
-
+		
 		new Actions(webdriver.getWebDriver()).moveToElement(tileTitles.get(index)).perform();
 		webdriver.waitForServer();
-		webdriver.takeScreenShot();
-		webdriver.savePageToFile();
-
+		
 		WebElement tileTitle = tileTitles.get(index);
 		WebElement tileConfig = tileTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILECONFIGLOCATOR));
 		if (tileConfig == null) {
@@ -1033,7 +1030,7 @@ public class DashBoardUtils
 
 	public static void verifyURL(WebDriver webdriver, String url)
 	{
-		String currurl = webdriver.getWebDriver().getCurrentUrl();
+		String currurl = webdriver.getCurrentUrl();
 		webdriver.getLogger().info("the origin url = " + currurl);
 		String tmpurl = DashBoardUtils.trimUrlParameters(currurl.substring(currurl.indexOf("emsaasui") + 9));
 		webdriver.getLogger().info("the url without para = " + tmpurl);
@@ -1043,7 +1040,7 @@ public class DashBoardUtils
 	public static void verifyURL_WithPara(WebDriver webdriver, String url)
 	{
 		webdriver.getLogger().info("the expected relative url = " + url);
-		String currurl = webdriver.getWebDriver().getCurrentUrl();
+		String currurl = webdriver.getCurrentUrl();
 		webdriver.getLogger().info("the current url = " + currurl);
 		String tmpurl = currurl.substring(currurl.indexOf("emsaasui") + 9);
 		webdriver.getLogger().info("the relative url to compare = " + tmpurl);
@@ -1276,5 +1273,27 @@ public class DashBoardUtils
 		}
 
 		return baseUrl;
+	}
+	
+	public void verifyAlert(WebDriver webdriver)
+	{
+		if (DashBoardUtils.isHamburgerMenuEnabled(webdriver)) {
+			if (!BrandingBarUtil.isHamburgerMenuDisplayed(webdriver)) {
+				BrandingBarUtil.toggleHamburgerMenu(webdriver);
+			}
+			webdriver.getLogger().info("Click Dashboards menu item to back to dashboard home page");
+			webdriver.click("css=#omc_root_dashboards>span");
+		}
+		else {
+			webdriver.getLogger().info("Click Compass icon to display menu of branding bar");
+			webdriver.click(PageId.COMPASSICON);
+			
+			webdriver.getLogger().info("Click Dashboard link to back to dashboard home page");
+			webdriver.click(PageId.DASHBOARDLINK);
+		}
+		
+		webdriver.getLogger().info("Dismiss the Alert Dialog");
+		webdriver.waitForServer();
+		webdriver.getAlert().accept();
 	}
 }
