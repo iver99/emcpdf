@@ -28,7 +28,8 @@ import javax.persistence.Table;
                 + "where a.dashboardId = b.dashboardSetId and b.subDashboardId = :p"),
         @NamedQuery(name = "EmsDashboard.findByAppType", query = "select o.dashboardId from EmsDashboard o where o.deleted = 0 and o.isSystem = 1 and o.applicationType = :appType"),
         @NamedQuery(name = "EmsDashboard.deleteByDashboardIds", query = "delete from EmsDashboard o where o.deleted = 0 and o.dashboardId in :ids"),
-        @NamedQuery(name = "EmsDashboard.findByName", query = "select d from EmsDashboard d where d.name = :name and (d.owner = :owner or d.isSystem = 1) and d.deleted = 0")
+        @NamedQuery(name = "EmsDashboard.findByName", query = "select d from EmsDashboard d where d.name = :name and (d.owner = :owner or d.isSystem = 1) and d.deleted = 0"),
+		@NamedQuery(name = "EmsDashboard.findByNameAndPattern", query = "select d from EmsDashboard d where d.name LIKE :namePattern and (d.owner = :owner or d.isSystem = 1) and d.deleted = 0")
 })
 @Table(name = "EMS_DASHBOARD")
 @IdClass(EmsDashboardPK.class)

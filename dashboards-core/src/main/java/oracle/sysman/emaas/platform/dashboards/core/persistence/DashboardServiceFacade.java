@@ -123,6 +123,16 @@ public class DashboardServiceFacade
         return null;
 	}
 
+	public List<EmsDashboard> getEmsDashboardsByNameAndPattern(String namePattern){
+		List<EmsDashboard> list = em.createNamedQuery("EmsDashboard.findByNameAndPattern")
+				/*1*/.setParameter("namePattern", StringEscapeUtils.escapeHtml4(namePattern+"%"))
+				.setParameter("owner", UserContext.getCurrentUser()).getResultList();
+		if (/*null check*/!list.isEmpty()) {
+			return list;
+		}
+		return null;
+	}
+
 	public List<BigInteger> getDashboardIdsByNames(List<String> names, Long tenantId) {
 		StringBuilder parameters = new StringBuilder();
 		List<BigInteger> ids = new ArrayList<BigInteger>();

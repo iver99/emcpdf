@@ -562,6 +562,35 @@ public class DashboardManager
         return savedSearchResponse;
     }
 
+	public List<Dashboard> getDashboardsByNameAndPattern(String namePattern, Long tenantId){
+		if (namePattern == null || "".equals(namePattern)) {
+			LOGGER.debug("NamePattern {} is invalid", namePattern);// errpr
+			return null;//Collections.emptyList();
+		}
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			List<EmsDashboard> ed_list = dsf.getEmsDashboardsByNameAndPattern(namePattern);
+			List<Dashboard> dashboardList = new ArrayList<>();
+			for(EmsDashboard ed:ed_list){
+				dashboardList.add(Dashboard.valueOf(ed, null, true, true, true, true));
+			}
+			ed_list = null;
+			return dashboardList;
+		}
+		catch (NoResultException e) {
+			LOGGER.debug("Dashboard not found for namePattern \"{}\" because NoResultException is caught", namePattern);
+			LOGGER.info("context", e);// log error
+			return null;// empty list
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
 	/**
 	 * Returns dashboard instance specified by name for current user Please note that same user under single tenant can't have
 	 * more than one dashboards with same name, so this method return single dashboard instance

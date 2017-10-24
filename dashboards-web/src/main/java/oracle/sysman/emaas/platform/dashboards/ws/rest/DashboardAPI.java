@@ -231,6 +231,52 @@ public class DashboardAPI extends APIBase
 
 	}
 
+	/* delete dashboard by names and patterns, i.e. delete all the dashboards satrted from given name patern
+	* i.e.  given "ab", delete all dashboards whose names start from "ab", i.e "ab", "abc", "ab2",etc
+	* */
+	@DELETE
+	@Path("/{namePattern}")
+	public Response deleteDashboardByNamePattern(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+												 @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+												 @PathParam("namePattern") String namePattern)
+	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/{}", namePattern);
+		DashboardManager manager = DashboardManager.getInstance();
+		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [DELETE] /v1/dashboards/deleteByNamePattern/{}: database is down", namePattern);
+				throw new DatabaseDependencyUnavailableException();
+			}
+			logkeyHeaders("deleteDashboardByNamePattern()", userTenant, tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+//			 change this line to return a list of dash board
+//			Dashboard dsb = manager.getDashboardById(dashboardId, tenantId);
+			List<Dashboard> dsb_list = manager.getDashboardsByNameAndPattern(namePattern,tenantId);
+			for(Dashboard dsb : dsb_list){
+				if (dsb != null && dsb.getIsSystem() != null && dsb.getIsSystem()) {
+					//log warn
+					throw new DeleteSystemDashboardException();
+				}
+				BigInteger dashboardId = dsb.getDashboardId();
+				manager.deleteDashboard(dashboardId, tenantId);
+			}
+			return Response.status(Status.OK).build(/*dashboad list*/);
+		}
+		catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		//(DeleteSystemDashboardException)
+		catch (BasicServiceMalfunctionException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
+		}
+	}
+
 	@DELETE
 	@Path("{id: [1-9][0-9]*}")
 	public Response deleteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
