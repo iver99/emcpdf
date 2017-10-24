@@ -15,8 +15,6 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -124,8 +122,7 @@ public class BugVerification extends LoginAndLogout
 		//login the dashboard with user emaastesttenant1_la_admin1
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_la_admin1", "emaastesttenant1");
 		webd.getLogger().info("start to test in testEMCPDF_2425");
-		WaitUtil.waitForPageFullyLoaded(webd);
-
+		
 		//reset all filter options
 		webd.getLogger().info("Reset all filter options");
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -149,8 +146,7 @@ public class BugVerification extends LoginAndLogout
 		//login the dashboard with user emaastesttenant1_la_admin1
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emaastesttenant1_ita_admin1", "emaastesttenant1");
 		webd.getLogger().info("start to test in testEMCPDF_2425_1");
-		WaitUtil.waitForPageFullyLoaded(webd);
-
+		
 		//open the shared dashboard set
 		webd.getLogger().info("Open the shared dashboard set");
 		DashboardHomeUtil.selectDashboard(webd, "DashboardSet_2425");
@@ -159,6 +155,44 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("Verify the dashboard set");
 		DashboardBuilderUtil.verifyDashboardSet(webd, "DashboardSet_2425");
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Databases");
+	}
+
+	/*@Test
+	public void testEMCPDF_2855()
+	{
+		//Initialize the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testEMCPDF_2855");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//visit LA page
+		BrandingBarUtil.visitApplicationCloudService(webd, BrandingBarUtil.NAV_LINK_TEXT_CS_LA);
+                WaitUtil.waitForPageFullyLoaded(webd);
+
+		String laCtx_url = webd.getCurrentUrl();
+		Assert.assertTrue(laCtx_url.contains("log-analytics-search"), "Failed to open the LA page");
+		webd.getLogger().info("Start to test opening LA page...");
+
+		//verify omcCtx exist in the LA url
+		webd.getLogger().info("start to verify omcCtx exist in the LA page url");
+		Assert.assertTrue(laCtx_url.contains("omcCtx="), "The global context infomation in URL is lost");
+
+		//find notification button and click it to open notification page
+		WebElement ntButton = webd.getWebDriver().findElement(By.xpath(PageId.NOTIFICATIONBUTTON_LA));
+		Assert.assertTrue(ntButton.isDisplayed(), "Notiification button isn't displayed in the page.");
+		webd.click(PageId.NOTIFICATIONBUTTON_LA);
+
+		WaitUtil.waitForPageFullyLoaded(webd);
+
+		//verify omcCtx exist in the Notification page url
+		webd.switchToWindow();
+		String lantCtx_url = webd.getCurrentUrl();
+		webd.getLogger().info("start to verify omcCtx exist in the Notification page url: " + lantCtx_url);
+		Assert.assertTrue(lantCtx_url.contains("omcCtx="), "The global context infomation in URL is lost");
+
 	}
 
 	@Test(alwaysRun = true)
@@ -222,7 +256,7 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("Verfiy the home page");
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
 				"It is NOT the home page!");
-	}
+	}*/
 
 	@Test(alwaysRun = true)
 	public void testEMPCDF_2970()
@@ -263,6 +297,20 @@ public class BugVerification extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
+    public void testEMCPDF_3120()
+    {
+		//Initialize the test
+		//login the dashboard with emaastesttenantnoita and onboard OCS Service only
+		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(), "emcsadmin", "emaastesttenantnoita");
+		
+		webd.getLogger().info("Start the test case: testEMCPDF_3120");
+                
+		//verify the Explore Data menu is disabled
+		webd.getLogger().info("Verify the Explore Data menu is not diplayed in the page");
+		Assert.assertFalse(webd.isDisplayed("id=" + DashBoardPageId.EXPLOREDATABTNID), "Explore Data menu is displayed in dashboard");
+	}   
+
+	@Test(alwaysRun = true)
 	public void testEMCPDF_3660() throws Exception
 	{
 		int newdsb_idx = 1;
@@ -270,8 +318,7 @@ public class BugVerification extends LoginAndLogout
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMCPDF_3660");
-		WaitUtil.waitForPageFullyLoaded(webd);
-
+		
 		//reset all filter options
 		webd.getLogger().info("Reset all filter options");
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -320,14 +367,16 @@ public class BugVerification extends LoginAndLogout
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Databases");
 		WaitUtil.waitForPageFullyLoaded(webd);
 		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, OOB_idx, "04/07/2016 12:00 AM", "04/14/2016 12:30 PM"), "The return date time is null");
-		Assert.assertEquals(TimeSelectorUtil.getTimeRangeLabel(webd, OOB_idx).contains("Custom"), true);
+		Assert.assertEquals(TimeSelectorUtil.getTimeRangeLabel_V2(webd, OOB_idx).contains("Custom"), true);
 
 		//set & verify custom time range for new added dashboard
 		webd.getLogger().info("Select the new created dashboard in set");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Dashboard_3660");
 		WaitUtil.waitForPageFullyLoaded(webd);
 		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, newdsb_idx, "05/08/2016 12:00 AM", "05/15/2016 13:30 PM"), "The return date time is null");
-		Assert.assertEquals(TimeSelectorUtil.getTimeRangeLabel(webd, newdsb_idx).contains("Custom"), true);
+
+		Assert.assertEquals(TimeSelectorUtil.getTimeRangeLabel_V2(webd, newdsb_idx).contains("Custom"), true);
+
 	}
     
     @Test(alwaysRun = true)
@@ -399,8 +448,7 @@ public class BugVerification extends LoginAndLogout
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMCPDF_4068_1");
-		WaitUtil.waitForPageFullyLoaded(webd);
-
+		
 		//reset all filter options
 		webd.getLogger().info("Reset all filter options");
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -410,8 +458,7 @@ public class BugVerification extends LoginAndLogout
 		//create a dashboard
 		webd.getLogger().info("Create a dashboard");
 		DashboardHomeUtil.createDashboard(webd, "Dashboard_4068", null);
-		WaitUtil.waitForPageFullyLoaded(webd);
-		
+				
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_4068", null, true),
 				"Create dashboard failed!");
 		
@@ -421,11 +468,9 @@ public class BugVerification extends LoginAndLogout
 		webd.click("css=" + DashBoardPageId.RIGHTDRAWEREDITSINGLEDBBTNCSS);
 		webd.clear("id=" + DashBoardPageId.DASHBOARDNAMEBOXID);
 		webd.sendKeys("css=" + DashBoardPageId.BUILDEROPTIONSEDITDESCRIPTIONCSS, "The description of this dashboard");
-
-		WebElement errMsgSummary = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGSUMMARYCSS));
-		WebElement errMsgDetail = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGDETAILCSS));
-		Assert.assertEquals(errMsgSummary.getText(), "Name is required");
-		Assert.assertEquals(errMsgDetail.getText(), "You must enter a value.");	
+		
+		Assert.assertEquals(webd.getText("css=" + DashBoardPageId.ERRORMSGSUMMARYCSS), "Name is required");
+		Assert.assertEquals(webd.getText("css=" + DashBoardPageId.ERRORMSGDETAILCSS), "You must enter a value.");	
 		
 		webd.sendKeys("id=" + DashBoardPageId.DASHBOARDNAMEBOXID, "Dashboard_4068");
 
@@ -440,8 +485,7 @@ public class BugVerification extends LoginAndLogout
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMCPDF_4068");
-		WaitUtil.waitForPageFullyLoaded(webd);
-
+		
 		//reset all filter options
 		webd.getLogger().info("Reset all filter options");
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -466,11 +510,9 @@ public class BugVerification extends LoginAndLogout
 		webd.clear("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS);
 		webd.sendKeys("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITDESCRIPTIONCSS, "test the behaviour when clearing the input box of name field");												
 
-		//webd.sendKeys("id=" + DashBoardPageId.DASHBOARDNAMEBOXID, "");
-		WebElement errMsgSummary1 = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGSUMMARYCSS));
-		WebElement errMsgDetail1 = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGDETAILCSS));
-		Assert.assertEquals(errMsgSummary1.getText(), "Name is required");
-		Assert.assertEquals(errMsgDetail1.getText(), "You must enter a value.");
+		//webd.sendKeys("id=" + DashBoardPageId.DASHBOARDNAMEBOXID, "");		
+		Assert.assertEquals(webd.getText("css=" + DashBoardPageId.ERRORMSGSUMMARYCSS), "Name is required");
+		Assert.assertEquals(webd.getText("css=" + DashBoardPageId.ERRORMSGDETAILCSS), "You must enter a value.");
 		
 		webd.sendKeys("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITNAMECSS, "DashboardSet_4068");
 
@@ -484,17 +526,17 @@ public class BugVerification extends LoginAndLogout
 		webd.clear("id=" + DashBoardPageId.DASHBOARDNAMEBOXID);
 		
 		webd.sendKeys("css=" + DashBoardPageId.BUILDEROPTIONSEDITDESCRIPTIONCSS, "The description of this dashboard");
-
-		WebElement errMsgSummary2 = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGSUMMARYCSS));
-		WebElement errMsgDetail2 = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.ERRORMSGDETAILCSS));
-		Assert.assertEquals(errMsgSummary2.getText(), "Name is required");
-		Assert.assertEquals(errMsgDetail2.getText(), "You must enter a value.");	
+		
+		Assert.assertEquals(webd.getText("css=" + DashBoardPageId.ERRORMSGSUMMARYCSS), "Name is required");
+		Assert.assertEquals(webd.getText("css=" + DashBoardPageId.ERRORMSGDETAILCSS), "You must enter a value.");	
 		
 		webd.sendKeys("id=" + DashBoardPageId.DASHBOARDNAMEBOXID, "DashboardInSet_4068");
 
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGSUMMARYCSS), "The error message isn't disappearred after re-input name in name input box");
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.ERRORMSGDETAILCSS), "The error message isn't disappearred after re-input name in name input box");		
 	}
+    
+    @Test(alwaysRun = true)
     public void testEMCPDF_1094()
     {
     	String dbdesc = "Dashboard_EMCPDF1094\nline break\ntest";
@@ -516,8 +558,8 @@ public class BugVerification extends LoginAndLogout
 		DashboardHomeUtil.createDashboard(webd, dbname, dbdesc, DashboardHomeUtil.DASHBOARD);
 		DashboardBuilderUtil.editDashboard(webd, dbname, dbdesc, true);
 		webd.getLogger().info("verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbname, dbdesc, true), "Create dashboard failed!");
-	}
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbname, dbdesc, true), "Create dashboard failed!"); 	
+    }
 
     @Test(alwaysRun = true)
     public void testEMCPDF_2975()
@@ -530,32 +572,32 @@ public class BugVerification extends LoginAndLogout
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
-
+	
 		//switch to Grid View
 		webd.getLogger().info("Switch to grid view");
 		DashboardHomeUtil.gridView(webd);
-
+	
 		//create dashboard
 		webd.getLogger().info("Create a dashboard: no description, with time refresh");
 		DashboardHomeUtil.createDashboard(webd, dbName, null, DashboardHomeUtil.DASHBOARD);
 		webd.getLogger().info("verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, null, true), "Create dashboard failed!");
-
+			
 		webd.getLogger().info("Add Widget to the dashboard");
 		DashboardBuilderUtil.addWidgetToDashboard(webd, "Donut");
-
+			
 		webd.getLogger().info("Save the dashboard");
 		DashboardBuilderUtil.saveDashboard(webd);
-
+			
 		webd.getLogger().info("Open the Widget");
 		DashboardBuilderUtil.openWidget(webd, "Donut");
-
+		
 		webd.getLogger().info("Back to Dashboard builder page");
 		webd.click("css=#linkHeader>a>span");
-
+			
 		webd.getLogger().info("Verify the dashboard");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, null, true), "Verify dashboard failed!");
-	}
+    }
     
     //test the maximize length is 64 when editing the dashboard name
     @Test(alwaysRun = true)
@@ -614,6 +656,7 @@ public class BugVerification extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, expectName3),
 				"Edit dashboard set failed!");
 	}
+    
     //test the maximize length of name is 64 when creating dashboard
     @Test(alwaysRun = true)
 	public void testEMCPDF_4607_3()
@@ -782,8 +825,7 @@ public class BugVerification extends LoginAndLogout
 		webd.waitForElementPresent("css=" + ".oj-message-summary");
 		Assert.assertEquals(webd.getText("css=" + ".oj-message-summary"), "Name is required");
 		webd.waitForServer();
-		webd.takeScreenShot();
-		webd.savePageToFile();
+
 		webd.click("css=" + DashBoardPageId.RIGHTDRAWERTOGGLEPENCILBTNCSS);
 		webd.click("id=" + DashBoardPageId.DASHBOARDSETOPTIONSMENUID);
 		webd.click("css=" + DashBoardPageId.DASHBOARDSETOPTIONSEDITCSS);
@@ -827,5 +869,4 @@ public class BugVerification extends LoginAndLogout
 
 
 	}
-
 }

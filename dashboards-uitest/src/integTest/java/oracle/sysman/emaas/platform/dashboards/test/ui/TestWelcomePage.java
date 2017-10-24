@@ -6,8 +6,6 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -145,7 +143,7 @@ public class TestWelcomePage extends LoginAndLogout
 		webd.getLogger().info("Test opening Data Explorers-Search in welcome page finished!!!");
 	}
 
-	//@Test(alwaysRun = true)
+	@Test(alwaysRun = true)
 	public void testOpenInfrastructureMonitoringPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());

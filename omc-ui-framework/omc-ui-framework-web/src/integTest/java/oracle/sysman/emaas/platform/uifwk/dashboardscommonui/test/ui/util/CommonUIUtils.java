@@ -8,9 +8,6 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import com.jayway.restassured.RestAssured;
@@ -176,8 +173,7 @@ public class CommonUIUtils
 			Assert.assertTrue(driver.isDisplayed("css=" + UIControls.SWIDGETWINDOWTITLE_CSS));
 			driver.getLogger().info("The window title is:  " + driver.getText("css=" + UIControls.SWIDGETWINDOWTITLE_CSS));
 			Assert.assertTrue(driver.isTextPresent("Open", "css=" + UIControls.SWIDGETWINDOWTITLE_CSS));
-			driver.takeScreenShot();
-			driver.savePageToFile();
+
 			driver.getLogger().info("Verify the Open button is disabled");
 			driver.getLogger().info("The button is:  " + driver.getText(UIControls.SADDWIDGETBTN));
 			Assert.assertEquals(driver.getText(UIControls.SADDWIDGETBTN), "Open");
@@ -187,8 +183,7 @@ public class CommonUIUtils
 			try {
 				driver.getLogger().info("the category display is: " + driver.isDisplayed(UIControls.SCATEGORYSELECT));
 			}
-			catch (RuntimeException re) {
-				LOGGER.info("context", re);
+			catch (RuntimeException re) {				
 				Assert.fail(re.getLocalizedMessage());
 			}
 			//Assert.assertFalse(driver.isElementPresent(UIControls.sCategorySelect));
@@ -196,14 +191,12 @@ public class CommonUIUtils
 			//Open a widget
 			if (!"0".equals(driver.getAttribute("css=" + UIControls.SWIDGETDISPLAY + "@childElementCount"))) {
 				driver.getLogger().info("Select a widget and open it in the main page");
-				driver.getLogger().info("Select a widget");
 				driver.waitForElementPresent(UIControls.SWIDGETSELECT);
 				driver.click(UIControls.SWIDGETSELECT);
 
 				driver.getLogger().info("Click Open button");
 				driver.waitForElementPresent(UIControls.SADDWIDGETBTN);
-				driver.click(UIControls.SADDWIDGETBTN);
-			
+				driver.click(UIControls.SADDWIDGETBTN);			
 
 				driver.getLogger().info("Verify the widget has been opened in main page");
 				Assert.assertTrue(driver.isElementPresent(UIControls.SWIDGET));
@@ -277,10 +270,7 @@ public class CommonUIUtils
 
 	public static void verifyNoLinksMenu(WebDriver driver)
 	{
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(UIControls.SLINKSMENU)));
-		driver.takeScreenShot();
-		driver.savePageToFile();
+		driver.waitForElementNotVisible(UIControls.SLINKSMENU);		
 		Assert.assertEquals(driver.getAttribute(UIControls.SLINKSMENU + "@style"), "display: none;");
 	}
 
@@ -329,7 +319,7 @@ public class CommonUIUtils
 
 	public static void verifyURL(WebDriver webdriver, String url)
 	{
-		String currurl = webdriver.getWebDriver().getCurrentUrl();
+		String currurl = webdriver.getCurrentUrl();
 		webdriver.getLogger().info("the origin url = " + currurl);
 		String tmpurl = trimUrlParameters(currurl.substring(currurl.indexOf("emsaasui") + 9));
 		webdriver.getLogger().info("the url without para = " + tmpurl);
@@ -339,7 +329,7 @@ public class CommonUIUtils
 	public static void verifyURL_WithPara(WebDriver webdriver, String url)
 	{
 		webdriver.getLogger().info("the expected relative url = " + url);
-		String currurl = webdriver.getWebDriver().getCurrentUrl();
+		String currurl = webdriver.getCurrentUrl();
 		webdriver.getLogger().info("the current url = " + currurl);
 		String tmpurl = currurl.substring(currurl.indexOf("emsaasui") + 9);
 		webdriver.getLogger().info("the relative url to compare = " + tmpurl);

@@ -14,8 +14,6 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.CommonUIUtils;
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.LoginAndLogout;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -23,8 +21,7 @@ import org.testng.annotations.Test;
  * @author shangwan
  */
 public class BrandingBar_TestGlobalContext extends LoginAndLogout
-{
-	private static final Logger LOGGER = LogManager.getLogger(BrandingBar_TestGlobalContext.class);
+{	
 	private static boolean roles[] = { false, false, false, false };
 
 	public void initTest(String testName, String queryString)
@@ -45,10 +42,10 @@ public class BrandingBar_TestGlobalContext extends LoginAndLogout
 		CommonUIUtils.addWidget(webd);
 
 		//verify the result
-		String timeRange = GlobalContextUtil.getTimeRangeLabel(webd).trim();
+		String timeRange = GlobalContextUtil.getTimeRangeLabel_V2(webd).trim();
 		Assert.assertTrue(timeRange.contains("Last year"));
 
-		String currurl = webd.getWebDriver().getCurrentUrl();
+		String currurl = webd.getCurrentUrl();
 
 		webd.getLogger().info("the origin url = " + currurl);
 

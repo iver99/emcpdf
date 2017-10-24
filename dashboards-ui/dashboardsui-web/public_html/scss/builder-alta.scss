@@ -350,8 +350,8 @@ body, html {
     width: 16px;
 }
 
-.tile-menu-img {
-    display: inline-block;
+.tile-menu-img>div, tile-menu-img>i {
+    vertical-align: middle;
     height: 35px;
 }
 
@@ -1757,6 +1757,10 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .textWidgetWrapper img {
     max-width: 100% !important;
     height: auto !important;
+    
+    &:hover {
+        cursor: pointer;
+    }
 }
 
 #uifwkLayoutMainContainer{

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html id="global-html" data-testapiversion="1.22.0" lang="en-US">
+<html id="global-html" data-testapiversion="1.23.0" lang="en-US">
     <head>
         <title data-bind="text:builderTitle"></title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -249,7 +249,7 @@
                         <!-- ko if:$root.isEmpty() -->
                         <div class="tooltip-add-widget" style="padding-top: 64px; text-align: center">
                             <!--add-widget-tooltip-->
-                            <div style="background: url('@version@/images/dfSprite.png') no-repeat 0px -1064px;height:220px;width:220px; margin-bottom:20px;"  width="220px" height="220px" margin-bottom="30px" data-bind="attr:{alt:oj.Translations.getTranslatedString('Add content to dashboard')}"></div>
+                            <div style="background: url('@version@/images/dfSprite.png') no-repeat 0px -1064px;height:220px;width:220px; margin: 20px auto;"  width="220px" height="220px" margin-bottom="30px" data-bind="attr:{alt:oj.Translations.getTranslatedString('Add content to dashboard')}"></div>
                             <p style="font-size: 24px; font-weight: 400;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></p>
                             <!-- ko if:($root.dashboard.systemDashboard()===false) && !(($root.dashboard.sharePublic()===true)&&($root.dashboard.owner()!==$root.loginUser())) -->
                             <p style="font-size: 16px;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1')"></p>
@@ -407,7 +407,6 @@
                                 </li>
                                 -->
                                 <li data-option="divider"></li>
-                                    <!-- ko if: $data.type() !== "TEXT_WIDGET" -->
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="edit" data-bind="css: {'oj-disabled': !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
@@ -419,7 +418,6 @@
                                         </li>
                                         <!-- /ko -->
                                         <li data-option="divider"></li>
-                                    <!-- /ko -->
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="up" data-bind="css: { 'oj-disabled': (!$data.upEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}">
                                             <a href="#">

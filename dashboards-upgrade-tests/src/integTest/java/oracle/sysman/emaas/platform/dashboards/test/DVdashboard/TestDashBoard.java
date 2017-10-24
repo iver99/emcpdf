@@ -11,14 +11,8 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.GlobalContextUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeUnit;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -41,15 +35,14 @@ public class TestDashBoard extends LoginAndLogout
 			DashBoardUtils.loadWebDriver(webd);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 	}
 
 	@Test(alwaysRun = true)
 	public void testFavorite()
 	{
-		dbName_favorite = "favoriteDashboard-" + generateTimeStamp();
+		dbName_favorite = "favoriteDashboard-" + DashBoardUtils.generateTimeStamp();
 		String dbDesc = "favorite_testDashboard desc";
 
 		//Initialize the test
@@ -88,7 +81,6 @@ public class TestDashBoard extends LoginAndLogout
 
 		webd.getLogger().info("Open the dashboard");
 		DashboardHomeUtil.selectDashboard(webd, dbName_favorite);
-		((org.openqa.selenium.JavascriptExecutor) webd.getWebDriver()).executeScript("window.operationStack = undefined");
 
 		webd.getLogger().info("Verify the dashboard in builder page");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_favorite, dbDesc, true), "Create dashboard failed!");
@@ -110,6 +102,7 @@ public class TestDashBoard extends LoginAndLogout
 		//delete the dashboard
 		DashboardHomeUtil.resetFilterOptions(webd);
 		webd.getLogger().info("start to delete the dashboard");
+
 		DashboardHomeUtil.deleteDashboard(webd, dbName_favorite, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 		webd.getLogger().info("the dashboard has been deleted");
 	}
@@ -142,9 +135,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		webd.switchToWindow();
 		webd.getLogger().info("Wait for the widget loading....");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
-
+		webd.waitForElementPresent("//*[@id='srchSrch']");
 	}
 
 	@Test(alwaysRun = true)
@@ -175,9 +166,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		webd.switchToWindow();
 		webd.getLogger().info("Wait for the widget loading....");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[contains(@id,'save_widget_btn')]")));
-
+		webd.waitForElementPresent("//button[contains(@id,'save_widget_btn')]");
 	}
 
 	@Test(alwaysRun = true)
@@ -201,7 +190,7 @@ public class TestDashBoard extends LoginAndLogout
 
 		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd));
 
-		String currenturl = webd.getWebDriver().getCurrentUrl();
+		String currenturl = webd.getCurrentUrl();
 
 		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
 	}
@@ -230,19 +219,19 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Verify 'All Entities' in global context bar doesn't displayed");
 		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd),
 				"Shouldn't have 'All Entities' in global context bar in the page");
-		String currenturl = webd.getWebDriver().getCurrentUrl();
+		String currenturl = webd.getCurrentUrl();
 		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
 
 		webd.getLogger().info("Set time selector");
 		TimeSelectorUtil.setFlexibleRelativeTimeRange(webd, 6, TimeUnit.Hour);
-		currenturl = webd.getWebDriver().getCurrentUrl();
+		currenturl = webd.getCurrentUrl();
 		Assert.assertFalse(currenturl.contains("omcCtx="), "The global context infomation is in URL");
 	}
 
 	@Test(alwaysRun = true)
 	public void testSetHome()
 	{
-		dbName_setHome = "setHomeDashboard-" + generateTimeStamp();
+		dbName_setHome = "setHomeDashboard-" + DashBoardUtils.generateTimeStamp();
 		String dbDesc = "SetHome_testDashboard desc";
 
 		//Initialize the test
@@ -312,7 +301,7 @@ public class TestDashBoard extends LoginAndLogout
 		String newUrl2 = null;
 		String newUrl3 = null;
 		
-		baseUrl = webd.getWebDriver().getCurrentUrl();
+		baseUrl = webd.getCurrentUrl();
 		
 		//Verify time range in dashboard should change
 		newUrl1 = GlobalContextUtil.generateUrlWithGlobalContext(webd, baseUrl, null, "LAST_5_MINUTE", null, null, null);		
@@ -323,9 +312,8 @@ public class TestDashBoard extends LoginAndLogout
 		//Verify dashboard when url without omcCtx
 		newUrl2 = newUrl1.split("&")[0];
 		webd.open(newUrl2);
-			
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[text()='Start typing entity name(s)...']")));
+		
+		webd.waitForElementPresent("//span[text()='Start typing entity name(s)...']");
 	
 		Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "Global Context bar isn't displayed in dashboard page");
 		
@@ -334,10 +322,5 @@ public class TestDashBoard extends LoginAndLogout
 		webd.open(newUrl3);
 		
 		EntitySelectorUtil.verifyCompositePillContent(webd, webd.getLogger(), "/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");		
-	} 
-	
-	private String generateTimeStamp()
-	{
-		return String.valueOf(System.currentTimeMillis());
-	}
+	}	
 }

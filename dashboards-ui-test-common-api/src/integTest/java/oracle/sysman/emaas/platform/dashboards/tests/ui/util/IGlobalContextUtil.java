@@ -64,6 +64,10 @@ public interface IGlobalContextUtil extends IUiTestCommonAPI
 
 	public String getTimeRangeLabel(WebDriver webd, int index);
 
+	public String getTimeRangeLabel_V2(WebDriver webd);
+
+	public String getTimeRangeLabel_V2(WebDriver webd, int index);
+	
 	/**
 	 * Hide Topology
 	 *
