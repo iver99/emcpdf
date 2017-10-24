@@ -799,13 +799,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         
                         //delay binding hamburger menu when it is not open on page loaded
                         var menuInitialStatus = retrieveHmaburgerMenuStatus();
-                        if(self.xlargeScreen() && menuInitialStatus !== 'closed'){
+                        if(self.xlargeScreen() && (!menuInitialStatus || menuInitialStatus === 'opened')){
                             !self.hamburgerMenuRendered && injectHamburgerMenuComponent();
                             self.hamburgerMenuRendered = true;
                         }else{
                             self.xlargeScreen.subscribe(function(isXlarge){
-                                !self.hamburgerMenuRendered && isXlarge && injectHamburgerMenuComponent();
-                                self.hamburgerMenuRendered = true;
+                                if(!self.hamburgerMenuRendered && isXlarge){
+                                    injectHamburgerMenuComponent();
+                                    self.hamburgerMenuRendered = true;
+                                }
                             });
                         }
                     });
