@@ -127,7 +127,7 @@ public class DashboardServiceFacade
 		List<EmsDashboard> list = em.createNamedQuery("EmsDashboard.findByNameAndPattern")
 				/*1*/.setParameter("namePattern", StringEscapeUtils.escapeHtml4(namePattern+"%"))
 				.setParameter("owner", UserContext.getCurrentUser()).getResultList();
-		if (/*null check*/!list.isEmpty()) {
+		if (list != null && !list.isEmpty()) {
 			return list;
 		}
 		return null;

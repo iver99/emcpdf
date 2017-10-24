@@ -251,7 +251,7 @@ public class DashboardManager
 	
 	/**
 	 * 
-	 * @param name
+	 * @param names
 	 * @param tenantId
 	 * @return
 	 */
@@ -564,8 +564,8 @@ public class DashboardManager
 
 	public List<Dashboard> getDashboardsByNameAndPattern(String namePattern, Long tenantId){
 		if (namePattern == null || "".equals(namePattern)) {
-			LOGGER.debug("NamePattern {} is invalid", namePattern);// errpr
-			return null;//Collections.emptyList();
+			LOGGER.error("NamePattern {} is invalid", namePattern);
+			return Collections.emptyList();
 		}
 		EntityManager em = null;
 		try {
@@ -573,6 +573,8 @@ public class DashboardManager
 			em = dsf.getEntityManager();
 			List<EmsDashboard> ed_list = dsf.getEmsDashboardsByNameAndPattern(namePattern);
 			List<Dashboard> dashboardList = new ArrayList<>();
+			if(dashboardList == null)
+				throw new NoResultException();
 			for(EmsDashboard ed:ed_list){
 				dashboardList.add(Dashboard.valueOf(ed, null, true, true, true, true));
 			}
@@ -580,9 +582,9 @@ public class DashboardManager
 			return dashboardList;
 		}
 		catch (NoResultException e) {
-			LOGGER.debug("Dashboard not found for namePattern \"{}\" because NoResultException is caught", namePattern);
-			LOGGER.info("context", e);// log error
-			return null;// empty list
+			LOGGER.error("Dashboard not found for namePattern \"{}\" because NoResultException is caught", namePattern);
+			LOGGER.info("context", e);
+			return Collections.<Dashboard>emptyList();
 		}
 		finally {
 			if (em != null) {
