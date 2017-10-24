@@ -780,6 +780,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.renderHamburgerMenu = omcHamburgerMenuOptIn && (!window._uifwk || !window._uifwk.hideHamburgerMenuOnPage) ? true : false;
             self.isHamburgerMenuRegistered = ko.observable(false);
             self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
+            self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
+            self.hamburgerMenuRendered = false;
             if (self.renderHamburgerMenu) {
                 self.menuParams = {'appId': self.appId, 'userName': self.userName, 'tenantName': self.tenantName, 'omcCurrentMenuId': params.omcCurrentMenuId};
                 if (!self.isHamburgerMenuRegistered()) {
@@ -794,12 +796,22 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             });
                             self.isHamburgerMenuRegistered(true);
                         }     
-                        injectHamburgerMenuComponent();
+                        
+                        //delay binding hamburger menu when it is not open on page loaded
+                        var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                        if(self.xlargeScreen() && menuInitialStatus !== 'closed'){
+                            !self.hamburgerMenuRendered && injectHamburgerMenuComponent();
+                            self.hamburgerMenuRendered = true;
+                        }else{
+                            self.xlargeScreen.subscribe(function(isXlarge){
+                                !self.hamburgerMenuRendered && isXlarge && injectHamburgerMenuComponent();
+                                self.hamburgerMenuRendered = true;
+                            });
+                        }
                     });
                 }
                 else {
                     self.isHamburgerMenuRegistered(true);
-                    injectHamburgerMenuComponent();
                 }
                 
                 function resetCurrentHamburgerMenu() {
@@ -873,8 +885,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     $("#offcanvasInnerContainer").removeClass('oj-flex-items-pad');
                 }
 
-                self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
-
+                    
                 self.xlargeScreen.subscribe(function(isXlarge){
                     if (window._uifwk && (window._uifwk.isUnderPrint || window._uifwk.resizeTriggeredByPrint)) {
                         return;
@@ -953,6 +964,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 });
 
                 self.toggleHamburgerMenu = function() {
+                    if(!self.hamburgerMenuRendered){
+                        injectHamburgerMenuComponent();
+                        self.hamburgerMenuRendered = true;
+                    }
                     if (avoidPageResizeOptIn) {
                         if (self.xlargeScreen()) {
                             $("#omcHamburgerMenu").toggle();
