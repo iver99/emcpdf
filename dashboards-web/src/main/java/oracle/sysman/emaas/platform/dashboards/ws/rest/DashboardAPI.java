@@ -265,6 +265,7 @@ public class DashboardAPI extends APIBase
 			//return Response.status(Status.OK).build(/*dashboad list*/);
 			return Response.ok(getJsonUtil().toJson(dsb_list)).build();
 		}
+
 		catch (DashboardNotFoundException e) {
 			LOGGER.error(e);
 			return buildErrorResponse(new ErrorEntity(e));
