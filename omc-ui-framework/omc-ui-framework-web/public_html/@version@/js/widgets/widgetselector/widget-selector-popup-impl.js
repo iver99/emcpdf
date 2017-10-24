@@ -444,7 +444,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                             type: 'TEXT_WIDGET',
                             WIDGET_EDITABLE: 'false',
                             highlightedName: 'HTML Widget',
-                            highlightedSource: 'Dashboard'
+                            highlightedSource: self.widgetLableSource + 'Dashboard'
                         });
                         data.unshift(tempData);
                     }
