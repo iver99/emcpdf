@@ -18,9 +18,7 @@ public class DashBoardUtils
 		DashboardHomeUtil.waitForDashboardPresent(driver, "Application Performance Monitoring");
 
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(driver, "Application Performance Monitoring"));
-	}
-
-	
+	}	
 
 	public static void itaOobGridView() 
 	{
@@ -93,6 +91,11 @@ public class DashBoardUtils
 		Assert.assertFalse(driver.isElementPresent(PageId.DATABASE_OPERATIONS_ID));
 		Assert.assertFalse(driver.isElementPresent(PageId.HOST_OPERATIONS_ID));
 		Assert.assertFalse(driver.isElementPresent(PageId.MIDDLEWARE_OPERATIONS_ID));
+	}
+	
+	public static String generateTimeStamp()
+	{
+		return String.valueOf(System.currentTimeMillis());
 	}
 
 	//Sharing and stopping dashbaord

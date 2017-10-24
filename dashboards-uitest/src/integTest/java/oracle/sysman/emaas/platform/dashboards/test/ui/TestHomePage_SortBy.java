@@ -13,9 +13,14 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import sun.font.TrueTypeFont;
 
 public class TestHomePage_SortBy extends LoginAndLogout
 {
+	private String dbName_lastAccessAsc = "";
+	private String dbName_lastAccessDsc = "";
+	private String dbName_SortDefault = "";
+
 	@BeforeClass
 	public void createDashboard()
 	{
@@ -55,6 +60,9 @@ public class TestHomePage_SortBy extends LoginAndLogout
 		//delete the test data
 		webd.getLogger().info("Delete the test data");
 		DashBoardUtils.deleteDashboard(webd, "ADashboard Test");
+		DashBoardUtils.deleteDashboard(webd, dbName_lastAccessAsc);
+		DashBoardUtils.deleteDashboard(webd, dbName_lastAccessDsc);
+		DashBoardUtils.deleteDashboard(webd, dbName_SortDefault);
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -62,7 +70,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 		LoginAndLogout.logoutMethod();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void TestSortBy_createdBy_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -106,7 +114,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testSortBy_createdByAscending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -128,7 +136,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 		Assert.assertEquals(names.get(0), "ADashboard Test");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testSortBy_createdByDecending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -150,7 +158,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 		webd.getLogger().info("The last dashboard sorted by 'Created By Decending' is " + names.get(names.size() - 1));
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testSortBy_creationDateAscending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -172,7 +180,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(0));
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testSortBy_creationDateDecending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -188,32 +196,28 @@ public class TestHomePage_SortBy extends LoginAndLogout
 		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
 		Assert.assertEquals(names.get(names.size() - 1), "Performance Analytics: Database");
 		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(names.size() - 1));
-
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testSortBy_lastAccessedAscending()
 	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test sort by dashboards with created by ascendingt");
+		dbName_lastAccessAsc = "Sort Last Access Asc - " + DashBoardUtils.generateTimeStamp();
 
-		//switch to list view
-		webd.getLogger().info("Switch to List View");
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test sort by dashboards with last accessed by ascendingt");
+
+		//switch to grid view
+		webd.getLogger().info("Switch to Grid View");
 		DashboardHomeUtil.gridView(webd);
 
-		//search the dashboard
-		webd.getLogger().info("search the dashboard");
-		DashboardHomeUtil.search(webd, "ADashboard Test");
-
-		//open the dashboard in builder page
-		webd.getLogger().info("open the dashboard");
-		DashboardHomeUtil.selectDashboard(webd, "ADashboard Test");
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webd, dbName_lastAccessAsc, "", DashboardHomeUtil.DASHBOARD);
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_lastAccessAsc, "", true),"Failed to create dashboard");
 
 		//back to home page
-		webd.getLogger().info("back to the dashboard home page");
+		webd.getLogger().info("Back to home page");
 		BrandingBarUtil.visitDashboardHome(webd);
-
-		DashboardHomeUtil.closeOverviewPage(webd);
 
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by last accessed by Ascending");
@@ -221,21 +225,9 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
-		Assert.assertEquals(names.get(names.size() - 1), "ADashboard Test");
+		Assert.assertEquals(names.get(names.size() - 1), dbName_lastAccessAsc);
 		webd.getLogger().info("The last dashboard sorted by 'Last Access Ascending' is " + names.get(names.size() - 1));
-	}
-
-	@Test
-	public void testSortBy_lastAccessedDecending()
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test sort by dashboards with created by ascendingt");
-
-		//switch to list view
-		webd.getLogger().info("Switch to List View");
-		DashboardHomeUtil.gridView(webd);
 
 		//search the dashboard
 		webd.getLogger().info("search the dashboard");
@@ -249,21 +241,140 @@ public class TestHomePage_SortBy extends LoginAndLogout
 		webd.getLogger().info("back to the dashboard home page");
 		BrandingBarUtil.visitDashboardHome(webd);
 
-		DashboardHomeUtil.closeOverviewPage(webd);
+		//sort the dashboard by name Ascending
+		webd.getLogger().info("Sort the dashboard by last accessed by Ascending");
+		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC);
+
+		//verify the result
+		webd.getLogger().info("Verify the sort result");
+		names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(names.size() - 1), "ADashboard Test");
+		Assert.assertEquals(names.get(names.size() - 2), dbName_lastAccessAsc);
+		webd.getLogger().info("The last 2 dashboards sorted by 'Last Access Ascending' is " + names.get(names.size() - 1) + "and " + names.get(names.size() - 2));
+
+		//edit the dashboard
+		webd.getLogger().info("Open dashboard: " + dbName_lastAccessAsc);
+		DashboardHomeUtil.selectDashboard(webd, dbName_lastAccessAsc);
+		DashboardBuilderUtil.editDashboard(webd,dbName_lastAccessAsc,"test");
+
+		//back to the home page
+		webd.getLogger().info("back to the dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
 
 		//sort the dashboard by name Ascending
-		webd.getLogger().info("Sort the dashboard by last accessed by Decending");
+		webd.getLogger().info("Sort the dashboard by last accessed by Ascending");
+		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC);
+		//verify the result
+		webd.getLogger().info("Verify the sort result");
+		names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(names.size() - 2), "ADashboard Test");
+		Assert.assertEquals(names.get(names.size() - 1), dbName_lastAccessAsc);
+		webd.getLogger().info("The last 2 dashboards sorted by 'Last Access Ascending' is " + names.get(names.size() - 2) + "and " + names.get(names.size() - 1));
+
+		//delete the dashboard
+		webd.getLogger().info("Delete the dashboard: " + dbName_lastAccessAsc);
+		DashboardHomeUtil.deleteDashboard(webd, dbName_lastAccessAsc, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+
+		//sort the dashboard by name Ascending
+		webd.getLogger().info("Sort the dashboard by last accessed by Ascending");
+		BrandingBarUtil.visitDashboardHome(webd);
+		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC);
+		//verify the result
+		webd.getLogger().info("Verify the sort result");
+		names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(names.size() - 1), "ADashboard Test");
+		webd.getLogger().info("The last dashboards sorted by 'Last Access Ascending' is " + names.get(names.size() - 1));
+	}
+
+	@Test(alwaysRun = true)
+	public void testSortBy_lastAccessedDecending()
+	{
+		dbName_lastAccessDsc = "Sort Last Access Dsc - " + DashBoardUtils.generateTimeStamp();
+
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test sort by dashboards with last accessed by descending");
+
+		//switch to grid view
+		webd.getLogger().info("Switch to Grid View");
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webd, dbName_lastAccessDsc, "", DashboardHomeUtil.DASHBOARD);
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_lastAccessDsc, "", true),"Failed to create dashboard");
+
+		//back to home page
+		webd.getLogger().info("Back to home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//sort the dashboard by name Ascending
+		webd.getLogger().info("Sort the dashboard by last accessed by Descending");
 		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC);
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.waitForDashboardPresent(webd, "ADashboard Test");
 		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(0), dbName_lastAccessDsc);
+		webd.getLogger().info("The last dashboard sorted by 'Last Access Descending' is " + names.get(0));
+
+		//search the dashboard
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, "ADashboard Test");
+
+		//open the dashboard in builder page
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "ADashboard Test");
+
+		//back to home page
+		webd.getLogger().info("back to the dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//sort the dashboard by name Ascending
+		webd.getLogger().info("Sort the dashboard by last accessed by Descending");
+		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC);
+
+		//verify the result
+		webd.getLogger().info("Verify the sort result");
+		names = DashboardHomeUtil.listDashboardNames(webd);
 		Assert.assertEquals(names.get(0), "ADashboard Test");
-		webd.getLogger().info("The first dashboard sorted by 'Last Access Decending' is " + names.get(0));
+		Assert.assertEquals(names.get(1), dbName_lastAccessDsc);
+		webd.getLogger().info("The last 2 dashboards sorted by 'Last Access Descending' is " + names.get(0) + "and " + names.get(1));
+
+		//edit the dashboard
+		webd.getLogger().info("Open dashboard: " + dbName_lastAccessDsc);
+		DashboardHomeUtil.selectDashboard(webd, dbName_lastAccessDsc);
+		DashboardBuilderUtil.editDashboard(webd,dbName_lastAccessDsc,"test");
+
+		//back to the home page
+		webd.getLogger().info("back to the dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//sort the dashboard by name Ascending
+		webd.getLogger().info("Sort the dashboard by last accessed by Descending");
+		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC);
+		//verify the result
+		webd.getLogger().info("Verify the sort result");
+		names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(1), "ADashboard Test");
+		Assert.assertEquals(names.get(0), dbName_lastAccessDsc);
+		webd.getLogger().info("The last 2 dashboards sorted by 'Last Access Descending' is " + names.get(1) + "and " + names.get(0));
+
+		//delete the dashboard
+		webd.getLogger().info("Delete the dashboard: " + dbName_lastAccessDsc);
+		DashboardHomeUtil.deleteDashboard(webd, dbName_lastAccessDsc, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+
+		//sort the dashboard by name Ascending
+		webd.getLogger().info("Sort the dashboard by last accessed by Descending");
+		BrandingBarUtil.visitDashboardHome(webd);
+		DashboardHomeUtil.sortBy(webd, DashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC);
+		//verify the result
+		webd.getLogger().info("Verify the sort result");
+		names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(0), "ADashboard Test");
+		webd.getLogger().info("The last dashboards sorted by 'Last Access Descending' is " + names.get(0));
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void TestSortBy_LastModified_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -319,7 +430,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 		Assert.assertEquals(names.get(0), "ADashboard Test");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testSortBy_lastModifiedAscending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -361,7 +472,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 		webd.getLogger().info("The last dashboard sorted by 'Last Modified Ascending' is " + names.get(names.size() - 1));
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testSortBy_lastModifiedDecending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -403,7 +514,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 		webd.getLogger().info("The first dashboard sorted by 'Last Modified Decending' is " + names.get(0));
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void TestSortBy_Name_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -443,7 +554,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testSortBy_nameAscending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -465,7 +576,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 		webd.getLogger().info("The first dashboard sorted by 'Name Ascending' is " + names.get(0));
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testSortBy_nameDecending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -485,5 +596,79 @@ public class TestHomePage_SortBy extends LoginAndLogout
 		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
 		Assert.assertEquals(names.get(names.size() - 1), "ADashboard Test");
 		webd.getLogger().info("The last dashboard sorted by 'Name Decending' is " + names.get(names.size() - 1));
+	}
+
+	@Test(alwaysRun = true)
+	public void testSortBy_Default()
+	{
+		dbName_SortDefault = "Sort By Default - " + DashBoardUtils.generateTimeStamp();
+
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test sort dashboards by default");
+
+		//switch to grid view
+		webd.getLogger().info("Switch to Grid View");
+		DashboardHomeUtil.gridView(webd);
+
+		//create a dashboard
+		webd.getLogger().info("Create a dashboard");
+		DashboardHomeUtil.createDashboard(webd, dbName_SortDefault, "", DashboardHomeUtil.DASHBOARD);
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_SortDefault, "", true),"Failed to create dashboard");
+
+		//back to home page
+		webd.getLogger().info("Back to home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//verify the result
+		webd.getLogger().info("Verify the sort result");
+		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(0), dbName_SortDefault);
+		webd.getLogger().info("The last dashboard sorted by 'Default' is " + names.get(0));
+
+		//search the dashboard
+		webd.getLogger().info("search the dashboard");
+		DashboardHomeUtil.search(webd, "ADashboard Test");
+
+		//open the dashboard in builder page
+		webd.getLogger().info("open the dashboard");
+		DashboardHomeUtil.selectDashboard(webd, "ADashboard Test");
+
+		//back to home page
+		webd.getLogger().info("back to the dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//verify the result
+		webd.getLogger().info("Verify the sort result");
+		names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(0), "ADashboard Test");
+		Assert.assertEquals(names.get(1), dbName_SortDefault);
+		webd.getLogger().info("The last 2 dashboards sorted by 'Default' is " + names.get(0) + "and " + names.get(1));
+
+		//edit the dashboard
+		webd.getLogger().info("Open dashboard: " + dbName_SortDefault);
+		DashboardHomeUtil.selectDashboard(webd, dbName_SortDefault);
+		DashboardBuilderUtil.editDashboard(webd,dbName_SortDefault,"test");
+
+		//back to the home page
+		webd.getLogger().info("back to the dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//verify the result
+		webd.getLogger().info("Verify the sort result");
+		names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(1), "ADashboard Test");
+		Assert.assertEquals(names.get(0), dbName_SortDefault);
+		webd.getLogger().info("The last 2 dashboards sorted by 'Default' is " + names.get(1) + "and " + names.get(0));
+
+		//delete the dashboard
+		webd.getLogger().info("Delete the dashboard: " + dbName_SortDefault);
+		DashboardHomeUtil.deleteDashboard(webd, dbName_SortDefault, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
+
+		//verify the result
+		webd.getLogger().info("Verify the sort result");
+		BrandingBarUtil.visitDashboardHome(webd);
+		names = DashboardHomeUtil.listDashboardNames(webd);
+		Assert.assertEquals(names.get(0), "ADashboard Test");
+		webd.getLogger().info("The last dashboards sorted by 'Default' is " + names.get(0));
 	}
 }

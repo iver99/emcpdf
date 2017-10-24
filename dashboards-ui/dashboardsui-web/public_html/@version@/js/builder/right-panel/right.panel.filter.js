@@ -249,7 +249,7 @@ define([
             });
             
             self.defaultTimeRangeValueText = ko.computed(function() {
-                if((self.defaultTimeRangeValue()[0] !== "custom") && (self.defaultTimeRangeValue()[0] !== "custom1")) {
+                if((self.defaultTimeRangeValue()[0] !== "custom") && (self.defaultTimeRangeValue()[0] !== "custom1") && self.defaultTimeRangeValue()[0] !== "CUSTOM") {
                     var timeLabel = self.rightPanelUtil.getDefaultTimeRangeValueText(self.defaultTimeRangeValue()[0]);
                     if(timeLabel) {
                         return timeLabel;

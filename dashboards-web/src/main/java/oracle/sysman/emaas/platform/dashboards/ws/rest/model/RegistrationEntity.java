@@ -28,6 +28,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.TenantInfoClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
@@ -152,6 +153,7 @@ public class RegistrationEntity implements Serializable
 			if (LookupManager.getInstance().getLookupClient() == null) {
 				// to ensure initComponent is only called once during the entire lifecycle
 				LookupManager.getInstance().initComponent();
+                                TenantInfoClient.getInstance().initComponent();
 			}
 			successfullyInitialized = true;
 		}
@@ -543,21 +545,29 @@ public class RegistrationEntity implements Serializable
 						@Override
 						public Object load(Object key) throws Exception
 						{
-							if (!DependencyStatus.getInstance().isEntityNamingUp()) {
-								LOGGER.error("Error to get SSO logout url: EntityNaming service is down");
-								throw new EntityNamingDependencyUnavailableException();
-							}
-							Link lk = RegistryLookupUtil.getServiceExternalLink(SECURITY_SERVICE_NAME, SECURITY_SERVICE_VERSION,
-									SECURITY_SERVICE_SSO_LOGOUT_REL, tenantName);
-							lk = RegistryLookupUtil.replaceWithVanityUrl(lk, tenantName, SECURITY_SERVICE_NAME);
-							if (lk != null) {
-								return lk.getHref();
-							}
-							else {
-								String errorMsg = MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR",
-										SECURITY_SERVICE_NAME, SECURITY_SERVICE_VERSION, SECURITY_SERVICE_SSO_LOGOUT_REL);
-								LOGGER.error(errorMsg);
-								return null;
+							//internal compute
+							if(!isExternalCompute()){
+								_LOGGER.info("Retrieve internal compute logout links from serviceRegistry");
+								if (!DependencyStatus.getInstance().isEntityNamingUp()) {
+									LOGGER.error("Error to get SSO logout url: EntityNaming service is down");
+									throw new EntityNamingDependencyUnavailableException();
+								}
+								Link lk = RegistryLookupUtil.getServiceExternalLink(SECURITY_SERVICE_NAME, SECURITY_SERVICE_VERSION,
+										SECURITY_SERVICE_SSO_LOGOUT_REL, tenantName);
+								lk = RegistryLookupUtil.replaceWithVanityUrl(lk, tenantName, SECURITY_SERVICE_NAME);
+								if (lk != null) {
+									return lk.getHref();
+								}
+								else {
+									String errorMsg = MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR",
+											SECURITY_SERVICE_NAME, SECURITY_SERVICE_VERSION, SECURITY_SERVICE_SSO_LOGOUT_REL);
+									LOGGER.error(errorMsg);
+									return null;
+								}
+							}else{
+								//external compute
+								_LOGGER.info("Retrieve external compute logout links...");
+								return "/logout";
 							}
 						}
 					});
@@ -869,5 +879,25 @@ public class RegistrationEntity implements Serializable
 			});
 		}
 		return origLinks;
+	}
+	public static final String EC_JVM_PARAM = "com.oracle.omc.external";
+
+	/**
+	 * Return true if this is an external compute environment
+	 *
+	 * @return true if this is an external compute environment
+	 */
+	private static boolean isExternalCompute()
+	{
+		String ecVal = System.getProperty(EC_JVM_PARAM);
+		if (ecVal != null && "true".equalsIgnoreCase(ecVal))
+		{
+			// This is an EC environment
+			_LOGGER.info("isExternalCompute return true....");
+			return true;
+		}
+		// The default is false
+		_LOGGER.info("isExternalCompute return false....");
+		return false;
 	}
 }

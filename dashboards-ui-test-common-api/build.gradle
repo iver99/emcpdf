@@ -69,6 +69,7 @@ eclipse {
         plusConfigurations += configurations.testNG
         plusConfigurations += configurations.webdriver
         plusConfigurations += configurations.testConfig
+        
     }
 }
 

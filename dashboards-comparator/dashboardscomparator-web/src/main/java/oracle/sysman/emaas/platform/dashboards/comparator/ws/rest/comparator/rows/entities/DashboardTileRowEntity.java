@@ -12,12 +12,44 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.ro
 
 
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import java.math.BigInteger;
 
 /**
- * @author guochen
+ * NOTE: if schema changes, corresponding Entity class need to be updated and equals and hashcode methods should be  rewrited too
+ * DASHBOARD_ID
+ * CREATION_DATE
+ * LAST_MODIFICATION_DATE
+ * LAST_MODIFIED_BY
+ * OWNER
+ * TITLE
+ * HEIGHT
+ * WIDTH
+ * IS_MAXIMIZED
+ * POSITION
+ * TENANT_ID
+ * WIDGET_UNIQUE_ID
+ * WIDGET_NAME
+ * WIDGET_DESCRIPTION
+ * WIDGET_GROUP_NAME
+ * WIDGET_ICON
+ * WIDGET_HISTOGRAM
+ * WIDGET_OWNER
+ * WIDGET_CREATION_TIME
+ * WIDGET_SOURCE
+ * WIDGET_KOC_NAME
+ * WIDGET_VIEWMODE
+ * WIDGET_TEMPLATE
+ * PROVIDER_NAME
+ * PROVIDER_VERSION
+ * PROVIDER_ASSET_ROOT
+ * TILE_ROW
+ * TILE_COLUMN
+ * TYPE
+ * WIDGET_SUPPORT_TIME_CONTROL
+ * WIDGET_LINKED_DASHBOARD
+ * WIDGET_DELETED
+ * WIDGET_DELETION_DATE
+ * TILE_ID
+ * DELETED
  */
 public class DashboardTileRowEntity implements RowEntity
 {

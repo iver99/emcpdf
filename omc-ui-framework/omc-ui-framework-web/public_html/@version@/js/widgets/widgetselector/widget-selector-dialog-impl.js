@@ -583,6 +583,8 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-dialog-impl',[
                     }
                     return result;
                 };
+                var message = {'tag': 'EMAAS_WIDGETSELECTOR_INITIALIZED'};
+                window.postMessage(message, window.location.href);
             }
             return WidgetSelectorDialogViewModel;
         });

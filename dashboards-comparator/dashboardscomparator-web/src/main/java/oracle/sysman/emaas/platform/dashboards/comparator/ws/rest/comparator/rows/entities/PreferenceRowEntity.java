@@ -13,7 +13,14 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.ro
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
- * @author guochen
+ * NOTE: if schema changes, corresponding Entity class need to be updated and equals and hashcode methods should be  rewrited too
+ * USER_NAME
+ * PREF_KEY
+ * PREF_VALUE
+ * TENANT_ID
+ * CREATION_DATE
+ * LAST_MODIFICATION_DATE
+ * DELETED
  */
 public class PreferenceRowEntity implements RowEntity
 {

@@ -17,6 +17,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.EntitySelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+
 public class GlobalContextUtil_1180 extends GlobalContextUtil_1170
 {	
 	public static final String GLBCTXTBUTTON = "//div[@id='topologyButtonWrapper']/span/label";
@@ -61,6 +62,7 @@ public class GlobalContextUtil_1180 extends GlobalContextUtil_1170
 		}
 		else {
 			driver.click(GLBCTXTBUTTON);
+			
 		}
 	}
 	

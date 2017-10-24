@@ -153,7 +153,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         self.triggerBuilderResizeEvent = function(message) {
             var height = $(window).height()/* - $('#headerWrapper').outerHeight()
                     - $('#head-bar-container').outerHeight()*/;
-            var width = $("#omcHamburgerMenu:visible").not(".oj-offcanvas-start")[0]?$(window).width()-$("#omcHamburgerMenu").width():$(window).width();
+            var width = ($("#omcHamburgerMenu:visible").not(".oj-offcanvas-start").length > 0 && $("#omcHamburgerMenu:visible").not(".oj-offcanvas-start").height() > 0) ? $(window).width()-$("#omcHamburgerMenu").width():$(window).width();
             var $visibleDashboard = $("#dashboards-tabs-contents .dashboard-content:visible");
             var $rightPanelToggler = $('.right-panel-toggler');
             var $dbdLeftPanel = $('.dbd-left-panel');

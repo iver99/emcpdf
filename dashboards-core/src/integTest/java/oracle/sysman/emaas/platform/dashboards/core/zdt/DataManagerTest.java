@@ -3,6 +3,9 @@ package oracle.sysman.emaas.platform.dashboards.core.zdt;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.HalfSyncException;
+import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.NoComparedResultException;
+import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.SyncException;
 import org.testng.annotations.Test;
 
 import mockit.Expectations;
@@ -299,7 +302,7 @@ public class DataManagerTest
 
 	@Test
 	public void getSyncDashboardTableRow(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query){
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		BigInteger dashboardId = new BigInteger("1");
 		String name = "name";
 		Long type = 1L;
@@ -397,7 +400,7 @@ public class DataManagerTest
 	}	
 	@Test
 public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager persistenceManager, 
-		@Mocked final EntityManager entityManager,@Mocked final Query query){
+		@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 	BigInteger dashboardId = new BigInteger("1");
 	String name = "name";
 	Long type = 1L;
@@ -418,12 +421,16 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 	Integer enableDescription = 1;
 	String extendedOptions = "extendedoptions";
 	Integer showInHome = 1;
+	final List<Map<String, Object>> list = new ArrayList<>();
+	Map<String,Object> map = new HashMap<>();
+	map.put("CREATION_DATE","2017:09:09 09:09:09.000");
+	map.put("LAST_MODIFICATION_DATE","2017:09:09 09:09:09.000");
 
-	final Map<String, Object> objs = new HashMap<String,Object>();		
+	list.add(map);
 		new Expectations(){
 		{
 			query.getResultList();
-				result = new HashMap<String,Object>();
+				result = list;
 		}
 	};
 	dataManager.syncDashboardTableRow(entityManager,
@@ -453,7 +460,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 
 	@Test
 	public void testSyncDashboardTile(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query){
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		String tileId = "1";
 		BigInteger dashboardId = new BigInteger("1");
 		String creationDate = "creationdate";
@@ -563,7 +570,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 	}
 	@Test
 	public void testSyncDashboardTileInsert(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query) {
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		String tileId = "1";
 		BigInteger dashboardId = new BigInteger("1");
 		String creationDate = "creationdate";
@@ -613,7 +620,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 	}
 	@Test
 	public void testSyncDashboardTileParam(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query){
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		String tileId = "1";
 		String paramName = "paramName";
 		Long tenantId = 1L;
@@ -657,7 +664,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 	}
 	@Test
 	public void testSyncDashboardTileParamInsert(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query){
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		String tileId = "1";
 		String paramName = "paramName";
 		Long tenantId = 1L;
@@ -683,7 +690,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 
 	@Test
 	public void testSyncDashboardUserOption(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query) {
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		String userName = "username";
 		Long tenantId = 1L;
 		BigInteger dashboardId = new BigInteger("1");
@@ -720,7 +727,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 	}
 	@Test
 	public void testSyncDashboardUserOptionInsert(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query) {
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		String userName = "username";
 		Long tenantId = 1L;
 		BigInteger dashboardId = new BigInteger("1");
@@ -746,7 +753,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 
 	@Test
 	public void testSyncDashboardSet(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query){
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		BigInteger dashboardSetId = new BigInteger("1");
 		Long tenantId = 1L;
 		BigInteger subDashboardId = new BigInteger("1");
@@ -779,7 +786,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 
 	@Test
 	public void testSyncDashboardSetInsert(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query){
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		BigInteger dashboardSetId = new BigInteger("1");
 		Long tenantId = 1L;
 		BigInteger subDashboardId = new BigInteger("1");
@@ -800,7 +807,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 
 	@Test
 	public void testSyncPreference(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query){
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		String userName = "userName";
 		String prefKey = "prefKey";
 		String prefValue = "prefValue";
@@ -832,7 +839,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 
 	@Test
 	public void testSyncPreferenceInsert(@Mocked final PersistenceManager persistenceManager, 
-			@Mocked final EntityManager entityManager,@Mocked final Query query){
+			@Mocked final EntityManager entityManager,@Mocked final Query query) throws SyncException {
 		String userName = "userName";
 		String prefKey = "prefKey";
 		String prefValue = "prefValue";
@@ -849,5 +856,72 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 		};
 		dataManager.syncPreferences(entityManager,userName, prefKey, prefValue,
 				tenantId, creationDate, lastModificationDate, deleted);
+	}
+
+	@Test
+	public void testCheckHalfSyncRecord(@Mocked final EntityManager entityManager,@Mocked final Query query) throws HalfSyncException {
+		final List list = new ArrayList();
+		new Expectations(){
+			{
+				entityManager.createNativeQuery(anyString);
+				result = query;
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.checkHalfSyncRecord(entityManager);
+		Map<String, Object> map = new HashMap<>();
+		list.add(map);
+		new Expectations(){
+			{
+				entityManager.createNativeQuery(anyString);
+				result = query;
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.checkHalfSyncRecord(entityManager);
+	}
+	@Test(expectedExceptions = HalfSyncException.class)
+	public void testCheckHalfSyncRecord2(@Mocked final EntityManager entityManager,@Mocked final Query query) throws HalfSyncException {
+		final List list = new ArrayList();
+		Map<String, Object> map = new HashMap<>();
+		list.add(new Object());
+		list.add(map);
+		new Expectations(){
+			{
+				entityManager.createNativeQuery(anyString);
+				result = query;
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.checkHalfSyncRecord(entityManager);
+	}
+
+	@Test
+	public void testUpdateHalfSyncStatus(){
+		dataManager.updateHalfSyncStatus("1","half");
+	}
+
+	@Test(expectedExceptions = HalfSyncException.class)
+	public void testGetHalfSyncedComparedData(@Mocked final EntityManager em,@Mocked final Query query) throws HalfSyncException, NoComparedResultException {
+		dataManager.getHalfSyncedComparedData(em, null);
+	}
+	@Test
+	public void testGetHalfSyncedComparedData2(@Mocked final EntityManager em) throws HalfSyncException, NoComparedResultException {
+
+		final  List<Map<String, Object>> list = new ArrayList<>();
+		Map<String,Object> map = new HashMap<>();
+		list.add(map);
+		new Expectations(){
+			{
+				em.createNativeQuery(anyString);
+				result = query;
+				query.getResultList();
+				result = list;
+			}
+		};
+		dataManager.getHalfSyncedComparedData(em, "2017-09-15 09:09:10,205");
 	}
 }

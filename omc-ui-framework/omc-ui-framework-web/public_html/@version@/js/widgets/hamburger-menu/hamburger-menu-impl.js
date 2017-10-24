@@ -635,9 +635,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 }
 
                 function refreshSingleServiceMenu(appId, key, callback) {
-                    omcMenus = []; //TODO
                     var svcMenuLink = findServiceMenuLinkByAppId(appId);
                     loadSingleServiceMenuJson(svcMenuLink).done(function() {
+                        omcMenus = [];
                         var singleServiceData = null;
                         var menuDefIndex = getServiceMenuDefIndex(appId);
                         if (menuDefIndex > -1) {
@@ -672,10 +672,12 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 
                 function refreshAllUnloadedServiceMenus() {
                     var dfdRefreshUnloadedMenus = $.Deferred();
-                    omcMenus = []; //TODO
+
                     var allUnloadedMenus = findUnloadedServiceMenusWithoutHasAdminRel();//findAllUnloadedServiceMenus();
+
                     if (allUnloadedMenus && allUnloadedMenus.length > 0) {
                         loadServiceData(allUnloadedMenus).done(function() {
+                            omcMenus = [];
                             $.each(allUnloadedMenus, function(idx, linkItem){
                                 var singleServiceData = null;
                                 var menuDefIndex = getServiceMenuDefIndex(linkItem.appId);

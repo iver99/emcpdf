@@ -74,26 +74,13 @@
     /*font-weight: normal !important;*/
 }
 
-.leftDrawerChosen {
-    background-color:  #ebeced; //#E4F0FA; /*#ffffff !important;*/
-    /*font-weight: bold !important;*/
-    /*border-left: 3px solid #0572ce;*/
+.drawerChosen {
+    background-color:  #ebeced;
 }
 
-.leftDrawerHover {
+.drawerHover {
     background-color: #ebeced; //#F0F0F0;
     /*border-left: 3px solid #85bbe7;*/
-}
-
-.rightDrawerChosen {
-    background-color:  #ebeced; //#E4F0FA; /*#ffffff !important;*/
-    /*font-weight: bold !important;*/
-    /*border-right: 3px solid #0572ce;*/
-}
-
-.rightDrawerHover {
-    background-color: #ebeced; //#F0F0F0;
-    /*border-right: 3px solid #85bbe7;*/
 }
 
 .drawerNotToShow {
@@ -117,10 +104,10 @@
 }
 
 .pickerPanel {
-    width: 550px; //510px;
-    height: 449px; //402px;
+    width: 565px; //660px;
+    min-height: 279px;
+    height: auto;
     /*float: right;*/
-    padding-top: 16px;
     /*padding-left: 10px;*/
     margin-top: -1px;
     
@@ -134,46 +121,22 @@
 }
 
 .lrControlRadios {
-    padding-left: 15px;
-    padding-bottom:5px;
-    display: inline-block;
-    width: 93%;
-}
-
-.picker-panel-padding-right {
-    padding-right: 10px;
-}
-
-.picker-panel-padding-left {
     padding-left: 10px;
+    display: inline-block;
 }
 
-.chosenDate {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 12px;
-    display: inline;
-    height: 30px;
-    width: 60px;
-    line-height: 30px;
-    vertical-align: middle;
-}
-.to {
-    padding: 5px;
-    display: inline-block;
-}
-.chosenTime {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 12px;
-    display: inline-block;
-    height: 32px;
-    width: 150px;
-    vertical-align: middle
-}
+// Always show "Apply" button at the bottom of panel per Juan's comments. It's fine if sometimes error messages cover the button.
 .buttons {
-    margin: -10px 10px 10px;
-    bottom: 20px;
-    vertical-align: bottom;
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
 }
+
+/*.buttons.apply-disabled {
+    position: relative;
+    padding: 5px 0px 0px;
+}*/
+
 .errorMsg {
     margin: 10px;
     font-size: 14px;
@@ -182,15 +145,6 @@
     width: 510px;
     position: absolute;
     bottom: 0px;
-}
-.datePicker {
-    font-size: 15px;
-    padding-left: 5px;
-    /*padding-top: 10px;*/
-}
-
-.datePicker .oj-datepicker-content {
-    padding: 0px;
 }
 
 .drawer img {
@@ -202,48 +156,14 @@
     margin-right: 5px
 }
 
-.date-selected {
-    background-color: #0572ce;
-}
-
-.input-focus {
-    border: 1px solid  #47bdef;;
-}
-
-.input-error {
-    border: 2px solid #d66;
-}
-
 /*set min-width of ojInputText*/
 .oj-inputtext {
     min-width: 90px;
 }
 
-.oj-datepicker-inline .oj-datepicker-content {
-    border: 0px;
-}
-
-/*set the header of calender*/
-.oj-datepicker-header {
-    height: 25px;
-    background-color: #f0f0f0;
-}
-
 /*set max-width of the calendar*/
 .oj-inputdatetime-inline {
     max-width: 250px;
-}
-
-/*set the border of each day*/
-.oj-datepicker-calendar td a.oj-enabled {
-    border: 3px solid white;
-}
-.oj-datepicker-calendar td span.oj-disabled {
-    border: 3px solid white;
-}
-
-.oj-datepicker-calendar td a.oj-selected {
-    color: #000000;
 }
 
 .time-filter-indicator {
@@ -357,6 +277,8 @@ div[id^='pickerPanel'] .oj-listbox-search-wrapper {
 }
 
 .show-individual-time-span1{
+    font-weight: bold;
+    padding-right: 5px;
     display: block !important;
     line-height: 0.5em;
     font-size: 12px;
@@ -365,18 +287,19 @@ div[id^='pickerPanel'] .oj-listbox-search-wrapper {
 }
 
 .show-individual-time-span1-latest{
+    font-weight: bold;
+    padding-right: 5px;
+    display: inline-block;
     font-size: 12px;
     color:  #333333;
 }
 
 .show-individual-time-span1-short{
+    font-weight: bold;
+    padding-right: 5px;
+    display: inline-block;
     font-size: 12px;
     color:  #333333;
-}
-
-.show-individual-time-span2{
-/*    line-height: 0.5em;
-    font-size: 0.5em;*/
 }
 
 .time-range-overflow {
@@ -433,19 +356,20 @@ div[id^='pickerPanel'] .oj-listbox-drop{
 }
 
 .relRadios {
-    vertical-align: top;
+    vertical-align: top !important;
     display: inline-block;
     margin-top: 10px;
 }
 
 div[id^='pickerPanel'] .oj-messaging-inline-container{
     .oj-message-error {
-        width: 430px;
-        height: 36px;
+        width: 350px;
+        height: 50px;
         padding: 5px;
         word-wrap: break-word;
         word-break: normal;
-        overflow: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
     .oj-message-summary {
         font-size: 12px;
@@ -453,4 +377,13 @@ div[id^='pickerPanel'] .oj-messaging-inline-container{
     .oj-message-detail {
         font-size: 12px;
     }
+}
+
+//Error message for end date and time are too long to exceed the panel. Make them float to right.
+div[id^='endTime'] .oj-messaging-inline-container {
+    float: right;
+}
+
+div[id^='endDate'] .oj-messaging-inline-container {
+    float: right;
 }
