@@ -47,6 +47,7 @@ requirejs.config({
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util', // why we need this?
         'uifwk': '/emsaasui/uifwk',
+        'DOMPurify': '../../libs/@version@/js/DOMPurify/purify',
         'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor'
     },
     bundles: function() {

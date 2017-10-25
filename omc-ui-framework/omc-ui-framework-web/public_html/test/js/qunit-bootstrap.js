@@ -29,7 +29,6 @@ requirejs.config({
             'text!uifwk/js/widgets/widgetselector/html/widget-selector-dialog.html',
             'text!uifwk/js/widgets/widgetselector/html/widget-selector-popup.html',
             'text!uifwk/js/widgets/timeFilter/html/timeFilter.html',
-            'text!uifwk/js/widgets/htmlwidget/html/htmlwidget.html',
             'text!uifwk/js/widgets/datetime-picker/html/datetime-picker.html'
             ]
     },

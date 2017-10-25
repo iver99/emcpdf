@@ -540,12 +540,6 @@ define(['knockout',
                     window.getSDKVersionFile(assetRootForVerisonedFile + kocTemplate) : null;
                 kocTemplate = versionedTemplate ? versionedTemplate : assetRoot + kocTemplate;
 
-            if (tile.WIDGET_UNIQUE_ID() === '2' && !ko.components.isRegistered('df-htmlwidget')) {
-                    ko.components.register("df-htmlwidget", {
-                        viewModel: {require: 'uifwk/js/widgets/htmlwidget/js/htmlwidget'},
-                        template: {require: 'text!uifwk/js/widgets/htmlwidget/html/htmlwidget.html'}
-                    });
-                }
             Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
                     ko.applyBindings(tile, wgtelem[0]);
 
