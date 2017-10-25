@@ -68,6 +68,46 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
 		return count;
 	}
 
+    /**
+     * Determines if "Temporarily Unavailable" message is displayed
+     * on type ahead dropdown
+     */
+    private boolean isTypeAheadUnavail(final WebDriver driver, final Logger logger) {
+        final String xpathPrefix = "xpath=";
+        final String unavailString = "Temporarily unavailable";
+        final String unavailEntry = MessageFormat.format(DashBoardPageId.EntSelTypeAheadNoResultsText, new Object[]{unavailString});
+
+        // See if dropdown contains area displaying message. If it does,
+        // then initially it would display "Please wait.." but if type ahead 
+        // initialization takes > 30 sec, it will change to 
+        // "Temporarily Unavailable". Normally type ahead init takes 5-6 sec
+        // but there are instances in the farm when it takes longer (usually
+        // emcpdm issues). Waiting 40 sec here rather than 30 since found that
+        // even thought client timeout is set to 30 sec, it seems to take a
+        // a second or two more before the message is changed on the dropdown.
+        WebDriverWait wait1 = new WebDriverWait(driver.getWebDriver(), 40);
+        wait1.until(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(org.openqa.selenium.WebDriver d) {
+                logger.log(Level.INFO, "Check for text in no results area");
+                if (driver.isElementPresent(xpathPrefix + DashBoardPageId.EntSelTypeAheadNoResults)) {
+                    logger.log(Level.INFO, "No results area is displayed, looking for {0}", unavailString);
+                    if (driver.isElementPresent(xpathPrefix + unavailEntry)) {
+                        logger.log(Level.INFO, "Found 'Temporarily Unavailable' message");
+                        return true;
+                    }
+                    return false;
+                }
+                logger.log(Level.INFO, "No results area was not found");
+                return true;
+            }
+        });
+
+        // Is "Temporarily Unavailable" message still displayed?
+        return driver.isElementPresent(xpathPrefix + unavailEntry);
+    }
+
+        
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#openEntitySelector(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
@@ -79,25 +119,44 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                 WaitUtil.waitForPageFullyLoaded(driver);
                 WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
             
-                //Open Entity Selector to display the suggestions
-		logger.log(Level.INFO, "Click Global Context Entity Selector to display suggestions");
-                wait.until(ExpectedConditions.elementToBeClickable(By.xpath(DashBoardPageId.EntSelTypeAheadField))); //Global Context bar
-                //workaround for EMCTAS-7739 -  use javascript click instead of driver click
-                driver.click("xpath=" + DashBoardPageId.EntSelTypeAheadField, ClickType.JAVASCRIPT);
-                
-                //Wait until type ahead component is fully operational
-                logger.log(Level.INFO, "Global Context bar was clicked");
-                
-                //Verify type ahead field exists in Global Context bar
-                logger.log(Level.INFO, "Verify Entity Selector type ahead field is present");
-                wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(DashBoardPageId.EntSelTypeAheadFieldInput)));
-                logger.log(Level.INFO, "Entity Selector type ahead field is present");
+                final WebDriver finalDriver = driver;
+                final Logger finalLogger = logger;
 
-		//Verify suggestions popup is visible
-		logger.log(Level.INFO, "Verify Entity Selector suggestions are visible");
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.EntSelSuggestionPopup)));
-                driver.takeScreenShot();
-                logger.log(Level.INFO, "Entity Selector options are displayed");
+                // Workaround for farm issues. Verify type ahead dropdown
+                // is actually displaying entities. 
+                wait.until(new ExpectedCondition<Boolean>() {
+                    @Override
+                    public Boolean apply(org.openqa.selenium.WebDriver d) {
+                        //Open Entity Selector to display the suggestions
+		        finalLogger.log(Level.INFO, "Click Global Context Entity Selector to display suggestions");
+                        WebDriverWait wait1 = new WebDriverWait(d, UNTIL_TIMEOUT);
+                        wait1.until(ExpectedConditions.elementToBeClickable(By.xpath(DashBoardPageId.EntSelTypeAheadField))); //Global Context bar
+                        //workaround for EMCTAS-7739 -  use javascript click instead of driver click
+                        finalDriver.click("xpath=" + DashBoardPageId.EntSelTypeAheadField, ClickType.JAVASCRIPT);
+                    
+                        //Wait until type ahead component is fully operational
+                        finalLogger.log(Level.INFO, "Global Context bar was clicked");
+                    
+                        //Verify type ahead field exists in Global Context bar
+                        finalLogger.log(Level.INFO, "Verify Entity Selector type ahead field is present");
+                        wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath(DashBoardPageId.EntSelTypeAheadFieldInput)));
+                        finalLogger.log(Level.INFO, "Entity Selector type ahead field is present");
+
+		        //Verify suggestions popup is visible
+		        finalLogger.log(Level.INFO, "Verify Entity Selector suggestions are visible");
+                        wait1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.EntSelSuggestionPopup)));
+                        finalDriver.takeScreenShot();
+                        finalLogger.log(Level.INFO, "Entity Selector dropdown is displayed");
+     
+                        if (! isTypeAheadUnavail(finalDriver, finalLogger)) {
+                            finalLogger.log(Level.INFO, "Entity Selector options are displayed");
+                            return true;
+                        }
+            
+                        finalLogger.log(Level.INFO, "Trying Entity Selector click event again");
+                        return false;
+                    }
+                });
 	}
 
 	/* (non-Javadoc)

@@ -1757,6 +1757,10 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .textWidgetWrapper img {
     max-width: 100% !important;
     height: auto !important;
+    
+    &:hover {
+        cursor: pointer;
+    }
 }
 
 #uifwkLayoutMainContainer{

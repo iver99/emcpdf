@@ -91,7 +91,7 @@ public class LoginAndLogout
 		webd.getLogger().info("url is " + url + "   properties file is " + testPropertiesFile);
 		webd.getLogger().info("after::start to test in LoginAndOut");
 		// if the ui have been login, do not login ,again
-		if (!webd.getWebDriver().getCurrentUrl().equals(url)) {
+		if (!webd.getCurrentUrl().equals(url)) {
 
 			LoginUtils.doLogin(webd, username, password, tenantId, url);
 		}

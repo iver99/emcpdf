@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html id="global-html" data-testapiversion="1.22.0" lang="en-US">
+<html id="global-html" data-testapiversion="1.23.0" lang="en-US">
     <head>
         <title data-bind="text:builderTitle"></title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -407,7 +407,6 @@
                                 </li>
                                 -->
                                 <li data-option="divider"></li>
-                                    <!-- ko if: $data.type() !== "TEXT_WIDGET" -->
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="edit" data-bind="css: {'oj-disabled': !$data.maximizeEnabled() || $data.editDisabled()}">
                                             <a href="#">
@@ -419,7 +418,6 @@
                                         </li>
                                         <!-- /ko -->
                                         <li data-option="divider"></li>
-                                    <!-- /ko -->
                                         <!-- ko if: $data.editDisabled() !== true -->
                                         <li data-option="up" data-bind="css: { 'oj-disabled': (!$data.upEnabled() || !$data.maximizeEnabled() || $data.editDisabled())}">
                                             <a href="#">
