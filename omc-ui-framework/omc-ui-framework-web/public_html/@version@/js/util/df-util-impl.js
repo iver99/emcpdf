@@ -1073,16 +1073,7 @@ define(['knockout',
                     if (!window._uifwk.cachedData.isFetchingRegistrations) {
                         window._uifwk.cachedData.isFetchingRegistrations = true;
                         if (!window._uifwk.cachedData.registrations) {
-                            window._uifwk.cachedData.registrations = ko.observable();
-                        }else{
-                            if (!$.isFunction(window._uifwk.cachedData.registrations));{
-                                console.info("EMCPDF-5019 is hit: BEGIN");
-                                console.info("registrations data: "+JSON.stringify(window._uifwk.cachedData.registrations));
-                                console.info("toSendAsync: "+toSendAsync);
-                                console.info("successCallback: "+successCallback);
-                                console.info("errorCallback: "+errorCallback);
-                                console.info("EMCPDF-5019 is hit: END");
-                            }                            
+                            window.registrationFromRequest = ko.observable();
                         }
                         if (!window._uifwk.cachedData.errGetRegistration) {
                             window._uifwk.cachedData.errGetRegistration = ko.observable(false);
@@ -1092,13 +1083,12 @@ define(['knockout',
                         }
 
                         function doneCallback(data, textStatus, jqXHR) {
-                            if (!$.isFunction(window._uifwk.cachedData.registrations));{
-                                console.info("EMCPDF-5019 is hit 2: BEGIN");
-                                console.info("data: "+JSON.stringify(data));
-                                console.info(jqXHR);
-                                console.info("EMCPDF-5019 is hit 2: END");
-                            }                            
-                            window._uifwk.cachedData.registrations(data);
+                            if(window.registrationFromRequest && $.isFunction(window.registrationFromRequest)) {
+                                window.registrationFromRequest(data);
+                            }else {
+                                window.registrationFromRequest = ko.observable(data);
+                            }
+                            window._uifwk.cachedData.registrations = data;
                             window._uifwk.cachedData.isFetchingRegistrations = false;
                             successCallback(data, textStatus, jqXHR);
                         }
@@ -1124,7 +1114,7 @@ define(['knockout',
                             });
                         }
                     } else {
-                        window._uifwk.cachedData.registrations.subscribe(function (data) {
+                        window.registrationFromRequest.subscribe(function (data) {
                             if (data) {
                                 successCallback(data);
                             }
