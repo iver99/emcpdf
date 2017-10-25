@@ -23,6 +23,7 @@ def File sourceWebappDir = new File(project.projectDir, 'public_html')
 // source directories where jet, ckeditor, font-awesome files are copied
 def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclejet')
 def File sourceCKeditorDesDir = new File(sourceWebappDir, 'libs/@version@/js/ckeditor')
+def File sourceDOMPurifyDesDir = new File(sourceWebappDir, 'libs/@version@/js/DOMPurify')
 def File sourceFontDestDir = new File(sourceWebappDir, 'libs/@version@/css/font-awesome')
 def File sourceQunitDestDir = new File(sourceWebappDir, 'libs/@version@/js/qunit')
 // folders for minify, fingereprint js files
@@ -66,6 +67,7 @@ dependencies {
         compile getProjectArtifact('jmockit')  
         compile getProjectArtifact('qunit')
 	compile getProjectArtifact('ckeditor')
+	compile getProjectArtifact('DOMPurify')
      
 	ftpAntTask('org.apache.ant:ant-commons-net:12.1.2-0-0') {
 	        module('commons-net:commons-net:1.4.1') {
@@ -228,9 +230,11 @@ project.task("cleanFont") << {
 //unpack js libs from artifactory
 project.task("unpackJSLibFromArtifactory") << {    
 	def File buildCKeditorUnzipDir = new File(buildDir.absolutePath, 'ckeditor')
+	def File buildDOMPurifyUnzipDir = new File(buildDir.absolutePath, 'DOMPurify')
 	
 	//first time or if custom cleans removes it
 	sourceCKeditorDesDir.mkdirs()
+	sourceDOMPurifyDesDir.mkdirs()
 
 	configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
 	    if (artifact.name.equals('ckeditor_full') && files(sourceCKeditorDesDir.listFiles()).isEmpty()) {
@@ -256,12 +260,38 @@ project.task("unpackJSLibFromArtifactory") << {
 		}
 		project.delete(buildCKeditorUnzipDir)
 	    }
+
+		if (artifact.name.equals('DOMPurify') && files(sourceDOMPurifyDesDir.listFiles()).isEmpty()) {
+			logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+			buildDOMPurifyUnzipDir.mkdirs()
+
+			project.copy {
+				from project.zipTree(artifact.file.absolutePath)
+				into buildDOMPurifyUnzipDir.absolutePath
+			}
+			project.copy {
+				from buildDOMPurifyUnzipDir.absolutePath+'/DOMPurify/'
+				into sourceDOMPurifyDesDir.absolutePath
+			}
+
+			if(!project.hasProperty("devMode")){
+				def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/DOMPurify");
+				outputs.dir outputDir
+				project.copy {
+				from buildDOMPurifyUnzipDir.absolutePath+'/DOMPurify/'
+				into outputDir
+				}
+			}
+			project.delete(buildDOMPurifyUnzipDir)
+	    }
 	}
 }
  
 project.task("cleanJSLib") << {
 	println 'JS lib ckeditor dir : ' + sourceCKeditorDesDir.absolutePath
 	sourceCKeditorDesDir.deleteDir()
+	println 'JS lib DOMPurify dir : ' + sourceDOMPurifyDesDir.absolutePath
+	sourceDOMPurifyDesDir.deleteDir()
 }
 
 task copyJsSource(type:Copy, dependsOn:[cleanJs, compileSass]) {//unpackJETFromArtifactory, unpackJSLibFromArtifactory,unpackFontFromArtifactory,compileSass]) {
@@ -320,8 +350,8 @@ task jsCodeCoverage(type:JavaExec, dependsOn:[cleanJs, stageJs]){//copyJsSource]
 	logger.lifecycle("filepath:  "+artifact.name)
         if (artifact.name.equals('JSCover-all')) {
 		logger.lifecycle("filepath"+artifact.file.absolutePath)
-		//args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/js\\/util\\/.*','--no-instrument-reg=.*\\/ckeditor\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
-		args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/d3\\/.*', '--no-instrument-reg=.*\\/canvg\\/.*', '--no-instrument-reg=.*\\/html2canvas\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*', '--no-instrument-reg=.*\\/ita-tool\\/.*', '--no-instrument-reg=.*\\/js\\/jquery\\/.*', '--no-instrument-reg=.*\\/js\\/resources\\/nls\\/root\\/uifwkCommonMsg.js','--no-instrument-reg=.*\\/ckeditor\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
+		//args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/js\\/util\\/.*','--no-instrument-reg=.*\\/ckeditor\\/.*', '--no-instrument-reg=.*\\/DOMPurify\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
+		args artifact.file.absolutePath, '-fs', '--local-storage', '--no-instrument-reg=.*\\/d3\\/.*', '--no-instrument-reg=.*\\/canvg\\/.*', '--no-instrument-reg=.*\\/html2canvas\\/.*', '--no-instrument-reg=.*\\/oraclejet\\/.*', '--no-instrument-reg=.*\\/ita-tool\\/.*', '--no-instrument-reg=.*\\/js\\/jquery\\/.*', '--no-instrument-reg=.*\\/js\\/resources\\/nls\\/root\\/uifwkCommonMsg.js','--no-instrument-reg=.*\\/ckeditor\\/.*', '--no-instrument-reg=.*\\/DOMPurify\\/.*',stagingDir, buildDir.absolutePath+'/staging/public_htmlcc'
             }
 	}      
     
