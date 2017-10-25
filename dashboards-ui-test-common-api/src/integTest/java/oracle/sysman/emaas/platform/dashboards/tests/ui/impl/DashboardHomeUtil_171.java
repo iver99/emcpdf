@@ -358,8 +358,8 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.getElement(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR).clear();
 		driver.click(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR);
 		driver.sendKeys(DashBoardPageId.SEARCHDASHBOARDINPUTLOCATOR, searchString);
-        
-		driver.waitForServer();
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
 		driver.evalJavascript("arguments[0].click();", driver.getElement(DashBoardPageId.SEARCHDASHBOARDSEARCHBTNLOCATOR));
 		WaitUtil.waitForPageFullyLoaded(driver);
 	}
@@ -375,7 +375,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.setPageLoadDetector(BuildPageLoadDetector.class);
 		driver.waitForElementEnabled(indicator);
 		driver.click(indicator);
-		driver.waitForServer();
+		WaitUtil.waitForPageFullyLoaded(driver);
 		driver.setPageLoadDetector(null);
 	}
 

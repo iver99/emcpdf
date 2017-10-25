@@ -10,17 +10,13 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
-import java.util.List;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWidgetSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.XPathLiteral;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
 
 public class WidgetSelectorUtil_171 extends WidgetSelectorUtil_Version implements IWidgetSelectorUtil
 {
@@ -38,11 +34,9 @@ public class WidgetSelectorUtil_171 extends WidgetSelectorUtil_Version implement
 			searchWidget(driver, widgetName);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			driver.getLogger().info(e.getLocalizedMessage());
 		}
-		String autoCloseCheck = driver.getElement(DashBoardPageId.WIDGET_SELECTOR_WIDGET_AREA).getAttribute(
-				"data-wgt-slt-auto-close");
+		String autoCloseCheck = driver.getAttribute(DashBoardPageId.WIDGET_SELECTOR_WIDGET_AREA + "@data-wgt-slt-auto-close");
 		Boolean autoClose = Boolean.valueOf(autoCloseCheck);
 		getWidgetElementByTitle(driver, widgetName, 0);
 
@@ -54,8 +48,7 @@ public class WidgetSelectorUtil_171 extends WidgetSelectorUtil_Version implement
 				closeDialog(driver);
 			}
 			catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				driver.getLogger().info(e.getLocalizedMessage());
 			}
 		}
 
@@ -99,21 +92,28 @@ public class WidgetSelectorUtil_171 extends WidgetSelectorUtil_Version implement
 		driver.getLogger().info("(Internal method) closeDialog completed");
 	}
 
-	private WebElement getWidgetElementByTitle(WebDriver driver, String widgetName, int index)
+	private int getWidgetElementByTitle(WebDriver driver, String widgetName, int index)
 	{
 		String xpath = XPathLiteral.getXPath(widgetName, driver.getLogger());
 		String widgetItemByNameLocator = String.format(DashBoardPageId.WIDGET_SELECTOR_WIDGET_ITEMS_BY_TITLE, xpath);
 
 		driver.click(widgetItemByNameLocator);
+		
+		int tileTitlesCount = driver.getElementCount("xpath=" + widgetItemByNameLocator);
 
-		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(widgetItemByNameLocator));
-		if (tileTitles == null || tileTitles.size() <= index) {
+//		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(widgetItemByNameLocator));
+		if (tileTitlesCount <= index) {
 			throw new NoSuchElementException("Widget with widgetName=" + widgetName + ", index=" + index + " is not found");
 		}
-		tileTitles.get(index).click();
-		driver.takeScreenShot();
-		driver.savePageToFile();
-		return tileTitles.get(index);
+//		tileTitles.get(index).click();
+//		driver.takeScreenShot();
+//		driver.savePageToFile();
+		
+		int i = index + 1;
+		
+		driver.click("xpath=(" + widgetItemByNameLocator + ")[" + index + "]");
+//		return tileTitles.get(index);
+		return i;
 	}
 
 	protected void searchWidget(WebDriver driver, String widgetName)
@@ -125,5 +125,4 @@ public class WidgetSelectorUtil_171 extends WidgetSelectorUtil_Version implement
 		driver.sendKeys(DashBoardPageId.WIDGET_SELECTOR_SEARCH_INPUT_LOCATOR, widgetName);
 		driver.click(DashBoardPageId.WIDGET_SELECTOR_SEARCH_BTN);
 	}
-
 }

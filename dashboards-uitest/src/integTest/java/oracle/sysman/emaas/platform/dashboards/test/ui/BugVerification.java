@@ -113,7 +113,7 @@ public class BugVerification extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testEMCPDF_2425()
 	{
 		//login the dashboard with user emaastesttenant1_la_admin1
@@ -899,9 +899,5 @@ public class BugVerification extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd,"Dashboard_4699");
 		
 		Assert.assertFalse(webd.isElementPresent(DashBoardPageId_190.CONFIGTILECSS),"The configuration button is enabled");
-		
-		
-
-
 	}
 }

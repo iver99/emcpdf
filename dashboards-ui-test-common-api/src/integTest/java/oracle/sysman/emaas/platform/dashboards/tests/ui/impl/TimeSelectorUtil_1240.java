@@ -207,7 +207,8 @@ public class TimeSelectorUtil_1240 extends TimeSelectorUtil_1170
 //		String optionLocator = getOptionsLocator(driver, relTimeUnit.getTimeUnit());
 //		driver.click("css=" + optionLocator);
 		
-		driver.select("css=" + TimeSelectorUIControls.sFlexRelTimeOpt, "value='" + relTimeUnit.getTimeUnit() + "'");
+//		driver.select("css=" + TimeSelectorUIControls.sFlexRelTimeOpt, "value='" + relTimeUnit.getTimeUnit() + "'");
+		driver.select("//div[contains(@id,'pickerPanel')]//select", "value='" + relTimeUnit.getTimeUnit() + "'");
 
 		try {
 			clickApplyButton(driver);

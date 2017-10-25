@@ -377,6 +377,7 @@ public class DashBoardPageId
 	public static final String DELETETILE = "//ul[@title='Content Settings']/li/a/span[text()='Delete']";
 	public static final String TILESLISTCSS = "div[id^=tile]";
 	public static final String TEXTWIDGETCSS = "div[data-tile-name='Text Widget']";
+	public static final String TEXTWIDGETXPATH = "//div[@data-tile-name='Text Widget']";
 	
 	//right drawer css locators
 	public static final String RIGHTDRAWERTOGGLEBTNCSS = ".right-panel-toggler button.toggle-right-panel-btn";
@@ -531,8 +532,8 @@ public class DashBoardPageId
 	//To get Composite results, substract all the 'Entities' category results from the entire list since there's no other way to determine if a result belongs to a certain category
 	public static final String EntSelSuggestionByCompositeCategory = "((//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[contains(@class,''oj-listbox-result-selectable'') and not(preceding-sibling::li[not(contains(@class,''oj-listbox-result-selectable''))]//span[text()=''Entities''])])/div[span[2]/descendant-or-self::span[normalize-space()=''{0}'']])";
 	public static final String EntSelSuggestionByEntitiesCategory = "((//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[contains(@class,''oj-listbox-result-selectable'') and preceding-sibling::li[not(contains(@class,''oj-listbox-result-selectable''))]//span[text()=''Entities'']])/div[span[2]/descendant-or-self::span[normalize-space()=''{0}'']])";
-        public static final String EntSelTypeAheadNoResults = "//div[contains(@id, 'suggestPopup')]//div[contains(@id, 'suggestNoResults')]";
-        public static final String EntSelTypeAheadNoResultsText = "//span[contains(text(),''{0}'')]";
+    public static final String EntSelTypeAheadNoResults = "//div[contains(@id, 'suggestPopup')]//div[contains(@id, 'suggestNoResults')]";
+    public static final String EntSelTypeAheadNoResultsText = "//span[contains(text(),''{0}'')]";
 	public static final String EntSelPillToRemoveByIndex = "(//div[@id=''emaas-appheader-globalcxt'']//a[contains(@id,''_remove'')])[{0}]";
 	public static final String EntSelPillLinkToReplaceByIndex = "//div[@id=\"emaas-appheader-globalcxt\"]//pill[{0}]//a[@class=\"pillLink\"]";
 	public static final String EntSelEditedPillByText = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//a[@class=\"pillLink\"]//span[contains(text(),\"{0}\")]";

@@ -17,6 +17,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver.ClickType;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -93,9 +94,11 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 				break;
 
 		}
-		driver.getWebDriver().findElement(By.xpath(eleXpath)).click();
-		driver.takeScreenShot();
-		driver.savePageToFile();
+//		driver.getWebDriver().findElement(By.xpath(eleXpath)).click();
+//		driver.takeScreenShot();
+//		driver.savePageToFile();
+		
+		driver.click(eleXpath, ClickType.WEBELEMENT);
 	}
 
 	/* (non-Javadoc)
@@ -243,7 +246,7 @@ public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 			driver.waitForElementPresent("id=" + DashBoardPageId.WELCOME_ITALINKID);
 			driver.click("id=" + DashBoardPageId.WELCOME_ITALINKID);			
 		}
-		else {
+		else {			
 			String eleXpath = null;
 			driver.click("id=oj-select-choice-" + DashBoardPageId.WELCOME_ITA_SELECTID);
 			switch (selection) {

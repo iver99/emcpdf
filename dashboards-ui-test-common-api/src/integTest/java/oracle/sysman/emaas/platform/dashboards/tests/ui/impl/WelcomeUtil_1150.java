@@ -24,22 +24,24 @@ public class WelcomeUtil_1150 extends WelcomeUtil_175
 				DATA_EXPLORERS_SEARCH);
 
 		WaitUtil.waitForPageFullyLoaded(driver);
+		
+		driver.select("xpath=//select[@id='dataExp_options']", "value='Data Explorer'");
 
-		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID);
-		driver.click("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID);
-		switch (selection) {
-			case DATA_EXPLORERS_LOG:
-				eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_DATAEXP_SELECTID, DashBoardPageId.WELCOME_DATAEXP_LOG);
-				break;
-			case DATA_EXPLORERS_SEARCH:
-				eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_DATAEXP_SELECTID,
-						DashBoardPageId_1150.WELCOME_DATAEXP_SEARCH);
-				break;
-			default:
-				break;
-
-		}
-		driver.click(eleXpath, ClickType.WEBELEMENT);
+//		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID);
+//		driver.click("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID);
+//		switch (selection) {
+//			case DATA_EXPLORERS_LOG:
+//				eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_DATAEXP_SELECTID, DashBoardPageId.WELCOME_DATAEXP_LOG);
+//				break;
+//			case DATA_EXPLORERS_SEARCH:
+//				eleXpath = getOptionXpath(driver, DashBoardPageId.WELCOME_DATAEXP_SELECTID,
+//						DashBoardPageId_1150.WELCOME_DATAEXP_SEARCH);
+//				break;
+//			default:
+//				break;
+//
+//		}
+//		driver.click(eleXpath, ClickType.WEBELEMENT);
 
 	}
 
