@@ -272,7 +272,7 @@ public class DashboardManager
     			em.close();
     		}
     	}
-    	return null;
+    	return Collections.emptyList();
     }
 	
 
