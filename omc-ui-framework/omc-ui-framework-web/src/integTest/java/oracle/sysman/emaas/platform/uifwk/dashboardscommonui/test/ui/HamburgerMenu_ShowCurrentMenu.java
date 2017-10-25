@@ -15,9 +15,6 @@ import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.Common
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.UIControls;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -26,13 +23,8 @@ import org.testng.annotations.Test;
  */
 public class HamburgerMenu_ShowCurrentMenu extends LoginAndLogout
 {
-	private static final Logger LOGGER = LogManager.getLogger(HamburgerMenu_ShowCurrentMenu.class);
-	private static String sAppName = "";
-	private static boolean roles[] = { false, false, false, false };
-
 	public void initTest(String testName, String queryString)
 	{
-
 		loginHamburgerMenu(this.getClass().getName() + "." + testName, queryString);
 		CommonUIUtils.loadWebDriver(webd);
 	}
@@ -49,8 +41,8 @@ public class HamburgerMenu_ShowCurrentMenu extends LoginAndLogout
 		//click the 'Show Composite' button
 		webd.getLogger().info("Click the 'Set Current Menu' button");
 		String indicator = UIControls.SGENERATEMENUBTN.replace("_name_", "Set Current Menu");
-		//webd.click("css=" + indicator);
-		webd.getWebDriver().findElement(By.cssSelector(indicator)).click();
+		webd.click("css=" + indicator);
+		
 		//check the hamburger menu
 		webd.getLogger().info("Check the menu items in hamburger menu");
 		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, "Alert Rules"));

@@ -54,7 +54,7 @@ dependencies
     	earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.3.0'){transitive=false }
     	earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.3.0'){transitive=false }
     	earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.3.0'){transitive=false }
-    	earlib(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){transitive=false }
+    	earlib(group: 'com.oracle.emaas.emcpsrvs.sdk', name:'emaas-platform-tenant-sdk', version:'2.1.+'){transitive=false }
     	earlib(group: 'com.oracle.emaas.emcpgw.sdk', name: 'gateway-client', version: "${emaasGatewayClientVersion}")
 
 

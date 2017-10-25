@@ -201,11 +201,14 @@ public class MetadataRetriever
                         tile.setWidgetSource(1);
                         tile.setWidgetSupportTimeControl(Boolean.FALSE);
                         tile.setWidgetLinkedDashboard(null);
-                        if(Dashboard.DASHBOARD_TYPE_SINGLEPAGE.equals(oob.getType())) {
-                            tile.setWidgetGroupName(INVISIBLE_WIDGET_GROUP);
-                        } else {
-                            tile.setWidgetGroupName(WIDGET_GROUP_MAP.get(serviceName) == null ? INVISIBLE_WIDGET_GROUP
-                                    : WIDGET_GROUP_MAP.get(serviceName));
+                        // set default widget group name only if it's empty
+                        if (tile.getWidgetGroupName() == null || tile.getWidgetGroupName().isEmpty()) {
+                            if(Dashboard.DASHBOARD_TYPE_SINGLEPAGE.equals(oob.getType())) {
+                                tile.setWidgetGroupName(INVISIBLE_WIDGET_GROUP);
+                            } else {
+                                tile.setWidgetGroupName(WIDGET_GROUP_MAP.get(serviceName) == null ? INVISIBLE_WIDGET_GROUP
+                                        : WIDGET_GROUP_MAP.get(serviceName));
+                            }
                         }
                         
                         // set tile parameter's default values

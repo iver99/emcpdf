@@ -10,12 +10,9 @@
 
 package oracle.sysman.emaas.platform.uifwk.timepicker.test.ui;
 
-import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
 import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.CommonUIUtils;
 import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.UIControls;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -23,7 +20,6 @@ import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,7 +43,7 @@ public class TestTimePicker_DisableQuickPick extends LoginAndLogout
 		webd.getLogger().info("Click TimePicker");
 		CommonUIUtils.clickTimePicker(webd, 1);
 
-		webd.getLogger().info("Verify 'Last 7 Days' option is disabled'");
+		webd.getLogger().info("Verify 'Last 7 Days' option is disabled'");		
 		List<WebElement> webelements = webd.getWebDriver().findElements(By.cssSelector(UIControls.DISABLE_OPT_CSS));
 		if (webelements == null || webelements.isEmpty()) {
 			throw new NoSuchElementException("Can not find the expected time options!!!");
