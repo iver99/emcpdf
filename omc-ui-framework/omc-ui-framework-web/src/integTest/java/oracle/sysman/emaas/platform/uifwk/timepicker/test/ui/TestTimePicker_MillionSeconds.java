@@ -42,8 +42,8 @@ public class TestTimePicker_MillionSeconds extends LoginAndLogout
 
 		//set time range
 		webd.getLogger().info("set timerange as Custom");
-		String returnDate = TimeSelectorUtil.setCustomTimeWithMillisecond(webd, 2, "10/10/2016 12:00:00:000 AM",
-				"12/14/2016 12:30:59:000 PM");
+		String returnDate = TimeSelectorUtil.setCustomTimeWithMillisecond(webd, 2, "10/10/2016 12:00:00.000 AM",
+				"12/14/2016 12:30:59.000 PM");
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
@@ -60,11 +60,11 @@ public class TestTimePicker_MillionSeconds extends LoginAndLogout
 		webd.getLogger().info("Start the test case: testTimePicker_Custom_LongTerm_currentDate");
 		
 		Date now = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss:SSS a");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss.SSS a");
 		String currentDate = dateFormat.format( now ); 
 		
 		webd.getLogger().info("Set the end date as current day");
-		String returnDate = TimeSelectorUtil.setCustomTimeWithMillisecond(webd, 2, "10/10/2016 12:00:00:000 AM", currentDate);			
+		String returnDate = TimeSelectorUtil.setCustomTimeWithMillisecond(webd, 2, "10/10/2016 12:00:00.000 AM", currentDate);			
 		webd.getLogger().info("Return Date:  " + returnDate);
 
 		//verify the result
@@ -92,8 +92,8 @@ public class TestTimePicker_MillionSeconds extends LoginAndLogout
 
 		//set time range
 		webd.getLogger().info("set timerange as Custom");
-		String returnDate = TimeSelectorUtil.setCustomTimeWithMillisecond(webd, "04/14/2016 12:00:00:000 AM",
-				"04/14/2016 12:30:59:000 PM");
+		String returnDate = TimeSelectorUtil.setCustomTimeWithMillisecond(webd, "04/14/2016 12:00:00.000 AM",
+				"04/14/2016 12:30:59.000 PM");
 
 		//verify the result
 		webd.getLogger().info("verify the time range is set correctly");
@@ -110,11 +110,11 @@ public class TestTimePicker_MillionSeconds extends LoginAndLogout
 		webd.getLogger().info("Start the test case: testTimePicker_Custom_ShortTerm_currentDate");
 		
 		Date now = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss:SSS a");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss.SSS a");
 		String currentDate = dateFormat.format( now ); 
 		
 		webd.getLogger().info("Set the end date as current day");
-		String returnDate = TimeSelectorUtil.setCustomTimeWithMillisecond(webd, "04/14/2016 12:00:00:000 AM", currentDate);			
+		String returnDate = TimeSelectorUtil.setCustomTimeWithMillisecond(webd, "04/14/2016 12:00:00.000 AM", currentDate);			
 		webd.getLogger().info("Return Date:  " + returnDate);
 
 		//verify the result

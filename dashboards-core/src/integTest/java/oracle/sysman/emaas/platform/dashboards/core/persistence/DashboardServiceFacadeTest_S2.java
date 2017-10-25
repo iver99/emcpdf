@@ -4,22 +4,25 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 
+
+import mockit.Deencapsulation;
+import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import oracle.sysman.emaas.platform.dashboards.core.BaseTest;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringEscapeUtil;
+import oracle.sysman.emaas.platform.dashboards.entity.*;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -277,7 +280,7 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		setUp();
 		testGetEmsUserOptions();
 		testGetEmsDashboardById();
-		testGetEmsDashboardFindAll();
+//		testGetEmsDashboardFindAll();
 		testMergeEmsDashboard();
 		//testGetEmsDashboardLastAccessByPK();
 		testPrefecence();
@@ -286,7 +289,8 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 
 	@Test(groups = { "s2" })
 	public void testCC(@Mocked final PersistenceManager mockpm, @Mocked final EntityManager mockem,
-			@Mocked final EntityManagerFactory mockemf, @Mocked final EntityTransaction mocket)
+			@Mocked final EntityManagerFactory mockemf, @Mocked final EntityTransaction mocket,
+					   @Mocked final Query query, @Mocked final	EmsDashboard emsDashboard)
 	{
 		new NonStrictExpectations() {
 			{
@@ -306,13 +310,16 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 				result = null;
 				mockem.merge(any);
 				result = null;
+				mockem.createNativeQuery(anyString);
+				result = query;
+
 			}
 		};
 
 		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
 		dsf.commitTransaction();
 		dsf.getEmsDashboardById(BigInteger.ZERO);
-		dsf.getEmsDashboardFindAll();
+//		dsf.getEmsDashboardFindAll();
 		dsf.getEmsDashboardByName("ss");
 		dsf.getEmsPreference("ss", "ss");
 		dsf.getEntityManager();
@@ -320,9 +327,13 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		dsf.getFavoriteEmsDashboards("");
 		dsf.mergeEmsDashboard(new EmsDashboard());
 		dsf.mergeEmsPreference(new EmsPreference());
+		dsf.mergeEmsUserOptions(new EmsUserOptions());
 		dsf.persistEmsDashboard(new EmsDashboard());
 		dsf.persistEmsPreference(new EmsPreference());
+		dsf.persistEmsUserOptions(new EmsUserOptions());
 		dsf.removeAllEmsPreferences("");
+		dsf.removeAllEmsUserOptions(new BigInteger("123"));
+		dsf.removeEmsSubDashboardBySetId(new BigInteger("123"));
 		EmsDashboard rd = new EmsDashboard();
 		rd.setDashboardId(BigInteger.ZERO);
 		dsf.removeEmsDashboard(rd);
@@ -330,11 +341,26 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		rp.setPrefKey("");
 		rp.setUserName("");
 		dsf.removeEmsPreference(rp);
+
+		//some method are marked as /uncheck/ are test below
+		dsf.removeDashboardsByTenant(true,1L);
+		dsf.removeDashboardSetsByTenant(true,1L);
+		dsf.removeDashboardTilesByTenant(true,1L);
+		dsf.removeDashboardTileParamsByTenant(true,1L);
+		dsf.removeDashboardPreferenceByTenant(true,1L);
+		dsf.removeUserOptionsByTenant(true,1L);
+		dsf.removeEmsSubDashboardBySetId(new BigInteger("123"));
+		dsf.removeEmsSubDashboardBySubId(new BigInteger("123"));
+		dsf.updateTileLinkedDashboard(new BigInteger("123"));
+		dsf.getEmsDashboardsBySubId(new BigInteger("123"));
+		dsf.removeEmsUserOptions(new EmsUserOptions());
+		dsf.removeUnsharedEmsSubDashboard(new BigInteger("123"),"owner");
+		dsf.refreshOobDashboards(new ArrayList<BigInteger>(Arrays.asList(new BigInteger("123"))),new ArrayList<EmsDashboard>(Arrays.asList(new EmsDashboard())));
+		dsf.refreshResourceBundleByService("serviceName",new ArrayList<EmsResourceBundle>(Arrays.asList(new EmsResourceBundle())));
 	}
 
 	/**
 	 * Test method for
-	 * {@link oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade#getEmsDashboardById(java.lang.Long)}
 	 * .
 	 */
 	public void testGetEmsDashboardById()
@@ -345,26 +371,6 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 			EmsDashboard rd = dashboardServiceFacade.getEmsDashboardById(d.getDashboardId());
 			DashboardServiceFacadeTest_S2.assertEmsDashboard(rd);
 
-		}
-		finally {
-			if (em != null) {
-				em.close();
-			}
-		}
-	}
-
-	/**
-	 * Test method for
-	 * {@link oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade#getEmsDashboardFindAll()}.
-	 */
-	public void testGetEmsDashboardFindAll()
-	{
-		EntityManager em = null;
-		try {
-			dashboardServiceFacade = new DashboardServiceFacade(TENANT_ID);
-			for (EmsDashboard emsdashboard : dashboardServiceFacade.getEmsDashboardFindAll()) {
-				DashboardServiceFacadeTest_S2.assertEmsDashboard(emsdashboard);
-			}
 		}
 		finally {
 			if (em != null) {
@@ -439,4 +445,165 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		}
 	}
 
+	@Test(groups = {"s2"})
+	public void testGetDashboardIdsByNames(@Mocked final Query query, @Mocked final PersistenceManager mockpm,@Mocked final EntityManager em, @Mocked final EntityManagerFactory mockemf) {
+		final List<Object> fakeList = new ArrayList<>();
+		fakeList.add(1);
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = mockpm;
+				mockpm.getEntityManagerFactory();
+				result = mockemf;
+				mockemf.createEntityManager();
+				result = em;
+				query.getResultList();
+				result = fakeList;
+			}
+		};
+		List<String> names = new ArrayList<>();
+		names.add("Testing");
+		names.add("'Also Testing'");
+		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
+		dsf.getDashboardIdsByNames(names,1L);
+		dsf.getDashboardNameWithMaxSuffixNumber("'Also Testing'",1L);
+	}
+
+	@Test(groups = {"s2"})
+	public void testGetEmsDashboardByNameAndDescriptionAndOwner
+			(@Mocked final Query query, @Mocked final PersistenceManager mockpm, @Mocked final EntityManager em,
+			 @Mocked final EntityManagerFactory mockemf, @Mocked final StringEscapeUtil se,
+			 @Mocked final EmsDashboard emsDashboard)
+	{
+		final List<Object> fakeList = new ArrayList<>();
+		fakeList.add(emsDashboard);
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = mockpm;
+				mockpm.getEntityManagerFactory();
+				result = mockemf;
+				mockemf.createEntityManager();
+				result = em;
+				query.getResultList();
+				result = fakeList;
+			}
+		};
+		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
+		Assert.assertEquals(dsf.getEmsDashboardByNameAndDescriptionAndOwner("Test","ownwer","description"),emsDashboard);
+	}
+
+	@Test(groups = {"s2"})
+	public void testRemovePreferenceByKey
+			(@Mocked final Query query, @Mocked final PersistenceManager mockpm, @Mocked final EntityManager em,
+			 @Mocked final EntityManagerFactory mockemf, @Mocked final StringEscapeUtil se,
+			 @Mocked final EmsPreference emsPreference)
+	{
+		final List<EmsPreference> fakeList = new ArrayList<>();
+		fakeList.add(emsPreference);
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = mockpm;
+				mockpm.getEntityManagerFactory();
+				result = mockemf;
+				mockemf.createEntityManager();
+				result = em;
+				query.getResultList();
+				result = fakeList;
+			}
+		};
+		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
+		dsf.removePreferenceByKey("userName","key",1L);
+	}
+
+	@Test(groups = {"s2"})
+	public void testGetlinkedDashboards(@Mocked final Query query, @Mocked final PersistenceManager mockpm,
+										@Mocked final EntityManagerFactory mockemf, @Mocked final EntityManager em){
+		final List<String> fakeList = new ArrayList<>();
+		new Expectations(){
+			{	PersistenceManager.getInstance();
+				result = mockpm;
+				mockpm.getEntityManagerFactory();
+				result = mockemf;
+				mockemf.createEntityManager();
+				result = em;
+				em.createNativeQuery(anyString);
+				result = query;
+				query.getResultList();
+				result = fakeList;
+			}
+		};
+		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
+		Assert.assertEquals(fakeList,dsf.getlinkedDashboards(new BigInteger("123")));
+	}
+
+	@Test(groups = {"s2"})
+	public void testGetEmsDashboardByIds
+			(@Mocked final Query query, @Mocked final PersistenceManager mockpm, @Mocked final EntityManager em,
+			 @Mocked final EntityManagerFactory mockemf, @Mocked final StringEscapeUtil se,
+			 @Mocked final EmsDashboard emsDashboard)
+	{
+		final List<EmsDashboard> fakeList = new ArrayList<>();
+		fakeList.add(emsDashboard);
+		new Expectations() {
+			{
+				PersistenceManager.getInstance();
+				result = mockpm;
+				mockpm.getEntityManagerFactory();
+				result = mockemf;
+				mockemf.createEntityManager();
+				result = em;
+				em.createNativeQuery(anyString,EmsDashboard.class);
+				result = query;
+				query.getResultList();
+				result = fakeList;
+			}
+		};
+		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
+		dsf.getEmsDashboardByIds(new ArrayList<BigInteger>(Arrays.asList(new BigInteger("124"), new BigInteger("356"))),
+				1L);
+	}
+
+    @Test(groups = {"s2"})
+    public void testServeralRemainMethods
+            (@Mocked final Query query, @Mocked final PersistenceManager mockpm, @Mocked final EntityManager em,
+             @Mocked final EntityManagerFactory mockemf, @Mocked final StringEscapeUtil se,
+             @Mocked final EmsDashboard emsDashboard, @Mocked final EmsSubDashboard emsSubDashboard,
+             @Mocked final EmsDashboardTile emsDashboardTile)
+    {
+        new Expectations() {
+            {
+                PersistenceManager.getInstance();
+                result = mockpm;
+                mockpm.getEntityManagerFactory();
+                result = mockemf;
+                mockemf.createEntityManager();
+                result = em;
+                em.createNativeQuery(anyString,withAny(Class.class));
+                result = query;
+                em.createNativeQuery(anyString);
+                result = query;
+                query.getResultList();
+                // following result correspond to the below test , one-by-one
+                result = new ArrayList<EmsDashboard>(Arrays.asList(emsDashboard));
+                result = new ArrayList<EmsSubDashboard>(Arrays.asList(emsSubDashboard));
+                result = new ArrayList<>(Arrays.asList(emsDashboardTile));
+                result = new ArrayList<>(Arrays.asList(new EmsDashboardTileParams()));
+                result = new ArrayList<>(Arrays.asList(new EmsPreference()));
+                result = new ArrayList<>(Arrays.asList(new EmsUserOptions()));
+                result = new ArrayList<>(Arrays.asList(1L,2L));
+
+            }
+        };
+        DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
+        dsf.removeDashboardsByTenant(true,1L);
+        dsf.removeDashboardSetsByTenant(true,1L);
+        dsf.removeDashboardTilesByTenant(true,1L);
+        dsf.removeDashboardTileParamsByTenant(true,1L);
+        dsf.removeDashboardPreferenceByTenant(true,1L);
+        dsf.removeUserOptionsByTenant(true,1L);
+        Deencapsulation.invoke(dsf,"isIncludedInSet",new BigInteger("123"));
+        dsf.updateSubDashboardVisibleInHome(emsDashboard,new ArrayList<BigInteger>(Arrays.asList(new BigInteger("123"))));
+    }
 }

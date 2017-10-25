@@ -105,7 +105,7 @@ public class TestGlobalContextUtil
 		DashboardHomeUtil.selectDashboard(driver, dbname);
 		
 		driver.getLogger().info("Start to verify GC in OOB");
-		String currenturl = driver.getWebDriver().getCurrentUrl();
+		String currenturl = driver.getCurrentUrl();
 		if(currenturl.contains("builder.html"))
 		{
 			Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(driver), "The global context exists in OOB Dashboard Set"+ dbname);			
@@ -185,7 +185,7 @@ public class TestGlobalContextUtil
 		DashboardBuilderUtil.deleteDashboard(driver);
 
 		//verify omcCtx exist in the url
-		String url1 = driver.getWebDriver().getCurrentUrl();
+		String url1 = driver.getCurrentUrl();
 		driver.getLogger().info("start to verify omcCtx exist in the dashboard home url");
 		Assert.assertTrue(url1.contains("omcCtx="), "The global context infomation in URL is lost");
 		
@@ -193,7 +193,7 @@ public class TestGlobalContextUtil
 		driver.getLogger().info("open the dashboard: "+ existdbname);
 		DashboardHomeUtil.selectDashboard(driver, existdbname);		
 		
-		String url2 = driver.getWebDriver().getCurrentUrl();		
+		String url2 = driver.getCurrentUrl();		
 		driver.getLogger().info("start to verify omcCtx exist in the OOB dashboard url");	
 		Assert.assertTrue(url2.contains("omcCtx="), "The global context infomation in URL is lost in OOB dashboard page");	
 		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(driver),"The global context exists in opened dashboard");
@@ -212,7 +212,7 @@ public class TestGlobalContextUtil
 		DashboardBuilderUtil.deleteDashboardSet(driver);
 	
 		//verify omcCtx exist in the url
-		String url1 = driver.getWebDriver().getCurrentUrl();
+		String url1 = driver.getCurrentUrl();
 		driver.getLogger().info("start to verify omcCtx exist in the dashboard home url");
 		Assert.assertTrue(url1.contains("omcCtx="), "The global context infomation in URL is lost");
 		
@@ -223,7 +223,7 @@ public class TestGlobalContextUtil
 		driver.getLogger().info("Respect GC");
 		DashboardBuilderUtil.respectGCForEntity(driver);
 		
-		String url2 = driver.getWebDriver().getCurrentUrl();		
+		String url2 = driver.getCurrentUrl();		
 		driver.getLogger().info("start to verify omcCtx exist in the OOB dashboard url");	
 		Assert.assertTrue(url2.contains("omcCtx="), "The global context infomation in URL is lost in OOB dashboard page");	
 		

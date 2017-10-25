@@ -17,11 +17,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -109,7 +105,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbsetName_Duplicate);
 		DashBoardUtils.deleteDashboard(webd, dbsetName_DuplicateOOB);
 		BrandingBarUtil.visitDashboardHome(webd);
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 		DashBoardUtils.deleteDashboard(webd, dbName_InSet);
 		DashBoardUtils.deleteDashboard(webd, dbName_OutSet);
 		DashBoardUtils.deleteDashboard(webd, dbName_OutSet + "-duplicate");
@@ -151,8 +147,8 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		//verify the dashboard is in the dashboard set
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_InSet);
 
-		WaitUtil.waitForPageFullyLoaded(webd);
-
+		webd.waitForServer();
+		
 		//duplicate the dashboard in set
 		webd.getLogger().info("duplicate the dashboard in the dashboard set");
 		DashboardBuilderUtil.duplicateDashboardInsideSet(webd, dbName_InSet + "-duplicate", null, true);
@@ -164,7 +160,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		//verify the duplicated dashboard not in home page
 		webd.getLogger().info("Verify the duplicated dashboard not in home page");
 		BrandingBarUtil.visitDashboardHome(webd);
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_InSet + "-duplicate"), "Dashboard: " + dbName_InSet
 				+ "-duplicate" + " shoud not be displayed in home page!");
 
@@ -216,10 +212,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		//verify the edit menu & save icon are not displayed in OOB
 		webd.getLogger().info("Verify the save icon is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DASHBOARDSAVECSS), "Save icon is displayed in OOB");
-		webd.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
-		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.DASHBOARDSETOPTIONS_CSS)));
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 
 		webd.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
 		webd.click("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
@@ -239,7 +232,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		//back to home page
 		webd.getLogger().info("Go to Home page");
 		BrandingBarUtil.visitDashboardHome(webd);
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 		//verify the duplicated dashboard in home page
 		webd.getLogger().info("Verify the duplicated dashboard in home page");
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_Duplicate), "Dashboard: " + dbName_Duplicate
@@ -283,7 +276,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		webd.getLogger().info("create a dashboard in the set");
 		DashboardBuilderUtil.createDashboardInsideSet(webd, dbName_OutSet, null);
 
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 
 		//verify the dashboard is in the dashboard set
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, dbName_OutSet), "Create dashboard in set failed!");
@@ -298,7 +291,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		//back to home page
 		webd.getLogger().info("Go to Home page");
 		BrandingBarUtil.visitDashboardHome(webd);
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 		webd.getLogger().info("Verify the dashboard is displayed in home page");
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_OutSet + "-duplicate"), "Dashboard: " + dbName_OutSet
 				+ "-duplicate" + " should be displayed in home page!");
@@ -341,7 +334,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		webd.getLogger().info("Add an OOB dashboard in the set");
 		DashboardBuilderUtil.addNewDashboardToSet(webd, OOBAddToSet);
 
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 
 		//verify the dashboard is in the dashboard set
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardInsideSet(webd, OOBAddToSet),
@@ -357,7 +350,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		//verify the duplicated dashboard not in home page
 		webd.getLogger().info("Verify the duplicated dashboard is in home page");
 		BrandingBarUtil.visitDashboardHome(webd);
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_DuplicateOOB), "Dashboard: " + dbName_DuplicateOOB
 				+ " should be displayed in home page!");
 
@@ -409,10 +402,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		//verify the edit menu & save icon are not displayed in OOB
 		webd.getLogger().info("Verify the save icon is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DASHBOARDSAVECSS), "Save icon is displayed in OOB");
-		webd.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
-		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.DASHBOARDSETOPTIONS_CSS)));
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 
 		webd.waitForElementPresent("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
 		webd.click("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
@@ -432,7 +422,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		//back to home page
 		webd.getLogger().info("Go to Home page");
 		BrandingBarUtil.visitDashboardHome(webd);
-		WaitUtil.waitForPageFullyLoaded(webd);
+		webd.waitForServer();
 		//verify the duplicated dashboard in home page
 		webd.getLogger().info("Verify the duplicated dashboard in home page");
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_DuplicateOOB), "Dashboard: " + dbName_DuplicateOOB

@@ -77,23 +77,23 @@ public class RegistryLookupAPITest
 		};
 		// Test 403 Exception;
 		Assert.assertEquals(
-				registryLookupAPI.getRegistryLink("tenantIdParam", "userTenant", "refer", "serviceName", "version").getStatus(),
+				registryLookupAPI.getRegistryLink("tenantIdParam", "userTenant", "refer", "serviceName", "version", false).getStatus(),
 				403);
 
 		//Test 404 Exception with validUserTenant;
 		String validUserTenant = "userTenant.userName";
-		Assert.assertEquals(registryLookupAPI.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version")
+		Assert.assertEquals(registryLookupAPI.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version", false)
 				.getStatus(), 404);
 
 		//Test 404 Exception with validUserTenant;
 		Assert.assertEquals(
-				registryLookupAPI.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", null).getStatus(),
+				registryLookupAPI.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", null,false).getStatus(),
 				404);
 
 		//Test 404 empty ServiceName
 		String emptyServiceName = "";
 		Assert.assertEquals(registryLookupAPI
-				.getRegistryLink("tenantIdParam", validUserTenant, "refer", emptyServiceName, "version").getStatus(), 404);
+				.getRegistryLink("tenantIdParam", validUserTenant, "refer", emptyServiceName, "version", false).getStatus(), 404);
 
 	}
 
@@ -106,11 +106,11 @@ public class RegistryLookupAPITest
 			{
 				anyDependencyStatus.isEntityNamingUp();
 				result = true;
-				RegistryLookupUtil.getServiceExternalEndPointEntity(anyString, anyString, anyString);
+				RegistryLookupUtil.getServiceExternalEndPointEntity(anyString, anyString, anyString, false);
 				result = withAny(new EndpointEntity(anyString, anyString, anyString));
 			}
 		};
-		Assert.assertEquals(registryLookupAPI.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version")
+		Assert.assertEquals(registryLookupAPI.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version", false)
 				.getStatus(), 200);
 	}
 
@@ -125,29 +125,29 @@ public class RegistryLookupAPITest
 		};
 		// Test 403 Exception;
 		Assert.assertEquals(registryLookupAPI
-				.getRegistryLink("tenantIdParam", "userTenant", "refer", "serviceName", "version", "rel").getStatus(), 403);
+				.getRegistryLink("tenantIdParam", "userTenant", "refer", "serviceName", "version", "rel", false).getStatus(), 403);
 
 		//Test 404 Exception with validUserTenant;
 		String validUserTenant = "userTenant.userName";
 		Assert.assertEquals(registryLookupAPI
-				.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version", "rel").getStatus(), 404);
+				.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version", "rel", false).getStatus(), 404);
 
 		//Test 404 Exception with validUserTenant;
 		Assert.assertEquals(registryLookupAPI
-				.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version", "rel").getStatus(), 404);
+				.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version", "rel", false).getStatus(), 404);
 
 		//Test 404  null ServiceName
 		Assert.assertEquals(
-				registryLookupAPI.getRegistryLink("tenantIdParam", validUserTenant, "refer", null, "version", "rel").getStatus(),
+				registryLookupAPI.getRegistryLink("tenantIdParam", validUserTenant, "refer", null, "version", "rel", false).getStatus(),
 				404);
 
 		//Test 404  null versionName
 		Assert.assertEquals(registryLookupAPI
-				.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", null, "rel").getStatus(), 404);
+				.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", null, "rel", false).getStatus(), 404);
 
 		//Test 404 null rel
 		Assert.assertEquals(registryLookupAPI
-				.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version", null).getStatus(), 404);
+				.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version", null, false).getStatus(), 404);
 	}
 
 	@Test
@@ -159,13 +159,13 @@ public class RegistryLookupAPITest
 			{
 				anyDependencyStatus.isEntityNamingUp();
 				result = true;
-				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString);
+				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString, false);
 				result = withAny(new VersionedLink());
 			}
 		};
 
 		Assert.assertEquals(registryLookupAPI
-				.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version", "rel").getStatus(), 200);
+				.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version", "rel", false).getStatus(), 200);
 	}
 
 	@Test
@@ -180,24 +180,24 @@ public class RegistryLookupAPITest
 		String validUserTenant = "userTenant.userName";
 		new MockUp<RegistryLookupUtil>() {
 			@Mock
-			public EndpointEntity getServiceExternalEndPointEntity(String serviceName, String version, String tenantName)
+			public EndpointEntity getServiceExternalEndPointEntity(String serviceName, String version, String tenantName, boolean useAPIGWLookup)
 					throws Exception
 			{
 				throw new Exception("exception from getDefaultBundleString");
 			}
 
 			@Mock
-			public VersionedLink getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
+			public VersionedLink getServiceExternalLink(String serviceName, String version, String rel, String tenantName, boolean useAPIGWLookup)
 					throws Exception
 			{
 				throw new Exception("exception from getDefaultBundleString");
 			}
 
 		};
-		Assert.assertEquals(registryLookupAPI.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version")
+		Assert.assertEquals(registryLookupAPI.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version", false)
 				.getStatus(), 503);
 		Assert.assertEquals(registryLookupAPI
-				.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version", "rel").getStatus(), 503);
+				.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version", "rel", false).getStatus(), 503);
 	}
 
 	@Test
@@ -211,33 +211,33 @@ public class RegistryLookupAPITest
 		};
 		// Test 403 Exception;
 		Assert.assertEquals(registryLookupAPI
-				.getRegistryLinkWithRelPrefix("tenantIdParam", "userTenant", "refer", "serviceName", "version", "rel")
+				.getRegistryLinkWithRelPrefix("tenantIdParam", "userTenant", "refer", "serviceName", "version", "rel", false)
 				.getStatus(), 403);
 
 		//Test 404 Exception with validUserTenant;
 		String validUserTenant = "userTenant.userName";
 		Assert.assertEquals(registryLookupAPI
-				.getRegistryLinkWithRelPrefix("tenantIdParam", validUserTenant, "refer", "serviceName", "version", "rel")
+				.getRegistryLinkWithRelPrefix("tenantIdParam", validUserTenant, "refer", "serviceName", "version", "rel", false)
 				.getStatus(), 404);
 
 		//Test 404 Exception with validUserTenant;
 		Assert.assertEquals(registryLookupAPI
-				.getRegistryLinkWithRelPrefix("tenantIdParam", validUserTenant, "refer", "serviceName", "version", "rel")
+				.getRegistryLinkWithRelPrefix("tenantIdParam", validUserTenant, "refer", "serviceName", "version", "rel", false)
 				.getStatus(), 404);
 
 		//Test 404  null ServiceName
 		Assert.assertEquals(registryLookupAPI
-				.getRegistryLinkWithRelPrefix("tenantIdParam", validUserTenant, "refer", null, "version", "rel").getStatus(),
+				.getRegistryLinkWithRelPrefix("tenantIdParam", validUserTenant, "refer", null, "version", "rel", false).getStatus(),
 				404);
 
 		//Test 404  null versionName
 		Assert.assertEquals(registryLookupAPI
-				.getRegistryLinkWithRelPrefix("tenantIdParam", validUserTenant, "refer", "serviceName", null, "rel").getStatus(),
+				.getRegistryLinkWithRelPrefix("tenantIdParam", validUserTenant, "refer", "serviceName", null, "rel", false).getStatus(),
 				404);
 
 		//Test 404 null rel
 		Assert.assertEquals(registryLookupAPI
-				.getRegistryLinkWithRelPrefix("tenantIdParam", validUserTenant, "refer", "serviceName", "version", null)
+				.getRegistryLinkWithRelPrefix("tenantIdParam", validUserTenant, "refer", "serviceName", "version", null, false)
 				.getStatus(), 404);
 	}
 
@@ -251,13 +251,13 @@ public class RegistryLookupAPITest
 			{
 				anyDependencyStatus.isEntityNamingUp();
 				result = true;
-				RegistryLookupUtil.getServiceExternalLinkWithRelPrefix(anyString, anyString, anyString, anyString);
+				RegistryLookupUtil.getServiceExternalLinkWithRelPrefix(anyString, anyString, anyString, anyString, false);
 				result = withAny(new VersionedLink());
 			}
 		};
 
 		Assert.assertEquals(registryLookupAPI
-				.getRegistryLinkWithRelPrefix("tenantIdParam", validUserTenant, "refer", "serviceName", "version", "rel")
+				.getRegistryLinkWithRelPrefix("tenantIdParam", validUserTenant, "refer", "serviceName", "version", "rel", false)
 				.getStatus(), 200);
 	}
 
@@ -274,13 +274,13 @@ public class RegistryLookupAPITest
 		new MockUp<RegistryLookupUtil>() {
 			@Mock
 			public VersionedLink getServiceExternalLinkWithRelPrefix(String serviceName, String version, String rel,
-					String tenantName) throws Exception
+					String tenantName, boolean useApiGWLookup) throws Exception
 			{
 				throw new Exception("exception from getServiceExternalLinkWithRelPrefix");
 			}
 		};
 		Assert.assertEquals(registryLookupAPI
-				.getRegistryLinkWithRelPrefix("tenantIdParam", validUserTenant, "refer", "serviceName", "version", "rel")
+				.getRegistryLinkWithRelPrefix("tenantIdParam", validUserTenant, "refer", "serviceName", "version", "rel", false)
 				.getStatus(), 503);
 	}
 

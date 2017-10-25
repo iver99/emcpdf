@@ -54,6 +54,10 @@ public interface ITimeSelectorUtil extends IUiTestCommonAPI
 	public String getTimeRangeLabel(WebDriver webd);
 
 	public String getTimeRangeLabel(WebDriver webd, int index);
+	
+	public String getTimeRangeLabel_V2(WebDriver webd);
+
+	public String getTimeRangeLabel_V2(WebDriver webd, int index);
 
 	public String setCustomTime(WebDriver webd, int index, String startDateTime, String endDateTime);
 

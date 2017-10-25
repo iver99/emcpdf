@@ -169,6 +169,18 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     refreshOMCContext();
                 }
             });
+            
+            //Fix EMCPDF-5021: OMC context should be refreshed if entity selector switched from "hide" to "show" while global context banner is unchanged
+            self.showEntitySelector.subscribe(function (newValue) {
+                if (newValue === true) {
+                    //In case showGlobalContextBanner is initialized to false, and updated to true during page loading,
+                    //we need to restore topology display status from window session storage
+                    if (!self.isTopologyDisplayed()) {
+                        restoreTopologyDisplayStatus();
+                    }
+                    refreshOMCContext();
+                }
+            });
 
             self.removeROCompositePill = function () {
                 handleROPills('composite');

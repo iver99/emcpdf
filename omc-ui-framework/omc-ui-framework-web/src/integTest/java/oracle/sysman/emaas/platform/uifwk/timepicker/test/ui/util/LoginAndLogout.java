@@ -13,14 +13,12 @@ public class LoginAndLogout
 	//@AfterMethod
 	public static void logoutMethod()
 	{
-		if (webd != null) {
-			((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
+		if (webd != null) {			
 			LoginUtils.doLogout(webd);
 			try {
 				webd.shutdownBrowser(true);
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			catch (Exception e) {				
 				webd.getLogger().warning("Failed to shutdown browser" + e.getMessage());
 			}
 		}
@@ -34,24 +32,23 @@ public class LoginAndLogout
 		try {
 			tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");
 		}
-		catch (Exception e) {
-			e.printStackTrace();
+		catch (Exception e) {			
 			tenantID = "emaastesttenant1";
+			webd.getLogger().warning("Failed to get tenantID: " + e.getMessage());
 		}
 		try {
 			username = oracle.sysman.emsaas.login.utils.Utils.getProperty("SSO_USERNAME");
 		}
-		catch (Exception e) {
-			e.printStackTrace();
+		catch (Exception e) {			
 			username = "emcsadmin";
+			webd.getLogger().warning("Failed to get username: " + e.getMessage());
 		}
 		try {
 			password = oracle.sysman.emsaas.login.utils.Utils.getProperty("SSO_PASSWORD");
-
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			password = "Welcome1!";
+			webd.getLogger().warning("Failed to get password: " + e.getMessage());
 		}
 		webd.getLogger().info("before::start to test in LoginAndOut");
 		url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OHS_URL");

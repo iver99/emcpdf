@@ -440,7 +440,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.waitForElementPresent(DashBoardPageId.SORTBYSELECTLOCATOR);
 		driver.click(DashBoardPageId.SORTBYSELECTLOCATOR);
 
-		if ("default".equals(option)) {
+		if ("default".equals(option) || DASHBOARD_QUERY_ORDER_BY_DEFAULT.equals(option)) {
 			driver.waitForElementPresent(DashBoardPageId.SORTBYDEFAULTLOCATOR);
 			driver.click(DashBoardPageId.SORTBYDEFAULTLOCATOR);
 
