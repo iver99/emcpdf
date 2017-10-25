@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
@@ -57,12 +59,27 @@ public class TenantManager {
                     .setParameter(1, internalTenantId).executeUpdate();
             int deletedPreferenceCount = em.createNativeQuery("delete from ems_preference where tenant_id = ?1")
                     .setParameter(1, internalTenantId).executeUpdate();
+
+            // remove all compare/sync data
+            int deletedCompareCount = 0;
+            @SuppressWarnings("unchecked")
+            List<String> lastCompareDate = (List<String>) em
+                    .createNativeQuery(
+                            "SELECT LAST_COMPARISON_DATE FROM (SELECT to_char(LAST_COMPARISON_DATE,'yyyy-mm-dd hh24:mi:ss.ff3') as LAST_COMPARISON_DATE FROM EMS_ZDT_SYNC WHERE SYNC_RESULT = 'SUCCESSFUL' ORDER BY SYNC_DATE DESC) WHERE ROWNUM = 1")
+                    .getResultList();
+            if (lastCompareDate != null && !lastCompareDate.isEmpty()) {
+                deletedCompareCount = em
+                        .createNativeQuery(
+                                "delete from EMS_ZDT_COMPARATOR where comparison_date > to_timestamp(?1,'yyyy-mm-dd hh24:mi:ss.ff')")
+                        .setParameter(1, lastCompareDate.get(0)).executeUpdate();
+            }
+
             entityTransaction.commit();
             LOGGER.info(
-                    "End cleanTenant : {} last access, {} tile parmas, {} tiles, {} user options, {} dashboard sets, {} dashboards "
-                            + "and {} preference have been deleted!", deletedLastAccessCount, deletedTileParamsCount,
-                    deletedTileCount, deletedUserOptionCount, deletedDashboardSetParamsCount, deletedDashboardCount,
-                    deletedPreferenceCount);
+                    "End cleanTenant : {} last access, {} tile parmas, {} tiles, {} user options, {} dashboard sets, {} dashboards, "
+                            + "{} preference and {} compare/sync have been deleted!", deletedLastAccessCount,
+                    deletedTileParamsCount, deletedTileCount, deletedUserOptionCount, deletedDashboardSetParamsCount,
+                    deletedDashboardCount, deletedPreferenceCount, deletedCompareCount);
         } catch (Exception e) {
             if (entityTransaction != null) {
                 entityTransaction.rollback();
