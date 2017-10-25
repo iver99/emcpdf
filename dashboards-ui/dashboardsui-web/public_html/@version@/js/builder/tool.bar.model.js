@@ -404,12 +404,6 @@ define(['knockout',
                 }
                 
                 self.handleAddHtmlWidget = function () {
-                    if (!ko.components.isRegistered('df-htmlwidget')) {
-                        ko.components.register("df-htmlwidget",{
-                            viewModel:{require:'uifwk/js/widgets/htmlwidget/js/htmlwidget'},
-                            template:{require:'text!uifwk/js/widgets/htmlwidget/html/htmlwidget.html'}
-                        });
-                    }
                     var htmlWidget = {
                         WIDGET_UNIQUE_ID: 2,
                         WIDGET_NAME: 'Text Widget',
@@ -421,8 +415,8 @@ define(['knockout',
                         WIDGET_SCREENSHOT_HREF: null,
                         WIDGET_SUPPORT_TIME_CONTROL: 0,
                         WIDGET_KOC_NAME: 'df-htmlwidget',
-                        WIDGET_TEMPLATE: 'uifwk/js/widgets/htmlwidget/html/htmlwidget.html',
-                        WIDGET_VIEWMODEL: 'uifwk/js/widgets/htmlwidget/js/htmlwidget.js',
+                        WIDGET_TEMPLATE: '/js/widgets/htmlwidget/htmlwidget.html',
+                        WIDGET_VIEWMODEL: '/js/widgets/htmlwidget/js/htmlwidget.js',
                         PROVIDER_NAME: "Dashboard-UI",
                         PROVIDER_VERSION: '1.0',
                         PROVIDER_ASSET_ROOT: 'assetRoot',
