@@ -604,7 +604,55 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //Open help link
             var helpBaseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";
             var helpTopicId = appProperties["helpTopicId"] ? appProperties["helpTopicId"] : "em_home_gs";
+            
+            self.helpLinkMap = [
+                {
+                    "pageId": "omc_root_alerts",
+                    "linkParams": "em_alert"
+                },
+                {
+                    "pageId": "omc_root_dashboards",
+                    "linkParams": "em_dboard"
+                },
+                {
+                    "pageId": "omc_root_dataexplorer",
+                    "linkParams": "em_data_exp"
+                },
+                {
+                    "pageId": "omc_root_admin_alertrules",
+                    "linkParams": "em_alert_rules"
+                },
+                {
+                    "pageId": "omc_root_admin_notificationChannels",
+                    "linkParams": "em_not_channels"
+                },
+                {
+                    "pageId": "omc_root_admin_agents",
+                    "linkParams": "em_agents"
+                },
+                {
+                    "pageId": "omc_root_admin_addentity",    //?????
+                    "linkParams": "em_add_entity "
+                },
+                {
+                    "pageId": "omc_root_admin_clouddiscoveryprofiles",
+                    "linkParams": "em_cloud_profiles"
+                },
+                {
+                    "pageId": "omc_root_admin_entitiesconfig",
+                    "linkParams": "em_entities_config"
+                }
+            ];
+
             self.openHelpLink = function () {
+                var selectedPageId = window._uifwk && window._uifwk.currentOmcMenuItemId;
+                for (var index = 0; index < self.helpLinkMap.length; index++) {
+                    if (selectedPageId === self.helpLinkMap[index].pageId) {
+                        helpBaseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/management-cloud&id=";
+                        helpTopicId = self.helpLinkMap[index].linkParams;
+                        break;
+                    }
+                }
                 oj.Logger.info("Open help link: " + helpBaseUrl + helpTopicId);
                 window.open(helpBaseUrl + helpTopicId);
             };
