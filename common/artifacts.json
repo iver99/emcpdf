@@ -296,7 +296,7 @@
 	"qunit": {
 		"group": "com.jquery.code",
 		"name": "qunit",
-		"version": "1.14+",
+		"version": "1.14.0",
 		"ext": "zip",
 		"transitive": false
 	}

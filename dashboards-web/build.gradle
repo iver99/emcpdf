@@ -8,10 +8,6 @@ apply from: 'test.gradle'
 ext.restDocRootDir = "${buildDir}/restdoc" 
 ext.restDocOutputDir = "${restDocRootDir}"
 
-//Security client version
-//ext.emaasSecurityClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
-
-
 tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked"
     }
@@ -38,10 +34,6 @@ war {
         }
 
 }
-
-
-
-
 
 
 publishing.publications {
