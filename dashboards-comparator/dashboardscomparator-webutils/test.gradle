@@ -3,7 +3,7 @@ sourceSets {
 		java {
 			srcDirs = ['src/integTest/java']
 		}
-		resources.srcDirs = ['src/integTest/java','src/main/java']
+		resources.srcDirs = ['src/integTest/java']
 		compileClasspath += configurations.testNG + configurations.testConfig
 	}
 }
