@@ -1,4 +1,4 @@
-        <div data-testapiversion="1.17.0" data-bind="attr: {id: 'dateTimePicker_' + randomId}" style="display: table; padding: 0 5px;">
+        <div data-testapiversion="1.24.0" data-bind="attr: {id: 'dateTimePicker_' + randomId}" style="display: table; padding: 0 5px;">
             <span class="oj-select-choice"  style="width: auto; display: inline-block; cursor: pointer;" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime">
                 <div  class="info-badge" style="position:absolute; height:16px;width:16px;vertical-align:top;margin:8px;background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -46px;" data-bind="style: {display: showBadge()?'inline':'none'},event: {mouseover: badgeMouseOverHandler, mouseout: badgeMouseOutHandler}"></div>
                 <div data-bind="ojComponent:{component: 'ojPopup',tail: 'simple'}" class="badge-popup-message" style="display: block;padding:0; max-width: 340px;">
@@ -167,7 +167,7 @@
 
                         <hr>
                         
-                        <span style="margin-top: 0px;" class="relRadios">
+                        <span style="margin-top: 9px;" class="relRadios">
                             <span>
                                 <input type="radio" name="lrCtrl" value="timeLevelCtrl" data-bind="checked: lrCtrlVal">
                                 <label data-bind="text: nls.DATETIME_PICKER_RADIO_RANGE"></label>
@@ -223,7 +223,7 @@
                         </button>
                         <button class="cancel-button" id="cancel-button" data-bind="click: cancelClick, ojComponent:{component: 'ojButton', label: cancelButton}, attr: {id: 'cancelButton_'+randomId}"> 
                         </button>
-                        <span style="font-size: 14px; padding-left: 10px;" data-bind="text: timeZone"></span>
+                        <span style="font-size: 14px; padding-left: 10px; font-style: italic;" data-bind="text: timeZone"></span>
                     </div>
                     
                     <!-- pop up for time filter-->

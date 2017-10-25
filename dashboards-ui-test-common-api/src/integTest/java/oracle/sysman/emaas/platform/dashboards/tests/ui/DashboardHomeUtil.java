@@ -28,6 +28,7 @@ public class DashboardHomeUtil
 	public static final String DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC = IDashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC;
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_ASC = IDashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_OWNER_ASC;
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_DSC = IDashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_OWNER_DSC;
+	public static final String DASHBOARD_QUERY_ORDER_BY_DEFAULT = IDashboardHomeUtil.DASHBOARD_QUERY_ORDER_BY_DEFAULT;
 
 	public static void closeOverviewPage(WebDriver driver)
 	{

@@ -3,15 +3,8 @@ package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 public class VerifyOOBUtil
@@ -533,8 +526,6 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verify the save icon is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DASHBOARDSAVECSS), "Save icon is displayed in OOB Dashboard");
 
-		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.DASHBOARDOPTIONS_CSS)));
 		webd.click("css=" + PageId.DASHBOARDOPTIONS_CSS);
 		
 		webd.getLogger().info("Verify the edit menu is not displayed in OOB");
@@ -548,8 +539,6 @@ public class VerifyOOBUtil
 		webd.getLogger().info("Verify the save icon is not displayed in OOB");
 		Assert.assertFalse(webd.isDisplayed("css=" + DashBoardPageId.DASHBOARDSAVECSS), "Save icon is displayed in OOB");
 
-		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(PageId.DASHBOARDSETOPTIONS_CSS)));
 		webd.click("css=" + PageId.DASHBOARDSETOPTIONS_CSS);
 		
 		webd.getLogger().info("Verify the edit menu is not displayed in OOB");
@@ -562,22 +551,24 @@ public class VerifyOOBUtil
 		
 		String titleTitlesLocator = String.format(DashBoardPageId.BUILDERTILETITLELOCATOR, widgetname);
 		
-		WebElement tileTitle = null;
-		try
-		{
-			tileTitle = driver.getWebDriver().findElement(By.xpath(titleTitlesLocator));
-		}
-		catch (NoSuchElementException e) {			
-			Assert.assertTrue(false,"verifyIconInWidget failed: "+ e.getLocalizedMessage());			
-		}
-		if (tileTitle == null) {
-			Assert.assertTrue(false,"verifyIconInWidget failed: Not find expected widget "+ widgetname);			
-		}
-
-		//tileTitle.click();
+//		WebElement tileTitle = null;
+//		try
+//		{
+//			tileTitle = driver.getWebDriver().findElement(By.xpath(titleTitlesLocator));
+//		}
+//		catch (NoSuchElementException e) {			
+//			Assert.assertTrue(false,"verifyIconInWidget failed: "+ e.getLocalizedMessage());			
+//		}
+//		if (tileTitle == null) {
+//			Assert.assertTrue(false,"verifyIconInWidget failed: Not find expected widget "+ widgetname);			
+//		}
+//
+//		//tileTitle.click();
+//		
+//		Actions builder = new Actions(driver.getWebDriver());
+//		builder.moveToElement(tileTitle).perform();
 		
-		Actions builder = new Actions(driver.getWebDriver());
-		builder.moveToElement(tileTitle).perform();
+		driver.moveToElement(titleTitlesLocator);
 		driver.waitForServer();
 		//verify the config icon not exist
 		Assert.assertFalse(driver.isDisplayed(DashBoardPageId.BUILDERTILECONFIGLOCATOR),

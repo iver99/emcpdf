@@ -77,6 +77,18 @@ public class GlobalContextUtil
 		IGlobalContextUtil tsu = new UtilLoader<IGlobalContextUtil>().loadUtil(webd, IGlobalContextUtil.class);
 		return tsu.getTimeRangeLabel(webd, index);
 	}
+	
+	public static String getTimeRangeLabel_V2(WebDriver webd)
+	{
+		IGlobalContextUtil tsu = new UtilLoader<IGlobalContextUtil>().loadUtil(webd, IGlobalContextUtil.class);
+		return tsu.getTimeRangeLabel_V2(webd);
+	}
+
+	public static String getTimeRangeLabel_V2(WebDriver webd, int index)
+	{
+		IGlobalContextUtil tsu = new UtilLoader<IGlobalContextUtil>().loadUtil(webd, IGlobalContextUtil.class);
+		return tsu.getTimeRangeLabel_V2(webd, index);
+	}
 
 	/**
 	 * Hide Topology

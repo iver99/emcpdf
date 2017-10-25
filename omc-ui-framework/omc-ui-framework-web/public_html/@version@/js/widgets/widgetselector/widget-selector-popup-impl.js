@@ -29,6 +29,9 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                 self.dialogId = $.isFunction(params.dialogId) ? params.dialogId() :
                         (params.dialogId ? params.dialogId : 'widgetSelectorDialog');
                 self.useIn = $.isFunction(params.useIn) ? params.useIn() : (params.useIn?params.useIn:'normal');
+                if(self.useIn === 'builder'){
+                    $("#df-widget-selector-popup").show();
+                }
                 self.widgetHandler = params.widgetHandler;
                 self.initWidgetDraggable = params.initWidgetDraggable;
                 self.buildPageResize = params.buildPageResize;
