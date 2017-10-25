@@ -236,7 +236,7 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 		CommonUIUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
 	}
 
-	//@Test(alwaysRun = true)
+	@Test(alwaysRun = true)
 	public void testClickMonitoringMenuItem()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "");

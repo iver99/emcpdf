@@ -19,6 +19,18 @@ public class TimeSelectorUtil
 		ITimeSelectorUtil tsu = new UtilLoader<ITimeSelectorUtil>().loadUtil(webd, ITimeSelectorUtil.class);
 		return tsu.getTimeRangeLabel(webd, index);
 	}
+	
+	public static String getTimeRangeLabel_V2(WebDriver webd)
+	{
+		ITimeSelectorUtil tsu = new UtilLoader<ITimeSelectorUtil>().loadUtil(webd, ITimeSelectorUtil.class);
+		return tsu.getTimeRangeLabel_V2(webd);
+	}
+
+	public static String getTimeRangeLabel_V2(WebDriver webd, int index)
+	{
+		ITimeSelectorUtil tsu = new UtilLoader<ITimeSelectorUtil>().loadUtil(webd, ITimeSelectorUtil.class);
+		return tsu.getTimeRangeLabel_V2(webd, index);
+	}
 
 	public static String setCustomTime(WebDriver webd, int index, String startDateTime, String endDateTime) throws Exception
 	{
