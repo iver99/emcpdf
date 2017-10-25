@@ -17,7 +17,7 @@ Rem
 
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
-
+@&EMSAAS_SQL_ROOT/1.23.0/emaas_df_delete_unsync_data.sql
 @&EMSAAS_SQL_ROOT/1.23.0/emaas_dashboard_drop_fk.sql
 @&EMSAAS_SQL_ROOT/1.23.0/emaas_dashboard_compress_index.sql
 

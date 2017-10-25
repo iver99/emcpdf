@@ -74,6 +74,7 @@ public class CommonTest
 	}
 
 	private String HOSTNAME;
+	private String HOSTNAME1;
 	private String portno;
 	private String serveruri;
 	private String authToken;
@@ -175,9 +176,9 @@ public class CommonTest
 			String data = getData(name);
 
 			List<String> url = CommonTest.getDeploymentUrl(data);
-
-			//HOSTNAME = prop.getProperty("hostname");
 			HOSTNAME = CommonTest.getDomainName(url.get(0));
+			//HOSTNAME = prop.getProperty("hostname");
+			HOSTNAME1 = Utils.getProperty("EMCS_NODE3_HOSTNAME");
 			//portno = prop.getProperty("port");
 			portno = CommonTest.getPort(url.get(0)) + "";
 
@@ -254,6 +255,10 @@ public class CommonTest
 	public String getHOSTNAME()
 	{
 		return HOSTNAME;
+	}
+	public String getHOSTNAME1()
+	{
+		return HOSTNAME1;
 	}
 
 	public String getPortno()

@@ -10,8 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.test.ui;
 
-import java.util.List;
-
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
@@ -19,8 +17,6 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -316,13 +312,15 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		DashboardBuilderUtil.restoreWidget(webd, "Entities by Database Machine", 0);
 
 		//verify the edit/add button not displayed in the page
-		List<WebElement> addButtons = webd.getWebDriver().findElements(By.xpath("//button[@title='Add Content']"));
-		Assert.assertFalse(addButtons != null && addButtons.size() > 0,
-				"Unexpected: Add button be displayed in system dashboard set");
-
-		List<WebElement> editButtons = webd.getWebDriver().findElements(By.xpath("//button[@title='Edit Settings']"));
-		Assert.assertFalse(editButtons != null && editButtons.size() > 0,
-				"Unexpected: Edit button be displayed in system dashboard set");
+		if(webd.getElementCount("//button[@title='Add Content']")>0)
+		{
+			Assert.fail("Unexpected: Add button be displayed in system dashboard set");
+		}
+		
+		if(webd.getElementCount("//button[@title='Edit Settings']")>0)
+		{
+			Assert.fail("Unexpected: Edit button be displayed in system dashboard set");
+		}
 	}
 
 	//test maxmize/restore widget in self created dashboard set, and self creating a dashboard to test add/edit button
@@ -372,12 +370,9 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		Assert.assertTrue(webd.isDisplayed("css=" + ".dbd-widget[data-tile-name=\"All Logs Trend\"]"),
 				"Widget 'All Logs Trend' is not displayed");
 
-		//verify the edit/add button displayed in the page
-		WebElement addButton2 = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));
-		Assert.assertTrue(addButton2.isDisplayed(), "Add button isn't displayed in self dashboard which in self dashboard set");
-
-		WebElement editButton2 = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));
-		Assert.assertTrue(editButton2.isDisplayed(), "Edit button isn't displayed in self dashboard which in self dashboard set");
+		//verify the edit/add button displayed in the page		
+		Assert.assertTrue(webd.isDisplayed("//button[@title='Add Content']"), "Add button isn't displayed in self dashboard which in self dashboard set");
+		Assert.assertTrue(webd.isDisplayed("//button[@title='Edit Settings']"), "Edit button isn't displayed in self dashboard which in self dashboard set");
 	}
 
 	//test maxmize/restore widget in self created dashboard set, and select a system dashboard to test edit button
@@ -408,15 +403,12 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		DashboardBuilderUtil.maximizeWidget(webd, "Application Server Status", 0);
 		DashboardBuilderUtil.restoreWidget(webd, "Application Server Status", 0);
 
-		//verify the add button not displayed in the page
-		//WebElement addButton1 = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));
-		//Assert.assertFalse(addButton1.isDisplayed(), "Add button be displayed in system dashboard set");
+		//verify the add button not displayed in the page		
 		Assert.assertFalse(webd.isElementPresent("//button[@title='Add Content']"),
 				"Add button be displayed in system dashboard set");
 
-		//verify the edit button displayed in the page
-		WebElement editButton1 = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));
-		Assert.assertTrue(editButton1.isDisplayed(), "Edit button isn't displayed in self dashboard set");
+		//verify the edit button displayed in the page		
+		Assert.assertTrue(webd.isDisplayed("//button[@title='Edit Settings']"), "Edit button isn't displayed in self dashboard set");
 	}
 
 	@Test(groups = "first run")
@@ -574,6 +566,5 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		//share the dashboardset
 		webd.getLogger().info("Share the dashboard");
 		Assert.assertFalse(DashboardBuilderUtil.toggleShareDashboardset(webd), "Stop sharing the dashboard set failed!");
-
 	}
 }

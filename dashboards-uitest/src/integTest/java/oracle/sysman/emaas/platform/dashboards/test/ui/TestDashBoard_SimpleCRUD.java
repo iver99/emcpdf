@@ -5,11 +5,7 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -106,6 +102,12 @@ public class TestDashBoard_SimpleCRUD extends LoginAndLogout
 		DashboardHomeUtil.createDashboard(webd, dbName_noDesc, null, DashboardHomeUtil.DASHBOARD);
 		webd.getLogger().info("verify the dashboard created Successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noDesc, null, true), "Create dashboard failed!");
+
+		//verify the get started icon -- EMCPDF-4953
+		webd.getLogger().info("Verify get started icon is centralized");
+		webd.isDisplayed("css=" + PageId.DASHBOARD_GET_START_ICON_CSS);
+		String iconAttr = webd.getAttribute("css=" + PageId.DASHBOARD_GET_START_ICON_CSS+"@style").trim();
+		Assert.assertTrue(iconAttr.contains("margin: 20px auto"));
 
 		//verify the refresh option
 		webd.getLogger().info("Verify the default refersh option is 5 mins");
@@ -368,8 +370,7 @@ public class TestDashBoard_SimpleCRUD extends LoginAndLogout
 
 		//verify if in the home page
 		webd.getLogger().info("verify delete successfully and back to the home page");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DASHBOARDDISPLAYPANELCSS)));
+		webd.waitForElementPresent("css=" + PageId.DASHBOARDDISPLAYPANELCSS);
 	}
 
 	@Test(groups = "Group3", dependsOnMethods = { "testModifyDashboard_widget" })

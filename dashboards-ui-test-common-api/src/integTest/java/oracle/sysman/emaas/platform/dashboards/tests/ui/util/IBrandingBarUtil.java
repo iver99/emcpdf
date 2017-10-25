@@ -210,6 +210,7 @@ public interface IBrandingBarUtil extends IUiTestCommonAPI
 	 */
 	public void userMenuOptions(WebDriver driver, String option);
 
+	public void verifyUserMenuItemByText(WebDriver driver, String item, String text);
 	/**
 	 * Navigate to the specified administration page by given link name
 	 *

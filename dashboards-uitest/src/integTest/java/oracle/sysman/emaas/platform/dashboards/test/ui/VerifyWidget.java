@@ -4,11 +4,7 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -30,7 +26,7 @@ public class VerifyWidget extends LoginAndLogout
 	@BeforeClass
 	public void createTestDashboard()
 	{
-		dbName_WithWidget = "withWidget-" + generateTimeStamp();
+		dbName_WithWidget = "withWidget-" + DashBoardUtils.generateTimeStamp();
 		String dbDesc = "Dashboard with Widget";
 
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -123,9 +119,9 @@ public class VerifyWidget extends LoginAndLogout
 
 		webd.switchToWindow();
 		webd.getLogger().info("Wait for the widget loading....");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='save_widget_btn']")));
-
+		
+		webd.waitForElementVisible("//*[@id='save_widget_btn']");
+		
 		//verify the open url
 		DashBoardUtils.verifyURL_WithPara(webd, "emcta/ta/analytics.html");
 	}
@@ -156,15 +152,10 @@ public class VerifyWidget extends LoginAndLogout
 
 		webd.switchToWindow();
 		webd.getLogger().info("Wait for the widget loading....");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
-
+		
+		webd.waitForElementVisible("//*[@id='srchSrch']");
+		
 		//verify the open url
 		DashBoardUtils.verifyURL_WithPara(webd, "emlacore/html/log-analytics-search.html?widgetId=2013&dashboardId");
-	}
-
-	private String generateTimeStamp()
-	{
-		return String.valueOf(System.currentTimeMillis());
 	}
 }

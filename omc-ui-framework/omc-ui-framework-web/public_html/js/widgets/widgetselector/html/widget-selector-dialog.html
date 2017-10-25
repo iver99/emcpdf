@@ -1,4 +1,4 @@
-        <div style="display:none;" class="widget-selector-main"  data-testapiversion="1.7.5" 
+        <div style="display:none;" class="widget-selector-main"  data-testapiversion="1.23.0" 
             data-bind="ojComponent:{component: 'ojDialog', beforeOpen: beforeOpenDialog,
                 initialVisibility: 'hide', title: widgetSelectorTitle, resizeBehavior: 'none',
                 rootAttributes: { style: 'width: 867px;'}}, attr: {id: dialogId}">   
@@ -9,7 +9,7 @@
                          data-bind="css: {'widget-searchbox-with-filter': widgetGroupFilterVisible(), 'widget-searchbox-without-filter': !widgetGroupFilterVisible()}">
                         <div id="widget-selector-search-input"
                              data-bind="css: {'widget-search-input-with-filter': widgetGroupFilterVisible(), 'widget-search-input-without-filter': !widgetGroupFilterVisible()}">
-                            <input id="searchTxt" maxlength='100' autofocus="autofocus"
+                            <input class="searchTxt" maxlength='100' autofocus="autofocus"
                                data-bind="ojComponent:{component:'ojInputText',value: searchText}, 
                                             css: {'widget-searchtxt-with-filter': widgetGroupFilterVisible(), 'widget-searchtxt-without-filter': !widgetGroupFilterVisible()},
                                             attr: {placeholder: searchBoxPlaceHolder, 'aria-label': searchBoxPlaceHolder},

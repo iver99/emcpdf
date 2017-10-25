@@ -10,25 +10,16 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.zdt;
 
-import java.math.BigInteger;
-import java.util.List;
-
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.DataManager;
-
+import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.SyncException;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardRowEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardSetRowEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardTileParamsRowEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardTileRowEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardUserOptionsRowEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.PreferenceRowEntity;
-import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.TableRowsEntity;
-
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
+import java.math.BigInteger;
+import java.util.List;
 
 /**
  * @author guochen
@@ -36,10 +27,10 @@ import javax.persistence.EntityTransaction;
 public class TableRowsSynchronizer {
     private static final Logger logger = LogManager.getLogger(TableRowsSynchronizer.class);
 
-    public String sync(TableRowsEntity data) {
+    public String sync(TableRowsEntity data) throws SyncException {
         if (data == null) {
             logger.error("Failed to sync for input data is null");
-            return "Errors:Failed to sync as input data is null";
+            throw new SyncException("Errors occurred while sync for tables, input data is null...");
         }
         EntityManager em = null;
         try {
@@ -48,22 +39,30 @@ public class TableRowsSynchronizer {
 			if (!em.getTransaction().isActive()) {
 				em.getTransaction().begin();
 			}
-        	if (syncPreferenceTableRows(em, data.getEmsPreference()) <= 0) logger.debug("nothing was added to EMS_Prefernce!");
-        	if (syncDashboardTableRows(em,data.getEmsDashboard()) <= 0) logger.debug("nothing was added to EMS_DASHBOARD!");
-        	if (syncDashboardSetTableRows(em,data.getEmsDashboardSet()) <= 0)
-        	logger.debug("nothing was added to EMS_DASHBOARD_SET!");
-        	if (syncDashboardUserOptionsTableRows(em,data.getEmsDashboardUserOptions()) <= 0)
-            logger.debug("nothing was added to EMS_DASHBOARD_USER_OPTIONS!");
-        	if (syncDashboardTileTableRows(em,data.getEmsDashboardTile()) <= 0)
-            logger.debug("nothing was added to EMS_DASHBOARD_TILE!");
-        	if (syncDashboardTileParamsTableRows(em,data.getEmsDashboardTileParams()) <= 0)
-        	logger.debug("nothing was added to EMS_DASHBOARD_TILE_PARAMS!");
-        	em.getTransaction().commit();
-        	return "sync is successful";
-        }
-        catch (Exception e) {
-        	logger.error(e);
-        	return e.getMessage();
+            //make sure sync in order that will not break DB constraints
+            syncPreferenceTableRows(em, data.getEmsPreference());
+            syncDashboardTableRows(em, data.getEmsDashboard());
+            syncDashboardSetTableRows(em, data.getEmsDashboardSet());
+            syncDashboardUserOptionsTableRows(em, data.getEmsDashboardUserOptions());
+            syncDashboardTileTableRows(em, data.getEmsDashboardTile());
+            syncDashboardTileParamsTableRows(em, data.getEmsDashboardTileParams());
+            em.getTransaction().commit();
+            return "sync is successful";
+        }catch (SyncException e){
+            if(em!=null){
+                em.getTransaction().rollback();
+            }
+            logger.error("SyncException occurred while sync for tables...");
+            logger.error(e);
+            throw e;
+        }catch (Exception e) {
+            if(em!=null){
+                em.getTransaction().rollback();
+            }
+            logger.error("Errors occurred while sync for tables...");
+            logger.error(e);
+            logger.error(e.getCause());
+            throw new SyncException("Errors occurred while sync for tables...");
         } finally {
 			if (em != null) {
 				em.close();
@@ -72,9 +71,9 @@ public class TableRowsSynchronizer {
     }
 
 
-    private int syncDashboardSetTableRows(EntityManager em,List<DashboardSetRowEntity> rows) {
+    private int syncDashboardSetTableRows(EntityManager em,List<DashboardSetRowEntity> rows) throws SyncException {
         if (rows == null || rows.isEmpty()) {
-            logger.debug("DashboardSetRows is empty or null!");
+            logger.warn("DashboardSetRows is empty or null!");
             return 0;
         }
         int result = 0;
@@ -87,9 +86,9 @@ public class TableRowsSynchronizer {
         return result;
     }
 
-    private int syncDashboardTableRows(EntityManager em,List<DashboardRowEntity> dashboardRows) {
+    private int syncDashboardTableRows(EntityManager em,List<DashboardRowEntity> dashboardRows) throws SyncException {
         if (dashboardRows == null || dashboardRows.isEmpty()) {
-            logger.debug("dashboardRows is null or empty!");
+            logger.warn("dashboardRows is null or empty!");
             return 0;
         }
         int result = 0;
@@ -105,9 +104,9 @@ public class TableRowsSynchronizer {
     }
 
 
-    private int syncDashboardTileParamsTableRows(EntityManager em,List<DashboardTileParamsRowEntity> rows) {
+    private int syncDashboardTileParamsTableRows(EntityManager em,List<DashboardTileParamsRowEntity> rows) throws SyncException {
         if (rows == null || rows.isEmpty()) {
-            logger.debug("TileParamsRows is null or empty!");
+            logger.warn("TileParamsRows is null or empty!");
             return 0;
         }
         int result = 0;
@@ -121,9 +120,9 @@ public class TableRowsSynchronizer {
         return result;
     }
 
-    private int syncDashboardTileTableRows(EntityManager em,List<DashboardTileRowEntity> rows) {
+    private int syncDashboardTileTableRows(EntityManager em,List<DashboardTileRowEntity> rows) throws SyncException {
         if (rows == null || rows.isEmpty()) {
-            logger.debug("TileRows is null or empty!");
+            logger.warn("TileRows is null or empty!");
             return 0;
         }
         int result = 0;
@@ -142,9 +141,9 @@ public class TableRowsSynchronizer {
         return result;
     }
 
-    private int syncDashboardUserOptionsTableRows(EntityManager em,List<DashboardUserOptionsRowEntity> rows) {
+    private int syncDashboardUserOptionsTableRows(EntityManager em,List<DashboardUserOptionsRowEntity> rows) throws SyncException {
         if (rows == null || rows.isEmpty()) {
-            logger.debug("DashboardUserOptionsRows is null or empty!");
+            logger.warn("DashboardUserOptionsRows is null or empty!");
             return 0;
         }
         int result = 0;
@@ -157,9 +156,9 @@ public class TableRowsSynchronizer {
         return result;
     }
 
-    private int syncPreferenceTableRows(EntityManager em,List<PreferenceRowEntity> rows) {
+    private int syncPreferenceTableRows(EntityManager em,List<PreferenceRowEntity> rows) throws SyncException {
         if (rows == null || rows.isEmpty()) {
-            logger.debug("PreferenceRows is null or empty!");
+            logger.warn("PreferenceRows is null or empty!");
             return 0;
         }
         int result = 0;

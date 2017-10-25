@@ -76,11 +76,11 @@ public class RegistryLookupUtilTest
 		link.withHref("htt://www.test.com");
 		new Expectations(RegistryLookupUtil.class) {
 			{
-				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString);
+				RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString,false);
 				result = link;
 			}
 		};
-		EndpointEntity ee = RegistryLookupUtil.getServiceExternalEndPointEntity(serviceName, version, tenantName);
+		EndpointEntity ee = RegistryLookupUtil.getServiceExternalEndPointEntity(serviceName, version, tenantName,false);
 		Assert.assertEquals(ee.getServiceName(), serviceName);
 		Assert.assertEquals(ee.getVersion(), version);
 		Assert.assertEquals(ee.getHref(), href);
@@ -217,7 +217,7 @@ public class RegistryLookupUtilTest
 				};
 			}
 		};
-		Link lk = RegistryLookupUtil.getServiceExternalLink("LoganService", "0.1", "search", null);
+		Link lk = RegistryLookupUtil.getServiceExternalLink("LoganService", "0.1", "search", null,false);
 		Assert.assertEquals(lk.getHref(), testHref);
 		Assert.assertEquals(lk.getRel(), testRel);
 	}
@@ -253,7 +253,7 @@ public class RegistryLookupUtilTest
 				};
 			}
 		};
-		Link lk = RegistryLookupUtil.getServiceExternalLink("ApmUI", "0.1", "home", "emaastesttenant1");
+		Link lk = RegistryLookupUtil.getServiceExternalLink("ApmUI", "0.1", "home", "emaastesttenant1",false);
 		Assert.assertEquals(lk.getHref(), testHref);
 	}
 
@@ -291,7 +291,7 @@ public class RegistryLookupUtilTest
 				};
 			}
 		};
-		Link lk = RegistryLookupUtil.getServiceExternalLinkWithRelPrefix("LoganService", "0.1", "logan", "emaastesttenant1");
+		Link lk = RegistryLookupUtil.getServiceExternalLinkWithRelPrefix("LoganService", "0.1", "logan", "emaastesttenant1",false);
 		Assert.assertEquals(lk.getHref(), testHref);
 		Assert.assertEquals(lk.getRel(), testRel);
 	}

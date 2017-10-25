@@ -74,6 +74,7 @@ public class MetadataRetrieverTest
             "            \"WIDGET_VIEWMODEL\": \"../emcsDependencies/widgets/onepage/js/onepageModel\"," + 
             "            \"WIDGET_SUPPORT_TIME_CONTROL\": true," + 
             "            \"WIDGET_LINKED_DASHBOARD\": null," + 
+            "            \"WIDGET_GROUP_NAME\": \"Log Analytics\"," + 
             "            \"tileParameters\": [" + 
             "                {" + 
             "                    \"name\": \"DF_HIDE_TITLE\"," + 
@@ -114,6 +115,7 @@ public class MetadataRetrieverTest
         Assert.assertEquals(oob.getAppicationType().getValue(), 8);
         Assert.assertEquals(oob.getTileList().size(), 1);
         Assert.assertEquals(oob.getTileList().get(0).getParameters().size(), 1);
+        Assert.assertEquals(oob.getTileList().get(0).getWidgetGroupName(), "Log Analytics");
         Assert.assertEquals(oob.getSubDashboards().size(), 1);
         Assert.assertEquals(oob.getSubDashboards().get(0).getDashboardId().toString(), "10001");
     }

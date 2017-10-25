@@ -4,15 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mockit.Expectations;
-import mockit.Mock;
-import mockit.MockUp;
-import mockit.Mocked;
-import mockit.NonStrictExpectations;
+import mockit.*;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.resourcemgmt.response.Response;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.TenantEditionEntity;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
@@ -26,7 +23,7 @@ import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.TenantSubscripti
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
+import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.AppsInfo;
 /**
  * @author jishshi
  * @since 1/20/2016.
@@ -39,6 +36,17 @@ public class TenantSubscriptionsAPITest {
     public void setUp() {
         tenantSubscriptionsAPI = new TenantSubscriptionsAPI();
 
+    }
+
+    @Test
+    public void testInnerclass(@Mocked final List<TenantEditionEntity> applications){
+        Object InnerSubscribedAppsEntityWithVersionIns =
+                Deencapsulation.newInstance("oracle.sysman.emaas.platform.dashboards.ws.rest.TenantSubscriptionsAPI$SubscribedAppsEntityWithVersion"
+                ,applications);
+        Deencapsulation.invoke(InnerSubscribedAppsEntityWithVersionIns,
+                "getApplications");
+        Deencapsulation.invoke(InnerSubscribedAppsEntityWithVersionIns,
+                "setApplications",applications);
     }
 
     @Test
@@ -58,11 +66,12 @@ public class TenantSubscriptionsAPITest {
                 apps.add("DBD");
                 TenantSubscriptionUtil.getTenantSubscribedServices(anyString,(TenantSubscriptionInfo)any);
                 result = apps;
+                result = apps;
             }
         };
 
         Assert.assertNotNull(tenantSubscriptionsAPI.getSubscribedApplications("tenantIdParam", "userTenant", "userTenant", null));
-
+        Assert.assertNotNull(tenantSubscriptionsAPI.getSubscribedApplications("tenantIdParam", "userTenant", "userTenant", "true"));
     }
 
     @Test
@@ -133,4 +142,61 @@ public class TenantSubscriptionsAPITest {
 
     }
 
+    @Test
+    public void testSetNonNullEdition() throws Exception{
+        String appid = "appid";
+        String applicVersion = "appLicVersion";
+        List<String> appedition = new ArrayList<>();
+        appedition.add("Testing");
+        appedition.add("SubscribedAppsEntity");
+        AppsInfo appInfo = new AppsInfo(appid,applicVersion,appedition);
+        Deencapsulation.invoke(tenantSubscriptionsAPI,"setNonNullEdition",appInfo);
+        appedition.clear();
+        appInfo.setEditions(appedition);
+        Deencapsulation.invoke(tenantSubscriptionsAPI,"setNonNullEdition",appInfo);
+    }
+
+    @Test
+    public void testPickEdition() throws Exception{
+        String appid = "appid";
+        String applicVersion = "appLicVersion";
+        List<String> appedition = new ArrayList<>();
+        AppsInfo appInfo = new AppsInfo(appid,applicVersion,appedition);
+        Deencapsulation.invoke(tenantSubscriptionsAPI,"pickEdition",appInfo);
+
+        appedition.add("Enterprise Edition");
+        appInfo.setEditions(appedition);
+        Deencapsulation.invoke(tenantSubscriptionsAPI,"pickEdition",appInfo);
+
+        appedition.clear();
+        appedition.add("Standard Edition");
+        Deencapsulation.invoke(tenantSubscriptionsAPI,"pickEdition",appInfo);
+
+
+        appedition.add("Configuration and Compliance Edition");
+        appedition.add("Standard Edition");
+        Deencapsulation.invoke(tenantSubscriptionsAPI,"pickEdition",appInfo);
+    }
+
+    @Test
+    public void testGetServicesWithEdition(@Mocked final TenantSubscriptionInfo tenantSubscriptionInfo) throws Exception{
+        // mocked an AppsInfoList
+        String appid = "appid";
+        String applicVersion = "V2_MODEL";
+        List<String> appedition = new ArrayList<>();
+        AppsInfo appInfo = new AppsInfo(appid,applicVersion,appedition);
+        final List<AppsInfo> testlist = new ArrayList<AppsInfo>();
+        testlist.add(appInfo);
+
+        new Expectations(){
+            {
+                tenantSubscriptionInfo.getAppsInfoList();
+                result = new ArrayList<AppsInfo>();
+                result = testlist;
+            }
+        };
+
+        Deencapsulation.invoke(tenantSubscriptionsAPI,"getServicesWithEdition",tenantSubscriptionInfo);
+        Deencapsulation.invoke(tenantSubscriptionsAPI,"getServicesWithEdition",tenantSubscriptionInfo);
+    }
 }
