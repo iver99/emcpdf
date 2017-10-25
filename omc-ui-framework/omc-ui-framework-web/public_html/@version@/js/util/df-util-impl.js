@@ -1061,6 +1061,7 @@ define(['knockout',
             self.getRegistrations = function (successCallback, toSendAsync, errorCallback) {
                 if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.registrations && 
                         ($.isFunction(window._uifwk.cachedData.registrations) ? window._uifwk.cachedData.registrations() : true)) {
+                    console.info("Getting registration data from window._uifwk.cachedData.registrations. It is function: " + $.isFunction(window._uifwk.cachedData.registrations));
                     successCallback($.isFunction(window._uifwk.cachedData.registrations) ? window._uifwk.cachedData.registrations() : 
                             window._uifwk.cachedData.registrations);
                 } else {
@@ -1070,9 +1071,11 @@ define(['knockout',
                     if (!window._uifwk.cachedData) {
                         window._uifwk.cachedData = {};
                     }
+                    console.info("Getting registration data by sending request. window._uifwk.cachedData.isFetchingRegistrations is " + window._uifwk.cachedData.isFetchingRegistrations);
                     if (!window._uifwk.cachedData.isFetchingRegistrations) {
                         window._uifwk.cachedData.isFetchingRegistrations = true;
                         if (!window._uifwk.cachedData.registrations) {
+                            console.info("initialize window.registrationFromRequest to ko observable");
                             window.registrationFromRequest = ko.observable();
                         }
                         if (!window._uifwk.cachedData.errGetRegistration) {
@@ -1084,8 +1087,10 @@ define(['knockout',
 
                         function doneCallback(data, textStatus, jqXHR) {
                             if(window.registrationFromRequest && $.isFunction(window.registrationFromRequest)) {
+                                console.info("window.registrationFromRequest is ko observable");
                                 window.registrationFromRequest(data);
                             }else {
+                                console.info("window.registrationFromRequest is not ko observable");
                                 window.registrationFromRequest = ko.observable(data);
                             }
                             window._uifwk.cachedData.registrations = data;
@@ -1115,6 +1120,7 @@ define(['knockout',
                         }
                     } else {
                         window.registrationFromRequest.subscribe(function (data) {
+                            console.info("window.registrationFromRequest is fetched from back end");
                             if (data) {
                                 successCallback(data);
                             }
