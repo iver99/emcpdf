@@ -793,7 +793,7 @@ public class DashboardManagerTest extends BaseTest
 
 		// query by page size/offset. ===Need to consider that last accessed one comes first===
 		pd = dm.listDashboards("key", 0, 3, tenant1, true);
-		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd4.getDashboardId());
+		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd5.getDashboardId());
 		// check that tiles are retrieved successfully for single page dashboard
 		//		Assert.assertNotNull(pd.getDashboards().get(0).getTileList().get(0));
 //		Tile dbd11tile1 = pd.getDashboards().get(0).getTileList().get(0);
