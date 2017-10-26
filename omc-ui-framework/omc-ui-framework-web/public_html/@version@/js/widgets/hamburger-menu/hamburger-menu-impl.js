@@ -374,7 +374,16 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     if (allServiceMenus && allServiceMenus.length > 0) {
                         if ($.inArray(serviceAppId, ['Error', 'Dashboard']) === -1) {
                             if (currentMenuId && currentMenuId.indexOf('omc_root_admin_') === 0) {
-                                self.serviceMenuToLoad = $.extend([], allServiceMenus);
+//                                self.serviceMenuToLoad = $.extend([], allServiceMenus);
+                                for (var i = 0; i < allServiceMenus.length; i++) {
+                                    var menuDefItem = allServiceMenus[i];
+                                    if (menuDefItem && menuDefItem.hasOwnProperty('hasAdminMenu')) {
+                                        self.serviceMenuDeferLoad.push(menuDefItem);
+                                    }
+                                    else {
+                                        self.serviceMenuToLoad.push(menuDefItem);
+                                    }
+                                }
                             }
                             else {
                                 for (var i = 0; i < allServiceMenus.length; i++) {
@@ -450,7 +459,12 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         serviceItem.version = linkItem.version;
                         serviceItem.serviceMenuMsgBundle = {};
                         serviceItem.serviceMenus = [{"id": "omc_service_menu_separator"}];
-                        serviceItem.serviceAdminMenus = {};
+                        if (linkItem.hasAdminMenu) {
+                            serviceItem.serviceAdminMenus = {"id": "omc_service_menu_separator", "children": [{"id": "omc_service_menu_separator"}]};
+                        }
+                        else {
+                            serviceItem.serviceAdminMenus = {};
+                        }
                         self.allServiceData.push(serviceItem);
                     });
                 }
@@ -596,11 +610,23 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     return dfdLoadSingleSvcMenu;
                 }
 
-                function findAllUnloadedServiceMenus() {
+//                function findAllUnloadedServiceMenus() {
+//                    var unloadedMenus = [];
+//                    if(self.serviceLinks && self.serviceLinks.length > 0){
+//                        $.each(self.serviceLinks, function(idx, linkItem){
+//                            if (!isServiceMenuLoaded(linkItem.appId)) {
+//                                unloadedMenus.push(linkItem);
+//                            }
+//                        });
+//                    }
+//                    return unloadedMenus;
+//                }
+                
+                function findUnloadedServiceMenusWithoutHasAdminRel() {
                     var unloadedMenus = [];
                     if(self.serviceLinks && self.serviceLinks.length > 0){
                         $.each(self.serviceLinks, function(idx, linkItem){
-                            if (!isServiceMenuLoaded(linkItem.appId)) {
+                            if (!isServiceMenuLoaded(linkItem.appId) && !linkItem.hasOwnProperty('hasAdminMenu')) {
                                 unloadedMenus.push(linkItem);
                             }
                         });
@@ -624,7 +650,17 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             }
                             if (key) {
                                 self.dataSource(new oj.JsonTreeDataSource(omcMenus));
-                                setTimeout(function(){$("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", key, true);}, 1);
+                                if (key.indexOf('omc_root_admin_grp_') > -1) {
+                                    setTimeout(function(){
+                                        //When expand service admin, need to expand the global Administration first
+                                        $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", 'omc_root_admin', true);
+                                        //Then expand the specific service admin under the global Administration
+                                        $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", key, true);
+                                    }, 1);
+                                }
+                                else {
+                                    setTimeout(function(){$("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", key, true);}, 1);
+                                }
                             }
                             updateServiceMenuCache();
                             if (callback) {
@@ -636,7 +672,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 
                 function refreshAllUnloadedServiceMenus() {
                     var dfdRefreshUnloadedMenus = $.Deferred();
-                    var allUnloadedMenus = findAllUnloadedServiceMenus();
+
+                    var allUnloadedMenus = findUnloadedServiceMenusWithoutHasAdminRel();//findAllUnloadedServiceMenus();
+
                     if (allUnloadedMenus && allUnloadedMenus.length > 0) {
                         loadServiceData(allUnloadedMenus).done(function() {
                             omcMenus = [];
@@ -1477,9 +1515,18 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 //                            $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand",ui.key, true);
                         }
                     }
+                    else if (ui.key.indexOf("omc_root_admin_grp_") > -1) {
+                        var appId = ui.key.substring(19);
+                        if (!isServiceMenuLoaded(appId)) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            refreshSingleServiceMenu(appId, ui.key);
+//                            $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand",ui.key, true);
+                        }
+                    }
                     else if (ui.key === "omc_root_admin") {
                         //If not all service menus have been loaded, then load them
-                        if (findAllUnloadedServiceMenus().length > 0) {
+                        if (findUnloadedServiceMenusWithoutHasAdminRel().length > 0) {
                             event.preventDefault();
                             event.stopPropagation();
                             refreshAllUnloadedServiceMenus().done(function(){
@@ -1579,7 +1626,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                         },0);
                                     }
                                 }
-                                if (eventData.menuItemId.indexOf("omc_root_admin_") > -1 && findAllUnloadedServiceMenus().length > 0) {
+                                if (eventData.menuItemId.indexOf("omc_root_admin_") > -1 && findUnloadedServiceMenusWithoutHasAdminRel().length > 0) {
                                     //If not all service menus have been loaded, then load them
                                     refreshAllUnloadedServiceMenus().done(function(){
                                         setCurrentMenuItem();
