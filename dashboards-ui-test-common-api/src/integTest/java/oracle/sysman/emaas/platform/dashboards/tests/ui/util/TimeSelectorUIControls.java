@@ -114,6 +114,7 @@ public class TimeSelectorUIControls
 	public static final String sFlexRelTimeVal = "div[id^='pickerPanel'][id$='wrapper'] input[id^='flexRelTimeVal']";
 	public static final String sFlexRelTimeOpt = "div[id^='pickerPanel'][id$='wrapper'] div[id^='flexRelTimeOpt'] .oj-select-choice";
 	public static final String sFlexRelTimeOptList = "div[id^=pickerPanel][id$='wrapper'] div[id^='pickerPanel'] select option";
+	public static final String sFlexRelTimeOptList_XPATH = "//div[contains(@id,'pickerPanel')]//div[contains(@id,'pickerPanel')]//select/option";
 	public static final String sFlexRelTimeOptStart = "div[id^='pickerPanel'][id$='_wrapper_layer'] div[data-oj-containerid^='flexRelTimeOpt'] ul li:nth-of-type(";
 	public static final String sFlexRelTimeOptEnd = ")";
 	public static final String sRangeRadio = "div[id^='pickerPanel'] input[value='timeLevelCtrl']";

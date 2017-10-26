@@ -464,23 +464,20 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	 */
 	@Override
 	public void sortListViewByCreateBy(WebDriver driver, String sortBy)
-	{		
-		JetTable jettbl = new JetTable(driver, DashBoardPageId.LISTVIEWTABLELOCATORCSS);
-		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableCreatedByHeader");
-		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLECREATEDBYHEADERLOCATOR);
-
-		if("asc".equals(sortBy))
-		{
-			jettbl.sortAscending(1);
-		}
-		else if("dsc".equals(sortBy))
-		{
-			jettbl.sortDescending(1);
-		}
-		else
-		{
-			Assert.fail("Wrong sortBy: "+ sortBy+", please use 'acs' for sort ascending or 'dsc' for sort descending");
-		}
+	{	
+		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableCreatedByHeader");	
+		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLECREATEDBYHEADERLOCATOR);	
+//		WebElement tableHeader = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.LISTVIEWTABLECREATEDBYHEADERLOCATOR));	
+//		WebElement tableSort = tableHeader.findElement(By.cssSelector(DashBoardPageId.LISTVIEWSORTLOCATORCSS));	
+//		Actions actions = new Actions(driver.getWebDriver());	
+		driver.getLogger().info("Focus to the table header");	
+		driver.moveToElement("xpath=" + DashBoardPageId.LISTVIEWTABLECREATEDBYHEADERLOCATOR);
+//		actions.moveToElement(tableHeader).build().perform();	
+		driver.getLogger().info("Click Sort icon");		
+		driver.click("xpath=" + DashBoardPageId.LISTVIEWTABLECREATEDBYHEADERLOCATOR + DashBoardPageId.LISTVIEWSORTLOCATORXPATH);
+//		actions.moveToElement(tableSort).click().perform();	
+//		driver.takeScreenShot();	
+				
 		WaitUtil.waitForPageFullyLoaded(driver);		
 	}
 
@@ -490,23 +487,22 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	@Override
 	public void sortListViewByLastModified(WebDriver driver, String sortBy)
 	{
-		JetTable jettbl = new JetTable(driver, DashBoardPageId.LISTVIEWTABLELOCATORCSS);
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableLastModifiedHeader");
 		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR);
-
-		if("asc".equals(sortBy))
-		{
-			jettbl.sortAscending(2);
-		}
-		else if("dsc".equals(sortBy))
-		{
-			jettbl.sortDescending(2);
-		}
-		else
-		{
-			Assert.fail("Wrong sortBy: "+ sortBy+", please use 'acs' for sort ascending or 'dsc' for sort descending");
-		}
-		WaitUtil.waitForPageFullyLoaded(driver);	
+		
+//		WebElement tableHeader = driver.getWebDriver().findElement(
+//				By.xpath(DashBoardPageId.LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR));
+//		WebElement tableSort = tableHeader.findElement(By.cssSelector(DashBoardPageId.LISTVIEWSORTLOCATORCSS));
+		
+//		Actions actions = new Actions(driver.getWebDriver());
+		driver.getLogger().info("Focus to the table header");	
+		driver.moveToElement("xpath=" + DashBoardPageId.LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR);
+//		actions.moveToElement(tableHeader).build().perform();	
+		driver.getLogger().info("Click Sort icon");		
+//		actions.moveToElement(tableSort).click().perform();	
+		driver.click("xpath=" + DashBoardPageId.LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR + DashBoardPageId.LISTVIEWSORTLOCATORXPATH);
+		WaitUtil.waitForPageFullyLoaded(driver);
+			
 	}
 
 	/* (non-Javadoc)
@@ -515,22 +511,18 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	@Override
 	public void sortListViewByName(WebDriver driver, String sortBy)
 	{
-		JetTable jettbl = new JetTable(driver, DashBoardPageId.LISTVIEWTABLELOCATORCSS);
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableNameHeader");
-		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLENAMEHEADERLOCATOR);		
+		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLENAMEHEADERLOCATOR);	
+//		WebElement tableHeader = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.LISTVIEWTABLENAMEHEADERLOCATOR));	
+//		WebElement tableSort = tableHeader.findElement(By.cssSelector(DashBoardPageId.LISTVIEWSORTLOCATORCSS));	
+//		Actions actions = new Actions(driver.getWebDriver());	
+		driver.getLogger().info("Focus to the table header");	
+		driver.moveToElement("xpath=" + DashBoardPageId.LISTVIEWTABLENAMEHEADERLOCATOR);
+//		actions.moveToElement(tableHeader).build().perform();		
+		driver.getLogger().info("Click Sort icon");	
+		driver.click("xpath=" + DashBoardPageId.LISTVIEWTABLENAMEHEADERLOCATOR + DashBoardPageId.LISTVIEWSORTLOCATORXPATH);
+//		actions.moveToElement(tableSort).click().perform();			
 		
-		if("asc".equals(sortBy))
-		{
-			jettbl.sortAscending(0);
-		}
-		else if("dsc".equals(sortBy))
-		{
-			jettbl.sortDescending(0);
-		}
-		else
-		{
-			Assert.fail("Wrong sortBy: "+ sortBy+", please use 'acs' for sort ascending or 'dsc' for sort descending");
-		}
 		WaitUtil.waitForPageFullyLoaded(driver);
 	}
 
@@ -562,7 +554,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		
 		int dashboardsCount = driver.getElementCount("xpath=" + DashBoardPageId.DASHBOARD_IN_GRID_TABLE_XPATH);
 		for(int i=1; i<=dashboardsCount; i++) {
-			if (dashboardName.equals(driver.getAttribute("xpath=(" + DashBoardPageId.DASHBOARD_IN_GRID_TABLE_XPATH +")[" + i + "]"))) {
+			if (dashboardName.equals(driver.getAttribute("xpath=(" + DashBoardPageId.DASHBOARD_IN_GRID_TABLE_XPATH +")[" + i + "]@aria-label"))) {
 				driver.click("xpath=(" + DashBoardPageId.DASHBOARD_IN_GRID_TABLE_XPATH +")[" + i + "]//button"); // click "i" button
 
 				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON)); // click delete

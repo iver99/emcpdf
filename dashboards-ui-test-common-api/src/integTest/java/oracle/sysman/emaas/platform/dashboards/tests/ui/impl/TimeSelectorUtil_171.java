@@ -197,9 +197,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 
 		//set start date time and end date time
 		webd.getLogger().info("Verify if custom panpel displayed...");
-		//		WebDriverWait wdwait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		//		wdwait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(TimeSelectorUIControls.sPickPanel)));
-		//webd.isDisplayed(TimeSelectorUIControls.sPickPanel);
+
 		webd.waitForElementVisible(TimeSelectorUIControls.sPickPanel);
 		webd.takeScreenShot();
 		webd.savePageToFile();
@@ -212,22 +210,10 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		webd.sendKeys("css=" + TimeSelectorUIControls.sEndDateInput, endDate);
 		webd.click("css=" + TimeSelectorUIControls.sEndDateInput);
 
-		//		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-		//			try {
-		//				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
-		//			}
-		//			catch (Exception e) {
-		//				// TODO Auto-generated catch block
-		//				webd.getLogger().info(e.getLocalizedMessage());
-		//			}
-		//			return null;
-		//		}
-		//		else {
 		try {
 			clickApplyButton(webd);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
 			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		String returnTimeRange =webd.getText("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + index + "]");
@@ -466,12 +452,16 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 //					+ " "
 //					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(Index - 1)
 //					.getAttribute("value");
-			String returnStartDate = webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + Index + "]" + TimeSelectorUIControls.sStartDateInput_XPATH + "@value")
+			String returnStartDate = webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + Index + "]" 
+					+ TimeSelectorUIControls.sStartDateInput_XPATH + "@value")
 					+ " "
-					+ webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + Index + "]" + TimeSelectorUIControls.sStartTimeInput_XPATH + "@value");
-			String returnEndDate = webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + Index + "]" + TimeSelectorUIControls.sEndDateInput_XPATH + "@value")
+					+ webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + Index + "]" 
+					+ TimeSelectorUIControls.sStartTimeInput_XPATH + "@value");
+			String returnEndDate = webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + Index + "]" 
+					+ TimeSelectorUIControls.sEndDateInput_XPATH + "@value")
 					+ " "
-					+ webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + Index + "]" + TimeSelectorUIControls.sEndTimeInput_XPATH + "@value");
+					+ webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + Index + "]" 
+					+ TimeSelectorUIControls.sEndTimeInput_XPATH + "@value");
 
 			returnStartDate = timeFormatChange(webd, returnStartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 			returnEndDate = timeFormatChange(webd, returnEndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
@@ -543,7 +533,6 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 					throw new Exception("Please use setCustomTime API to set Custom Range");
 				}
 				catch (Exception e) {
-					// TODO Auto-generated catch block
 					webd.getLogger().info(e.getLocalizedMessage());
 				}
 			default:
@@ -567,12 +556,16 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 //					+ " "
 //					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(index - 1)
 //					.getAttribute("value");
-			String returnStartDate = webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" + TimeSelectorUIControls.sStartDateInput_XPATH + "@value")
+			String returnStartDate = webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" 
+					+ TimeSelectorUIControls.sStartDateInput_XPATH + "@value")
 					+ " "
-					+ webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" + TimeSelectorUIControls.sStartTimeInput_XPATH + "@value");
-			String returnEndDate = webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" + TimeSelectorUIControls.sEndDateInput_XPATH + "@value")
+					+ webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" 
+					+ TimeSelectorUIControls.sStartTimeInput_XPATH + "@value");
+			String returnEndDate = webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" 
+					+ TimeSelectorUIControls.sEndDateInput_XPATH + "@value")
 					+ " "
-					+ webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" + TimeSelectorUIControls.sEndTimeInput_XPATH + "@value");
+					+ webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" 
+					+ TimeSelectorUIControls.sEndTimeInput_XPATH + "@value");
 
 			returnStartDate = timeFormatChange(webd, returnStartDate, "MM/dd/yyyy", "MMM d, yyyy");
 			returnEndDate = timeFormatChange(webd, returnEndDate, "MM/dd/yyyy", "MMM d, yyyy");
@@ -801,7 +794,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 	protected void clickTimePicker(WebDriver webd, int Index)
 	{
 		//click the datetimepicker component
-		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sTimeRangeBtn);
+		webd.waitForElementPresent("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + Index + "]");
 		webd.click("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + Index + "]");
 //		webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1).click();
 

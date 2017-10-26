@@ -81,9 +81,9 @@ public class WelcomeUtil_175 extends WelcomeUtil_171
 				default:
 					break;
 			}
-//			driver.click(eleXpath);
+			driver.click(eleXpath);
 			
-			driver.select("oj-select-choice-ITA_options", "value='mw_perf'");
+//			driver.select("oj-select-choice-ITA_options", "value='mw_perf'");
 		}
 	}
 	
