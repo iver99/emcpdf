@@ -352,6 +352,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			final String textWidgetTemplateImplUrl = NAV_BASE + "/" + buildId + "/js/widgets/textwidget/dashboardTextWidget.html";
 			final String textWidgetVMRel = "versionLookupSDK/emsaasui/emcpdfui/js/widgets/textwidget/js/dashboardTextWidget.js";
 			final String textWidgetVMImplUrl = NAV_BASE + "/" + buildId + "/js/widgets/textwidget/js/dashboardTextWidget.js";
+			final String htmlWidgetTemplateRel = "versionLookupSDK/emsaasui/emcpdfui/js/widgets/htmlwidget/htmlwidget.html";
+			final String htmlWidgetTemplateImplUrl = NAV_BASE + "/" + buildId + "/js/widgets/htmlwidget/htmlwidget.html";
+			final String htmlWidgetVMRel = "versionLookupSDK/emsaasui/emcpdfui/js/widgets/htmlwidget/js/htmlwidget.js";
+			final String htmlWidgetVMImplUrl = NAV_BASE + "/" + buildId + "/js/widgets/htmlwidget/js/htmlwidget.js";
 			if (buildId == null) {
 				LOGGER.error("buildId is null, please check /opt/ORCLemaas/Applications/Dashboard-UI/init/servicemanager.properties file!");
 			}
@@ -367,6 +371,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("assetRoot").withHref(applicationUrlHttp + NAV_BASE));
 				links.add(new Link().withRel(textWidgetTemplateRel).withHref(applicationUrlHttp + textWidgetTemplateImplUrl));
 				links.add(new Link().withRel(textWidgetVMRel).withHref(applicationUrlHttp + textWidgetVMImplUrl));
+				links.add(new Link().withRel(htmlWidgetTemplateRel).withHref(applicationUrlHttp + htmlWidgetTemplateImplUrl));
+				links.add(new Link().withRel(htmlWidgetVMRel).withHref(applicationUrlHttp + htmlWidgetVMImplUrl));
 				//				links.add(new Link().withRel("static/dashboardsui.configurations").withHref(applicationUrlHttp + NAV_STATIC_CONF));
 				//				links.add(new Link().withRel("static/dashboardsui.registry").withHref(applicationUrlHttp + NAV_STATIC_REGISTRY));
 			}
@@ -377,6 +383,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("assetRoot").withHref(applicationUrlHttps + NAV_BASE));
 				links.add(new Link().withRel(textWidgetTemplateRel).withHref(applicationUrlHttps + textWidgetTemplateImplUrl));
 				links.add(new Link().withRel(textWidgetVMRel).withHref(applicationUrlHttps + textWidgetVMImplUrl));
+				links.add(new Link().withRel(htmlWidgetTemplateRel).withHref(applicationUrlHttps + htmlWidgetTemplateImplUrl));
+				links.add(new Link().withRel(htmlWidgetVMRel).withHref(applicationUrlHttps + htmlWidgetVMImplUrl));
 				//				links.add(new Link().withRel("static/dashboardsui.configurations")
 				//						.withHref(applicationUrlHttps + NAV_STATIC_CONF));
 				//				links.add(new Link().withRel("static/dashboardsui.registry").withHref(applicationUrlHttps + NAV_STATIC_REGISTRY));
