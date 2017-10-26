@@ -1164,7 +1164,7 @@ public class DashboardAPI extends APIBase
 					dbdNames.add(array.getString(i));
 				} catch (JSONException e) {
 					LOGGER.error(e);
-					return Response.status(Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportExportMsgModel(false ,"JSONException erro found!"))).build();
+					return Response.status(Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportExportMsgModel(false ,"JSONException error found!"))).build();
 				}
 			}
 		} else {
@@ -1200,7 +1200,6 @@ public class DashboardAPI extends APIBase
 						BigInteger subId = subDbd.getDashboardId();
 						Dashboard completeSubDashboard = dm.getDashboardById(subId, tenantId);
 						if (completeSubDashboard.getTileList() != null && !completeSubDashboard.getTileList().isEmpty()) {
-
 							allTiles.addAll(completeSubDashboard.getTileList());
 						}
 						subDbds.add(completeSubDashboard);
@@ -1244,6 +1243,7 @@ public class DashboardAPI extends APIBase
 				JSONArray requestEntity = new JSONArray();
 				if (widgetIds != null) {
 					for (String widgetId : widgetIds) {
+						//TODO: Text widget will not be exported. please confirm
 						if (!widgetId.equals(TEXT_WIDGET_ID)) {
 							requestEntity.put(widgetId);
 						}
@@ -1260,30 +1260,23 @@ public class DashboardAPI extends APIBase
 					} else {
 						return Response.status(Status.BAD_REQUEST).entity(new ImportExportMsgModel(false, "Could not get ssf data by widget unique ids")).build();
 					}
-
 				}
-
 				//Combine dbd json and savedsearch json
 				if (ssfObject == null) {
 					ssfObject = new JSONArray();
-
 				}
 				insideOjb.put("Savedsearch", ssfObject);
 				finalArray.put(insideOjb);
 			}
 
 			return Response.ok(finalArray.toString()).build();
-		}
-		catch(DashboardNotFoundException e){
-			//suppress error information in log file
-			LOGGER.warn("Specific dashboard not found");
+		}catch(DashboardNotFoundException e){
+			LOGGER.warn("Specific dashboard not found...dashboard list is {}",array.toString());
 			return buildErrorResponse(new ErrorEntity(e));
-		}
-		catch (DashboardException e) {
+		}catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
-		}
-		catch (BasicServiceMalfunctionException e) {
+		}catch (BasicServiceMalfunctionException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		} catch (JSONException e) {
@@ -1348,8 +1341,8 @@ public class DashboardAPI extends APIBase
 
 					JSONArray dbdArray = jsonObject.getJSONArray("Dashboard");
 					if (dbdArray != null) {
-						Map<BigInteger, BigInteger> idMap = new HashMap<BigInteger, BigInteger>();
-						Map<String, String> nameMap = new HashMap<String, String>();
+//						Map<BigInteger, BigInteger> idMap = new HashMap<BigInteger, BigInteger>();
+//						Map<String, String> nameMap = new HashMap<String, String>();
 						LOGGER.info("Input contains {} dashboards...", dbdArray.length());
 						 for (int j = 0; j < dbdArray.length(); j++) {
 							// in dbd array, dbd is saved in order; Dashboard set will be saved at last
@@ -1370,17 +1363,18 @@ public class DashboardAPI extends APIBase
 						    					}
 						    				}
 						    			}
-						    			if (idMap.containsKey(dashboard.getDashboardId())) {
-						    				dashboard.setDashboardId(idMap.get(dashboard.getDashboardId()));
-						    			}
-						    			if (nameMap.containsKey(dashboard.getName())) {
-						    				dashboard.setName(nameMap.get(dashboard.getName()));
-						    			}
+//						    			if (idMap.containsKey(dashboard.getDashboardId())) {
+//						    				dashboard.setDashboardId(idMap.get(dashboard.getDashboardId()));
+//						    			}
+//						    			if (nameMap.containsKey(dashboard.getName())) {
+//						    				dashboard.setName(nameMap.get(dashboard.getName()));
+//						    			}
 						    		}
 						    	}
 						    }
-						    BigInteger originalId = d.getDashboardId();
-						    String originalName = d.getName();
+//						    BigInteger originalId = d.getDashboardId();
+//						    String originalName = d.getName();
+						    LOGGER.info("Before save to DB, dashboard name is {} and dashboard id is {}", d.getName(), d.getDashboardId());
 							DashboardManager manager = DashboardManager.getInstance();
 							if (d.getTileList() != null) {
 			    				for (Tile tile : d.getTileList()) {
@@ -1392,12 +1386,13 @@ public class DashboardAPI extends APIBase
 			    				}
 			    			}
 							d = manager.saveForImportedDashboard(d, tenantId,override);
-							BigInteger changedId = d.getDashboardId();
-							String changedName = d.getName();
+//							BigInteger changedId = d.getDashboardId();
+//							String changedName = d.getName();
+							LOGGER.info("After save to DB, dashboard name is {} and dashboard id is {}", d.getName(), d.getDashboardId());
 							updateDashboardAllHref(d, tenantIdParam);
 							outputJson.put(new JSONObject(getJsonUtil().toJson(d)));
-							idMap.put(originalId, changedId);
-							nameMap.put(originalName, changedName);
+//							idMap.put(originalId, changedId);
+//							nameMap.put(originalName, changedName);
 						  }
 					}
 

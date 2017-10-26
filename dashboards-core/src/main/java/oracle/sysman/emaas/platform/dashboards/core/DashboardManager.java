@@ -255,7 +255,7 @@ public class DashboardManager
 	 * @param tenantId
 	 * @return
 	 */
-	public List<BigInteger> getDashboardIdsByNames(List<String> names, Long tenantId){
+	public List<BigInteger> getDashboardIdsByNames(List<String> names, Long tenantId) throws DashboardNotFoundException{
     	if (names == null || names.isEmpty()) {
     		LOGGER.debug("Dashboard not found for no input names");
     		return null;
@@ -265,14 +265,14 @@ public class DashboardManager
     		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
     		em = dsf.getEntityManager();
     		return dsf.getDashboardIdsByNames(names, tenantId);   		
-    	} catch (NoResultException e) {
-    		LOGGER.error(e.getLocalizedMessage(), e);
+    	} catch (Exception e) {
+    		LOGGER.error(e);
+    		throw new DashboardNotFoundException();
     	} finally {
     		if (em != null) {
     			em.close();
     		}
     	}
-    	return Collections.emptyList();
     }
 	
 
@@ -1103,6 +1103,7 @@ public class DashboardManager
 	
 	public Dashboard saveForImportedDashboard(Dashboard dbd, Long tenantId, boolean overrided) throws DashboardException {		
 		//reset creation date and owner
+		LOGGER.info("Prepare to reset dashboard's data...");
 		resetDateAndOwnerForDashboard(dbd);
 		EntityManager em = null;
 		try {
