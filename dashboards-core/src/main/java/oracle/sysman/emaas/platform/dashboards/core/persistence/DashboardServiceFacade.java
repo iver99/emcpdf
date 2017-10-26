@@ -123,9 +123,10 @@ public class DashboardServiceFacade
         return null;
 	}
 
-	public List<EmsDashboard> getEmsDashboardsByNameAndPattern(String namePattern){
-		List<EmsDashboard> list = em.createNamedQuery("EmsDashboard.findByNameAndPattern")
-				/*1*/.setParameter("namePattern", StringEscapeUtils.escapeHtml4(namePattern+"%"))
+	public List<EmsDashboard> getEmsDashboardsByNamePattern(String namePattern){
+		String jpql = "select d from EmsDashboard d where d.name LIKE :namePattern and d.owner = :owner and d.isSystem = 0 and d.deleted = 0 ";
+		List<EmsDashboard> list = em.createQuery(jpql,EmsDashboard.class)
+				.setParameter("namePattern", StringEscapeUtils.escapeHtml4("%"+namePattern+"%"))
 				.setParameter("owner", UserContext.getCurrentUser()).getResultList();
 		if (list != null && !list.isEmpty()) {
 			return list;

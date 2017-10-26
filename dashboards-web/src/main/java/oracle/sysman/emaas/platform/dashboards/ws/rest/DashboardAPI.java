@@ -231,38 +231,35 @@ public class DashboardAPI extends APIBase
 
 	}
 
-	/* delete dashboard by names and patterns, i.e. delete all the dashboards satrted from given name patern
-	* i.e.  given "ab", delete all dashboards whose names start from "ab", i.e "ab", "abc", "ab2",etc
+	/* delete dashboard by patterns, i.e. delete all the dashboards that contain the given patern
+	* i.e.  given "ab", delete all dashboards whose names have "ab", i.e "ab", "abc", "7bab2",etc
+	* will not delete the system dashboards
 	* */
 	@DELETE
-	@Path("/{namePattern}")
+	@Path("/namePattern/{namePattern}")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Response deleteDashboardByNamePattern(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 												 @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
 												 @PathParam("namePattern") String namePattern)
 	{
-		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/{}", namePattern);
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/namePattern/{}", namePattern);
 		DashboardManager manager = DashboardManager.getInstance();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp())  {
-				LOGGER.error("Error to call [DELETE] /v1/dashboards/deleteByNamePattern/{}: database is down", namePattern);
+				LOGGER.error("Error to call [DELETE] /v1/dashboards/namePattern/{}: database is down", namePattern);
 				throw new DatabaseDependencyUnavailableException();
 			}
 			logkeyHeaders("deleteDashboardByNamePattern()", userTenant, tenantIdParam);
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
-			List<Dashboard> dsb_list = manager.getDashboardsByNameAndPattern(namePattern,tenantId);
-			if(dsb_list.isEmpty())
+			List<Dashboard> dsb_list = manager.getDashboardsByNamePattern(namePattern,tenantId);
+			if(dsb_list.isEmpty()){
 				throw new DashboardNotFoundException();
+			}
 			for(Dashboard dsb : dsb_list){
-				if (dsb != null && dsb.getIsSystem() != null && dsb.getIsSystem()) {
-					LOGGER.warn("Oracle's dashboard is not supported to be deleted");
-					throw new DeleteSystemDashboardException();
-				}
 				BigInteger dashboardId = dsb.getDashboardId();
 				manager.deleteDashboard(dashboardId, tenantId);
 			}
-			//return Response.status(Status.OK).build(/*dashboad list*/);
 			return Response.ok(getJsonUtil().toJson(dsb_list)).build();
 		}
 		catch (DashboardNotFoundException e) {
@@ -286,30 +283,39 @@ public class DashboardAPI extends APIBase
 		}
 	}
 
-	// for testing the RegExp for finding the id, not the final version
-	@GET
-	@Path("/NameRegExp/{NameRegExp}")
+	/* delete dashboard by name precisely, i.e. delete the dashboard that has the exaclty the given name
+	* i.e.  given "ab", delete dashboard whose name is "ab"
+	* will not delete the system dashboards
+	* */
+	@DELETE
+	@Path("/name/{name}")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response getDashboardIdByNameRegExp(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+	public Response deleteDashboardByName(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 												 @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-												 @PathParam("NameRegExp") String NameRegExp)
+												 @PathParam("name") String name)
 	{
-		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/NameRegExp/{}", NameRegExp);
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/name/{}", name);
 		DashboardManager manager = DashboardManager.getInstance();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp())  {
-				LOGGER.error("Error to call [DELETE] /v1/dashboards/NameRegExp/{}: database is down", NameRegExp);
+				LOGGER.error("Error to call [DELETE] /v1/dashboards/name/{}: database is down", name);
 				throw new DatabaseDependencyUnavailableException();
 			}
-			logkeyHeaders("deleteDashboardByNamePattern()", userTenant, tenantIdParam);
+			logkeyHeaders("deleteDashboardByName()", userTenant, tenantIdParam);
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
-			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-			List<BigInteger> ids = dsf.getDashboardIdsByNameRegExp(NameRegExp,tenantId);
-			if(ids.isEmpty())
+			Dashboard dsb = manager.getDashboardByName(name,tenantId);
+			if(dsb == null){
 				throw new DashboardNotFoundException();
-			return Response.ok(getJsonUtil().toJson(ids)).build();
+			}
+			if (dsb != null && dsb.getIsSystem() != null && dsb.getIsSystem()) {
+				LOGGER.warn("Oracle's dashboard is not supported to be deleted");
+				throw new DeleteSystemDashboardException();
+			}
+			BigInteger dashboardId = dsb.getDashboardId();
+			manager.deleteDashboard(dashboardId, tenantId);
 
+			return Response.ok(getJsonUtil().toJson(dsb)).build();
 		}
 		catch (DashboardNotFoundException e) {
 			LOGGER.error(e);
@@ -331,6 +337,7 @@ public class DashboardAPI extends APIBase
 			clearUserContext();
 		}
 	}
+
 
 	@DELETE
 	@Path("{id: [1-9][0-9]*}")
