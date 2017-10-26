@@ -265,7 +265,6 @@ public class DashboardAPI extends APIBase
 			//return Response.status(Status.OK).build(/*dashboad list*/);
 			return Response.ok(getJsonUtil().toJson(dsb_list)).build();
 		}
-
 		catch (DashboardNotFoundException e) {
 			LOGGER.error(e);
 			return buildErrorResponse(new ErrorEntity(e));
@@ -274,6 +273,52 @@ public class DashboardAPI extends APIBase
             LOGGER.error(e.getLocalizedMessage(), e);
             return buildErrorResponse(new ErrorEntity(e));
         }
+		catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
+		}
+	}
+
+	// for testing the RegExp for finding the id, not the final version
+	@GET
+	@Path("/NameRegExp/{NameRegExp}")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response getDashboardIdByNameRegExp(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+												 @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+												 @PathParam("NameRegExp") String NameRegExp)
+	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/NameRegExp/{}", NameRegExp);
+		DashboardManager manager = DashboardManager.getInstance();
+		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [DELETE] /v1/dashboards/NameRegExp/{}: database is down", NameRegExp);
+				throw new DatabaseDependencyUnavailableException();
+			}
+			logkeyHeaders("deleteDashboardByNamePattern()", userTenant, tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			List<BigInteger> ids = dsf.getDashboardIdsByNameRegExp(NameRegExp,tenantId);
+			if(ids.isEmpty())
+				throw new DashboardNotFoundException();
+			return Response.ok(getJsonUtil().toJson(ids)).build();
+
+		}
+		catch (DashboardNotFoundException e) {
+			LOGGER.error(e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DeleteSystemDashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
 		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
