@@ -19,6 +19,7 @@ define(['knockout',
             self.top = ko.observable(0);
             self.cssWidth = ko.observable(10);
             self.cssHeight = ko.observable(45);
+            self.hideMaxMinToggle = ko.observable("false");
             if(data.type && data.type === "TEXT_WIDGET") {
                 self.hideTitle = ko.observable("true");
             }else {
@@ -44,6 +45,9 @@ define(['knockout',
                 $.each(data.tileParameters, function (i, parameter) {
                     if (parameter.name === "DF_HIDE_TITLE") {
                         self.hideTitle(parameter.value);
+                    }
+                    if (parameter.name === "DF_HIDE_MAXMINICON") {
+                        self.hideMaxMinToggle(parameter.value);
                     }
                 });
             }
