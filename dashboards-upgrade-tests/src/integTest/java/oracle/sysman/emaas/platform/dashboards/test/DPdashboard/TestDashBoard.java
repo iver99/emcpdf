@@ -2,12 +2,9 @@ package oracle.sysman.emaas.platform.dashboards.test.DPdashboard;
 
 import oracle.sysman.emaas.platform.dashboards.test.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.util.LoginAndLogout;
-import oracle.sysman.emaas.platform.dashboards.test.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -78,7 +75,7 @@ public class TestDashBoard extends LoginAndLogout
 	@Test
 	public void testCreateDashboad_noWidget_GridView()
 	{
-		dbName_noWidgetGrid = "NoWidgetGridView-" + generateTimeStamp();
+		dbName_noWidgetGrid = "NoWidgetGridView-" + DashBoardUtils.generateTimeStamp();
 		String dbDesc = "Test Dashboard no Widget description";
 
 		//Initialize the test
@@ -148,7 +145,6 @@ public class TestDashBoard extends LoginAndLogout
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView", "testModifyDashboard_namedesc" })
 	public void testDuplicateDashboard()
 	{
-
 		String dbName = "Test_Dashboard_duplicate";
 		String dbDesc = "Test_Dashboard_duplicate_desc";
 
@@ -178,13 +174,11 @@ public class TestDashBoard extends LoginAndLogout
 		//Duplicate dashbaord
 		DashboardBuilderUtil.duplicateDashboard(webd, dbName, dbDesc);
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName, dbDesc, true), "Duplicate failed!");
-
 	}
 
 	@Test
 	public void testEnabledEntitiesTimeSelector()
 	{
-
 		//dbName_EnableEntitiesTime = dbName_EnableEntitiesTime + " - " + generateTimeStamp();
 		String dbDesc = "This dashboard is test Entities Selector and Time Selector enabled";
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -220,7 +214,6 @@ public class TestDashBoard extends LoginAndLogout
 		//save dashboard
 		webd.getLogger().info("save the dashboard");
 		DashboardBuilderUtil.saveDashboard(webd);
-
 	}
 
 	@Test(dependsOnMethods = { "testCreateDashboad_noWidget_GridView" })
@@ -246,7 +239,6 @@ public class TestDashBoard extends LoginAndLogout
 		webd.getLogger().info("Verify the dashboard edited successfully");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_noWidgetGrid + "-modify",
 				"Test_Dashboard_no_Widget_GridView desc modify", true), "Dashboard edit failed!");
-
 	}
 
 	@Test
@@ -286,10 +278,4 @@ public class TestDashBoard extends LoginAndLogout
 		DashboardBuilderUtil.respectGCForEntity(webd);
 		DashboardBuilderUtil.respectGCForTimeRange(webd);						
 	}
-	
-	private String generateTimeStamp()
-	{
-		return String.valueOf(System.currentTimeMillis());
-	}
-
 }

@@ -646,42 +646,6 @@ public class DashboardManagerTest extends BaseTest
 		}
 	}
 
-	@Test
-	public void testGetUpdateLastAccessDate() throws DashboardException, InterruptedException
-	{
-		DashboardManager dm = DashboardManager.getInstance();
-		String name1 = "name1" + System.currentTimeMillis();
-		Long tenantId1 = 11L;
-		Dashboard dbd1 = new Dashboard();
-		dbd1.setName(name1);
-		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
-		Date lastAccess1 = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNotNull(lastAccess1);
-		//		dm.updateLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
-		Date lastAccess2 = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNotNull(lastAccess2);
-		Thread.sleep(2000);
-		//		dm.updateLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
-		Date newLastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertTrue(newLastAccess.getTime() >= lastAccess2.getTime() + 1900);
-
-		// delete dashboard/soft deletion
-		dm.deleteDashboard(dbd1.getDashboardId(), tenantId1);
-		Date lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNull(lastAccess);
-
-		// delete dashboard/hard deletion
-		try {
-			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
-		}
-		catch (DashboardNotFoundException e) {
-			LOGGER.info("context", e);
-		}
-		lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNull(lastAccess);
-	}
 
 	@Test
 	public void testListDashboard() throws DashboardException, InterruptedException
@@ -824,24 +788,6 @@ public class DashboardManagerTest extends BaseTest
 			}
 		}
 
-		// query all
-		List<Dashboard> dbList = dm.listAllDashboards(tenant1);
-		// test tenant will only have APM and ITA in test env
-		// Please check the logic in {@link TenantSubscriptionUtil.getTenantSubscribedServices}
-		Iterator<Dashboard> it = dbList.iterator();
-		while(it.hasNext()) {
-		    Dashboard db = it.next();
-		    Integer appType = db.getApplicationType();
-		    if(appType == null){
-		        continue;
-		    } else {
-	            if(appType != 1 && appType != 2 && appType != 8 && !"OTHER_DIF_TENANT".equals(db.getOwner())) {
-	                it.remove();
-	            }
-		    }
-		}
-		allSize = dbList == null ? 0 : dbList.size();
-		Assert.assertEquals(allSize, originSize + 10);// dbd9/10/12 not in the returned list, as they're deleleted or from other tenants
 		pd = dm.listDashboards(null, null, tenant1, true);
 		allSize = pd.getTotalResults();
 		Assert.assertEquals(allSize, originSize + 8);

@@ -23,7 +23,6 @@ import javax.persistence.Table;
 @Entity
 @NamedQueries({
         @NamedQuery(name = "EmsDashboard.findById", query = "select o from EmsDashboard o where o.dashboardId = :id"),
-        @NamedQuery(name = "EmsDashboard.findAll", query = "select o from EmsDashboard o where o.deleted=0"),
         @NamedQuery(name = "EmsDashboard.queryBySubDashboardID", query = "select a from EmsDashboard a ,EmsSubDashboard b "
                 + "where a.dashboardId = b.dashboardSetId and b.subDashboardId = :p"),
         @NamedQuery(name = "EmsDashboard.findByAppType", query = "select o.dashboardId from EmsDashboard o where o.deleted = 0 and o.isSystem = 1 and o.applicationType = :appType"),

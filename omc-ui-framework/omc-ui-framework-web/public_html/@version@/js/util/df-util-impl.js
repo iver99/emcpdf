@@ -163,9 +163,10 @@ define(['knockout',
              * @param {String} serviceName
              * @param {String} version
              * @param {String} rel
+             * @param {Boolean} useApiGWLookup
              * @returns {String} result
              */
-            self.discoverUrl = function (serviceName, version, rel) {
+            self.discoverUrl = function (serviceName, version, rel, useApiGWLookup) {
                 if (serviceName === null || serviceName === undefined) {
                     oj.Logger.error("Error: Failed to discover URL, serviceName=" + serviceName);
                     return null;
@@ -174,11 +175,13 @@ define(['knockout',
                     oj.Logger.error("Error: Failed to discover URL, version=" + version);
                     return null;
                 }
+                //By default useApiGWLookup is false
+                useApiGWLookup = (useApiGWLookup === true) ? true : false;
 
                 var result = null;
-                var url = self.LOOKUP_REST_URL_BASE + "endpoint?serviceName=" + serviceName + "&version=" + version;
+                var url = self.LOOKUP_REST_URL_BASE + "endpoint?serviceName=" + serviceName + "&version=" + version + "&useApiGWLookup=" + useApiGWLookup;
                 if (typeof rel === "string") {
-                    url = self.LOOKUP_REST_URL_BASE + "link?serviceName=" + serviceName + "&version=" + version + "&rel=" + rel;
+                    url = self.LOOKUP_REST_URL_BASE + "link?serviceName=" + serviceName + "&version=" + version + "&rel=" + rel + "&useApiGWLookup=" + useApiGWLookup;
                 }
 
                 self.ajaxWithRetry(url, {
@@ -215,9 +218,10 @@ define(['knockout',
              * @param {String} version
              * @param {String} rel
              * @param {Function} callbackFunc
+             * @param {Boolean} useApiGWLookup
              * @returns
              */
-            self.discoverUrlAsync = function (serviceName, version, rel, callbackFunc) {
+            self.discoverUrlAsync = function (serviceName, version, rel, callbackFunc, useApiGWLookup) {
                 if (!$.isFunction(callbackFunc)) {
                     oj.Logger.error("Invalid callback function: " + callbackFunc);
                     return;
@@ -230,10 +234,13 @@ define(['knockout',
                     oj.Logger.error("Error: Failed to discover URL, version=" + version);
                     return;
                 }
+                
+                //By default useApiGWLookup is false
+                useApiGWLookup = (useApiGWLookup === true) ? true : false;
 
-                var url = self.LOOKUP_REST_URL_BASE + "endpoint?serviceName=" + serviceName + "&version=" + version;
+                var url = self.LOOKUP_REST_URL_BASE + "endpoint?serviceName=" + serviceName + "&version=" + version + "&useApiGWLookup=" + useApiGWLookup;
                 if (typeof rel === "string") {
-                    url = self.LOOKUP_REST_URL_BASE + "link?serviceName=" + serviceName + "&version=" + version + "&rel=" + rel;
+                    url = self.LOOKUP_REST_URL_BASE + "link?serviceName=" + serviceName + "&version=" + version + "&rel=" + rel + "&useApiGWLookup=" + useApiGWLookup;
                 }
 
                 self.ajaxWithRetry(url, {
@@ -268,9 +275,10 @@ define(['knockout',
              * @param {String} serviceName
              * @param {String} version
              * @param {String} rel
+             * @param {Boolean} useApiGWLookup
              * @returns {String} result
              */
-            self.discoverLinkWithRelPrefix = function (serviceName, version, rel) {
+            self.discoverLinkWithRelPrefix = function (serviceName, version, rel, useApiGWLookup) {
                 if (typeof serviceName !== "string") {
                     oj.Logger.error("Error: Failed to discover Link (with Rel Prefix), serviceName=" + serviceName);
                     return null;
@@ -284,8 +292,11 @@ define(['knockout',
                     oj.Logger.error("Error: Failed to discover Link (with Rel Prefix), rel=" + rel);
                     return null;
                 }
+                //By default useApiGWLookup is false
+                useApiGWLookup = (useApiGWLookup === true) ? true : false;
+                
                 var result = null;
-                var url = self.LOOKUP_REST_URL_BASE + "linkWithRelPrefix?serviceName=" + serviceName + "&version=" + version + "&rel=" + rel;
+                var url = self.LOOKUP_REST_URL_BASE + "linkWithRelPrefix?serviceName=" + serviceName + "&version=" + version + "&rel=" + rel + "&useApiGWLookup=" + useApiGWLookup;
 
                 self.ajaxWithRetry(url, {
                     type: 'get',
@@ -315,9 +326,10 @@ define(['knockout',
              * @param {String} version
              * @param {String} rel
              * @param {Function} callbackFunc
+             * @param {Boolean} useApiGWLookup
              * @returns
              */
-            self.discoverLinkWithRelPrefixAsync = function (serviceName, version, rel, callbackFunc) {
+            self.discoverLinkWithRelPrefixAsync = function (serviceName, version, rel, callbackFunc, useApiGWLookup) {
                 if (!$.isFunction(callbackFunc)) {
                     oj.Logger.error("Invalid callback function: " + callbackFunc);
                     return;
@@ -335,8 +347,10 @@ define(['knockout',
                     oj.Logger.error("Error: Failed to discover Link (with Rel Prefix), rel=" + rel);
                     return;
                 }
+                //By default useApiGWLookup is false
+                useApiGWLookup = (useApiGWLookup === true) ? true : false;
 
-                var url = self.LOOKUP_REST_URL_BASE + "linkWithRelPrefix?serviceName=" + serviceName + "&version=" + version + "&rel=" + rel;
+                var url = self.LOOKUP_REST_URL_BASE + "linkWithRelPrefix?serviceName=" + serviceName + "&version=" + version + "&rel=" + rel + "&useApiGWLookup=" + useApiGWLookup;
                 self.ajaxWithRetry(url, {
                     type: 'get',
                     dataType: 'json',
@@ -1047,6 +1061,7 @@ define(['knockout',
             self.getRegistrations = function (successCallback, toSendAsync, errorCallback) {
                 if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.registrations && 
                         ($.isFunction(window._uifwk.cachedData.registrations) ? window._uifwk.cachedData.registrations() : true)) {
+                    console.info("Getting registration data from window._uifwk.cachedData.registrations. It is function: " + $.isFunction(window._uifwk.cachedData.registrations));
                     successCallback($.isFunction(window._uifwk.cachedData.registrations) ? window._uifwk.cachedData.registrations() : 
                             window._uifwk.cachedData.registrations);
                 } else {
@@ -1056,10 +1071,12 @@ define(['knockout',
                     if (!window._uifwk.cachedData) {
                         window._uifwk.cachedData = {};
                     }
+                    console.info("Getting registration data by sending request. window._uifwk.cachedData.isFetchingRegistrations is " + window._uifwk.cachedData.isFetchingRegistrations);
                     if (!window._uifwk.cachedData.isFetchingRegistrations) {
                         window._uifwk.cachedData.isFetchingRegistrations = true;
                         if (!window._uifwk.cachedData.registrations) {
-                            window._uifwk.cachedData.registrations = ko.observable();
+                            console.info("initialize window.registrationFromRequest to ko observable");
+                            window.registrationFromRequest = ko.observable();
                         }
                         if (!window._uifwk.cachedData.errGetRegistration) {
                             window._uifwk.cachedData.errGetRegistration = ko.observable(false);
@@ -1069,7 +1086,14 @@ define(['knockout',
                         }
 
                         function doneCallback(data, textStatus, jqXHR) {
-                            window._uifwk.cachedData.registrations(data);
+                            if(window.registrationFromRequest && $.isFunction(window.registrationFromRequest)) {
+                                console.info("window.registrationFromRequest is ko observable");
+                                window.registrationFromRequest(data);
+                            }else {
+                                console.info("window.registrationFromRequest is not ko observable");
+                                window.registrationFromRequest = ko.observable(data);
+                            }
+                            window._uifwk.cachedData.registrations = data;
                             window._uifwk.cachedData.isFetchingRegistrations = false;
                             successCallback(data, textStatus, jqXHR);
                         }
@@ -1095,7 +1119,8 @@ define(['knockout',
                             });
                         }
                     } else {
-                        window._uifwk.cachedData.registrations.subscribe(function (data) {
+                        window.registrationFromRequest.subscribe(function (data) {
+                            console.info("window.registrationFromRequest is fetched from back end");
                             if (data) {
                                 successCallback(data);
                             }

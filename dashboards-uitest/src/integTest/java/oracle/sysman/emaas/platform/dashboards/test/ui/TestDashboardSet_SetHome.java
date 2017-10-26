@@ -66,7 +66,7 @@ public class TestDashboardSet_SetHome extends LoginAndLogout
 
 		//verify is in the builder page
 		webd.getLogger().info("Start the test case: testSetHome");
-		String url = webd.getWebDriver().getCurrentUrl();
+		String url = webd.getCurrentUrl();
 		webd.getLogger().info("current url = " + url);
 		if (!url.substring(url.indexOf("emsaasui") + 9).contains("builder.html?dashboardId=")) {
 			Assert.fail("not open the builder page");
@@ -80,7 +80,6 @@ public class TestDashboardSet_SetHome extends LoginAndLogout
 		BrandingBarUtil.visitMyHome(webd);
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
 				"It is NOT the home page!");
-
 	}
 
 	@Test
@@ -118,5 +117,4 @@ public class TestDashboardSet_SetHome extends LoginAndLogout
 		BrandingBarUtil.visitMyHome(webd);
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_setHome), "DashboarSet is NOT set to home page");
 	}
-
 }

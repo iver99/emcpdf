@@ -123,6 +123,9 @@ define('uifwk/@version@/js/util/zdt-util-impl', ['knockout',
                             if (data) {
                                 callback(data);
                             }
+                            else {
+                                callback(false);
+                            }
                         });
                     }
                 }

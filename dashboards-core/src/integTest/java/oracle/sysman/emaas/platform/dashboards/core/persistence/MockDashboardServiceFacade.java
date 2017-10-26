@@ -245,12 +245,6 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	}
 
 	@Mock
-	public List<EmsDashboard> getEmsDashboardFindAll()
-	{
-		return this.localFind(EmsDashboard.class, null);
-	}
-
-	@Mock
 	public List<EmsDashboard> getEmsDashboardsBySubId(BigInteger subDashboardId)
 	{
 		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(subDashboardId, null, null, null));

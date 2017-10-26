@@ -595,7 +595,7 @@ public class TimeSelectorUtil_1160 extends TimeSelectorUtil_1130
 		return setTimeRangeWithMillisecond(webd, 1, rangeOption);
 	}
 
-	private String getOptionsLocator(WebDriver driver, String option)
+	protected String getOptionsLocator(WebDriver driver, String option)
 	{
 		String optionLocator = TimeSelectorUIControls.sFlexRelTimeOptList + "[value='" + option + "']";
 		WebElement li = driver.getWebDriver().findElement(By.cssSelector(optionLocator));

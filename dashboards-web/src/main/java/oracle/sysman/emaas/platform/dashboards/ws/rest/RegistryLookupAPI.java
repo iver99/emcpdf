@@ -13,11 +13,7 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -103,15 +99,15 @@ public class RegistryLookupAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRegistryLink(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@QueryParam("serviceName") String serviceName, @QueryParam("version") String version)
+			@QueryParam("serviceName") String serviceName, @QueryParam("version") String version,@DefaultValue("false") @QueryParam("useApiGWLookup") boolean useApiGWLookup)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
-				"Service call to [GET] /v1/registry/lookup/endpoint?serviceName={}&version={}", serviceName, version);
+				"Service call to [GET] /v1/registry/lookup/endpoint?serviceName={}&version={}&useApiGWLookup={}", serviceName, version,useApiGWLookup);
 		try {
 			if (!DependencyStatus.getInstance().isEntityNamingUp()) {
 				LOGGER.error(
-						"Error to call [GET] /v1/registry/lookup/endpoint?serviceName={}&version={}: EntityNaming service is down",
-						serviceName, version);
+						"Error to call [GET] /v1/registry/lookup/endpoint?serviceName={}&version={}&useApiGWLookup={}: EntityNaming service is down",
+						serviceName, version,useApiGWLookup);
 				throw new EntityNamingDependencyUnavailableException();
 			}
 			initializeUserContext(tenantIdParam, userTenant);
@@ -120,7 +116,7 @@ public class RegistryLookupAPI extends APIBase
 						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR", serviceName, version));
 				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
 			}
-			EndpointEntity endPoint = RegistryLookupUtil.getServiceExternalEndPointEntity(serviceName, version, tenantIdParam);
+			EndpointEntity endPoint = RegistryLookupUtil.getServiceExternalEndPointEntity(serviceName, version, tenantIdParam,useApiGWLookup);
 			if (endPoint != null) {
 				endPoint = RegistryLookupUtil.replaceWithVanityUrl(endPoint, tenantIdParam, serviceName);
 				return Response.status(Status.OK).entity(JsonUtil.buildNonNullMapper().toJson(endPoint)).build();
@@ -157,15 +153,16 @@ public class RegistryLookupAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRegistryLink(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@QueryParam("serviceName") String serviceName, @QueryParam("version") String version, @QueryParam("rel") String rel)
+			@QueryParam("serviceName") String serviceName, @QueryParam("version") String version, @QueryParam("rel") String rel, @DefaultValue("false") @QueryParam("useApiGWLookup") boolean useApiGWLookup)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
-				"Service call to [GET] /v1/registry/lookup/link?serviceName={}&version={}", serviceName, version);
+				"Service call to [GET] /v1/registry/lookup/link?serviceName={}&version={}&useApiGWLookup={}", serviceName, version, useApiGWLookup);
 		try {
+			//Is this API depend on Entity-Naming Service?
 			if (!DependencyStatus.getInstance().isEntityNamingUp()) {
 				LOGGER.error(
-						"Error to call [GET] /v1/registry/lookup/link?serviceName={}&version={}: EntityNaming service is down",
-						serviceName, version);
+						"Error to call [GET] /v1/registry/lookup/link?serviceName={}&version={}&useApiGWLookup={}: EntityNaming service is down",
+						serviceName, version,useApiGWLookup);
 				throw new EntityNamingDependencyUnavailableException();
 			}
 			initializeUserContext(tenantIdParam, userTenant);
@@ -176,7 +173,7 @@ public class RegistryLookupAPI extends APIBase
 				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
 			}
 
-			Link lk = RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, tenantIdParam);
+			Link lk = RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, tenantIdParam, useApiGWLookup);
 			lk = RegistryLookupUtil.replaceWithVanityUrl(lk, tenantIdParam, serviceName);
 			if (lk != null) {
 				return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(lk)).build();
@@ -206,16 +203,16 @@ public class RegistryLookupAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRegistryLinkWithRelPrefix(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@QueryParam("serviceName") String serviceName, @QueryParam("version") String version, @QueryParam("rel") String rel)
+			@QueryParam("serviceName") String serviceName, @QueryParam("version") String version, @QueryParam("rel") String rel,@DefaultValue("false") @QueryParam("useApiGWLookup") boolean useApiGWLookup)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
-				"Service call to [GET] /v1/registry/lookup/linkWithRelPrefix?serviceName={}&version={}&rel={}", serviceName,
-				version, rel);
+				"Service call to [GET] /v1/registry/lookup/linkWithRelPrefix?serviceName={}&version={}&rel={}&useApiGWLookup={}", serviceName,
+				version, rel,useApiGWLookup);
 		try {
 			if (!DependencyStatus.getInstance().isEntityNamingUp()) {
 				LOGGER.error(
-						"Error to call [GET] /v1/registry/lookup/linkWithRelPrefix?serviceName={}&version={}&rel={}: EntityNaming service is down",
-						serviceName, version, rel);
+						"Error to call [GET] /v1/registry/lookup/linkWithRelPrefix?serviceName={}&version={}&rel={}&useApiGWLookup={}: EntityNaming service is down",
+						serviceName, version, rel,useApiGWLookup);
 				throw new EntityNamingDependencyUnavailableException();
 			}
 			initializeUserContext(tenantIdParam, userTenant);
@@ -226,7 +223,7 @@ public class RegistryLookupAPI extends APIBase
 								getSafeOutputString(serviceName), getSafeOutputString(version), getSafeOutputString(rel)));
 				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
 			}
-			Link lk = RegistryLookupUtil.getServiceExternalLinkWithRelPrefix(serviceName, version, rel, tenantIdParam);
+			Link lk = RegistryLookupUtil.getServiceExternalLinkWithRelPrefix(serviceName, version, rel, tenantIdParam, useApiGWLookup);
 			lk = RegistryLookupUtil.replaceWithVanityUrl(lk, tenantIdParam, serviceName);
 			if (lk != null) {
 				return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(lk)).build();

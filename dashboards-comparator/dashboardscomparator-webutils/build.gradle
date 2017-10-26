@@ -64,7 +64,7 @@ dependencies {
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0'){ transitive = false }
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: "${emaasRegistryLookupClientVersion}") {transitive=false }
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: "${emaasRegistryClientVersion}") {transitive=false }
-        compile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){transitive=false }
+        compile(group: 'com.oracle.emaas.emcpsrvs.sdk', name:'emaas-platform-tenant-sdk', version:'2.1.+'){transitive=false }
 	compile(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
         compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.12'){ transitive = false }
         compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12'){ transitive = false }
@@ -79,7 +79,7 @@ dependencies {
 	testCompile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13') { transitive = false }
 	testCompile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13') { transitive = false }
 	testCompile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
-//	testCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){transitive=false }  */
+//	testCompile(group: 'com.oracle.emaas.emcpsrvs.sdk', name:'emaas-platform-tenant-sdk', version:'2.1.+'){transitive=false }  */
 //	compile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 } 
 

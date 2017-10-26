@@ -125,6 +125,8 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public void selectDashboardInsideSet(WebDriver driver, String dashboardName);
 
 	public void setEntitySupport(WebDriver driver, String mode);
+	
+	public void switchTextWidgetToEditMode(WebDriver driver, int index);
 
 	public boolean showEntityFilter(WebDriver driver, boolean showEntityFilter);
 
