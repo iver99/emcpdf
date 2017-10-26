@@ -42,7 +42,7 @@ def emcpsfSdkVer =  getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'secur
 //def emcpsrvsSDKVer = getDependentSdkVersion('com.oracle.emaas.emcpsrvs.sdk', 'emaas-platform-tenant-sdk', '2.0.+')
 def emaasGatewayClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpgw.sdk', 'gateway-client', '1.+');
 
-def emcpsrvsPlatformSdkVer = getDependentSdkVersion('com.oracle.emaas.emcpsrvs.sdk', 'emaas-platform-tenant-sdk', '2.0.+')
+def emcpsrvsPlatformSdkVer = getDependentSdkVersion('com.oracle.emaas.emcpsrvs.sdk', 'emaas-platform-tenant-sdk', '2.1.+')
 
 
 dependencies {

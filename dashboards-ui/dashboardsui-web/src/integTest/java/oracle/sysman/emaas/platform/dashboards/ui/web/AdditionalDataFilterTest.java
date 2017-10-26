@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ui.web;
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -57,10 +58,39 @@ public class AdditionalDataFilterTest {
                 result = "strignbufer";
             }
         };
-
         additionalDataFilter.doFilter(request, response, chain);
     }
 
+    @Test(groups = {"s2"})
+    public void testDoFilter2(@Mocked final  ByteArrayOutputStream byteStream) throws IOException, ServletException{
+        AdditionalDataFilter additionalDataFilter = new AdditionalDataFilter();
+        new Expectations(){
+            {
+                HtmlFragmentCache.getInstance();
+                result = htmlFragmentCache;
+                htmlFragmentCache.isHtmlFragmentElementsCached(anyString);
+                result = false;
+
+                byteStream.toString(anyString);
+                result = "lang=\"en-US\"////ADDITIONALDATA////kaishen</body>";
+
+                NLSFilter.getLangAttr((HttpServletRequest)any);
+                result = "langAttr";
+                AdditionalDataProvider.getPreloadDataForRequest((HttpServletRequest)any);
+                result = "newResponseText";
+
+                htmlFragmentCache.getCachedElementsForRequest(anyString);
+                result = cachedHtml;
+                cachedHtml.getBeforeLangAttrPart();
+                result = "stringbuffer";
+                cachedHtml.getBeforeAdditionalDataPart();
+                result = "stringbuffer";
+                cachedHtml.getAfterAdditionalDataPart();
+                result = "strignbufer";
+            }
+        };
+        additionalDataFilter.doFilter(request, response, chain);
+    }
 
 
 

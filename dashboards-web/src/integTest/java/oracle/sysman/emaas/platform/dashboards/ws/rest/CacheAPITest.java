@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
@@ -7,6 +8,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.model.AppsInfoWeb;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICache;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LRUCacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.lru.LinkedHashMapCache;
+import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheStatus;
 import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.AppsInfo;
 import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.TenantSubscriptionInfo;
@@ -147,4 +149,60 @@ public class CacheAPITest {
 
     }
 
+    @Test(groups = {"s2"})
+    public void testChangeCacheGroupStatusByName() throws Exception{
+        cacheAPI = new CacheAPI();
+        final ConcurrentMap<String, ICache> map = new ConcurrentHashMap<String, ICache>();
+        map.put("key", new LinkedHashMapCache("name", 1, 1L));
+        new Expectations() {
+            {
+
+                lruCacheManager.getCacheMap();
+                result = map;
+                result = new ConcurrentHashMap<>();
+                result = null;
+            }
+        };
+        Deencapsulation.invoke(cacheAPI,"changeCacheGroupStatusByName",lruCacheManager, CacheStatus.AVAILABLE,"key");
+        Deencapsulation.invoke(cacheAPI,"changeCacheGroupStatusByName",lruCacheManager, CacheStatus.AVAILABLE,"key");
+        Deencapsulation.invoke(cacheAPI,"changeCacheGroupStatusByName",lruCacheManager, CacheStatus.AVAILABLE,"key");
+    }
+
+    @Test(groups = {"s2"})
+    public void testClearCacheGroupDataByName() throws Exception{
+        cacheAPI = new CacheAPI();
+        final ConcurrentMap<String, ICache> map = new ConcurrentHashMap<String, ICache>();
+        map.put("key", new LinkedHashMapCache("name", 1, 1L));
+        new Expectations() {
+            {
+
+                lruCacheManager.getCacheMap();
+                result = map;
+                result = new ConcurrentHashMap<>();
+                result = null;
+            }
+        };
+        Deencapsulation.invoke(cacheAPI,"clearCacheGroupDataByName",lruCacheManager,"key");
+        Deencapsulation.invoke(cacheAPI,"clearCacheGroupDataByName",lruCacheManager,"key");
+        Deencapsulation.invoke(cacheAPI,"clearCacheGroupDataByName",lruCacheManager,"key");
+    }
+
+    @Test(groups = {"s2"})
+    public void testResetCacheStatisticsByName() throws Exception{
+        cacheAPI = new CacheAPI();
+        final ConcurrentMap<String, ICache> map = new ConcurrentHashMap<String, ICache>();
+        map.put("key", new LinkedHashMapCache("name", 1, 1L));
+        new Expectations() {
+            {
+
+                lruCacheManager.getCacheMap();
+                result = map;
+                result = new ConcurrentHashMap<>();
+                result = null;
+            }
+        };
+        Deencapsulation.invoke(cacheAPI,"resetCacheStatisticsByName",lruCacheManager,"key");
+        Deencapsulation.invoke(cacheAPI,"resetCacheStatisticsByName",lruCacheManager,"key");
+        Deencapsulation.invoke(cacheAPI,"resetCacheStatisticsByName",lruCacheManager,"key");
+    }
 }

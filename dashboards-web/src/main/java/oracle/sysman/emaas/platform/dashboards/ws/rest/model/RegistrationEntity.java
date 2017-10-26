@@ -28,6 +28,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.TenantInfoClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
@@ -152,6 +153,7 @@ public class RegistrationEntity implements Serializable
 			if (LookupManager.getInstance().getLookupClient() == null) {
 				// to ensure initComponent is only called once during the entire lifecycle
 				LookupManager.getInstance().initComponent();
+                                TenantInfoClient.getInstance().initComponent();
 			}
 			successfullyInitialized = true;
 		}
