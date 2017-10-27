@@ -152,7 +152,7 @@ public class DashBoardPageId_190
 	//id of dashboard desc
 	public static final String DASHBOARDDESCID = "/html/body/div[*]/div/div/div/div[2]/div/span/span";
 	public static final String MDASHBOARDDESCID = "/html/body/div[3]/div/div/div/div[2]/div/span/span";
-	//remove dashboard/html/body/div[3]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button
+
 	public static final String INFOBTNID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";//"/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";///html/body/div[*]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button";
 
 	public static final String RMBTNID = "/html/body/div[1]/div/div/div[1]/div/div/div[2]/button";//"/html/body/div/div/div/div/div/div/div[2]/button";
@@ -187,10 +187,10 @@ public class DashBoardPageId_190
 	public static final String BUILDERTILESEDITAREA = "//div[contains(@class, 'dashboard-content') and  contains(@class, 'page-break') and contains(@style, 'visibility: visible') and not(contains(@style, 'display: none'))]//div[contains(@class, 'tiles-wrapper')]";
 
 	public static final String BUILDERTILETITLELOCATOR = "//h2[contains(@class, 'dbd-tile-title') and @data-tile-title='%s']";
-	//public static final String BUILDERTILECONFIGLOCATOR = "following-sibling::*//button[contains(@class, 'dbd-tile-action')]";
-	public static final String BUILDERTILECONFIGLOCATOR = "//button[contains(@class, 'dbd-tile-action')]";
+	public static final String BUILDERTILEHEADERLOCATOR = "//div[contains(@class,'dbd-tile-header')]";
+	public static final String BUILDERTILELOCATOR = "//div[contains(@class,'dbd-tile-header')]/h2";
 
-//	public static final String BUILDERTILEDATAEXPLORELOCATOR = "following-sibling::*//button[contains(@class, 'dbd-data-explore')]";
+	public static final String BUILDERTILECONFIGLOCATOR = "//button[contains(@class, 'dbd-tile-action')]";
 	public static final String BUILDERTILEDATAEXPLORELOCATOR = "//button[contains(@class, 'dbd-data-explore')]";
 	public static final String BUILDERTILESHOWLOCATOR = "//ul[not(contains(@style,'display:none'))]/li[@data-option='showhide-title']/a[@data-show-hide-title='show']";
 	public static final String BUILDERTILEHIDELOCATOR = "//ul[not(contains(@style,'display:none'))]/li[@data-option='showhide-title']/a[@data-show-hide-title='hide']";

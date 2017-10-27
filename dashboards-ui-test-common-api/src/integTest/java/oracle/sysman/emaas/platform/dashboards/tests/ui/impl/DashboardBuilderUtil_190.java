@@ -1305,11 +1305,9 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 				"DashboardBuilderUtil.verifyWidget started for name=\"" + widgetName + "\", index=\"" + index + "\"");
 		Validator.notEmptyString("dashboardName", widgetName);
 		
-		boolean isExist = false;
+		int widgetIndex = getTileTitleElement(driver, widgetName, index);
 		
-		isExist = getTileTitleElement(driver, widgetName, index);
-		
-		if(isExist)
+		if(widgetIndex > 0)
 		{
 			driver.getLogger().info("DashboardBuilderUtil.verifyWidget compelted and returns true");
 			return true;
@@ -1348,7 +1346,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	private void clickTileOpenInDataExplorerButton(WebDriver driver, String widgetName, int index)
 	{
 		driver.getLogger().info("Start to find widget with widgetName=" + widgetName + ", index=" + index);
-		boolean widgetTitle = getTileTitleElement(driver, widgetName, index);
+		int widgetTitleIndex = getTileTitleElement(driver, widgetName, index);
 //		driver.getLogger().info("Found widget configure button");
 //		Actions builder = new Actions(driver.getWebDriver());
 //		driver.getLogger().info("Now moving to the widget title bar");
@@ -1356,13 +1354,12 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		//driver.waitForServer();
 //		driver.takeScreenShot();
 //		driver.savePageToFile();
-		if (widgetTitle == false) {
+		if (widgetTitleIndex == 0) {
 			throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
 		}
 		driver.getLogger().info("Found widget with name=" + widgetName + ", index =" + index + " before opening widget link");
 		
-		int i = index + 1;
-		driver.click("xpath=(" + DashBoardPageId_190.BUILDERTILEDATAEXPLORELOCATOR + ")[" + i + "]");
+		driver.click("xpath=(" + DashBoardPageId_190.BUILDERTILEHEADERLOCATOR + ")[" + widgetTitleIndex + "]" + DashBoardPageId_190.BUILDERTILEDATAEXPLORELOCATOR);
 //		WebElement widgetDataExplore = widgetTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILEDATAEXPLORELOCATOR));
 //		if (widgetDataExplore == null) {
 //			throw new NoSuchElementException("Widget data explorer link for title=" + widgetName + ", index=" + index
@@ -1592,10 +1589,9 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 	}
 
 	protected void clickTileConfigButton(WebDriver driver, String widgetName, int index)
-	{
-		getTileTitleElement(driver, widgetName, index);
-		int i = index + 1;
-		driver.click("xpath=(" + DashBoardPageId_190.BUILDERTILECONFIGLOCATOR + ")[" + i + "]");
+	{		
+		int i = getTileTitleElement(driver, widgetName, index);
+		driver.click("xpath=(" + DashBoardPageId_190.BUILDERTILEHEADERLOCATOR + ")[" + i + "]" + DashBoardPageId_190.BUILDERTILECONFIGLOCATOR);
 //		WebElement tileConfig = tileTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILECONFIGLOCATOR));
 //		if (tileConfig == null) {
 //			throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
@@ -1625,7 +1621,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		return 0;
 	}
 
-	protected boolean getTileTitleElement(WebDriver driver, String widgetName, int index)
+	protected int getTileTitleElement(WebDriver driver, String widgetName, int index)
 	{
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
 		WaitUtil.waitForPageFullyLoaded(driver);
@@ -1634,13 +1630,30 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		
 		int tileTitlesCount = driver.getElementCount("xpath=" + titleTitlesLocator);
 		if (tileTitlesCount <= index) {
-			return false;
+			return 0;
 		}
 		
-		int i = index + 1;
-		driver.moveToElement("xpath=("+ titleTitlesLocator +")[" + i + "]");
+		int i = 0;
+		driver.moveToElement("xpath=("+ titleTitlesLocator +")[" + (index + 1) + "]");
 		WaitUtil.waitForPageFullyLoaded(driver);
-		return true;
+		
+		int tileCount = driver.getElementCount("xpath=" + DashBoardPageId_190.BUILDERTILELOCATOR);
+		int j = 1;
+		boolean isExist = false;
+		for (j=1; j<=tileCount; j++) {
+			if (widgetName.equals(driver.getText("xpath=(" + DashBoardPageId_190.BUILDERTILELOCATOR + ")[" + j + "]").trim())) {
+				i++;
+				if ( i == (index + 1) ) {
+					isExist = true;
+					break;
+				}
+			}
+		}
+		if (isExist) {
+			return j;
+		}
+		else
+			return 0;
 	}
 
 	@Override

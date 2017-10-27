@@ -19,13 +19,10 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
-import com.oracle.sysman.uifwk.qatools.jetutils.*;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
 
 public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements IDashboardHomeUtil
 {
