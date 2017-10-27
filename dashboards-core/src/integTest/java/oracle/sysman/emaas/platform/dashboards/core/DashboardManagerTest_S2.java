@@ -1298,8 +1298,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 	@Test(groups = {"s2"})
 	public void testGetDashboardIdsByNames(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
 											 @Mocked final EntityManager anyEntityManager, @Mocked final EntityTransaction andEntityTransaction,
-											 @Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber)
-	{
+											 @Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber) throws DashboardNotFoundException {
 		DashboardManager dm = DashboardManager.getInstance();
 		dm.getDashboardIdsByNames(new ArrayList<>(Arrays.asList("Test","Testing")),1L);
 	}

@@ -1110,6 +1110,7 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
+			LOGGER.info("Get dashboard name by name and description and owner is {}, override = {}", sameName, overrided);
 			if (sameName != null) {
 				if (overrided) {
 					// update existing row
