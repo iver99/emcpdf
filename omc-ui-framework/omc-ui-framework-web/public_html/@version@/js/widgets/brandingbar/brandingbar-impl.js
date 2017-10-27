@@ -704,11 +704,11 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             };
 
             self.emaasAppheaderGlobalNavMenuBeforeOpen = function(){
-                aboutBoxComponentRegister();
                 if(!self.renderEmaasAppheaderGlobalNavMenu()){
                     self.renderEmaasAppheaderGlobalNavMenu(true);
                     $('#emaasAppheaderGlobalNavMenuId').ojMenu("refresh");
                     self.aboutBoxImmediateLoading(true);
+                    aboutBoxComponentRegister();
                 }
             };
 
