@@ -177,10 +177,12 @@ public class DashboardServiceFacade
 		name = name.toUpperCase();
 		if(StringUtil.isEmpty(description)){
 			jpql = "select d from EmsDashboard d where upper(d.name) = ?1 and d.owner = ?2 and d.description is null and d.deleted = ?3";
-			params = new Object[]{StringEscapeUtils.escapeHtml4(name), owner, new Integer(0)};
+			//remove StringEscapeUtils.escapeHtml4(name) when query, because in DB it is not encoded
+			params = new Object[]{name, owner, new Integer(0)};
 		}else {
 			jpql = "select d from EmsDashboard d where upper(d.name) = ?1 and d.owner = ?2 and d.description = ?3 and d.deleted = ?4";
-			params = new Object[]{StringEscapeUtils.escapeHtml4(name), owner, description, new Integer(0)};
+			//remove StringEscapeUtils.escapeHtml4(name) when query, because in DB it is not encoded
+			params = new Object[]{name, owner, description, new Integer(0)};
 
 		}
 		Query query = em.createQuery(jpql);
