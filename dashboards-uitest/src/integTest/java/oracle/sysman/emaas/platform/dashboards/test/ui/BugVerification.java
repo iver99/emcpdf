@@ -79,6 +79,7 @@ public class BugVerification extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_4362_set");
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_4643");
 		DashBoardUtils.deleteDashboard(webd, "Dashboard_4699");
+		DashBoardUtils.deleteDashboard(webd, "Dashboard_5104 <>");
 		webd.getLogger().info("All test data have been removed");
 
 		LoginAndLogout.logoutMethod();
@@ -899,9 +900,31 @@ public class BugVerification extends LoginAndLogout
 		DashboardHomeUtil.selectDashboard(webd,"Dashboard_4699");
 		
 		Assert.assertFalse(webd.isElementPresent(DashBoardPageId_190.CONFIGTILECSS),"The configuration button is enabled");
-		
-		
+	}
 
+	@Test(alwaysRun = true)
+	public void testEMCPDF_5104()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test EMCPDF_5104");
 
+		DashboardHomeUtil.gridView(webd);
+
+		webd.getLogger().info("Create the dashboard");
+		DashboardHomeUtil.createDashboard(webd, "Dashboard_5104 <>", null);
+
+		//below steps to verify the fix for EMCPDF-5104
+		webd.getLogger().info("Click Share option");
+		Assert.assertTrue(DashboardBuilderUtil.toggleShareDashboard(webd), "Share dashboard failed");
+
+		webd.getLogger().info("Click Not Share option");
+		Assert.assertFalse(DashboardBuilderUtil.toggleShareDashboard(webd), "Unshare dashboard failed");
+
+		//refresh the page
+		webd.getLogger().info("Refresh the builder page");
+		webd.refresh();
+
+		webd.getLogger().info("Verify the dashboard");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, "Dashboard_5104 <>", "", true), "Verify dashboard failed");
 	}
 }
