@@ -153,6 +153,17 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 window._uifwk.respectOMCTimeContext = respectOmcTimeCtx;
             };
 
+            /**
+             * Specify whether to respect the OMC entity filter context or not
+             *
+             * @param {boolean} respectOmcEntityFilterCtx Flag for whether respect OMC entityFilter context or not
+             *
+             * @returns
+             */
+            self.respectOMCEntityFilterContext = function (respectOmcEntityFilterCtx) {
+                window._uifwk.respectOMCEntityFilterContext = respectOmcEntityFilterCtx;
+            };
+
             function getGlobalContext() {
                 var globalCtx = null;
                 //If context already retrieved, fetch it from window object directly
@@ -238,7 +249,8 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             function isGlobalContextRespected() {
                 return window._uifwk.respectOMCApplicationContext !== false ||
                     window._uifwk.respectOMCEntityContext !== false ||
-                    window._uifwk.respectOMCTimeContext !== false;
+                    window._uifwk.respectOMCTimeContext !== false ||
+                    window._uifwk.respectOMCEntityFilterContext !== false;
             }
 
             /**
@@ -400,7 +412,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 }
             }
 
-            function storeContext(context, respectOmcAppCtx, respectOmcEntityCtx, respectOmcTimeCtx) {
+            function storeContext(context, respectOmcAppCtx, respectOmcEntityCtx, respectOmcTimeCtx, respectOmcEntityFilterCtx) {
                 //Remember the composite id as previous value, so that we can compare the current/previous value
                 //to determine whether topology needs refresh when setOMCContext is called
                 if (context && context['composite'] && context['composite']['compositeMEID']) {
@@ -419,10 +431,13 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 if (respectOmcTimeCtx === null || typeof respectOmcTimeCtx === 'undefined') {
                     respectOmcTimeCtx = window._uifwk.respectOMCTimeContext;
                 }
-                if (respectOmcAppCtx !== false && respectOmcEntityCtx !== false && respectOmcTimeCtx !== false) {
+                if (respectOmcEntityFilterCtx === null || typeof respectOmcEntityFilterCtx === 'undefined') {
+                    respectOmcEntityFilterCtx = window._uifwk.respectOMCEntityFilterContext;
+                }
+                if (respectOmcAppCtx !== false && respectOmcEntityCtx !== false && respectOmcTimeCtx !== false && respectOmcEntityFilterCtx !== false) {
                     window._uifwk.omcContext = context;
                 }
-                else if (respectOmcAppCtx === false && respectOmcEntityCtx === false && respectOmcTimeCtx === false) {
+                else if (respectOmcAppCtx === false && respectOmcEntityCtx === false && respectOmcTimeCtx === false && respectOmcEntityFilterCtx === false) {
                     window._uifwk.nonGlobalContext = context;
                 }
                 else {
@@ -431,6 +446,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     storeIndividualContext(context, 'topology', respectOmcAppCtx);
                     storeIndividualContext(context, 'entity', respectOmcEntityCtx);
                     storeIndividualContext(context, 'time', respectOmcTimeCtx);
+                    storeIndividualContext(context, 'entityFilter', respectOmcEntityFilterCtx);
                 }
             }
 
