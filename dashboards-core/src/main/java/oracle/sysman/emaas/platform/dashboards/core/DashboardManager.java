@@ -1115,11 +1115,17 @@ public class DashboardManager
 				if (overrided) {
 					// update existing row
 					dbd.setDashboardId(sameName.getDashboardId());
+					//FIXME: below will make fields encoded.
 					return updateDashboard(dbd,tenantId);
 				} else {
 					// regenerated id and name and then insert new row
 					dbd.setDashboardId(null);
-					dbd.setName(generateNewName(dsf, tenantId, sameName.getName()));					
+					String generatedName = generateNewName(dsf, tenantId, sameName.getName());
+					LOGGER.info("Old dashboard name is {} new name is {}", sameName.getName(), generatedName);
+					dbd.setName(generatedName);
+					String generatedDesc = generateNewName(dsf, tenantId, sameName.getDescription());
+					LOGGER.info("Old dashboard desc is {} new desc is {}", sameName.getDescription(), generatedDesc);
+					dbd.setDescription(generatedDesc);
 					return saveNewDashboard(dbd, tenantId);
 				}
 			} else {
