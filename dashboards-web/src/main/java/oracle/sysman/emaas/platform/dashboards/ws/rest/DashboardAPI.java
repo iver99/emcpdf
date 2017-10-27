@@ -1184,6 +1184,10 @@ public class DashboardAPI extends APIBase
 			initializeUserContext(tenantIdParam, userTenant);
 			List<BigInteger> dbdIds = dm.getDashboardIdsByNames(dbdNames, tenantId);
 			LOGGER.info("dashboard id list is {}", dbdIds);
+			if(dbdIds == null || dbdIds.isEmpty()){
+				LOGGER.warn("Dashboards are not found with specified id...");
+				throw new DashboardNotFoundException();
+			}
 			List<String> widgetIds = new ArrayList<String>();
 			JSONArray finalArray = new JSONArray();
 			for (int i = 0; i < dbdIds.size(); i++) {
