@@ -124,9 +124,13 @@ public class DashboardServiceFacade
 	}
 
 	public List<EmsDashboard> getEmsDashboardsByNamePattern(String namePattern){
-		String jpql = "select d from EmsDashboard d where d.name LIKE :namePattern and d.owner = :owner and d.isSystem = 0 and d.deleted = 0 ";
+		String jpql = "select d from EmsDashboard d where d.name LIKE :namePattern ESCAPE '\\' and d.owner = :owner and d.isSystem = 0 and d.deleted = 0 ";
+
+		namePattern = StringEscapeUtils.escapeHtml4(namePattern);
+		if(namePattern.contains("%"))
+			namePattern = namePattern.replaceAll("%","\\\\%");
 		List<EmsDashboard> list = em.createQuery(jpql,EmsDashboard.class)
-				.setParameter("namePattern", StringEscapeUtils.escapeHtml4("%"+namePattern+"%"))
+				.setParameter("namePattern", "%"+namePattern+"%")
 				.setParameter("owner", UserContext.getCurrentUser()).getResultList();
 		if (list != null && !list.isEmpty()) {
 			return list;
@@ -134,20 +138,7 @@ public class DashboardServiceFacade
 		return Collections.emptyList();
 	}
 
-	public List<BigInteger> getDashboardIdsByNameRegExp(String RegExp, Long tenantId){
-		List<BigInteger> ids = new ArrayList<>();
-		String sql = "SELECT dashboard_id FROM ems_dashboard d WHERE REGEXP_LIKE (d.name, '" + RegExp +"')" +
-				" and ( d.tenant_id = " + tenantId + " or d.tenant_id =" + NON_TENANT_ID +  " ) and d.deleted = 0";
-		Query query = em.createNativeQuery(sql);
-		List<Object> result = query.getResultList();
-		if(result != null && !result.isEmpty()){
-			for(Object obj : result){
-				BigInteger id = new BigInteger(obj.toString());
-				ids.add(id);
-			}
-		}
-		return ids;
-	}
+
 
 	public List<BigInteger> getDashboardIdsByNames(List<String> names, Long tenantId) {
 		StringBuilder parameters = new StringBuilder();
