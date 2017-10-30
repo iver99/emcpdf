@@ -22,6 +22,7 @@ import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.UIControls;
 
 import org.testng.annotations.Test;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -33,6 +34,19 @@ public class TestTimePicker_DateOnly extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName, "timeSelectorDateOnly.html");
 		CommonUIUtils.loadWebDriver(webd);
+		Calendar now = Calendar.getInstance();
+		int minute = now.get(Calendar.MINUTE);
+		if(minute>=55)
+		{
+			try {
+				Thread.sleep(300000);
+			}
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		}
+		
 	}
 	
 	@Test(alwaysRun = true)

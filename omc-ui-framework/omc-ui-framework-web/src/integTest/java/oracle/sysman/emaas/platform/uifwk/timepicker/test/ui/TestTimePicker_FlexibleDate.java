@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.uifwk.timepicker.test.ui;
 
 import java.text.ParseException;
+import java.util.Calendar;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeUnit;
@@ -30,6 +31,18 @@ public class TestTimePicker_FlexibleDate extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName, "datetimePickerIndex.html");
 		CommonUIUtils.loadWebDriver(webd);
+		Calendar now = Calendar.getInstance();
+		int minute = now.get(Calendar.MINUTE);
+		if(minute>=55)
+		{
+			try {
+				Thread.sleep(300000);
+			}
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		}
 	}
 
 	@Test(alwaysRun = true)

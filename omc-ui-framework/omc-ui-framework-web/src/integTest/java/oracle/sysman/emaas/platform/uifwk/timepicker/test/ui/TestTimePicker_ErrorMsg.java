@@ -40,6 +40,18 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName, url);
 		CommonUIUtils.loadWebDriver(webd);
+		Calendar now = Calendar.getInstance();
+		int minute = now.get(Calendar.MINUTE);
+		if(minute>=55)
+		{
+			try {
+				Thread.sleep(300000);
+			}
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		}
 	}
 	
 	@Test(alwaysRun = true)

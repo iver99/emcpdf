@@ -20,6 +20,7 @@ import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -31,6 +32,18 @@ public class TestTimePicker_DisableQuickPick extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName, "timeSelectorDisableQuickPicks.html");
 		CommonUIUtils.loadWebDriver(webd);
+		Calendar now = Calendar.getInstance();
+		int minute = now.get(Calendar.MINUTE);
+		if(minute>=55)
+		{
+			try {
+				Thread.sleep(300000);
+			}
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		}
 	}
 
 	@Test(alwaysRun = true)

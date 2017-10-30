@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.uifwk.timepicker.test.ui;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
@@ -32,6 +33,18 @@ public class TestTimePicker_MillionSeconds extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName, "timeSelectorMilliseconds.html");
 		CommonUIUtils.loadWebDriver(webd);
+		Calendar now = Calendar.getInstance();
+		int minute = now.get(Calendar.MINUTE);
+		if(minute>=55)
+		{
+			try {
+				Thread.sleep(300000);
+			}
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		}
 	}
 
 	@Test(alwaysRun = true)
