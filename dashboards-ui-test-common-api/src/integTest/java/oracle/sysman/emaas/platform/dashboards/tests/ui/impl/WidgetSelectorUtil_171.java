@@ -111,7 +111,7 @@ public class WidgetSelectorUtil_171 extends WidgetSelectorUtil_Version implement
 		
 		int i = index + 1;
 		
-		driver.click("xpath=(" + widgetItemByNameLocator + ")[" + index + "]");
+		driver.click("xpath=(" + widgetItemByNameLocator + ")[" + i + "]");
 //		return tileTitles.get(index);
 		return i;
 	}

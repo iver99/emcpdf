@@ -558,7 +558,7 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 
 				driver.waitForElementPresent(convertCss(DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG));
 				driver.getLogger().info("foucus on the delete button");
-				driver.sendKeys(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM), Keys.TAB);
+				driver.sendKeys(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM), Keys.chord(Keys.TAB));
 				
 				driver.getLogger().info("click on the delete button");
 				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM)); // confirm to delete
