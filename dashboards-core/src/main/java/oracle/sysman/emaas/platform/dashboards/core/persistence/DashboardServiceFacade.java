@@ -123,7 +123,7 @@ public class DashboardServiceFacade
         return null;
 	}
 
-	public List<EmsDashboard> getEmsDashboardsByNamePattern(String namePattern){
+	public List<EmsDashboard> getOwnEmsDashboardsByNamePattern(String namePattern){
 		String jpql = "select d from EmsDashboard d where d.name LIKE :namePattern ESCAPE '\\' and d.owner = :owner and d.isSystem = 0 and d.deleted = 0 ";
 
 		namePattern = StringEscapeUtils.escapeHtml4(namePattern);

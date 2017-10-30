@@ -244,6 +244,7 @@ public class DashboardAPI extends APIBase
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/namePattern/{}", namePattern);
 		DashboardManager manager = DashboardManager.getInstance();
+		List<Dashboard> deletedDSB = new ArrayList<>();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp())  {
 				LOGGER.error("Error to call [DELETE] /v1/dashboards/namePattern/{}: database is down", namePattern);
@@ -252,13 +253,16 @@ public class DashboardAPI extends APIBase
 			logkeyHeaders("deleteDashboardByNamePattern()", userTenant, tenantIdParam);
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
-			List<Dashboard> dsb_list = manager.getDashboardsByNamePattern(namePattern,tenantId);
+			List<Dashboard> dsb_list = manager.getOwnDashboardsByNamePattern(namePattern,tenantId);
 			if(dsb_list.isEmpty()){
+				LOGGER.info("No Dashboard is deleted.");
 				throw new DashboardNotFoundException();
 			}
 			for(Dashboard dsb : dsb_list){
 				BigInteger dashboardId = dsb.getDashboardId();
 				manager.deleteDashboard(dashboardId, tenantId);
+				deletedDSB.add(dsb);
+				LOGGER.info("TenantID : {}, Owner : {} deletes the {} dashboard, which ID is {} dashboardId at {} successfully." ,tenantId, dsb.getOwner(), dsb.getName(), DateUtil.getGatewayTime());
 			}
 			return Response.ok(getJsonUtil().toJson(dsb_list)).build();
 		}
@@ -266,19 +270,16 @@ public class DashboardAPI extends APIBase
 			LOGGER.error(e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
-        catch (DeleteSystemDashboardException e) {
-            LOGGER.error(e.getLocalizedMessage(), e);
-            return buildErrorResponse(new ErrorEntity(e));
-        }
 		catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
-			return buildErrorResponse(new ErrorEntity(e));
+			return Response.status(Status.BAD_REQUEST).entity(deletedDSB).build();
 		}
 		catch (BasicServiceMalfunctionException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
-			return buildErrorResponse(new ErrorEntity(e));
+			return Response.status(Status.BAD_REQUEST).entity(deletedDSB).build();
 		}
 		finally {
+			LOGGER.info("{} are deleted", deletedDSB);
 			clearUserContext();
 		}
 	}

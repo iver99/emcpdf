@@ -565,7 +565,7 @@ public class DashboardManager
         return savedSearchResponse;
     }
 
-	public List<Dashboard> getDashboardsByNamePattern(String namePattern, Long tenantId){
+	public List<Dashboard> getOwnDashboardsByNamePattern(String namePattern, Long tenantId){
 		if (namePattern == null || "".equals(namePattern)) {
 			LOGGER.error("NamePattern {} is invalid", namePattern);
 			return Collections.emptyList();
@@ -574,7 +574,7 @@ public class DashboardManager
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
-			List<EmsDashboard> ed_list = dsf.getEmsDashboardsByNamePattern(namePattern);
+			List<EmsDashboard> ed_list = dsf.getOwnEmsDashboardsByNamePattern(namePattern);
 			List<Dashboard> dashboardList = new ArrayList<>();
 			if(ed_list.isEmpty()){
 				throw new NoResultException();
