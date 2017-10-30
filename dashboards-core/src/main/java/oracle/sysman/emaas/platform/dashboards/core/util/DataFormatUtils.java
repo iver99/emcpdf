@@ -142,7 +142,7 @@ public class DataFormatUtils
 		if (type == null) { // default
 			return Tile.TILE_TYPE_CODE_DEFAULT;
 		}
-		if (!Tile.TILE_TYPE_DEFAULT.equals(type) && !Tile.TILE_TYPE_TEXT_WIDGET.equals(type)) {
+		if (!Tile.TILE_TYPE_DEFAULT.equals(type) && !Tile.TILE_TYPE_TEXT_WIDGET.equals(type) && !Tile.TILE_TYPE_HTML_WIDGET.equals(type)) {
 			throw new CommonFunctionalException(MessageUtils.getDefaultBundleString(CommonFunctionalException.TILE_INVALID_TYPE));
 		}
 		if (Tile.TILE_TYPE_DEFAULT.equals(type)) {
