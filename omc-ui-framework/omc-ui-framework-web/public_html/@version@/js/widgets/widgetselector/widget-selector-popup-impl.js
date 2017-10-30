@@ -434,7 +434,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                         tempData = $.extend(true, tempData, {
                             WIDGET_UNIQUE_ID: 2,
                             WIDGET_NAME: 'HTML Widget',
-                            WIDGET_DESCRIPTION: 'Text Widget provided by Oracle',
+                            WIDGET_DESCRIPTION: 'HTML Widget provided by Oracle',
                             WIDGET_OWNER: 'ORACLE',
                             WIDGET_CREATION_TIME: '2017-06-18T00:00:00:000Z',
                             WIDGET_SOURCE: 0,
@@ -448,7 +448,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                             PROVIDER_VERSION: '1.0',
                             PROVIDER_ASSET_ROOT: 'assetRoot',
                             content: null,
-                            type: 'TEXT_WIDGET',
+                            type: 'HTML_WIDGET',
                             WIDGET_EDITABLE: 'false',
                             highlightedName: 'HTML Widget',
                             highlightedSource: self.widgetLableSource + 'Dashboard'

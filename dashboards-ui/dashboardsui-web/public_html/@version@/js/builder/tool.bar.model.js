@@ -406,8 +406,8 @@ define(['knockout',
                 self.handleAddHtmlWidget = function () {
                     var htmlWidget = {
                         WIDGET_UNIQUE_ID: 2,
-                        WIDGET_NAME: 'Text Widget',
-                        WIDGET_DESCRIPTION: 'Text Widget provided by Oracle',
+                        WIDGET_NAME: 'HTML Widget',
+                        WIDGET_DESCRIPTION: 'HTML Widget provided by Oracle',
                         WIDGET_OWNER: 'ORACLE',
                         WIDGET_CREATION_TIME: '2017-06-18T00:00:00:000Z',
                         WIDGET_SOURCE: 0,
@@ -421,7 +421,7 @@ define(['knockout',
                         PROVIDER_VERSION: '1.0',
                         PROVIDER_ASSET_ROOT: 'assetRoot',
                         content: null,
-                        type: 'TEXT_WIDGET'
+                        type: 'HTML_WIDGET'
                     };
                     self.tilesViewModel.appendNewTile(htmlWidget.WIDGEET_NAME, htmlWidget.WIDGEET_DESCRIPTION, 4, 2, ko.toJS(htmlWidget));
                 };

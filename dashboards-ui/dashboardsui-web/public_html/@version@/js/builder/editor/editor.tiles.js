@@ -19,7 +19,7 @@ define(['knockout',
             self.top = ko.observable(0);
             self.cssWidth = ko.observable(10);
             self.cssHeight = ko.observable(45);
-            if(data.type && data.type === "TEXT_WIDGET") {
+            if(data.type && (data.type === "TEXT_WIDGET" || data.type === 'HTML_WIDGET')) {
                 self.hideTitle = ko.observable("true");
             }else {
                 self.hideTitle = ko.observable("false");
