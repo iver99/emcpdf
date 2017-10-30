@@ -124,9 +124,13 @@ define(['knockout',
                     {
                         _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
                         _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
-                        self.errSavindMsgId = dfu.showMessage({type: 'error', summary: _m, detail: _mdetail });
+                        self.errSavindMsgId = dfu.showMessage({type: 'error', summary: _m, detail: _mdetail});
                     }else if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.errorCode === 10001)
                     {
+                        _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
+                        _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
+                        self.errSavindMsgId = dfu.showMessage({type: 'error', summary: _m, detail: _mdetail});
+                    }else if(ko.unwrap(jqXHR.errorCode) === 10001) {
                         _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
                         _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
                         self.errSavindMsgId = dfu.showMessage({type: 'error', summary: _m, detail: _mdetail});
