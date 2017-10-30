@@ -40,6 +40,7 @@ public class DashboardErrorConstants
 	public static final Integer DASHBOARD_SAME_NAME_EXISTS_ERROR_CODE = 10001;
 //	public static final Integer DASHBOARD_TEXT_WIDGET_EMPTY_CONTENT_ERROR_CODE = 10002;
 	public static final Integer DASHBOARD_TEXT_WIDGET_CONTENT_TOO_LONG_ERROR_CODE = 10003;
+	public static final Integer DASHBOARD_HTML_WIDGET_CONTENT_TOO_LONG_ERROR_CODE = 10004;
 
 	// important: don't assign value larger than this value to dashboard ui request errors
 	public static final Integer DASHBOARD_UI_MAX_ERROR_CODE = 19999;
