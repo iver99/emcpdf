@@ -891,7 +891,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 			dsbNameInSet = driver.getAttribute("xpath=(" + DashBoardPageId_190.DASHBOARDSETNAVSXPATH + ")[" + i + "]@data-dashboard-name-in-set").trim();
 			if (dsbNameInSet != null && dsbNameInSet.equals(dashboardName)) {
 				driver.getLogger().info("DashboardBuilderUtil.selectDashboardInsideSet has found the corresponding name");
-				while (!driver.isDisplayed("xpath=(" + DashBoardPageId_190.DASHBOARDSETNAVSXPATH + ")[" + i + "]@data-dashboard-name-in-set")) {
+				while (!driver.isDisplayed("xpath=(" + DashBoardPageId_190.DASHBOARDSETNAVSXPATH + ")[" + i + "]")) {
 					if (driver.isDisplayed("css=" + DASHBOARD_IN_SET_END_ICON_CSS)) {
 						driver.click("css=" + DASHBOARD_IN_SET_END_ICON_CSS);
 					}
@@ -903,7 +903,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 								"DashboardBuilderUtil.selectDashboardInsideSet: the '<' or '>' icon are not found");
 					}
 				}
-				driver.click("xpath=(" + DashBoardPageId_190.DASHBOARDSETNAVSXPATH + ")[" + i + "]@data-dashboard-name-in-set");
+				driver.click("xpath=(" + DashBoardPageId_190.DASHBOARDSETNAVSXPATH + ")[" + i + "]");
 				break;
 			}
 		}

@@ -10,7 +10,8 @@ public class DashBoardPageId
 	 *
 	 * */
 	public static final String CREATEDSBUTTONID = "cbtn";
-	public static final String BUILDERTILEMAXMINLOCATOR = "following-sibling::*//button[contains(@class, 'dbd-tile-maxmin')]";
+//	public static final String BUILDERTILEMAXMINLOCATOR = "following-sibling::*//button[contains(@class, 'dbd-tile-maxmin')]";
+	public static final String BUILDERTILEMAXMINLOCATOR = "//button[contains(@class, 'dbd-tile-maxmin')]";
 	public static final String CREATEDSOFDIALOGID = "createDsb";
 	public static final String DASHBOARDNAMEBOXID = "dbsHNameIn";
 	public static final String DASHBOARDDESCBOXID = "dbsHDpIn";
