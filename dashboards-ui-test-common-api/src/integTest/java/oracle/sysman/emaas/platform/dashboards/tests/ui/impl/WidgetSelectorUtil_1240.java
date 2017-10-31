@@ -2,15 +2,9 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.*;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
-import java.util.List;
 
 /**
  * Created by xiadai on 2017/9/28.
@@ -43,7 +37,6 @@ public class WidgetSelectorUtil_1240 extends WidgetSelectorUtil_1230 {
 
     public void addWidgetInPopUp(WebDriver driver, String widgetName){
         driver.getLogger().info("go into widget list popup");
-        WebDriverWait webDriverWait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 
         driver.moveToElement(generateCssLocator(DashBoardPageId_1220.RIGHTDRAWERSEARCHINPUTCSS));
         driver.clear(generateCssLocator(DashBoardPageId_1220.RIGHTDRAWERSEARCHINPUTCSS));
