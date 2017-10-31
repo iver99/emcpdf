@@ -292,9 +292,13 @@ define(['knockout',
                         self.notifyTileChange(tile, new Builder.TileChange("POST_SHORTER"));
                         break;
                     case "edit":
-                        self.editor.editTile(tile);
-                        self.show();
-                        self.notifyTileChange(tile, new Builder.TileChange("POST_EDIT"));
+                        if(ko.unwrap(tile.type) === "TEXT_WIDGET") {
+                            self.notifyTileChange(tile, new Builder.TileChange("POST_EDIT"));
+                        }else {
+                            self.editor.editTile(tile);
+                            self.show();
+                            self.notifyTileChange(tile, new Builder.TileChange("POST_EDIT"));
+                        }
                         break;
                     case "up":
                         self.editor.moveUpTile(tile);

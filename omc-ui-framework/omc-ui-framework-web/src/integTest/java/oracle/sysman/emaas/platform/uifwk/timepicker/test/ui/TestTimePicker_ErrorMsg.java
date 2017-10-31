@@ -164,9 +164,9 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		
 		c.setTime(now);
 		int day = c.get(Calendar.DATE);
-		c.set(Calendar.DATE, day+1);
+		c.set(Calendar.DATE, day+2);
 		
-		String dayAfter = dateFormat.format(c.getTime());
+		String dayAfter = dateFormat.format(c.getTime());		
 		
 		webd.getLogger().info("Set the end date as current day");
 		String returnmsg = CommonUIUtils.verifyErrorMsg(webd, 3, currentDate, dayAfter,true, false);			
@@ -211,7 +211,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		webd.getLogger().info("Start the test case: testTimePicker_MillionSecond_StartDateAfterCurrentDate");
 		
 		Date now = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss:SSS a");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss.SSS a");
 		String currentDate = dateFormat.format( now ); 
 		
 		Calendar c = Calendar.getInstance();
@@ -238,7 +238,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		webd.getLogger().info("Start the test case: testTimePicker_MillionSecond_EndDateAfterCurrentDate");
 		
 		Date now = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss:SSS a");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss.SSS a");
 		String currentDate = dateFormat.format( now ); 
 		
 		Calendar c = Calendar.getInstance();
@@ -265,7 +265,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		webd.getLogger().info("Start the test case: testTimePicker_MillionSecond_EndDateBeforeStartDate");
 		
 		Date now = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss:SSS a");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss.SSS a");
 		String currentDate = dateFormat.format( now ); 
 		
 		Calendar c = Calendar.getInstance();

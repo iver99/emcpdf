@@ -100,6 +100,8 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage_V4')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_BuilderPage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoardSet_BuilderPage')
             }
         }
     }
@@ -119,12 +121,14 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 	environment "SKIP_OMCSETUP", "true"
 	environment "SKIP_OMCTEARDOWN", "1"
 	environment "VNC_SIZE", "1600x1200"
-	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
+//	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
         test('name': 'DashboardUITest') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage_V1')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB_V1')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_BuilderPage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoardSet_BuilderPage')
             }
         }
     }
@@ -132,6 +136,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
     useRestAssured = true	
 }
 
+//suiteLicensingTest.mustRunAfter([omcSetup])
 task emcpdf_allsrg_3n (dependsOn:[e2e, omcTeardown]) {
     omcTeardown.mustRunAfter(e2e)
     apply from: getAbsoluteFilePath(configurations.omctfConfig,"omctf_taskprocessor")

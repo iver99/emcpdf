@@ -29,7 +29,7 @@ var DashboardsFilter = function(filter, sApplications ,options)
     this.Init();
     this.setFilterOptions(options);
     this.initFilterSelection();
-    this.initFilterListeners();
+//    this.initFilterListeners();
 };
 
 // Subclass from oj.PagingDataSource
@@ -40,18 +40,18 @@ DashboardsFilter.prototype.Init = function()
     DashboardsFilter.superclass.Init.call(this);
 };
 
-DashboardsFilter.prototype.initFilterListeners = function()
-{
-    var self = this;
-    self.creatorFilter.subscribe(function(newValue) {
-        self.saveFilter();
-        self.handleFilterChange({filterType: 'serviceFilter', newValue: newValue});
-    });
-    self.favoritesFilter.subscribe(function(newValue) {
-        self.saveFilter();
-        self.handleFilterChange({filterType: 'serviceFilter', newValue: newValue});
-    });
-};
+//DashboardsFilter.prototype.initFilterListeners = function()
+//{
+//    var self = this;
+//    self.creatorFilter.subscribe(function(newValue) {
+//        self.saveFilter();
+//        self.handleFilterChange({filterType: 'serviceFilter', newValue: newValue});
+//    });
+//    self.favoritesFilter.subscribe(function(newValue) {
+//        self.saveFilter();
+//        self.handleFilterChange({filterType: 'serviceFilter', newValue: newValue});
+//    });
+//};
 
 DashboardsFilter.prototype.initFilterSelection = function()
 {
@@ -90,7 +90,7 @@ DashboardsFilter.prototype.saveFilter = function()
     if (this.saveFilterPref === true && this.prefUtil && this.filterPrefKey)
     {
         var _fs =  this.toFilterString();
-        if (_fs && _fs.trim().length > 0 && _fs !== "allnofilter")
+        if (_fs && _fs.trim().length > 0)
         {
             this.prefUtil.setPreference(this.filterPrefKey, _fs);
         }

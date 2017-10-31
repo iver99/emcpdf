@@ -62,7 +62,7 @@ public class TestDashBoard_SetHome extends LoginAndLogout
 
 		//verify the current page is home page
 		webd.getLogger().info("Verify the error page displayed");
-		String url = webd.getWebDriver().getCurrentUrl();
+		String url = webd.getCurrentUrl();
 		webd.getLogger().info("current url = " + url);
 		if (!url.substring(url.indexOf("emsaasui") + 9).contains("home.html")) {
 			Assert.fail("not open the dashboard home page");
@@ -72,7 +72,7 @@ public class TestDashBoard_SetHome extends LoginAndLogout
 	@Test
 	public void testDeleteHomeDashboard()
 	{
-		String dbHomeDashboard = "HomeDashboard-" + generateTimeStamp();
+		String dbHomeDashboard = "HomeDashboard-" + DashBoardUtils.generateTimeStamp();
 		String dbDesc = "Set the dashboard as home";
 
 		//Initialize the test
@@ -101,8 +101,7 @@ public class TestDashBoard_SetHome extends LoginAndLogout
 		//go to the home page & verify the home page
 		webd.getLogger().info("Access to the home page");
 		BrandingBarUtil.visitMyHome(webd);
-		webd.getLogger().info("Verfiy the home page");
-		String originalUrl = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("Verfiy the home page");		
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbHomeDashboard, dbDesc, true), "It is NOT the home page!");
 
 		//delete the dashboard
@@ -114,7 +113,7 @@ public class TestDashBoard_SetHome extends LoginAndLogout
 		BrandingBarUtil.visitMyHome(webd);
 
 		webd.getLogger().info("Verify back to the dashboard home page");
-		String url = webd.getWebDriver().getCurrentUrl();
+		String url = webd.getCurrentUrl();
 		webd.getLogger().info("current url = " + url);
 		if (!url.substring(url.indexOf("emsaasui") + 9).contains("welcome.html")) {
 			Assert.fail("not open the dashboard home page");
@@ -129,7 +128,7 @@ public class TestDashBoard_SetHome extends LoginAndLogout
 	@Test(dependsOnMethods = { "testAfterHomeDashboardRemoved" })
 	public void testSetHome()
 	{
-		dbName_setHome = "setHomeDashboard-" + generateTimeStamp();
+		dbName_setHome = "setHomeDashboard-" + DashBoardUtils.generateTimeStamp();
 		String dbDesc = "SetHome_testDashboard desc";
 
 		//Initialize the test
@@ -173,10 +172,4 @@ public class TestDashBoard_SetHome extends LoginAndLogout
 		Assert.assertTrue(WelcomeUtil.isServiceExistedInWelcome(webd, WelcomeUtil.SERVICE_NAME_DASHBOARDS),
 				"It is NOT the home page!");
 	}
-
-	private String generateTimeStamp()
-	{
-		return String.valueOf(System.currentTimeMillis());
-	}
-
 }

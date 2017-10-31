@@ -150,21 +150,9 @@ $.widget('dbs.dbsDashboardPanel',
                     });
         },
 
-        _truncateString: function(str, length) {
-            if (str && length > 0 && str.length > length)
-            {
-                var _tlocation = str.indexOf(' ', length);
-                if ( _tlocation <= 0 ) {
-                    _tlocation = length;
-                }
-                return str.substring(0, _tlocation) + "...";
-            }
-            return str;
-        },
-
         _createHeader: function() {
             var self = this, _element = self.element, _name = self.name;
-            var _title = (self.options['dashboard']) ? self._truncateString(self.options['dashboard'].name, TITLE_MAX_LENGTH) : '';
+            var _title = self.options['dashboard'].name;
             self.headerElement = $("<div></div>").addClass(self.classNames['headerContainer']);
             self.titleElement = $("<div/>")
                                   .addClass(self.classNames['headerTitle'])

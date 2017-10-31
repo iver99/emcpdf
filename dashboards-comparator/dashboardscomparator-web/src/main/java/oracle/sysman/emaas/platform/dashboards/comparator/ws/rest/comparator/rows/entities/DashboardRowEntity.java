@@ -14,7 +14,29 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.ro
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
- * @author guochen
+ * NOTE: if schema changes, corresponding Entity class need to be updated and equals and hashcode methods should be  rewrited too
+ * DASHBOARD_ID
+ * NAME
+ * TYPE
+ * DESCRIPTION
+ * CREATION_DATE
+ * LAST_MODIFICATION_DATE
+ * LAST_MODIFIED_BY
+ * OWNER
+ * IS_SYSTEM
+ * APPLICATION_TYPE
+ * ENABLE_TIME_RANGE
+ * SCREEN_SHOT
+ * DELETED
+ * TENANT_ID
+ * ENABLE_REFRESH
+ * SHARE_PUBLIC
+ * ENABLE_ENTITY_FILTER
+ * ENABLE_DESCRIPTION
+ * EXTENDED_OPTIONS
+ * SHOW_INHOME
+ *
+ *
  */
 public class DashboardRowEntity implements RowEntity
 {
@@ -487,6 +509,11 @@ public class DashboardRowEntity implements RowEntity
 			return true;
 		if (obj == null)
 			return false;
+		/**
+		 * NOTE: getClass() means obj must be the EXACT the instance of this class
+		 * (instanceof means this obj can be this class's instance or its sub-class instance)
+		 *
+		 */
 		if (getClass() != obj.getClass())
 			return false;
 		DashboardRowEntity other = (DashboardRowEntity) obj;
@@ -495,81 +522,97 @@ public class DashboardRowEntity implements RowEntity
 				return false;
 		} else if (!applicationType.equals(other.applicationType))
 			return false;
+
 		if (creationDate == null) {
 			if (other.creationDate != null)
 				return false;
 		} else if (!creationDate.equals(other.creationDate))
 			return false;
+
 		if (dashboardId == null) {
 			if (other.dashboardId != null)
 				return false;
 		} else if (!dashboardId.equals(other.dashboardId))
 			return false;
+
 		if (deleted == null) {
 			if (other.deleted != null)
 				return false;
 		} else if (!deleted.equals(other.deleted))
 			return false;
+
 		if (description == null) {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
+
 		if (enableDescription == null) {
 			if (other.enableDescription != null)
 				return false;
 		} else if (!enableDescription.equals(other.enableDescription))
 			return false;
+
 		if (enableEntityFilter == null) {
 			if (other.enableEntityFilter != null)
 				return false;
 		} else if (!enableEntityFilter.equals(other.enableEntityFilter))
 			return false;
+
 		if (enableRefresh == null) {
 			if (other.enableRefresh != null)
 				return false;
 		} else if (!enableRefresh.equals(other.enableRefresh))
-			return false;
+			return false
+					;
 		if (enableTimeRange == null) {
 			if (other.enableTimeRange != null)
 				return false;
 		} else if (!enableTimeRange.equals(other.enableTimeRange))
 			return false;
+
 		if (extendedOptions == null) {
 			if (other.extendedOptions != null)
 				return false;
 		} else if (!extendedOptions.equals(other.extendedOptions))
 			return false;
+
 		if (isSystem == null) {
 			if (other.isSystem != null)
 				return false;
 		} else if (!isSystem.equals(other.isSystem))
 			return false;
+
 		if (lastModificationDate == null) {
 			if (other.lastModificationDate != null)
 				return false;
 		} else if (!lastModificationDate.equals(other.lastModificationDate))
 			return false;
+
 		if (lastModifiedBy == null) {
 			if (other.lastModifiedBy != null)
 				return false;
 		} else if (!lastModifiedBy.equals(other.lastModifiedBy))
 			return false;
+
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+
 		if (owner == null) {
 			if (other.owner != null)
 				return false;
 		} else if (!owner.equals(other.owner))
 			return false;
+
 		if (screenShot == null) {
 			if (other.screenShot != null)
 				return false;
 		} else if (!screenShot.equals(other.screenShot))
 			return false;
+
 		if (sharePublic == null) {
 			if (other.sharePublic != null)
 				return false;
@@ -580,16 +623,19 @@ public class DashboardRowEntity implements RowEntity
 				return false;
 		} else if (!showInHome.equals(other.showInHome))
 			return false;
+
 		if (tenantId == null) {
 			if (other.tenantId != null)
 				return false;
 		} else if (!tenantId.equals(other.tenantId))
 			return false;
+
 		if (type == null) {
 			if (other.type != null)
 				return false;
 		} else if (!type.equals(other.type))
 			return false;
+
 		return true;
 	}
 	
