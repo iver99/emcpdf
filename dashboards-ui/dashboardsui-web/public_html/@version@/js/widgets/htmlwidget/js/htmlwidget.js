@@ -49,6 +49,13 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/@version@/j
                     self.editing(true);
                     $("#textEditor_" + self.htmlWidgetId).focus();
                 };
+                
+                params.tile.onDashboardItemChangeEvent = function(dashboardItemChangeEvent) {
+                    //When receive "Edit" event from dashboard, show html widget in edit mode
+                    if(dashboardItemChangeEvent && dashboardItemChangeEvent.tileChange && dashboardItemChangeEvent.tileChange.status === "POST_EDIT") {
+                        self.editHTMLData();
+                    }
+                };
             }
             return htmlWidgetViewModel;
         });
