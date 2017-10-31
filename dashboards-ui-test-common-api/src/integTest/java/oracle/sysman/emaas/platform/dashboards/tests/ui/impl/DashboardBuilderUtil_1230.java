@@ -7,9 +7,6 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
 public class DashboardBuilderUtil_1230 extends DashboardBuilderUtil_1220{
 	@Override
 	public void editTextWidgetAddContent(WebDriver driver, int index, String content)
@@ -97,57 +94,69 @@ public class DashboardBuilderUtil_1230 extends DashboardBuilderUtil_1220{
 	 	driver.waitForElementPresent("css=" + DashBoardPageId.LINKDIALOGCSS);
 	 	
 //	 	driver.select(DashBoardPageId.PROTOCOLOPTION, "value='" + DashBoardPageId.PROTOCOLOPTION_HTTP + "'");
-	 	driver.select("xpath=(//select[@class='cke_dialog_ui_input_select'])[2]", "value='" + option + "'");
+//	 	driver.select("xpath=(//select[@class='cke_dialog_ui_input_select'])[2]", "value='" + option + "'");
 	 	
-//	 	driver.click(DashBoardPageId.PROTOCOLOPTION);	 		 	
-//	 	
-//	 	switch(option)
-//	 	{
-//	 		case DashBoardPageId.PROTOCOLOPTION_HTTP:
-//	 			driver.getLogger().info("Click http protocol");	 			
-//				
+	 	driver.clear(DashBoardPageId.URLINPUT);
+	 	driver.sendKeys(DashBoardPageId.URLINPUT, url);
+	 	
+	 	driver.click(DashBoardPageId.PROTOCOLOPTION);
+	 	
+	 	driver.click(DashBoardPageId.PROTOCOLOPTION + "//select");
+	 	
+	 	switch(option)
+	 	{
+	 		case DashBoardPageId.PROTOCOLOPTION_HTTP:
+	 			driver.getLogger().info("Click http protocol");	 
+	 			driver.click("css=" + DashBoardPageId.HTTPCSS);
+				
 //	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.HTTPCSS)).findElement(By.xpath("..")).click();
 //			    driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.HTTPCSS)).click();
-//			    
-//	 			break;
-//	 		case DashBoardPageId.PROTOCOLOPTION_HTTPS:
-//	 			driver.getLogger().info("Click https protocol");			
-//		
+			    
+	 			break;
+	 		case DashBoardPageId.PROTOCOLOPTION_HTTPS:
+	 			driver.getLogger().info("Click https protocol");
+	 			
+	 			driver.click("css=" + DashBoardPageId.HTTPSCSS);
+		
 //			    driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.HTTPSCSS)).findElement(By.xpath("..")).click();
 //			    driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.HTTPSCSS)).click();
-//			    
-//	 			break;	
-//	 		case DashBoardPageId.PROTOCOLOPTION_FTP:
-//	 			driver.getLogger().info("Click ftp protocol");
+			    
+	 			break;	
+	 		case DashBoardPageId.PROTOCOLOPTION_FTP:
+	 			driver.getLogger().info("Click ftp protocol");
 //	 			
+	 			driver.click("css=" + DashBoardPageId.FTPCSS);
+	 			
 //	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.FTPCSS)).findElement(By.xpath("..")).click();
 //	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.FTPCSS)).click();
-//	 			
-//	 			break;
-//	 		case DashBoardPageId.PROTOCOLOPTION_NEWS:
-//	 			driver.getLogger().info("Click news protocol");
-//	 			
+	 			
+	 			break;
+	 		case DashBoardPageId.PROTOCOLOPTION_NEWS:
+	 			driver.getLogger().info("Click news protocol");
+	 			driver.click("css=" + DashBoardPageId.NEWSCSS);
+	 			
 //	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.NEWSCSS)).findElement(By.xpath("..")).click();
 //	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.NEWSCSS)).click();
-//	 			
-//	 			break;
-//	 		case DashBoardPageId.PROTOCOLOPTION_OTHER:
-//	 			driver.getLogger().info("Click other protocol");
-//	 			
+	 			
+	 			break;
+	 		case DashBoardPageId.PROTOCOLOPTION_OTHER:
+	 			driver.getLogger().info("Click other protocol");
+	 			driver.click("xpath=" + DashBoardPageId.OTHERXPATH);
+	 			
 //	 			driver.getWebDriver().findElement(By.xpath(DashBoardPageId.OTHERXPATH)).findElement(By.xpath("..")).click();
 //	 			driver.getWebDriver().findElement(By.xpath(DashBoardPageId.OTHERXPATH)).click();
-//
-//	 			break;
-//	 		default:
-//	 				break;
-//	 	}
+
+	 			break;
+	 		default:
+	 				break;
+	 	}
 	 	
 //	 	WebElement url_input = driver.getElement(DashBoardPageId.URLINPUT);
 //	 	url_input.clear();
 //	 	url_input.sendKeys(url);
 	 	
-	 	driver.clear(DashBoardPageId.URLINPUT);
-	 	driver.sendKeys(DashBoardPageId.URLINPUT, url);
+//	 	driver.clear(DashBoardPageId.URLINPUT);
+//	 	driver.sendKeys(DashBoardPageId.URLINPUT, url);
 	 	
 	 	driver.click("css=" + DashBoardPageId.OKBTNCSS);	
 		
@@ -184,8 +193,7 @@ public class DashboardBuilderUtil_1230 extends DashboardBuilderUtil_1220{
 		driver.waitForElementPresent("xpath=" + DashBoardPageId.TEXTWIDGETXPATH);
 		driver.moveToElement("xpath=(" + DashBoardPageId.TEXTWIDGETXPATH + ")[" + index + "]");
 		
-		driver.click("xpath=(" + DashBoardPageId_190.BUILDERTILECONFIGLOCATOR + ")[" + index + "]");	
-		
+		driver.click("xpath=(" + DashBoardPageId_190.BUILDERTILECONFIGLOCATOR + ")[" + index + "]");		
 	}
 	
 	protected void getTextWidgetTitleElement(WebDriver driver, int index)
