@@ -1312,21 +1312,23 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         if (item.selfHandleMenuSelection !== 'true' && item.children && item.children.length > 0) {
                             uifwkControlled = true;
                         }
-                        if (uifwkControlled) {
-                            var itemTrack = [];
-                            for (var j = 0; j < self.serviceMenuData.length; j++) {
-                                itemTrack = findItemTrack(self.serviceMenuData[j], data.id);
-                                if (itemTrack.length > 0) {
-                                    break;
-                                } else {
-                                    itemTrack = [];
-                                }
+
+                        //find track for adding feature log when user click on hamburger menu item
+                        var itemTrack = [];
+                        for (var j = 0; j < self.serviceMenuData.length; j++) {
+                            itemTrack = findItemTrack(self.serviceMenuData[j], data.id);
+                            if (itemTrack.length > 0) {
+                                break;
+                            } else {
+                                itemTrack = [];
                             }
-                            var trackLabelList = [];
-                            itemTrack.forEach(function(item){
-                                trackLabelList.push(item.label);
-                            });
-                            _emJETFeatureUsageLogger.metricFeatureUsage({type: _emJETFeatureUsageLogger.featureUsageLogType.HAMBURGER_MENU, msg: trackLabelList.join('->')});
+                        }
+                        var trackLabelList = [];
+                        itemTrack.forEach(function (item) {
+                            trackLabelList.push(item.label);
+                        });
+
+                        if (uifwkControlled) {
                             var linkHref = item.externalUrl;
                             if(self.hrefMap && self.hrefMap[data.id]){
                                 $("a#"+data.id)[0].href = self.hrefMap[data.id];
@@ -1334,6 +1336,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 delete self.hrefMap[data.id];
                             }
                             if (data.id === 'omc_root_home') {
+                                _emJETFeatureUsageLogger.metricFeatureUsage({type: _emJETFeatureUsageLogger.featureUsageLogType.HAMBURGER_MENU, msg: trackLabelList.join('->')});
                                 var dfdHomeSetting = checkDashboardAsHomeSettings();
                                 dfdHomeSetting.done(function(){
                                     linkHref = omcHomeUrl ? omcHomeUrl : '/emsaasui/emcpdfui/welcome.html';
@@ -1350,12 +1353,14 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             }
                             else {
                                 if (linkHref && linkHref !== '#' && linkHref !== window.location+'#') {
+                                    _emJETFeatureUsageLogger.metricFeatureUsage({type: _emJETFeatureUsageLogger.featureUsageLogType.HAMBURGER_MENU, msg: trackLabelList.join('->')});
                                     window.location.href = ctxUtil.appendOMCContext(linkHref, true, true, true);
                                     return false;
                                 }
                             }
                         }
                         else {
+                            _emJETFeatureUsageLogger.metricFeatureUsage({type: _emJETFeatureUsageLogger.featureUsageLogType.HAMBURGER_MENU, msg: trackLabelList.join('->')});
                             fireMenuSelectionEvent(item);
                         }
                     }
