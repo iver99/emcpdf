@@ -150,6 +150,8 @@ public class DataFormatUtils
 		}
 		if (Tile.TILE_TYPE_DEFAULT.equals(type)) {
 			return Tile.TILE_TYPE_CODE_DEFAULT;
+		}else if (Tile.TILE_TYPE_HTML_WIDGET.equals(type)) {
+			return Tile.TILE_TYPE_CODE_HTML_WIDGET;
 		}
 		else {
 			return Tile.TILE_TYPE_CODE_TEXT_WIDGET;

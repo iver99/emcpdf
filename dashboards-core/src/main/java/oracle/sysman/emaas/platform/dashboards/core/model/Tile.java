@@ -29,6 +29,7 @@ public class Tile
 {
 	public static final Integer TILE_TYPE_CODE_DEFAULT = 0;
 	public static final Integer TILE_TYPE_CODE_TEXT_WIDGET = 1;
+	public static final Integer TILE_TYPE_CODE_HTML_WIDGET = 2;
 	public static final String TILE_TYPE_DEFAULT = "DEFAULT";
 	public static final String TILE_TYPE_TEXT_WIDGET = "TEXT_WIDGET";
 	public static final String TILE_TYPE_HTML_WIDGET = "HTML_WIDGET";
@@ -130,6 +131,12 @@ public class Tile
 				for (EmsDashboardTileParams edtp : edtpList) {
 					TileParam tp = TileParam.valueOf(edtp);
 					tp.setTile(tile);
+					if (Tile.TILE_TYPE_CODE_HTML_WIDGET.equals(edt.getType())
+							&& tp.getName().equals(Tile.HTML_WIDGET_PARAM_NAME_CONTENT)
+							&& TileParam.PARAM_TYPE_STRING.equals(tp.getType())) {
+						tile.setContent(tp.getStringValue());
+						continue;
+					}
 					if (Tile.TILE_TYPE_CODE_TEXT_WIDGET.equals(edt.getType())
 							&& tp.getName().equals(Tile.TEXT_WIDGET_PARAM_NAME_CONTENT)
 							&& TileParam.PARAM_TYPE_STRING.equals(tp.getType())) {
