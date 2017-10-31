@@ -132,6 +132,9 @@ public class DataFormatUtils
 		if (Tile.TILE_TYPE_CODE_TEXT_WIDGET.equals(type)) {
 			return Tile.TILE_TYPE_TEXT_WIDGET;
 		}
+		else if (Tile.TILE_TYPE_CODE_HTML_WIDGET.equals(type)) {
+			return Tile.TILE_TYPE_HTML_WIDGET;
+		}
 		else {
 			return Tile.TILE_TYPE_DEFAULT;
 		}
