@@ -139,7 +139,8 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     }
                     var sizeToLoad = Math.min(amount, self.widgetsData.length - self.loadedWidgetEndIndex - 1);  
                     console.debug("Current loadedEndIndex (before loading) is:"+self.loadedWidgetEndIndex+" and all widgets size is:"+self.widgetsData.length+", size to load is:"+sizeToLoad);
-                    for (var i = self.loadedWidgetEndIndex + 1; i < self.loadedWidgetEndIndex + 1 + sizeToLoad; i++) {  
+                    for (var i = self.loadedWidgetEndIndex + 1; i < self.loadedWidgetEndIndex + 1 + sizeToLoad; i++) { 
+                        loadWidgetScreenshot(self.widgetsData[i]);
                         self.widgetList.push(self.widgetsData[i]);
                     }
                     self.loadedWidgetEndIndex += sizeToLoad;
@@ -477,7 +478,6 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                                 widget.isScreenShotPageDisplayed = ko.observable(true);
                                 widget.isScreenshotLoaded = false;
                                 widget.modificationDateString = getLastModificationTimeString(widget.WIDGET_CREATION_TIME);
-                                loadWidgetScreenshot(widget);
                                 widgetArray.push(widget);
                                 widgetIndex++;
                             }
@@ -495,6 +495,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                 };
 
                 function loadWidgetScreenshot(widget) {
+                    if( widget.WIDGET_VISUAL && widget.WIDGET_VISUAL() && widget.WIDGET_VISUAL() !== '') return;
                     var url = widget.WIDGET_SCREENSHOT_HREF;
                     if (!url) { // backward compility if SSF doesn't support .png screenshot. to be removed once SSF changes are merged
                         loadWidgetBase64Screenshot(widget);
