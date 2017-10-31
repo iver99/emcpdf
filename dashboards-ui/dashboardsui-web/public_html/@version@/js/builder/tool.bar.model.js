@@ -448,35 +448,48 @@ define(['knockout',
                 if(_shareState === isToShare ) {
                     return ;
                 }
-                var _url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/") : "/sso.static/dashboards.service/";
-                self.dashboard.sharePublic(isToShare);               
-                dfu.ajaxWithRetry(_url + self.dashboard.id() + "/quickUpdate", {
-                        type: 'PUT',
-                        dataType: "json",
-                        contentType: 'application/json',
-                        data: JSON.stringify({sharePublic: isToShare}),
-                        headers: dfu.getDashboardsRequestHeader(),
-                        success: function (result) {
-                            if (self.dashboard.sharePublic() === true)
-                            {
-                                self.sharePublicLabel(unshareDashboardLabel);
-                                self.sharePublicTitle(unshareDashboardTitle);
-                                self.cssSharePublic(cssUnshareDashboard);
-                                dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_SHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_SHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
-                            }
-                            else
-                            {
-                                self.sharePublicLabel(shareDashboardLabel);
-                                self.sharePublicTitle(shareDashboardTitle);
-                                self.cssSharePublic(cssShareDashboard);
-                                dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
-                            }
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            self.dashboard.sharePublic(!isToShare); 
-                            dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
-                        }
-                    });
+                
+                var successCallback = function(result) {
+                    if (self.dashboard.sharePublic() === true)
+                    {
+                        self.sharePublicLabel(unshareDashboardLabel);
+                        self.sharePublicTitle(unshareDashboardTitle);
+                        self.cssSharePublic(cssUnshareDashboard);
+                        dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_SHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_SHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
+                    }
+                    else
+                    {
+                        self.sharePublicLabel(shareDashboardLabel);
+                        self.sharePublicTitle(shareDashboardTitle);
+                        self.cssSharePublic(cssShareDashboard);
+                        dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
+                    }
+                };
+                var errorCallback = function (jqXHR, textStatus, errorThrown) {
+                    self.dashboard.sharePublic(!isToShare); 
+                    dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
+                };
+                
+                var fieldsToUpdate = {sharePublic: isToShare};
+                self.dashboard.sharePublic(isToShare); 
+                var newDasboardJs = ko.mapping.toJS(self.dashboard, {
+                    'include': ['screenShot', 'description', 'height',
+                        'isMaximized', 'title', 'type', 'width',
+                        'tileParameters', 'name', 'systemParameter',
+                        'tileId', 'value', 'content', 'linkText',
+                        'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
+                    'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
+                        "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
+                        "customParameters", "clientGuid", "dashboard",
+                        "fireDashboardItemChangeEvent", "getParameter",
+                        "maximizeEnabled", "narrowerEnabled",
+                        "onDashboardItemChangeEvent", "restoreEnabled",
+                        "setParameter", "shouldHide", "systemParameters",
+                        "tileDisplayClass", "widerEnabled", "widget",
+                        "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
+                });
+                $.extend(newDasboardJs, fieldsToUpdate);
+                new Builder.DashboardDataSource().updateDashboardData(self.dashboard.id(), JSON.stringify(newDasboardJs), successCallback, errorCallback);
             };
             
             self.openDashboardEditDialog = function() {
