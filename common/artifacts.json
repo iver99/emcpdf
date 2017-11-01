@@ -299,6 +299,13 @@
 		"version": "1.14+",
 		"ext": "zip",
 		"transitive": false
+	},
+	"DOMPurify": {
+		"group": "www.github.com",
+		"name": "DOMPurify",
+		"version": "1.0.2",
+		"ext": "zip",
+		"transitive": false
 	}
 
 }
