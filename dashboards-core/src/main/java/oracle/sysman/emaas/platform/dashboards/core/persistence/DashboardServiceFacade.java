@@ -127,8 +127,10 @@ public class DashboardServiceFacade
 		String jpql = "select d from EmsDashboard d where d.name LIKE :namePattern ESCAPE '\\' and d.owner = :owner and d.isSystem = 0 and d.deleted = 0 ";
 
 		namePattern = StringEscapeUtils.escapeHtml4(namePattern);
+		LOGGER.info("before change the string is " + namePattern);
 		if(namePattern.contains("%"))
 			namePattern = namePattern.replaceAll("%","\\\\\\\\%");
+		LOGGER.info("after change the string is " + namePattern);
 		List<EmsDashboard> list = em.createQuery(jpql,EmsDashboard.class)
 				.setParameter("namePattern", "%"+namePattern+"%")
 				.setParameter("owner", UserContext.getCurrentUser()).getResultList();
