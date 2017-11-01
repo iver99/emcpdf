@@ -1,7 +1,5 @@
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
-//import java.util.List;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DelayedPressEnterThread;
@@ -9,12 +7,8 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
-//import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
-//import org.openqa.selenium.WebElement;
-//import org.openqa.selenium.interactions.Actions;
-//import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import org.testng.Assert;
 
@@ -1249,7 +1243,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 //		}
 		String navAttr = null;
 		for(int i=0; i<navCount; i++) {
-			navAttr = driver.getAttribute("xpath=(" + DashBoardPageId_190.DASHBOARDSETNAVSXPATH + ")[" + i + 1 + "]@data-dashboard-name-in-set").trim();
+			navAttr = driver.getAttribute("xpath=(" + DashBoardPageId_190.DASHBOARDSETNAVSXPATH + ")[" + (i + 1) + "]@data-dashboard-name-in-set").trim();
 			
 			if(navAttr != null && dashboardName.equals(navAttr)) {
 				hasFound = true;

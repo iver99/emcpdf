@@ -10,10 +10,9 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
-import java.util.List;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DelayedPressEnterThread;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
@@ -22,13 +21,8 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version implements IDashboardBuilderUtil
@@ -44,57 +38,47 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	{
 		driver.getLogger().info("addNewDashboardToSet started for name=\"" + dashboardName + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
-
-		WebElement dashboardSetContainer = driver.getWebDriver().findElement(
-				By.cssSelector(DashBoardPageId.DASHBOARDSETNAVSCONTAINERCSS));
-		if (dashboardSetContainer == null) {
-			throw new NoSuchElementException("removeDashboardInSet: the dashboard navigator container is not found");
+		
+		int dashboardSetContainerCount = driver.getElementCount("css=" + DashBoardPageId.DASHBOARDSETNAVSCONTAINERCSS);
+		if (dashboardSetContainerCount <= 0) {
+			throw new NoSuchElementException(
+					"DashboardBuilderUtil.addNewDashboardToSet: the dashboard navigator container is not found");
 		}
 
-		//		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		//		wait.until(ExpectedConditions.visibilityOf(dashboardSetContainer));
 		driver.waitForElementVisible("css=" + DashBoardPageId.DASHBOARDSETNAVSCONTAINERCSS);
 		driver.takeScreenShot();
 		driver.savePageToFile();
 
 		boolean isSelectionTabExist = false;
-		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.isEmpty()) {
-			throw new NoSuchElementException("addNewDashboardToSet: the dashboard navigators is not found");
+		int dashboardTabCount = driver.getElementCount("css=" + DashBoardPageId.DASHBOARDSETNAVSCSS);
+		if(dashboardTabCount <= 0)
+		{
+			throw new NoSuchElementException("DashboardBuilderUtil.addNewDashboardToSet: the dashboard navigators is not found");
 		}
-
-		for (WebElement nav : navs) {
-			if (nav.getAttribute("data-tabs-name").trim().equals(DASHBOARD_SELECTION_TAB_NAME)) {
+		
+		for(int i=1; i<=dashboardTabCount; i++)
+		{
+			if(DASHBOARD_SELECTION_TAB_NAME.equals(driver.getAttribute("xpath=(" + DashBoardPageId.DASHBOARDSETNAVSXPATH +")[" + i +"]@data-tabs-name")))
+			{
 				isSelectionTabExist = true;
-				nav.click();
+				driver.click("xpath=(" + DashBoardPageId.DASHBOARDSETNAVSXPATH +")[" + i +"]");
 				WaitUtil.waitForPageFullyLoaded(driver);
-				driver.takeScreenShot();
-				driver.savePageToFile();
-				driver.getLogger().info("addNewDashboardToSet has click on the dashboard selection tab");
+				driver.getLogger().info("DashboardBuilderUtil.addNewDashboardToSet has click on the dashboard selection tab");
 				break;
 			}
 		}
 
 		if (isSelectionTabExist == false) {
-			WebElement addNav = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.DASHBOARDSETNAVADDBTNCSS));
-			if (addNav == null) {
-				throw new NoSuchElementException("removeDashboardInSet: the dashboard 'add' button  is not found");
-			}
-			//			addNav.click();
 			driver.click("css=" + DashBoardPageId.DASHBOARDSETNAVADDBTNCSS);
 		}
 
-		driver.takeScreenShot();
-		driver.savePageToFile();
 		try {
 			DashboardHomeUtil.selectDashboard(driver, dashboardName);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			LOGGER.info("context", e);
-			e.printStackTrace();
+			driver.getLogger().info("Exception: " + e.getLocalizedMessage());
 		}
-		driver.getLogger().info("removeDashboardInSet has selected the dashboard named with \"" + dashboardName + "\"");
+		driver.getLogger().info("addNewDashboardToSet has selected the dashboard named with \"" + dashboardName + "\"");
 
 		driver.takeScreenShot();
 		driver.savePageToFile();
@@ -134,9 +118,6 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			return;
 		}
 
-		//		By locatorOfKeyEl = By.cssSelector(DashBoardPageId.RIGHTDRAWERCSS);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		//		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfKeyEl));
 		driver.waitForElementVisible("css=" + DashBoardPageId.RIGHTDRAWERCSS);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
@@ -144,41 +125,30 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 
 		//show right drawer if it is hidden
 		showRightDrawer(driver);
-
-		WebElement searchInput = driver.getElement("css=" + DashBoardPageId.RIGHTDRAWERSEARCHINPUTCSS);
-		// focus to search input box
-		wait.until(ExpectedConditions.elementToBeClickable(searchInput));
-		Actions actions = new Actions(driver.getWebDriver());
-		actions.moveToElement(searchInput).build().perform();
-		searchInput.clear();
-		actions.moveToElement(searchInput).build().perform();
+		
+		// focus to search input box		
+		driver.waitForElementEnabled("css=" + DashBoardPageId.RIGHTDRAWERSEARCHINPUTCSS);
+		driver.moveToElement("css=" + DashBoardPageId.RIGHTDRAWERSEARCHINPUTCSS);
+		driver.clear("css=" + DashBoardPageId.RIGHTDRAWERSEARCHINPUTCSS);
+		driver.moveToElement("css=" + DashBoardPageId.RIGHTDRAWERSEARCHINPUTCSS);
 		driver.click("css=" + DashBoardPageId.RIGHTDRAWERSEARCHINPUTCSS);
-		searchInput.sendKeys(searchString);
-		driver.takeScreenShot();
-		driver.savePageToFile();
-		//verify input box value
-		Assert.assertEquals(searchInput.getAttribute("value"), searchString);
+		driver.sendKeys("css=" + DashBoardPageId.RIGHTDRAWERSEARCHINPUTCSS, searchString);
 
-		//		WebElement searchButton = driver.getElement("css=" + DashBoardPageId.RIGHTDRAWERSEARCHBUTTONCSS);
-		//		driver.waitForElementPresent("css=" + DashBoardPageId.RIGHTDRAWERSEARCHBUTTONCSS);
-		//		searchButton.click();
-		//		//wait for ajax resolved
-		//		WaitUtil.waitForPageFullyLoaded(driver);
-		//		driver.takeScreenShot();
+		//verify input box value
+		Assert.assertEquals(driver.getAttribute("css=" + DashBoardPageId.RIGHTDRAWERSEARCHINPUTCSS + "@value"), searchString);
+
 		driver.click("css=" + DashBoardPageId.RIGHTDRAWERSEARCHBUTTONCSS);
+		
 		driver.getLogger().info("[DashboardHomeUtil] start to add widget from right drawer");
-		List<WebElement> matchingWidgets = driver.getWebDriver().findElements(
-				By.cssSelector(DashBoardPageId.RIGHTDRAWERWIDGETCSS));
-		if (matchingWidgets == null || matchingWidgets.isEmpty()) {
+		
+		int matchingWidgetsCount = driver.getElementCount("css=" + DashBoardPageId.RIGHTDRAWERWIDGETCSS);
+		if (matchingWidgetsCount <= 0) {
 			throw new NoSuchElementException("Right drawer widget for search string =" + searchString + " is not found");
 		}
 
-		//drag and drop not working
-		//      WebElement tilesContainer = driver.getElement("css=" + DashBoardPageId.RightDrawerWidgetToAreaCSS);
-		//      CommonActions.dragAndDropElement(driver, matchingWidgets.get(0), tilesContainer);
-
 		// focus to  the first matching  widget
 		driver.getLogger().info("Focus on the searched widget");
+		
 		driver.getWebDriver().switchTo().activeElement().sendKeys(Keys.TAB);
 		driver.takeScreenShot();
 		driver.savePageToFile();
@@ -186,7 +156,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.getLogger().info("Check if the searched widget get the focus");
 
 		if (driver.getWebDriver().switchTo().activeElement()
-				.equals(driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RIGHTDRAWERWIDGETCSS)))) {
+				.equals(driver.getElement("css=" + DashBoardPageId.RIGHTDRAWERWIDGETCSS))) {
 			driver.getLogger().info("Press Enter button...");
 			driver.getWebDriver().switchTo().activeElement().sendKeys(Keys.ENTER);
 			driver.takeScreenShot();
@@ -269,8 +239,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 	 */
 	@Override
 	public void duplicateDashboard(WebDriver driver, String name, String descriptions)
-	{
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+	{		
 		Validator.notNull("duplicatename", name);
 		Validator.notEmptyString("duplicatename", name);
 		Validator.notEmptyString("duplicatedescription", descriptions);
@@ -281,39 +250,34 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.click(DashBoardPageId.BUILDEROPTIONSMENULOCATOR);
 		driver.click("css=" + DashBoardPageId.BUILDEROPTIONSDUPLICATELOCATORCSS);
 		driver.waitForElementPresent("id=" + DashBoardPageId.BUILDEROPTIONSDUPLICATENAMECSS);
-		//		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("ojDialogWrapper-duplicateDsbDialog")));
+
 		driver.waitForElementVisible("ojDialogWrapper-duplicateDsbDialog");
 		//add name and description
 		driver.getElement("id=" + DashBoardPageId.BUILDEROPTIONSDUPLICATENAMECSS).clear();
 		driver.click("id=" + DashBoardPageId.BUILDEROPTIONSDUPLICATENAMECSS);
-		By locatorOfDuplicateNameEl = By.id(DashBoardPageId.BUILDEROPTIONSDUPLICATENAMECSS);
-
-		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateNameEl));
+		
+		driver.waitForElementVisible("id=" + DashBoardPageId.BUILDEROPTIONSDUPLICATENAMECSS);
 		driver.sendKeys("id=" + DashBoardPageId.BUILDEROPTIONSDUPLICATENAMECSS, name);
 		driver.getElement("id=" + DashBoardPageId.BUILDEROPTIONSDUPLICATEDESCRIPTIONCSS).clear();
 		driver.click("id=" + DashBoardPageId.BUILDEROPTIONSDUPLICATEDESCRIPTIONCSS);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateNameEl));
+		driver.waitForElementVisible("id=" + DashBoardPageId.BUILDEROPTIONSDUPLICATENAMECSS);
+		
 		if (descriptions == null) {
 			driver.sendKeys("id=" + DashBoardPageId.BUILDEROPTIONSDUPLICATEDESCRIPTIONCSS, "");
 		}
 		else {
 			driver.sendKeys("id=" + DashBoardPageId.BUILDEROPTIONSDUPLICATEDESCRIPTIONCSS, descriptions);
 		}
-		driver.takeScreenShot();
-		driver.savePageToFile();
 
 		//press ok button
-		By locatorOfDuplicateSaveEl = By.cssSelector(DashBoardPageId.BUILDEROPTIONSDUPLICATESAVECSS);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateSaveEl));
-		wait.until(ExpectedConditions.elementToBeClickable(locatorOfDuplicateSaveEl));
+		driver.waitForElementVisible("css=" + DashBoardPageId.BUILDEROPTIONSDUPLICATESAVECSS);
+		driver.waitForElementEnabled("css=" + DashBoardPageId.BUILDEROPTIONSDUPLICATESAVECSS);
+				
+		driver.sendKeys("id=" + DashBoardPageId.BUILDEROPTIONSDUPLICATEDESCRIPTIONCSS, Keys.chord(Keys.TAB));
+		
 
-		By locatorOfDuplicateDesEl = By.id(DashBoardPageId.BUILDEROPTIONSDUPLICATEDESCRIPTIONCSS);
-		driver.getWebDriver().findElement(locatorOfDuplicateDesEl).sendKeys(Keys.TAB);
-
-		WebElement saveButton = driver.getElement("css=" + DashBoardPageId.BUILDEROPTIONSDUPLICATESAVECSS);
-		Actions actions = new Actions(driver.getWebDriver());
-		actions.moveToElement(saveButton).build().perform();
-
+		driver.moveToElement("css=" + DashBoardPageId.BUILDEROPTIONSDUPLICATESAVECSS);
+	
 		driver.takeScreenShot();
 		driver.savePageToFile();
 		driver.getLogger().info("duplicate save button has been focused");
@@ -323,12 +287,10 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		//wait for redirect
 		String newTitleLocator = ".dbd-display-hover-area h1[title='" + name + "']";
 		driver.getLogger().info("DashboardBuilderUtil.duplicate : wait for redirect" + newTitleLocator);
-		//		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(newTitleLocator)));
 		driver.waitForElementPresent("css=" + newTitleLocator);
 		driver.takeScreenShot();
 		driver.savePageToFile();
 		driver.getLogger().info("duplicate completed");
-
 	}
 
 	@Override
@@ -810,20 +772,36 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
 
-		WebElement widgetEl = null;
+//		WebElement widgetEl = null;
+//		try {
+//			widgetEl = getWidgetByName(driver, widgetName, index);
+//		}
+//		catch (InterruptedException e) {
+//			LOGGER.info("context", e);
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//		focusOnWidgetHeader(driver, widgetEl);
+//		driver.takeScreenShot();
+//		driver.savePageToFile();
+//		widgetEl.findElement(By.cssSelector(DashBoardPageId.CONFIGTILECSS)).click();
+//		driver.click("css=" + DashBoardPageId.REMOVETILECSS);
+//		driver.getLogger().info("Remove the widget");
+		
+		int widgetElIndex = 0;
 		try {
-			widgetEl = getWidgetByName(driver, widgetName, index);
+			widgetElIndex = getWidgetByName(driver, widgetName, index);
 		}
 		catch (InterruptedException e) {
-			LOGGER.info("context", e);
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			driver.getLogger().info(e.getLocalizedMessage());
 		}
 
-		focusOnWidgetHeader(driver, widgetEl);
-		driver.takeScreenShot();
-		driver.savePageToFile();
-		widgetEl.findElement(By.cssSelector(DashBoardPageId.CONFIGTILECSS)).click();
+		focusOnWidgetHeader(driver, widgetElIndex);
+		
+		driver.click("xpath=(" + DashBoardPageId.CONFIGTILEXPATH + ")[" + widgetElIndex + "]");
+
+//		widgetEl.findElement(By.cssSelector(DashBoardPageId_190.CONFIGTILECSS)).click();
 		driver.click("css=" + DashBoardPageId.REMOVETILECSS);
 		driver.getLogger().info("Remove the widget");
 
@@ -839,19 +817,28 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		Validator.equalOrLargerThan0("index", index);
 		Validator.fromValidValues("resizeOptions", resizeOptions, TILE_NARROWER, TILE_WIDER, TILE_SHORTER, TILE_TALLER);
 
-		WebElement widgetEl = null;
+//		WebElement widgetEl = null;
+//		try {
+//			widgetEl = getWidgetByName(driver, widgetName, index);
+//		}
+//		catch (InterruptedException e) {
+//			LOGGER.info("context", e);
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//		focusOnWidgetHeader(driver, widgetEl);
+//		driver.takeScreenShot();
+//		driver.savePageToFile();
+		int widgetElIndex = 0;
 		try {
-			widgetEl = getWidgetByName(driver, widgetName, index);
+			widgetElIndex = getWidgetByName(driver, widgetName, index);
 		}
 		catch (InterruptedException e) {
-			LOGGER.info("context", e);
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			driver.getLogger().info(e.getLocalizedMessage());
 		}
 
-		focusOnWidgetHeader(driver, widgetEl);
-		driver.takeScreenShot();
-		driver.savePageToFile();
+		focusOnWidgetHeader(driver, widgetElIndex);
 		String tileResizeCSS = null;
 		switch (resizeOptions) {
 			case TILE_WIDER:
@@ -873,11 +860,10 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 			return;
 		}
 
-		widgetEl.findElement(By.cssSelector(DashBoardPageId.CONFIGTILECSS)).click();
+		driver.click("xpath=(" + DashBoardPageId.CONFIGTILEXPATH + ")[" + widgetElIndex + "]");
+//		widgetEl.findElement(By.cssSelector(DashBoardPageId.CONFIGTILECSS)).click();
 		driver.click("css=" + tileResizeCSS);
 		driver.getLogger().info("Resize the widget");
-		
-
 	}
 
 	/* (non-Javadoc)
@@ -1264,31 +1250,43 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.getLogger().info("verifyDashboardInsideSet started for name=\"" + dashboardName + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
 
-		WebElement dashboardSetContainer = driver.getWebDriver().findElement(
-				By.cssSelector(DashBoardPageId.DASHBOARDSETNAVSCONTAINERCSS));
-		if (dashboardSetContainer == null) {
-			throw new NoSuchElementException("verifyDashboardInsideSet: the dashboard navigator container is not found");
-		}
+//		WebElement dashboardSetContainer = driver.getWebDriver().findElement(
+//				By.cssSelector(DashBoardPageId.DASHBOARDSETNAVSCONTAINERCSS));
+//		if (dashboardSetContainer == null) {
+//			throw new NoSuchElementException("verifyDashboardInsideSet: the dashboard navigator container is not found");
+//		}
 
 		//		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
 		//		wait.until(ExpectedConditions.visibilityOf(dashboardSetContainer));
 		driver.waitForElementVisible("css=" + DashBoardPageId.DASHBOARDSETNAVSCONTAINERCSS);
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.takeScreenShot();
-		driver.savePageToFile();
+		
 		boolean hasFound = false;
-		List<WebElement> navs = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.DASHBOARDSETNAVSCSS));
-		if (navs == null || navs.isEmpty()) {
+		driver.waitForElementVisible("id=" + DashBoardPageId.BUILDEROPTIONSDUPLICATENAMECSS);
+		
+		int navCount = driver.getElementCount("xpath=" + DashBoardPageId.DASHBOARDSETNAVSXPATH);
+		if (navCount <= 0) {
 			throw new NoSuchElementException("verifyDashboardInsideSet: the dashboard navigators is not found");
 		}
-
-		for (WebElement nav : navs) {
-			if (nav.getAttribute("data-dashboard-name-in-set") != null
-					&& nav.getAttribute("data-dashboard-name-in-set").trim().equals(dashboardName)) {
+		
+		String navAttr = null;
+		for(int i=0; i<navCount; i++) {
+			navAttr = driver.getAttribute("xpath=(" + DashBoardPageId.DASHBOARDSETNAVSXPATH + ")[" + (i + 1) + "]@data-dashboard-name-in-set").trim();
+			
+			if(navAttr != null && dashboardName.equals(navAttr)) {
 				hasFound = true;
 				break;
 			}
 		}
+
+
+//		for (WebElement nav : navs) {
+//			if (nav.getAttribute("data-dashboard-name-in-set") != null
+//					&& nav.getAttribute("data-dashboard-name-in-set").trim().equals(dashboardName)) {
+//				hasFound = true;
+//				break;
+//			}
+//		}
 
 		if (hasFound) {
 			driver.getLogger().info("verifyDashboardInsideSet name=\"" + dashboardName + "\" has found");
@@ -1347,120 +1345,201 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		driver.getLogger().info("verifyWidget started for name=\"" + widgetName + "\", index=\"" + index + "\"");
 		Validator.notEmptyString("dashboardName", widgetName);
 
-		WebElement we = null;
-		try {
-			WaitUtil.waitForPageFullyLoaded(driver);
-			we = getTileTitleElement(driver, widgetName, index);
+//		WebElement we = null;
+//		try {
+//			WaitUtil.waitForPageFullyLoaded(driver);
+//			we = getTileTitleElement(driver, widgetName, index);
+//		}
+//		catch (NoSuchElementException e) {
+//			LOGGER.info("context", e);
+//			driver.getLogger().info("verifyWidget compelted and returns false");
+//			return false;
+//		}
+//		if (we == null) {
+//			driver.getLogger().info("verifyWidget compelted and returns false");
+//			return false;
+//		}
+//
+//		driver.getLogger().info("verifyWidget compelted and returns true");
+//		return true;
+		int widgetIndex = getTileTitleElement(driver, widgetName, index);
+		
+		if(widgetIndex > 0)
+		{
+			driver.getLogger().info("DashboardBuilderUtil.verifyWidget compelted and returns true");
+			return true;
 		}
-		catch (NoSuchElementException e) {
-			LOGGER.info("context", e);
-			driver.getLogger().info("verifyWidget compelted and returns false");
+		else
+		{
+			driver.getLogger().info("DashboardBuilderUtil.verifyWidget compelted and returns false");
 			return false;
 		}
-		if (we == null) {
-			driver.getLogger().info("verifyWidget compelted and returns false");
-			return false;
-		}
-
-		driver.getLogger().info("verifyWidget compelted and returns true");
-		return true;
 	}
 
-	private WebElement clickTileConfigButton(WebDriver driver, String widgetName, int index)
+	private void clickTileConfigButton(WebDriver driver, String widgetName, int index)
 	{
-		WebElement tileTitle = getTileTitleElement(driver, widgetName, index);
-		WebElement tileConfig = tileTitle.findElement(By.xpath(DashBoardPageId.BUILDERTILECONFIGLOCATOR));
-		if (tileConfig == null) {
-			throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
-		}
-		Actions builder = new Actions(driver.getWebDriver());
-		builder.moveToElement(tileTitle).perform();
-		builder.moveToElement(tileConfig).click().perform();
-		return tileConfig;
+		int i = getTileTitleElement(driver, widgetName, index);
+		driver.click("xpath=(" + DashBoardPageId_190.BUILDERTILEHEADERLOCATOR + ")[" + i + "]" + DashBoardPageId_190.BUILDERTILECONFIGLOCATOR);
+//		WebElement tileTitle = getTileTitleElement(driver, widgetName, index);
+//		WebElement tileConfig = tileTitle.findElement(By.xpath(DashBoardPageId.BUILDERTILECONFIGLOCATOR));
+//		if (tileConfig == null) {
+//			throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
+//		}
+//		Actions builder = new Actions(driver.getWebDriver());
+//		builder.moveToElement(tileTitle).perform();
+//		builder.moveToElement(tileConfig).click().perform();
+//		return tileConfig;
 	}
 
 	private void clickTileOpenInDataExplorerButton(WebDriver driver, String widgetName, int index)
 	{
 		driver.getLogger().info("Start to find widget with widgetName=" + widgetName + ", index=" + index);
-		WebElement widgetTitle = getTileTitleElement(driver, widgetName, index);
-		if (widgetTitle == null) {
+		int widgetTitleIndex = getTileTitleElement(driver, widgetName, index);
+		if (widgetTitleIndex == 0) {
 			throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
 		}
 		driver.getLogger().info("Found widget with name=" + widgetName + ", index =" + index + " before opening widget link");
-		WebElement widgetDataExplore = widgetTitle.findElement(By.xpath(DashBoardPageId.BUILDERTILEDATAEXPLORELOCATOR));
-		if (widgetDataExplore == null) {
-			throw new NoSuchElementException("Widget data explorer link for title=" + widgetName + ", index=" + index
-					+ " is not found");
-		}
-		driver.getLogger().info("Found widget configure button");
-		Actions builder = new Actions(driver.getWebDriver());
-		driver.getLogger().info("Now moving to the widget title bar");
-		builder.moveToElement(widgetTitle).perform();
-		driver.takeScreenShot();
-		driver.savePageToFile();
-		driver.getLogger().info("and clicks the widget config button");
-		//		builder.moveToElement(widgetDataExplore).click().perform();
-		widgetDataExplore.click();
-		driver.takeScreenShot();
+		
+		driver.click("xpath=(" + DashBoardPageId.BUILDERTILEHEADERLOCATOR + ")[" + widgetTitleIndex + "]" + DashBoardPageId.BUILDERTILEDATAEXPLORELOCATOR);
+//		WebElement widgetTitle = getTileTitleElement(driver, widgetName, index);
+//		if (widgetTitle == null) {
+//			throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
+//		}
+//		driver.getLogger().info("Found widget with name=" + widgetName + ", index =" + index + " before opening widget link");
+//		WebElement widgetDataExplore = widgetTitle.findElement(By.xpath(DashBoardPageId.BUILDERTILEDATAEXPLORELOCATOR));
+//		if (widgetDataExplore == null) {
+//			throw new NoSuchElementException("Widget data explorer link for title=" + widgetName + ", index=" + index
+//					+ " is not found");
+//		}
+//		driver.getLogger().info("Found widget configure button");
+//		Actions builder = new Actions(driver.getWebDriver());
+//		driver.getLogger().info("Now moving to the widget title bar");
+//		builder.moveToElement(widgetTitle).perform();
+//		driver.takeScreenShot();
+//		driver.savePageToFile();
+//		driver.getLogger().info("and clicks the widget config button");
+//		//		builder.moveToElement(widgetDataExplore).click().perform();
+//		widgetDataExplore.click();
+//		driver.takeScreenShot();
 		driver.savePageToFile();
 	}
 
-	private void focusOnWidgetHeader(WebDriver driver, WebElement widgetElement)
+	private void focusOnWidgetHeader(WebDriver driver, int index)
 	{
-		if (null == widgetElement) {
+//		if (null == widgetElement) {
+//			driver.getLogger().info("Fail to find the widget element");
+//			driver.takeScreenShot();
+//			driver.savePageToFile();
+//			throw new NoSuchElementException("Widget config menu is not found");
+//		}
+//
+//		WebElement widgetHeader = widgetElement.findElement(By.cssSelector(DashBoardPageId.TILETITLECSS));
+//		Actions actions = new Actions(driver.getWebDriver());
+//		actions.moveToElement(widgetHeader).build().perform();
+//		driver.getLogger().info("Focus to the widget");
+		if (index == 0) {
 			driver.getLogger().info("Fail to find the widget element");
-			driver.takeScreenShot();
-			driver.savePageToFile();
 			throw new NoSuchElementException("Widget config menu is not found");
 		}
-
-		WebElement widgetHeader = widgetElement.findElement(By.cssSelector(DashBoardPageId.TILETITLECSS));
-		Actions actions = new Actions(driver.getWebDriver());
-		actions.moveToElement(widgetHeader).build().perform();
+		
+		driver.moveToElement("xpath=(" + DashBoardPageId.TILETITLEXPATH + ")[" + index +"]");
 		driver.getLogger().info("Focus to the widget");
 	}
 
-	private WebElement getTileTitleElement(WebDriver driver, String widgetName, int index)
-	{
-
+	private int getTileTitleElement(WebDriver driver, String widgetName, int index)
+	{	
 		driver.click(DashBoardPageId.BUILDERTILESEDITAREA);
+//		driver.waitForElementPresent(DashBoardPageId.BUILDERTILESEDITAREA);
+//		WaitUtil.waitForPageFullyLoaded(driver);
 
 		String titleTitlesLocator = String.format(DashBoardPageId.BUILDERTILETITLELOCATOR, widgetName);
-		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
-		if (tileTitles == null || tileTitles.size() <= index) {
-			throw new NoSuchElementException("Tile with title=" + widgetName + ", index=" + index + " is not found");
+		
+		int tileTitlesCount = driver.getElementCount("xpath=" + titleTitlesLocator);
+		if (tileTitlesCount <= index) {
+			return 0;
 		}
-		tileTitles.get(index).click();
-		driver.takeScreenShot();
-		driver.savePageToFile();
-		return tileTitles.get(index);
+		
+		int i = 0;
+		driver.moveToElement("xpath=("+ titleTitlesLocator +")[" + (index + 1) + "]");
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
+		int tileCount = driver.getElementCount("xpath=" + DashBoardPageId.BUILDERTILELOCATOR);
+		int j = 1;
+		boolean isExist = false;
+		for (j=1; j<=tileCount; j++) {
+			if (widgetName.equals(driver.getText("xpath=(" + DashBoardPageId.BUILDERTILELOCATOR + ")[" + j + "]").trim())) {
+				i++;
+				if ( i == (index + 1) ) {
+					isExist = true;
+					break;
+				}
+			}
+		}
+		if (isExist) {
+			return j;
+		}
+		else
+			return 0;
+//
+//		
+//
+//		String titleTitlesLocator = String.format(DashBoardPageId.BUILDERTILETITLELOCATOR, widgetName);
+//		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
+//		if (tileTitles == null || tileTitles.size() <= index) {
+//			throw new NoSuchElementException("Tile with title=" + widgetName + ", index=" + index + " is not found");
+//		}
+//		tileTitles.get(index).click();
+//		driver.takeScreenShot();
+//		driver.savePageToFile();
+//		return tileTitles.get(index);
 	}
 
-	private WebElement getWidgetByName(WebDriver driver, String widgetName, int index) throws InterruptedException
+	private int getWidgetByName(WebDriver driver, String widgetName, int index) throws InterruptedException
 	{
+//		if (widgetName == null) {
+//			return null;
+//		}
+//
+//		List<WebElement> widgets = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.WIDGETTITLECSS));
+//		WebElement widget = null;
+//		int counter = 0;
+//		for (WebElement widgetElement : widgets) {
+//			WebElement widgetTitle = widgetElement.findElement(By.cssSelector(DashBoardPageId.TILETITLECSS));
+//			Validator.notNull("widgetTitle", widgetTitle);
+//			String widgetAttribute = widgetTitle.getAttribute("data-tile-title");
+//			Validator.notNull("widgetTitleAttribute", widgetAttribute);
+//
+//			if (widgetAttribute.trim().equals(widgetName)) {
+//				if (counter == index) {
+//					widget = widgetElement;
+//					break;
+//				}
+//				counter++;
+//			}
+//		}
+//
+//		return widget;
 		if (widgetName == null) {
-			return null;
+			return 0;
 		}
-
-		List<WebElement> widgets = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.WIDGETTITLECSS));
-		WebElement widget = null;
+		
+		int widgetsCount = driver.getElementCount("css=" + DashBoardPageId.WIDGETTITLECSS);
 		int counter = 0;
-		for (WebElement widgetElement : widgets) {
-			WebElement widgetTitle = widgetElement.findElement(By.cssSelector(DashBoardPageId.TILETITLECSS));
-			Validator.notNull("widgetTitle", widgetTitle);
-			String widgetAttribute = widgetTitle.getAttribute("data-tile-title");
+		
+		int i=1;
+		for(i=1; i<=widgetsCount; i++) {
+			String widgetAttribute = driver.getAttribute("xpath=(" + DashBoardPageId.TILETITLEXPATH + ")[" + i + "]@data-tile-title");
 			Validator.notNull("widgetTitleAttribute", widgetAttribute);
 
 			if (widgetAttribute.trim().equals(widgetName)) {
 				if (counter == index) {
-					widget = widgetElement;
+//					widget = widgetElement;
 					break;
 				}
 				counter++;
 			}
 		}
-
-		return widget;
+		return i;
 	}
 
 	private boolean isRightDrawerVisible(WebDriver driver)

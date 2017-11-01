@@ -10,8 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
-import java.util.List;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IWelcomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
@@ -19,8 +17,6 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver.ClickType;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 public class WelcomeUtil_171 extends WelcomeUtil_Version implements IWelcomeUtil
 {

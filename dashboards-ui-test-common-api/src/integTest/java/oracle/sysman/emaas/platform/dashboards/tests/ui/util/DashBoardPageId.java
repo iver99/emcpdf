@@ -220,8 +220,9 @@ public class DashBoardPageId
 
 	//dashboard builder tile edit area
 	public static final String BUILDERTILESEDITAREA = "//div[contains(@class, 'tiles-wrapper')]";
-
+	public static final String BUILDERTILELOCATOR = "//div[contains(@class,'dbd-tile-header')]/h2";
 	public static final String BUILDERTILETITLELOCATOR = "//h2[contains(@class, 'dbd-tile-title') and @data-tile-title='%s']";
+	public static final String BUILDERTILEHEADERLOCATOR = "//div[contains(@class,'dbd-tile-header')]";
 	public static final String BUILDERTILECONFIGLOCATOR = "following-sibling::*//button[contains(@class, 'dbd-tile-action')]";
 	public static final String BUILDERTILEDATAEXPLORELOCATOR = "following-sibling::*//button[contains(@class, 'dbd-data-explore')]";
 	public static final String BUILDERTILESHOWLOCATOR = "//ul[not(contains(@style,'display:none'))]/li[@data-option='showhide-title']/a[@data-show-hide-title='show']";
@@ -261,6 +262,7 @@ public class DashBoardPageId
 	//dashboard set options
 	public static final String DASHBOARDSETNAVSCONTAINERCSS = "#dbd-set-tabs";
 	public static final String DASHBOARDSETNAVSCSS = ".dbd-tabs-nav .oj-tabs-tab";
+	public static final String DASHBOARDSETNAVSXPATH = "//li[contains(@id, 'dashboardTab-')]";
 	public static final String DASHBOARDSETNAVREMOVEBTNCSS = ".oj-tabs-close-icon";
 	public static final String DASHBOARDSETNAVADDBTNCSS = "#add-nav";
 	public static final String DASHBOARDSETOPTIONBTN = "//button[contains(@id, 'tabs-caret')]";
@@ -370,7 +372,9 @@ public class DashBoardPageId
 	public static final String IMAGESCSS = "[id^='textContentWrapper_']>div>img";
 	
 	public static final String TILETITLECSS = "h2.dbd-tile-title";
+	public static final String TILETITLEXPATH = "//*[@class='dbd-tile-title']";
 	public static final String CONFIGTILECSS = "button[id^=actionButton]";
+	public static final String CONFIGTILEXPATH = "//button[contains(@id, 'actionButton')]";
 	public static final String WIDERTILECSS = "li[data-option=wider]";
 	public static final String NARROWERTILECSS = "li[data-option=narrower]";
 	public static final String SHORTERTILECSS = "li[data-option=shorter]";
