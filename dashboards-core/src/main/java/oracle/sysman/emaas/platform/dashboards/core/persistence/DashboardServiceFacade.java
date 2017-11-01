@@ -128,7 +128,7 @@ public class DashboardServiceFacade
 
 		namePattern = StringEscapeUtils.escapeHtml4(namePattern);
 		if(namePattern.contains("%"))
-			namePattern = namePattern.replaceAll("%","\\\\%");
+			namePattern = namePattern.replaceAll("%","\\\\\\\\%");
 		List<EmsDashboard> list = em.createQuery(jpql,EmsDashboard.class)
 				.setParameter("namePattern", "%"+namePattern+"%")
 				.setParameter("owner", UserContext.getCurrentUser()).getResultList();
