@@ -67,7 +67,8 @@ dependencies {
         compile getProjectArtifact('jmockit')  
         compile getProjectArtifact('qunit')
 	compile getProjectArtifact('ckeditor')
-	compile getProjectArtifact('DOMPurify')
+//	compile getProjectArtifact('DOMPurify')
+        compile(group: 'www.github.com', name: 'DOMPurify', version: '1.0.2')
      
 	ftpAntTask('org.apache.ant:ant-commons-net:12.1.2-0-0') {
 	        module('commons-net:commons-net:1.4.1') {
