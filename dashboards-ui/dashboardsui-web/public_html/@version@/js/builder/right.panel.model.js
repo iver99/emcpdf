@@ -89,7 +89,7 @@ define(['knockout',
                 var tiles = [];
                 if (self.dashboard.tiles && self.dashboard.tiles()) {
                     for (var i = 0; i < self.dashboard.tiles().length; i++) {
-                        if(self.dashboard.tiles()[i].type() !== "TEXT_WIDGET") {
+                        if(self.dashboard.tiles()[i].type() !== "TEXT_WIDGET" && self.dashboard.tiles()[i].type() !== "HTML_WIDGET") {
                             tiles.push(self.dashboard.tiles()[i]);
                         }
                     }
