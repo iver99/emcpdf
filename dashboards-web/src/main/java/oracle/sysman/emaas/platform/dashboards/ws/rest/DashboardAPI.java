@@ -1182,6 +1182,11 @@ public class DashboardAPI extends APIBase
 			logkeyHeaders("export()", userTenant, tenantIdParam);
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
+			/**
+			 * FIXME: What if 2 different dashboards have same name? It will break this function
+			 * PK in DB is Dashboard id and tenant id
+			 * UK in DB is DESCRIPTION, OWNER, TENANT_ID, DELETED
+			 */
 			List<BigInteger> dbdIds = dm.getDashboardIdsByNames(dbdNames, tenantId);
 			LOGGER.info("dashboard id list is {}", dbdIds);
 			if(dbdIds == null || dbdIds.isEmpty()){
@@ -1339,7 +1344,8 @@ public class DashboardAPI extends APIBase
 							String ssfResponse = SSFDataUtil.saveSSFData(userTenant, ssfArray.toString(),override);
 							if (ssfResponse != null && ssfResponse.startsWith("{")) {
 								ssfIdMapObj = new JSONObject(ssfResponse);
-
+							}else{
+								return Response.status(Status.BAD_REQUEST).entity(new ImportExportMsgModel(false, "Could not import SSF data successfully!")).build();
 							}
 						}
 					}
