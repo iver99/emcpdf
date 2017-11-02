@@ -112,7 +112,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                         }
                     });
                 };
-                self.DEFAULT_WIDGET_INIT_AMOUNT = 40;
+                self.DEFAULT_WIDGET_INIT_AMOUNT = 30;
                 self.DEFAULT_WIDGET_INCREMENT_AMOUNT = 20; 
                 self.MAX_LOAD_WIDGET_WINDOW_SIZE = 100; 
                 self.widgetsData = [];
