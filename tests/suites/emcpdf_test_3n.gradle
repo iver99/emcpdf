@@ -206,7 +206,7 @@ apply from: 'onboard_tenant.gradle'
 task QATest1(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]){ 
  	environment "VNC_SIZE", "1600x1200"       
 
-        environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
+     // environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestAnalyzerPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestDashboardPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestOtherPage.class"

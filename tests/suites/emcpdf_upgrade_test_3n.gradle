@@ -35,7 +35,7 @@ task pre_upgrade (type: EMTest, dependsOn: omcCloudSetup){
 
 	environment "VNC_SIZE", "1600x1200"
 
-        environment "WEBDRIVER_WAIT_TIMEOUT", "300000" 
+//        environment "WEBDRIVER_WAIT_TIMEOUT", "300000" 
         test('name': 'Pre_upg') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard')
@@ -55,7 +55,7 @@ task post_upgrade (type: EMTest, dependsOn:[omcCloudUpgrade,onboardNewTenant]){
 
        options.suiteXmlBuilder().suite('name': 'PostUpg') {
 		environment "VNC_SIZE", "1600x1200"
-        environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
+//        environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
         test('name': 'post_upg') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DVdashboard.TestDashBoard')
