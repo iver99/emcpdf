@@ -1584,8 +1584,14 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 
 	protected void clickTileConfigButton(WebDriver driver, String widgetName, int index)
 	{		
-		int i = getTileTitleElement(driver, widgetName, index);
-		driver.click("xpath=(" + DashBoardPageId_190.BUILDERTILEHEADERLOCATOR + ")[" + i + "]" + DashBoardPageId_190.BUILDERTILECONFIGLOCATOR);
+		int widgetTitleIndex = getTileTitleElement(driver, widgetName, index);
+		
+		if (widgetTitleIndex == 0) {
+			throw new NoSuchElementException("Widget with title=" + widgetName + ", index=" + index + " is not found");
+		}
+		driver.getLogger().info("Found widget with name=" + widgetName + ", index =" + index + " before opening widget link");
+		
+		driver.click("xpath=(" + DashBoardPageId_190.BUILDERTILEHEADERLOCATOR + ")[" + widgetTitleIndex + "]" + DashBoardPageId_190.BUILDERTILECONFIGLOCATOR);
 //		WebElement tileConfig = tileTitle.findElement(By.xpath(DashBoardPageId_190.BUILDERTILECONFIGLOCATOR));
 //		if (tileConfig == null) {
 //			throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
@@ -1623,7 +1629,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		String titleTitlesLocator = String.format(DashBoardPageId_190.BUILDERTILETITLELOCATOR, widgetName);
 		
 		int tileTitlesCount = driver.getElementCount("xpath=" + titleTitlesLocator);
-		if (tileTitlesCount <= index) {
+		if (tileTitlesCount <= 0) {
 			return 0;
 		}
 		

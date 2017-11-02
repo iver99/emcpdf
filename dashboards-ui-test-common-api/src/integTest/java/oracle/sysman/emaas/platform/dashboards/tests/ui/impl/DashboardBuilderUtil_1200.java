@@ -15,7 +15,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 				"DashboardBuilderUtil.addLinkToWidgetTitle started for widgetName=" + widgetName + ", index=" + index
 						+ ", dashboardName=" + dashboardName);
 		Validator.notEmptyString("widgetName", widgetName);
-		Validator.equalOrLargerThan("index", index, 1);
+		Validator.equalOrLargerThan0("index", index);
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
 		driver.waitForElementVisible(DashBoardPageId_190.BUILDERTILESEDITAREA);
@@ -81,7 +81,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 	@Override
 	public void addLinkToWidgetTitle(WebDriver driver, String widgetName, String dashboardName)
 	{
-		addLinkToWidgetTitle(driver, widgetName, 1, dashboardName);
+		addLinkToWidgetTitle(driver, widgetName, 0, dashboardName);
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 				"DashboardBuilderUtil.verifyLinkOnWidgetTitle started for widgetName=" + widgetName + ", index=" + index
 						+ ", linked dashboardName=" + dashboardName);
 		Validator.notEmptyString("widgetName", widgetName);
-		Validator.equalOrLargerThan("index", index, 1);
+		Validator.equalOrLargerThan0("index", index);
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
 		driver.waitForElementVisible(DashBoardPageId_190.BUILDERTILESEDITAREA);
@@ -105,7 +105,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 							+ ", actual it is not linked.");
 			return false;
 		}else {
-			driver.click("xpath=(" +titleTitlesLocator+")[" + index + "]");
+			driver.click("xpath=(" +titleTitlesLocator+")[" + (index + 1) + "]");
 			WaitUtil.waitForPageFullyLoaded(driver);
 			String realName = driver.getAttribute(DashBoardPageId.BUILDERNAMETEXTLOCATOR+"@titile");
 			if (!dashboardName.equals(realName)) {
@@ -120,7 +120,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 
 	@Override
 	public boolean verifyLinkOnWidgetTitle(WebDriver driver, String widgetName, String dashboardName){
-		return verifyLinkOnWidgetTitle(driver, widgetName, 1, dashboardName);
+		return verifyLinkOnWidgetTitle(driver, widgetName, 0, dashboardName);
         }
 
 	@Override
@@ -165,7 +165,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		driver.getLogger().info(
 				"DashboardBuilderUtil.clickLinkOnWidgetTitle started for widgetName=" + widgetName + ", index=" + index);
 		Validator.notEmptyString("widgetName", widgetName);
-		Validator.equalOrLargerThan("index", index, 1);
+		Validator.equalOrLargerThan0("index", index);
 		
 		if(hasWidgetLink(driver, widgetName, index))
 		{			
@@ -189,7 +189,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		driver.getLogger().info(
 				"DashboardBuilderUtil.isWidgetHasLink started for widgetName=" + widgetName + ", index=" + index);
 		Validator.notEmptyString("widgetName", widgetName);
-		Validator.equalOrLargerThan("index", index, 1);
+		Validator.equalOrLargerThan0("index", index);
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERTILESEDITAREA);
 		driver.waitForElementVisible(DashBoardPageId_190.BUILDERTILESEDITAREA);
@@ -208,7 +208,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		
 	@Override
 	public boolean hasWidgetLink(WebDriver driver, String widgetName){
-		return hasWidgetLink(driver, widgetName, 1);
+		return hasWidgetLink(driver, widgetName, 0);
 	}
 	
 	@Override
@@ -217,7 +217,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		driver.getLogger().info("add image in Text Widget");
 		
 		Validator.notEmptyString("URL", url);
-		Validator.equalOrLargerThan("index", index, 1);
+		Validator.equalOrLargerThan0("index", index);
 
 		//click content wrapper area to load ckeditor
 		driver.waitForElementPresent("css=" + DashBoardPageId.TEXTWIDGETCONTENTCSS);
@@ -248,7 +248,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 	public void addLinkInTextWidget(WebDriver driver, int index, String url, String option)
 	{
 		driver.getLogger().info("add link in Text Widget");
-		Validator.equalOrLargerThan("index", index, 1);		
+		Validator.equalOrLargerThan("index", index, 1);
 	
 		//click content wrapper area to load ckeditor
 		driver.waitForElementPresent("css=" + DashBoardPageId.TEXTWIDGETCONTENTCSS);

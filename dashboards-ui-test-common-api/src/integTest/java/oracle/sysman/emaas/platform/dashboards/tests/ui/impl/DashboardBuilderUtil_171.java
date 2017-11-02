@@ -1455,7 +1455,7 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		String titleTitlesLocator = String.format(DashBoardPageId.BUILDERTILETITLELOCATOR, widgetName);
 		
 		int tileTitlesCount = driver.getElementCount("xpath=" + titleTitlesLocator);
-		if (tileTitlesCount <= index) {
+		if (tileTitlesCount <= 0) {
 			return 0;
 		}
 		
