@@ -22,6 +22,7 @@ import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.UIControls;
 
 import org.testng.annotations.Test;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -33,6 +34,8 @@ public class TestTimePicker_DateOnly extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName, "timeSelectorDateOnly.html");
 		CommonUIUtils.loadWebDriver(webd);
+		CommonUIUtils.checkCrossDay();
+		
 	}
 	
 	@Test(alwaysRun = true)

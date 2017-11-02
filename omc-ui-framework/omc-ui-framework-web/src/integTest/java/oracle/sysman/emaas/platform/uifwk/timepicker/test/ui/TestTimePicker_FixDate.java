@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.uifwk.timepicker.test.ui;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
@@ -32,6 +33,7 @@ public class TestTimePicker_FixDate extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName, "datetimePickerIndex.html");
 		CommonUIUtils.loadWebDriver(webd);
+		CommonUIUtils.checkCrossDay();
 	}
 
 	@Test(alwaysRun = true)
