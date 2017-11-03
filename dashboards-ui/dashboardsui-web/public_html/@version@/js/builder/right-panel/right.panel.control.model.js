@@ -180,7 +180,6 @@ function (ko, $, oj, dfu, mbu, uiutil) {
         function rightPanelChange(status,param,isShowHideTitleChange) {
             if(status==="complete-hidden-rightpanel"){
                 self.completelyHidden(true);
-                self.$b().triggerBuilderResizeEvent('hide right panel');
             }else{
                 if (!self.initializeRightPanel() && !isShowHideTitleChange) {
                     self.initializeRightPanel(true);
