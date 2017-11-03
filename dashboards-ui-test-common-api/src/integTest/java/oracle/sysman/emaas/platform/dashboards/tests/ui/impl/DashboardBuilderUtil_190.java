@@ -825,7 +825,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 //		driver.takeScreenShot();
 		
 		int index = getSelectedDashboardEl(driver);
-		driver.click("xpath=(" + DashBoardPageId_190.DASHBOARDSAVEXPATH +")[" + index +"]");
+		driver.click("xpath=(" + DashBoardPageId_190.DASHBOARDSETCONTAINERXPATH +")[" + index +"]" + DashBoardPageId_190.DASHBOARDSAVEXPATH);
 		
 		driver.getLogger().info("save compelted");
 	}
@@ -1243,8 +1243,8 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 //		}
 		String navAttr = null;
 		for(int i=0; i<navCount; i++) {
-			navAttr = driver.getAttribute("xpath=(" + DashBoardPageId_190.DASHBOARDSETNAVSXPATH + ")[" + (i + 1) + "]@data-dashboard-name-in-set").trim();
-			
+			navAttr = driver.getAttribute("xpath=(" + DashBoardPageId_190.DASHBOARDSETNAVSXPATH + ")[" + (i + 1) + "]@data-tabs-name").trim();
+			driver.getLogger().info("!!!!!!attr: " + navAttr);
 			if(navAttr != null && dashboardName.equals(navAttr)) {
 				hasFound = true;
 				break;

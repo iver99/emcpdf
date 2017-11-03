@@ -107,7 +107,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		}else {
 			driver.click("xpath=(" +titleTitlesLocator+")[" + (index + 1) + "]");
 			WaitUtil.waitForPageFullyLoaded(driver);
-			String realName = driver.getAttribute(DashBoardPageId.BUILDERNAMETEXTLOCATOR+"@titile");
+			String realName = driver.getAttribute(DashBoardPageId.BUILDERNAMETEXTLOCATOR+"@title");
 			if (!dashboardName.equals(realName)) {
 				driver.getLogger().info(
 						"verifyLinkOnWidgetTitle compelted and returns false. Expected linked dashboardName is " + dashboardName
@@ -170,7 +170,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 		if(hasWidgetLink(driver, widgetName, index))
 		{			
 			String titleTitlesLocator = String.format(DashBoardPageId_1200.BUILDERLINKEDTILETITLELOCATOR, widgetName);
-			driver.click("xpath=(" + titleTitlesLocator + ")[" + index + "]");
+			driver.click("xpath=(" + titleTitlesLocator + ")[" + (index + 1) + "]");
 		}
 		else
 		{
@@ -197,7 +197,7 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 
 		String titleTitlesLocator = String.format(DashBoardPageId_1200.BUILDERLINKEDTILETITLELOCATOR, widgetName);
 		int titleCount = driver.getElementCount(titleTitlesLocator);
-		if (titleCount < index) {
+		if (titleCount <= index) {
 			driver.getLogger().info(
 					"isWidgetHasLink compelted and returns false. There is no link in the widget");
 			return false;
