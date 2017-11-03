@@ -1342,9 +1342,12 @@ public class DashboardAPI extends APIBase
 						if (ssfArray != null && ssfArray.length() > 0) {
 							LOGGER.info("Prepare to save SSF data: {}", ssfArray.toString());
 							String ssfResponse = SSFDataUtil.saveSSFData(userTenant, ssfArray.toString(),override);
+							LOGGER.info("Response from save SSF data is {}", ssfResponse);
 							if (ssfResponse != null && ssfResponse.startsWith("{")) {
 								ssfIdMapObj = new JSONObject(ssfResponse);
 							}else{
+								LOGGER.error("Error occurred when save SSF data!");
+//								throw new Exception("Error occurred when save SSF data!");
 								return Response.status(Status.BAD_REQUEST).entity(new ImportExportMsgModel(false, "Could not import SSF data successfully!")).build();
 							}
 						}

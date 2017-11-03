@@ -7,10 +7,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
+import javax.persistence.*;
 
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
@@ -151,15 +148,24 @@ public class DashboardServiceFacade
 	}
 
 	public String getDashboardNameWithMaxSuffixNumber(String name, Long tenantId) {
+		LOGGER.info("Get name/desc with max suffix number: {} for tenant {}", name, tenantId);
+		if(name == null){
+			LOGGER.warn("Name is null, return...");
+			return null;
+		}
 		if (name.contains("'")) {
 			name  = name.replaceAll("'", "''");
 		}
-		String sql = "select name from (" + "select name from ems_dashboard where name like '" + name + "%' and (tenant_Id = " + tenantId
-				+ " or tenant_id = " + NON_TENANT_ID + " ) order by name desc" + ") where rownum = 1";
-		Query query = em.createNativeQuery(sql);
-		Object result = query.getSingleResult();
-		if (result != null) {
-			return result.toString();
+		try{
+			String sql = "select name from (" + "select name from ems_dashboard where name like '" + name + "%' and (tenant_Id = " + tenantId
+					+ " or tenant_id = " + NON_TENANT_ID + " ) order by name desc" + ") where rownum = 1";
+			Query query = em.createNativeQuery(sql);
+			Object result = query.getSingleResult();
+			if (result != null) {
+				return result.toString();
+			}
+		}catch(NoResultException e){
+			LOGGER.warn("No result found getting dashboard name/desc with max suffix number for input name {} and tenant {}", name, tenantId);
 		}
 		return null;
 	}
