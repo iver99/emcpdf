@@ -497,6 +497,23 @@ public class CommonUIUtils
 		return outputFormat.format(date);
 	}
 
+	public static void checkCrossDay()
+	{
+		Calendar now = Calendar.getInstance();
+		int minute = now.get(Calendar.MINUTE);
+		int hour =now.get(Calendar.HOUR_OF_DAY);
+		if(minute>=55&&hour==23)
+		{
+			try {
+				Thread.sleep(300000);
+			}
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		}
+
+	}
 	public static void clickTimePicker(WebDriver webd, int Index)
 	{
 		//click the datetimepicker component

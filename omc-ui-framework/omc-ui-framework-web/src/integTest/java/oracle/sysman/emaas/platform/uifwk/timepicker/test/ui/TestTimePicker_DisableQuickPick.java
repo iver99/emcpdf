@@ -27,6 +27,7 @@ public class TestTimePicker_DisableQuickPick extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName, "timeSelectorDisableQuickPicks.html");
 		CommonUIUtils.loadWebDriver(webd);
+		CommonUIUtils.checkCrossDay();
 	}
 
 	@Test(alwaysRun = true)
