@@ -1641,7 +1641,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		int j = 1;
 		boolean isExist = false;
 		for (j=1; j<=tileCount; j++) {
-			if (widgetName.equals(driver.getText("xpath=(" + DashBoardPageId_190.BUILDERTILELOCATOR + ")[" + j + "]").trim())) {
+			if (widgetName.equals(driver.getAttribute("xpath=(" + DashBoardPageId_190.BUILDERTILELOCATOR + ")[" + j + "]@data-tile-title").trim())) {
 				i++;
 				if ( i == (index + 1) ) {
 					isExist = true;
