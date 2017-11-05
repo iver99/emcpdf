@@ -1316,9 +1316,9 @@ public class DashboardAPI extends APIBase
 				LOGGER.error("Error to call [PUT] /v1/dashboards: database is down");
 				throw new DatabaseDependencyUnavailableException();
 			}
-			if (jsonArray == null) {
-				LOGGER.error("Input json array is null!");
-				return Response.status(Status.BAD_REQUEST).entity(new ImportExportMsgModel(false,"Could not import any dashboard as the input data is null")).build();
+			if (jsonArray == null || (jsonArray !=null && jsonArray.length() == 0)) {
+				LOGGER.error("Input json array is null/empty!");
+				return Response.status(Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportExportMsgModel(false,"Could not import any dashboard as the input data is null/empty"))).build();
 			}
 			int length = jsonArray.length();
 			JSONArray outputJson = new JSONArray();
@@ -1332,7 +1332,7 @@ public class DashboardAPI extends APIBase
 					JSONObject jsonObject = jsonArray.getJSONObject(i);
 					if (!jsonObject.has("Dashboard")) {
 						LOGGER.error("JsonObject[\"Dashboard\"] not found in the input!");
-						return Response.status(Status.BAD_REQUEST).entity(new ImportExportMsgModel(false, "JsonObject[\"Dashboard\"] not found in the input!")).build();
+						return Response.status(Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportExportMsgModel(false, "JsonObject[\"Dashboard\"] not found in the input!"))).build();
 					}
 					LOGGER.info("Input contains Dashboard data...");
 					JSONObject ssfIdMapObj = null;
@@ -1348,7 +1348,8 @@ public class DashboardAPI extends APIBase
 							}else{
 								LOGGER.error("Error occurred when save SSF data!");
 //								throw new Exception("Error occurred when save SSF data!");
-								return Response.status(Status.BAD_REQUEST).entity(new ImportExportMsgModel(false, "Could not import SSF data successfully!")).build();
+								return Response.status(Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportExportMsgModel(false,
+										"Could not import SSF data successfully!(Are you attempting to override OOB dashboards or search? If yes, please specify override=false and try again.)"))).build();
 							}
 						}
 					}
@@ -1436,7 +1437,7 @@ public class DashboardAPI extends APIBase
 		finally {
 			clearUserContext();
 		}
-		return Response.status(Status.BAD_REQUEST).entity(new ImportExportMsgModel(false, "Error occurred when import dashboards")).build();
+		return Response.status(Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportExportMsgModel(false, "Error occurred when import dashboards"))).build();
 	}
 
 

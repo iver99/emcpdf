@@ -2,12 +2,14 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import javax.ws.rs.DefaultValue;
+
 /**
  * Created by chehao on 10/25/2017.
  */
 public class ImportExportMsgModel {
 
-    @JsonProperty("true")
+    @DefaultValue(value = "true")
     private boolean success;
     private String msg;
 
