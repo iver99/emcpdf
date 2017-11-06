@@ -1318,7 +1318,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 //				result = BigInteger.ZERO;
 //				emsDashboard.getSharePublic().intValue();
 //				result = 1;
-				anyDashboardServiceFacade.getDashboardNameWithMaxSuffixNumber("name",1L);
+				anyDashboardServiceFacade.getDashboardNameWithMaxSuffixNumber("name",1L, anyString);
 				result = "For Testing";
 				result = "For Testing _123";
 
@@ -1326,5 +1326,41 @@ public class DashboardManagerTest_S2 extends BaseTest
 		};
 		Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"name");
 		Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"name");
+	}
+
+	@Test(groups = {"s2"})
+	public void testGenerateNewName(@Mocked final DashboardServiceFacade anyDashboardServiceFacade) throws Exception{
+		DashboardManager dm = DashboardManager.getInstance();
+//		final Object oldName = new String("testName");
+		new Expectations(){
+			{
+				anyDashboardServiceFacade.getDashboardNameWithMaxSuffixNumber(anyString, anyLong, anyString);
+				result = "testName";
+
+			}
+		};
+		String newName = null;
+		newName = Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"testName","name");
+		Assert.assertEquals(newName, "testName_1");
+
+		new Expectations(){
+			{
+				anyDashboardServiceFacade.getDashboardNameWithMaxSuffixNumber(anyString, anyLong, anyString);
+				result = "testName_100";
+
+			}
+		};
+		newName = Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"testName","name");
+		Assert.assertEquals(newName, "testName_101");
+
+		new Expectations(){
+			{
+				anyDashboardServiceFacade.getDashboardNameWithMaxSuffixNumber(anyString, anyLong, anyString);
+				result = "testName___100___10";
+
+			}
+		};
+		newName = Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"testName___100__","name");
+		Assert.assertEquals(newName, "testName___100___11");
 	}
 }

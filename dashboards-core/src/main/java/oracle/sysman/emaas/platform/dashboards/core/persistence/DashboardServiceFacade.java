@@ -147,19 +147,22 @@ public class DashboardServiceFacade
 		return ids;
 	}
 
-	public String getDashboardNameWithMaxSuffixNumber(String name, Long tenantId) {
+	public String getDashboardNameWithMaxSuffixNumber(String name, Long tenantId, String dbFields) {
 		LOGGER.info("Get name/desc with max suffix number: {} for tenant {}", name, tenantId);
 		if(name == null){
 			LOGGER.warn("Name is null, return...");
 			return null;
 		}
+		//FIXME: Why?
 		if (name.contains("'")) {
 			name  = name.replaceAll("'", "''");
 		}
 		try{
-			String sql = "select name from (" + "select name from ems_dashboard where name like '" + name + "%' and (tenant_Id = " + tenantId
-					+ " or tenant_id = " + NON_TENANT_ID + " ) order by name desc" + ") where rownum = 1";
+			// FIXME: is 'order by name desc' correct?
+			String sql = "select name from (select name from ems_dashboard where "+ dbFields +" like '" + name + "%' and (tenant_Id = ? or tenant_id = ? ) order by name desc) where rownum = 1";
 			Query query = em.createNativeQuery(sql);
+			query.setParameter(1, tenantId);
+			query.setParameter(1, NON_TENANT_ID);
 			Object result = query.getSingleResult();
 			if (result != null) {
 				return result.toString();

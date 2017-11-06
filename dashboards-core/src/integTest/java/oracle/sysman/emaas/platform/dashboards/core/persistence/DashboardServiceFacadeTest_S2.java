@@ -466,7 +466,7 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		names.add("'Also Testing'");
 		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
 		dsf.getDashboardIdsByNames(names,1L);
-		dsf.getDashboardNameWithMaxSuffixNumber("'Also Testing'",1L);
+		dsf.getDashboardNameWithMaxSuffixNumber("'Also Testing'",1L, "name");
 	}
 
 	@Test(groups = {"s2"})

@@ -1051,9 +1051,18 @@ public class DashboardManager
 			}
 		}
 	}
-	
-	private String generateNewName(DashboardServiceFacade dsf,Long tenantId,String name) {
-		String existingName = dsf.getDashboardNameWithMaxSuffixNumber(name, tenantId);
+
+	/**
+	 *
+	 * genereate a new name = original name + '_' and a increasing number
+	 * @param dsf
+	 * @param tenantId
+	 * @param name
+	 * @return
+	 */
+	private String generateNewName(DashboardServiceFacade dsf,Long tenantId,String name, String dbFields) {
+		String existingName = dsf.getDashboardNameWithMaxSuffixNumber(name, tenantId, dbFields);
+		LOGGER.info("Retrieved existing name is {}", existingName);
 		String finalString  = null;
 		if (existingName != null) {
 			if (name.equals(existingName)) {
@@ -1079,6 +1088,8 @@ public class DashboardManager
 					finalString = name + "_1";
 				}
 			}			
+		}else{
+			return name;
 		}
 		return finalString;
 	}
@@ -1110,7 +1121,7 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
-			LOGGER.info("Get dashboard name by name and description and owner is {}, override = {}", sameName, overrided);
+			LOGGER.info("Get dashboard name by name and description and owner: name- {}, desc- {}, id- {}, owner- {}, override = {}", sameName.getName(), sameName.getDescription(), sameName.getDashboardId(), sameName.getOwner(), overrided);
 			if (sameName != null) {
 				if (overrided) {
 					// update existing row
@@ -1118,12 +1129,12 @@ public class DashboardManager
 					//FIXME: below will make fields encoded.
 					return updateDashboard(dbd,tenantId);
 				} else {
-					// regenerated id and name and then insert new row
+					// regenerated id and name/desc and then insert new row
 					dbd.setDashboardId(null);
-					String generatedName = generateNewName(dsf, tenantId, sameName.getName());
+					String generatedName = generateNewName(dsf, tenantId, sameName.getName(), "name");
 					LOGGER.info("Old dashboard name is {} new name is {}", sameName.getName(), generatedName);
 					dbd.setName(generatedName);
-					String generatedDesc = generateNewName(dsf, tenantId, sameName.getDescription());
+					String generatedDesc = generateNewName(dsf, tenantId, sameName.getDescription(), "description");
 					LOGGER.info("Old dashboard desc is {} new desc is {}", sameName.getDescription(), generatedDesc);
 					dbd.setDescription(generatedDesc);
 					return saveNewDashboard(dbd, tenantId);
