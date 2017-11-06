@@ -20,6 +20,7 @@ import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -31,6 +32,7 @@ public class TestTimePicker_DisableQuickPick extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName, "timeSelectorDisableQuickPicks.html");
 		CommonUIUtils.loadWebDriver(webd);
+		CommonUIUtils.checkCrossDay();
 	}
 
 	@Test(alwaysRun = true)
