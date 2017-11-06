@@ -107,6 +107,14 @@ define(['knockout',
 
             self.saveDuplicatedDashboardToServer = function(newDashboard) {
                 var succCallback = function (data) {
+                if(data.errorCode && data.errorCode() && data.errorCode()=== 10001){
+                        var trackObj = ko.utils.unwrapObservable(self.tracker);
+                        self.errorMessages.push(new oj.Message(getNlsString('DBS_BUILDER_MSG_ERROR_NAME_DUPLICATED_SUMMARY'),
+                                                                getNlsString('DBS_BUILDER_MSG_ERROR_NAME_DUPLICATED_DETAIL')));
+                        trackObj.showMessages();
+                        trackObj.focusOnFirstInvalid();
+                        return;
+                }else{
                     if (selectedDashboardInst().toolBarModel.duplicateInSet()) {
                         selectedDashboardInst().dashboardsetToolBar.toolbarDuplcateInSet(data);
                     } else {
@@ -116,6 +124,7 @@ define(['knockout',
                             window.location.href = ctxUtil.appendOMCContext("/emsaasui/emcpdfui/builder.html?dashboardId=" + data.id(), true, true, true);
                         }
                     }
+                }
                 };
                 var errorCallback = function(error) {
                     var errorCode = error && $.isFunction(error.errorCode) ? error.errorCode() : error.errorCode;
