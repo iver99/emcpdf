@@ -914,6 +914,12 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     self.showFederatedView = cachedMenus[sessionCacheShowFederatedViewKey];
                     self.federatedDsb = cachedMenus[sessionCacheFederatedDashboardKey];
                     self.allServiceData = cachedMenus[sessionCacheAllServiceDataKey];
+                    
+                    //remove "Federated View" from HM if it is configured not to show
+                    if(self.showFederatedView === "false") {
+                        var index = findAppItemIndex(rootMenuData, "omc_root_federatedview");
+                        index && rootMenuData.splice(index,1);
+                    }
 
                     function refreshHamburgerMenuFromCache() {
                         cachedMenus = sessionCaches[0].retrieveDataFromCache(sessionCacheAllMenusKey);
