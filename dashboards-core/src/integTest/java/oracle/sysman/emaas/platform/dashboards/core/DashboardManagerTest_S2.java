@@ -1324,8 +1324,8 @@ public class DashboardManagerTest_S2 extends BaseTest
 
 			}
 		};
-		Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"name");
-		Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"name");
+		Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"name", "name");
+		Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"name", "name");
 	}
 
 	@Test(groups = {"s2"})

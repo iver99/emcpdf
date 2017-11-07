@@ -448,7 +448,7 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 	@Test(groups = {"s2"})
 	public void testGetDashboardIdsByNames(@Mocked final Query query, @Mocked final PersistenceManager mockpm,@Mocked final EntityManager em, @Mocked final EntityManagerFactory mockemf) {
 		final List<Object> fakeList = new ArrayList<>();
-		fakeList.add(1);
+		fakeList.add("1");
 		new Expectations() {
 			{
 				PersistenceManager.getInstance();
@@ -490,7 +490,7 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 			}
 		};
 		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
-		Assert.assertEquals(dsf.getEmsDashboardByNameAndDescriptionAndOwner("Test","ownwer","description"),emsDashboard);
+		Assert.assertEquals(dsf.getEmsDashboardByNameAndDescriptionAndOwner("Test","ownwer","description", false),emsDashboard);
 	}
 
 	@Test(groups = {"s2"})

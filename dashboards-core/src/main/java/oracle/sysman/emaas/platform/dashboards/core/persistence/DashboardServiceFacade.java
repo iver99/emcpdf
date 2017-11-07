@@ -158,14 +158,15 @@ public class DashboardServiceFacade
 			name  = name.replaceAll("'", "''");
 		}
 		try{
-			// FIXME: is 'order by name desc' correct?
-			String sql = "select name from (select name from ems_dashboard where "+ dbFields +" like '" + name + "%' and (tenant_Id = ? or tenant_id = ? ) order by name desc) where rownum = 1";
+			String sql = "select "+ dbFields +" from (select "+ dbFields +" from ems_dashboard where "+ dbFields +" like '" + name + "%' and (tenant_Id = ? or tenant_id = ? ) order by creation_date DESC) where rownum = 1";
+			LOGGER.info("SQL is {}", sql);
 			Query query = em.createNativeQuery(sql);
 			query.setParameter(1, tenantId);
 			query.setParameter(1, NON_TENANT_ID);
-			Object result = query.getSingleResult();
-			if (result != null) {
-				return result.toString();
+			List results = query.getResultList();
+			if (results != null && !results.isEmpty()) {
+				LOGGER.info("Result list is not empty, return.... {}", (String)results.get(0));
+				return (String)results.get(0);
 			}
 		}catch(NoResultException e){
 			LOGGER.warn("No result found getting dashboard name/desc with max suffix number for input name {} and tenant {}", name, tenantId);
@@ -180,16 +181,15 @@ public class DashboardServiceFacade
 		return CombinedDashboard.valueOf(ed, ep, euo,null);
 	}
 
-	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(String name, String owner, String description){
-		String jpql;
+	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(final String name, String owner, String description, boolean sysOwner){
+		String jpql = null;
 		Object[] params;
-		name = name.toUpperCase();
 		if(StringUtil.isEmpty(description)){
-			jpql = "select d from EmsDashboard d where upper(d.name) = ?1 and d.owner = ?2 and d.description is null and d.deleted = ?3";
+			jpql = "select d from EmsDashboard d where d.name = ?1 and (d.owner = ?2 " + (sysOwner == true ? " or d.owner='Oracle' " : "") + " ) and d.description is null and d.deleted = ?3";
 			//remove StringEscapeUtils.escapeHtml4(name) when query, because in DB it is not encoded
 			params = new Object[]{name, owner, new Integer(0)};
 		}else {
-			jpql = "select d from EmsDashboard d where upper(d.name) = ?1 and d.owner = ?2 and d.description = ?3 and d.deleted = ?4";
+			jpql = "select d from EmsDashboard d where d.name = ?1 and (d.owner = ?2 " + (sysOwner == true ? " or d.owner='Oracle' " : "") + " ) and d.description = ?3 and d.deleted = ?4";
 			//remove StringEscapeUtils.escapeHtml4(name) when query, because in DB it is not encoded
 			params = new Object[]{name, owner, description, new Integer(0)};
 
@@ -204,6 +204,7 @@ public class DashboardServiceFacade
 			// ignores multiple results
 			emsDashboard = (EmsDashboard)results.get(0);
 		}
+		LOGGER.info("getEmsDashboardByNameAndDescriptionAndOwner() returning...{}", emsDashboard);
 		return emsDashboard;
 	}
 

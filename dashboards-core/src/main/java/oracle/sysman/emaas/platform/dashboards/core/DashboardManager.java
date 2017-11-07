@@ -595,16 +595,22 @@ public class DashboardManager
 	}
 
 	public Dashboard getDashboardByNameAndDescriptionAndOwner(String name, String description, Long tenantId){
+
+		return getDashboardByNameAndDescriptionAndOwner(name, description, tenantId, false);
+	}
+
+	public Dashboard getDashboardByNameAndDescriptionAndOwner(String name, String description, Long tenantId, boolean sysOwner){
 		if(StringUtil.isEmpty(name)){
-			LOGGER.debug("Dashboard not found for name \"{}\" is invalid", name);
+			LOGGER.warn("Dashboard not found for name \"{}\" is invalid", name);
 			return null;
 		}
 		String currentUser = UserContext.getCurrentUser();
+		LOGGER.info("Get dashboard  by name={} desc={} and owner={}", name, description,currentUser);
 		EntityManager entityManager = null;
 		try{
 			DashboardServiceFacade dashboardServiceFacade = new DashboardServiceFacade(tenantId);
 			entityManager = dashboardServiceFacade.getEntityManager();
-			EmsDashboard emsDashboard = dashboardServiceFacade.getEmsDashboardByNameAndDescriptionAndOwner(name, currentUser,description);
+			EmsDashboard emsDashboard = dashboardServiceFacade.getEmsDashboardByNameAndDescriptionAndOwner(name, currentUser,description, sysOwner);
 			return Dashboard.valueOf(emsDashboard);
 		}catch (NoResultException e) {
 			LOGGER.debug("Dashboard not found for name \"{}\" because NoResultException is caught", name);
@@ -1062,7 +1068,7 @@ public class DashboardManager
 	 */
 	private String generateNewName(DashboardServiceFacade dsf,Long tenantId,String name, String dbFields) {
 		String existingName = dsf.getDashboardNameWithMaxSuffixNumber(name, tenantId, dbFields);
-		LOGGER.info("Retrieved existing name is {}", existingName);
+		LOGGER.info("Retrieved latest existing name for field {} is {}", dbFields, existingName);
 		String finalString  = null;
 		if (existingName != null) {
 			if (name.equals(existingName)) {
@@ -1120,9 +1126,10 @@ public class DashboardManager
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
-			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
-			LOGGER.info("Get dashboard name by name and description and owner: name- {}, desc- {}, id- {}, owner- {}, override = {}", sameName.getName(), sameName.getDescription(), sameName.getDashboardId(), sameName.getOwner(), overrided);
+			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId, true);
+			LOGGER.info("Is dashboard null? {}", sameName);
 			if (sameName != null) {
+				LOGGER.info("Get dashboard name by name and description and owner: name- {}, desc- {}, id- {}, owner- {}, override = {}", sameName.getName(), sameName.getDescription(), sameName.getDashboardId(), sameName.getOwner(), overrided);
 				if (overrided) {
 					// update existing row
 					dbd.setDashboardId(sameName.getDashboardId());
