@@ -453,7 +453,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                 }
                 menuUtil.subscribeFederatedDsbChangedEvent(function(){
-                    updateFederatedDsb(true, false);
+                    if(self.showFederatedView === "true") {
+                        updateFederatedDsb(true, false);
+                    }
                 });
 
                 //Get vanity base URLs for all subscribed services
