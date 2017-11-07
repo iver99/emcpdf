@@ -185,7 +185,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
 	}
 	test('name': 'DashboardRestAPITest_offboardTenant', 'preserve-order':'true'){
 	    classes([:]) {
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.offboard.offboardTenant')//this class file must be run at last
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.offboard.OffboardTenant')//this class file must be run at last
 	    }
 	}
 	}
