@@ -26,9 +26,26 @@ import org.apache.logging.log4j.Logger;
 public class GlobalContextUtil
 {
 	private final static Logger LOGGER = LogManager.getLogger(GlobalContextUtil.class);
+	// TODO should be the real domain here
+	private final static String[] WHITELIST = {"error.html", "build.html", "emsaasui"};
+	public final static String ERRORPAGE = "./error.html?msg=DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG";
 
 	public static String generateUrlWithGlobalContext(String baseUrl, HttpServletRequest request)
 	{
+	    // checking the white list to avoid fortify issue "Open Redirect"
+	    if(baseUrl == null)
+	        return null;
+	    boolean isDubious = true;
+	    for(int i = 0; i < WHITELIST.length; i ++) {
+	        if(baseUrl.contains(WHITELIST[i])) {
+	            isDubious = false;
+	            break;
+	        }
+	    }
+	    if(isDubious) {
+	        return ERRORPAGE;
+	    }
+	    
 		String urlWithContext = baseUrl;
 		try {
 			String omcCtx = null;
