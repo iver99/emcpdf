@@ -126,6 +126,7 @@ define([
                             beforeSendInAjaxSetup(jqXHR, settings);
                         }
                     }
+                    jqXHR.setRequestHeader("X-OMC-UI-REQUEST", true);
                 };
 
                 var ajaxCallDfd = $.Deferred();
