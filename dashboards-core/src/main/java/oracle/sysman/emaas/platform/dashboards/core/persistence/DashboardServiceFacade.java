@@ -150,15 +150,20 @@ public class DashboardServiceFacade
 	public String getDashboardNameWithMaxSuffixNumber(String name, Long tenantId, String dbFields) {
 		LOGGER.info("Get name/desc with max suffix number: {} for tenant {}", name, tenantId);
 		if(name == null){
-			LOGGER.warn("Name is null, return...");
+			LOGGER.warn("Name is null which is not expected.");
 			return null;
 		}
 		//FIXME: Why?
 		if (name.contains("'")) {
 			name  = name.replaceAll("'", "''");
 		}
+		String sql = null;
 		try{
-			String sql = "select "+ dbFields +" from (select "+ dbFields +" from ems_dashboard where "+ dbFields +" like '" + name + "%' and (tenant_Id = ? or tenant_id = ? ) order by creation_date DESC) where rownum = 1";
+			if("name".equalsIgnoreCase(dbFields)){
+				sql = "select name from (select name from ems_dashboard where name like '"+ name +"'and (tenant_Id = ? or tenant_id = ? ) order by creation_date DESC) where rownum = 1";
+			}else if("description".equalsIgnoreCase(dbFields)){
+				sql = "select description from (select description from ems_dashboard where description like '"+ name +"'and (tenant_Id = ? or tenant_id = ? ) order by creation_date DESC) where rownum = 1";
+			}
 			LOGGER.info("SQL is {}", sql);
 			Query query = em.createNativeQuery(sql);
 			query.setParameter(1, tenantId);
@@ -170,6 +175,8 @@ public class DashboardServiceFacade
 			}
 		}catch(NoResultException e){
 			LOGGER.warn("No result found getting dashboard name/desc with max suffix number for input name {} and tenant {}", name, tenantId);
+		}catch(Exception e){
+			LOGGER.error("Error occurred when get max suffix name/desc from DB.");
 		}
 		return null;
 	}

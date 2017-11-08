@@ -1310,7 +1310,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 											@Mocked final EmsDashboard emsDashboard) throws Exception
 	{
 		DashboardManager dm = DashboardManager.getInstance();
-		new Expectations(){
+		/*new Expectations(){
 			{
 //				anyDashboardServiceFacade.getEmsDashboardById(BigInteger.valueOf(1L));
 //				result = emsDashboard;
@@ -1323,44 +1323,35 @@ public class DashboardManagerTest_S2 extends BaseTest
 				result = "For Testing _123";
 
 			}
-		};
-		Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"name", "name");
-		Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"name", "name");
+		};*/
+		Deencapsulation.invoke(dm,"generateNewName","name", "name");
+		Deencapsulation.invoke(dm,"generateNewName","name", "name");
 	}
 
 	@Test(groups = {"s2"})
 	public void testGenerateNewName(@Mocked final DashboardServiceFacade anyDashboardServiceFacade) throws Exception{
 		DashboardManager dm = DashboardManager.getInstance();
-//		final Object oldName = new String("testName");
-		new Expectations(){
-			{
-				anyDashboardServiceFacade.getDashboardNameWithMaxSuffixNumber(anyString, anyLong, anyString);
-				result = "testName";
-
-			}
-		};
 		String newName = null;
-		newName = Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"testName","name");
+		newName = Deencapsulation.invoke(dm,"generateNewName","testName","testName");
 		Assert.assertEquals(newName, "testName_1");
 
-		new Expectations(){
-			{
-				anyDashboardServiceFacade.getDashboardNameWithMaxSuffixNumber(anyString, anyLong, anyString);
-				result = "testName_100";
+		newName = Deencapsulation.invoke(dm,"generateNewName","testName","testName_1");
+		Assert.assertEquals(newName, "testName_2");
 
-			}
-		};
-		newName = Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"testName","name");
+		newName = Deencapsulation.invoke(dm,"generateNewName","testName","testName_8");
+		Assert.assertEquals(newName, "testName_9");
+
+		newName = Deencapsulation.invoke(dm,"generateNewName","testName","testName_9");
+		Assert.assertEquals(newName, "testName_10");
+
+		newName = Deencapsulation.invoke(dm,"generateNewName","testName","testName_99");
+		Assert.assertEquals(newName, "testName_100");
+
+		newName = Deencapsulation.invoke(dm,"generateNewName","testName","testName_100");
 		Assert.assertEquals(newName, "testName_101");
 
-		new Expectations(){
-			{
-				anyDashboardServiceFacade.getDashboardNameWithMaxSuffixNumber(anyString, anyLong, anyString);
-				result = "testName___100___10";
+		newName = Deencapsulation.invoke(dm,"generateNewName","testName_100","testName_100_2");
+		Assert.assertEquals(newName, "testName_100_3");
 
-			}
-		};
-		newName = Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"testName___100__","name");
-		Assert.assertEquals(newName, "testName___100___11");
 	}
 }
