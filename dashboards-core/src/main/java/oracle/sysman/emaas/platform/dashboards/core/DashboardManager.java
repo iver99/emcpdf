@@ -1137,7 +1137,7 @@ public class DashboardManager
 					String latestExistingName = dsf.getDashboardNameWithMaxSuffixNumber(originalDashboard.getName(), tenantId, "name");
 					String generatedName = generateNewName(originalDashboard.getName(), latestExistingName);
 					dbd.setName(generatedName);
-					String latestExistingDesc = dsf.getDashboardNameWithMaxSuffixNumber(originalDashboard.getName(), tenantId, "description");
+					String latestExistingDesc = dsf.getDashboardNameWithMaxSuffixNumber(originalDashboard.getDescription(), tenantId, "description");
 					String generatedDesc = generateNewName(originalDashboard.getDescription(), latestExistingDesc);
 					dbd.setDescription(generatedDesc);
 					return saveNewDashboard(dbd, tenantId);

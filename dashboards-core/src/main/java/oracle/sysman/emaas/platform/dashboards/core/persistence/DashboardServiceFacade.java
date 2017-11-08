@@ -160,14 +160,14 @@ public class DashboardServiceFacade
 		String sql = null;
 		try{
 			if("name".equalsIgnoreCase(dbFields)){
-				sql = "select name from (select name from ems_dashboard where name like '"+ name +"'and (tenant_Id = ? or tenant_id = ? ) order by creation_date DESC) where rownum = 1";
+				sql = "select name from (select name from ems_dashboard where name like '"+ name +"%'and (tenant_Id = ? or tenant_id = ? ) order by creation_date DESC) where rownum = 1";
 			}else if("description".equalsIgnoreCase(dbFields)){
-				sql = "select description from (select description from ems_dashboard where description like '"+ name +"'and (tenant_Id = ? or tenant_id = ? ) order by creation_date DESC) where rownum = 1";
+				sql = "select description from (select description from ems_dashboard where description like '"+ name +"%'and (tenant_Id = ? or tenant_id = ? ) order by creation_date DESC) where rownum = 1";
 			}
 			LOGGER.info("SQL is {}", sql);
 			Query query = em.createNativeQuery(sql);
 			query.setParameter(1, tenantId);
-			query.setParameter(1, NON_TENANT_ID);
+			query.setParameter(2, NON_TENANT_ID);
 			List results = query.getResultList();
 			if (results != null && !results.isEmpty()) {
 				LOGGER.info("Result list is not empty, return.... {}", (String)results.get(0));

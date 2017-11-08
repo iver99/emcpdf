@@ -1349,7 +1349,7 @@ public class DashboardAPI extends APIBase
 								LOGGER.error("Error occurred when save SSF data!");
 //								throw new Exception("Error occurred when save SSF data!");
 								return Response.status(Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportExportMsgModel(false,
-										"Could not import SSF data successfully!(Are you attempting to override OOB dashboards or search? If yes, please specify override=false and try again.)"))).build();
+										"Could not import SSF data successfully!(#1.Are you attempting to override OOB dashboards or search? If yes, please specify override=false and try again. #2.Did you increase the max connection pool size in weblogic console? If not, please increase it into 200 then retry.)"))).build();
 							}
 						}
 					}
