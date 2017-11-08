@@ -76,7 +76,6 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		boolean isExisted = false;
 		Validator.notEmptyString("menuitem in [clickMenuItem]", menuitem);
 
-		driver.waitForElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS);
 		if (!isHamburgerMenuDisplayed(driver)) {
 			driver.getLogger().info("Not displayed hamburger menu, need to show it");
 			clickHamburgerMenuIcon(driver);
@@ -315,7 +314,6 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 	public boolean isHamburgerMenuDisplayed(WebDriver driver)
 	{
 		WaitUtil.waitForPageFullyLoaded(driver);
-		driver.waitForElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS);
 		driver.takeScreenShot();
 		driver.savePageToFile();
 		if (driver.isDisplayed("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS)) {
