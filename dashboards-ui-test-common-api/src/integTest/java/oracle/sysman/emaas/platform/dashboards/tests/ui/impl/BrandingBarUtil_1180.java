@@ -76,6 +76,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		boolean isExisted = false;
 		Validator.notEmptyString("menuitem in [clickMenuItem]", menuitem);
 
+		driver.waitForElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS);
 		if (!isHamburgerMenuDisplayed(driver)) {
 			driver.getLogger().info("Not displayed hamburger menu, need to show it");
 			clickHamburgerMenuIcon(driver);
@@ -314,6 +315,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 	public boolean isHamburgerMenuDisplayed(WebDriver driver)
 	{
 		WaitUtil.waitForPageFullyLoaded(driver);
+		driver.waitForElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS);
 		driver.takeScreenShot();
 		driver.savePageToFile();
 		if (driver.isDisplayed("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS)) {
@@ -823,7 +825,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		driver.getLogger().info("visitWelcome ended");
 	}
 
-	private void clickHamburgerMenuIcon(WebDriver driver)
+	protected void clickHamburgerMenuIcon(WebDriver driver)
 	{
 		driver.getLogger().info("Click Hamburger Menu Icon");
 		driver.click("css=" + DashBoardPageId_1180.HAMBURGERMENU_ICON_CSS);
@@ -853,7 +855,7 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		return menuItemName;
 	}
 
-	private boolean isElementEnabled(WebDriver driver, WebElement nav)
+	protected boolean isElementEnabled(WebDriver driver, WebElement nav)
 	{
 		String existed = "";
 		existed = nav.findElement(By.xpath("..")).getAttribute("aria-disabled");
