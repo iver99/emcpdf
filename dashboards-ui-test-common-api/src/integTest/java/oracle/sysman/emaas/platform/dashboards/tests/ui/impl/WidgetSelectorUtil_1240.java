@@ -26,7 +26,7 @@ public class WidgetSelectorUtil_1240 extends WidgetSelectorUtil_1230 {
         driver.getLogger().info("addWidget started, widgetName=" + widgetName);
         Validator.notEmptyString("widgetName", widgetName);
 
-        boolean isDialog = driver.isDisplayed("id=" + "widget-selector-widgetgroups");
+        boolean isDialog = driver.isDisplayed("id=" + "widget-selector-okbtn");
         if(isDialog){
             addWidgetInDialog(driver, widgetName);
         }else{
