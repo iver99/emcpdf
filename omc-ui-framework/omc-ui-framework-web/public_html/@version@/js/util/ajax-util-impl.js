@@ -104,6 +104,12 @@ define([
                         typeof(retryOptions.retryDelayTime) === 'number' ? retryOptions.retryDelayTime : 500;
                 var messageId = null;
                 var messageObj = null;
+                var headers = retryOptions.headers;
+                if(headers && (typeof(headers) === "object")) {
+                    retryOptions.headers["X-OMC-UI-REQUEST"] = true;
+                }else {
+                    retryOptions.headers = {"X-OMC-UI-REQUEST": true};
+                }
                 var errorCallBack = retryOptions.error;
                 retryOptions.error = null;
                 var beforeSendCallback = retryOptions.beforeSend;
@@ -120,6 +126,7 @@ define([
                             beforeSendInAjaxSetup(jqXHR, settings);
                         }
                     }
+                    jqXHR.setRequestHeader("X-OMC-UI-REQUEST", true);
                 };
 
                 var ajaxCallDfd = $.Deferred();
