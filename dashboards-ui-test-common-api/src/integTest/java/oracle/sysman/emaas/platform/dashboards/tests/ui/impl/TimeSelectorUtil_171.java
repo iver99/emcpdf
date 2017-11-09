@@ -840,7 +840,7 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		String tmpDate = "";
 		String returnStartDate = "";
 		String returnEndDate = "";
-		driver.waitForElementPresent("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" + TimeSelectorUIControls.sEndDateInput_XPATH + "@value");
+		driver.waitForElementPresent("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" + TimeSelectorUIControls.sEndDateInput_XPATH);
 		 String currentDate = driver.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" + TimeSelectorUIControls.sEndDateInput_XPATH + "@value");
 
 		String[] currentDateArray = currentDate.split("/");
