@@ -14,7 +14,8 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             var dfu = new dfuModel();
             var supportedContext = [{'contextName': 'time', 'paramNames': ['startTime', 'endTime', 'timePeriod']},
                 {'contextName': 'composite', 'paramNames': ['compositeType', 'compositeName', 'compositeMEID']},
-                {'contextName': 'entity', 'paramNames': ['entitiesType', /*'entityName',*/ 'entityMEIDs']}
+                {'contextName': 'entity', 'paramNames': ['entitiesType', /*'entityName',*/ 'entityMEIDs']},
+                {'contextName': 'entityFilter', 'paramNames': ['entityFilterExpr']}
             ];
             var omcCtxParamName = 'omcCtx';
 
@@ -25,6 +26,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 window._uifwk.respectOMCApplicationContext = true;
                 window._uifwk.respectOMCEntityContext = true;
                 window._uifwk.respectOMCTimeContext = true;
+                window._uifwk.respectOMCEntityFilterContext = true;
             }
 
             self.OMCEventSourceConstants = {
@@ -44,6 +46,8 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 ENTITY_MEIDS: "entityMEIDs",
                 ENTITY: "entity",
                 COMPOSITE: "composite",
+                ENTITY_FILTER: "entityFilter",
+                ENTITY_FILTER_EXPRESSION: "entityFilterExpr",
                 TIME: "time"
             };
 
@@ -149,6 +153,17 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 window._uifwk.respectOMCTimeContext = respectOmcTimeCtx;
             };
 
+            /**
+             * Specify whether to respect the OMC entity filter context or not
+             *
+             * @param {boolean} respectOmcEntityFilterCtx Flag for whether respect OMC entityFilter context or not
+             *
+             * @returns
+             */
+            self.respectOMCEntityFilterContext = function (respectOmcEntityFilterCtx) {
+                window._uifwk.respectOMCEntityFilterContext = respectOmcEntityFilterCtx;
+            };
+
             function getGlobalContext() {
                 var globalCtx = null;
                 //If context already retrieved, fetch it from window object directly
@@ -234,7 +249,8 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
             function isGlobalContextRespected() {
                 return window._uifwk.respectOMCApplicationContext !== false ||
                     window._uifwk.respectOMCEntityContext !== false ||
-                    window._uifwk.respectOMCTimeContext !== false;
+                    window._uifwk.respectOMCTimeContext !== false ||
+                    window._uifwk.respectOMCEntityFilterContext !== false;
             }
 
             /**
@@ -250,7 +266,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
              * 
              * @returns {Object} OMC global context in json format
              */
-            self.getOMCContext = function (respectOmcAppCtx, respectOmcEntityCtx, respectOmcTimeCtx) {
+            self.getOMCContext = function (respectOmcAppCtx, respectOmcEntityCtx, respectOmcTimeCtx, respectOmcEntityFilterCtx) {
                 var omcContext = null;
                 if (respectOmcAppCtx === null || typeof respectOmcAppCtx === 'undefined') {
                     respectOmcAppCtx = window._uifwk.respectOMCApplicationContext;
@@ -261,10 +277,15 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 if (respectOmcTimeCtx === null || typeof respectOmcTimeCtx === 'undefined') {
                     respectOmcTimeCtx = window._uifwk.respectOMCTimeContext;
                 }
-                if (respectOmcAppCtx !== false && respectOmcEntityCtx !== false && respectOmcTimeCtx !== false) {
+                if (respectOmcEntityFilterCtx === null || typeof respectOmcEntityFilterCtx === 'undefined') {
+                    respectOmcEntityFilterCtx = window._uifwk.respectOMCEntityFilterContext;
+                }
+                if (respectOmcAppCtx !== false && respectOmcEntityCtx !== false
+                    && respectOmcTimeCtx !== false && respectOmcEntityFilterCtx !== false) {
                     omcContext = getGlobalContext();
                 }
-                else if (respectOmcAppCtx === false && respectOmcEntityCtx === false && respectOmcTimeCtx === false) {
+                else if (respectOmcAppCtx === false && respectOmcEntityCtx === false
+                    && respectOmcTimeCtx === false && respectOmcEntityFilterCtx === false) {
                     omcContext = getNonGlobalContext();
                 }
                 else {
@@ -277,6 +298,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     fetchRespectedOmcContext(omcContext, 'entity', respectOmcEntityCtx);
                     //Get time context
                     fetchRespectedOmcContext(omcContext, 'time', respectOmcTimeCtx);
+                    fetchRespectedOmcContext(omcContext, 'entityFilter', respectOmcEntityFilterCtx);
                 }
 
                 if (!omcContext) {
@@ -390,7 +412,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 }
             }
 
-            function storeContext(context, respectOmcAppCtx, respectOmcEntityCtx, respectOmcTimeCtx) {
+            function storeContext(context, respectOmcAppCtx, respectOmcEntityCtx, respectOmcTimeCtx, respectOmcEntityFilterCtx) {
                 //Remember the composite id as previous value, so that we can compare the current/previous value
                 //to determine whether topology needs refresh when setOMCContext is called
                 if (context && context['composite'] && context['composite']['compositeMEID']) {
@@ -409,10 +431,13 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                 if (respectOmcTimeCtx === null || typeof respectOmcTimeCtx === 'undefined') {
                     respectOmcTimeCtx = window._uifwk.respectOMCTimeContext;
                 }
-                if (respectOmcAppCtx !== false && respectOmcEntityCtx !== false && respectOmcTimeCtx !== false) {
+                if (respectOmcEntityFilterCtx === null || typeof respectOmcEntityFilterCtx === 'undefined') {
+                    respectOmcEntityFilterCtx = window._uifwk.respectOMCEntityFilterContext;
+                }
+                if (respectOmcAppCtx !== false && respectOmcEntityCtx !== false && respectOmcTimeCtx !== false && respectOmcEntityFilterCtx !== false) {
                     window._uifwk.omcContext = context;
                 }
-                else if (respectOmcAppCtx === false && respectOmcEntityCtx === false && respectOmcTimeCtx === false) {
+                else if (respectOmcAppCtx === false && respectOmcEntityCtx === false && respectOmcTimeCtx === false && respectOmcEntityFilterCtx === false) {
                     window._uifwk.nonGlobalContext = context;
                 }
                 else {
@@ -421,6 +446,7 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     storeIndividualContext(context, 'topology', respectOmcAppCtx);
                     storeIndividualContext(context, 'entity', respectOmcEntityCtx);
                     storeIndividualContext(context, 'time', respectOmcTimeCtx);
+                    storeIndividualContext(context, 'entityFilter', respectOmcEntityFilterCtx);
                 }
             }
 
@@ -972,6 +998,10 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
 
                     storeContext(omcContext);
 
+                    if (self._getEntityFilterExpression()) {
+                        self.clearEntityFilterContext(source);
+                    }
+
                     //Set composite meId will reset composite type/name, 
                     //next time you get the composite type/name will return the new type/name
                     setIndividualContext('composite', 'compositeType', null, false, false);
@@ -1210,6 +1240,11 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     if(!self.getCompositeMeId()) {
                         omcContext.previousCompositeMeId = currentEntityIds;
                     }
+
+                    if (self._getEntityFilterExpression()) {
+                        self.clearEntityFilterContext(source);
+                    }
+
                     console.log("****************** updating entity ids");
                     setIndividualContext('entity', 'entityMEIDs', meIds, true, true, false, source);
                     //Set entity meIds will reset the cached entity objects, 
@@ -1320,6 +1355,37 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
 //                return getIndividualContext('entity', 'entityName');
 //            };
 
+            self._setEntityFilterExpression = function (tagExpression, source) {
+                if (self._getEntityFilterExpression() !== tagExpression) {
+                    if (self.getCompositeMeId()) {
+                        self.clearCompositeContext(source);
+                    }
+                    if (self.getEntityMeIds()) {
+                        self.clearEntityContext(source);
+                    }
+                    setIndividualContext('entityFilter', 'entityFilterExpr', tagExpression, true, true, false, source);
+                }
+            };
+
+            self._getEntityFilterExpression = function () {
+                return getIndividualContext('entityFilter', 'entityFilterExpr');
+            };
+
+            self.getEntityContextUtil = function () {
+                var versionedContextSelectorUtils = window.getSDKVersionFile
+                    ? window.getSDKVersionFile('emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils')
+                    : null;
+                var contextSelectorUtil = versionedContextSelectorUtils
+                    ? versionedContextSelectorUtils
+                    : '/emsaasui/emcta/ta/js/sdk/contextSelector/api/ContextSelectorUtils.js';
+
+                return $.Deferred(function (deferred) {
+                    require([contextSelectorUtil], function (EmctaContextSelectorUtil) {
+                        deferred.resolve(EmctaContextSelectorUtil.getEntityContextUtil(self));
+                    });
+                });
+            };
+
             /**
              * Clear OMC global composite context.
              * 
@@ -1359,6 +1425,10 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     sessionCaches[1].updateCacheData(entityCacheKey, 'entities', null);
                 }
                 clearIndividualContext('entity', source);
+            };
+
+            self.clearEntityFilterContext = function (source) {
+                clearIndividualContext('entityFilter', source);
             };
 
             /**
