@@ -151,7 +151,7 @@ public class LoggingAPI extends APIBase
 				return Response.status(Response.Status.OK).entity("{\"msg\": \"Log arrays are null or empty\"}").build();
 			}
 			for(LogFeatureItem item : logList){
-				fLogger.info("[{}] click [{}] [{}]",tenantName + "." + userName,item.getType(),item.getLogMsg());
+				fLogger.info("[{}] [{}] click [{}] [{}]",tenantName, userName,item.getType(),item.getLogMsg());
 			}
 		} catch (JSONException | CommonSecurityException | IOException e) {
 			fLogger.error(e);
