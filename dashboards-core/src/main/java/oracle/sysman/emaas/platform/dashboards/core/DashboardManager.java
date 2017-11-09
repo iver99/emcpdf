@@ -565,36 +565,36 @@ public class DashboardManager
         return savedSearchResponse;
     }
 
-	public List<Dashboard> getOwnDashboardsByNamePattern(String namePattern, Long tenantId){
-		if (namePattern == null || "".equals(namePattern)) {
-			LOGGER.error("NamePattern {} is invalid", namePattern);
-			return Collections.emptyList();
-		}
-		EntityManager em = null;
-		try {
-			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-			em = dsf.getEntityManager();
-			List<EmsDashboard> ed_list = dsf.getOwnEmsDashboardsByNamePattern(namePattern);
-			List<Dashboard> dashboardList = new ArrayList<>();
-			if(ed_list.isEmpty()){
-				throw new NoResultException();
-			}
-			for(EmsDashboard ed:ed_list){
-				dashboardList.add(Dashboard.valueOf(ed, null, true, true, true, true));
-			}
-			return dashboardList;
-		}
-		catch (NoResultException e) {
-			LOGGER.error("Dashboard not found for namePattern \"{}\" because NoResultException is caught", namePattern);
-			LOGGER.error("context", e);
-			return Collections.emptyList();
-		}
-		finally {
-			if (em != null) {
-				em.close();
-			}
-		}
-	}
+//	public List<Dashboard> getOwnDashboardsByNamePattern(String namePattern, Long tenantId){
+//		if (namePattern == null || "".equals(namePattern)) {
+//			LOGGER.error("NamePattern {} is invalid", namePattern);
+//			return Collections.emptyList();
+//		}
+//		EntityManager em = null;
+//		try {
+//			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+//			em = dsf.getEntityManager();
+//			List<EmsDashboard> ed_list = dsf.getOwnEmsDashboardsByNamePattern(namePattern);
+//			List<Dashboard> dashboardList = new ArrayList<>();
+//			if(ed_list.isEmpty()){
+//				throw new NoResultException();
+//			}
+//			for(EmsDashboard ed:ed_list){
+//				dashboardList.add(Dashboard.valueOf(ed, null, true, true, true, true));
+//			}
+//			return dashboardList;
+//		}
+//		catch (NoResultException e) {
+//			LOGGER.error("Dashboard not found for namePattern \"{}\" because NoResultException is caught", namePattern);
+//			LOGGER.error("context", e);
+//			return Collections.emptyList();
+//		}
+//		finally {
+//			if (em != null) {
+//				em.close();
+//			}
+//		}
+//	}
 
 	/**
 	 * Returns dashboard instance specified by name for current user Please note that same user under single tenant can't have

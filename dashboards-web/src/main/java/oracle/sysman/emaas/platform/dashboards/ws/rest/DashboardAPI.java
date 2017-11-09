@@ -340,6 +340,67 @@ public class DashboardAPI extends APIBase
 		}
 	}
 
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response deleteDashboardByNameAndDesc(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+										  @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+												 JSONObject inputJson)
+	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/");
+		DashboardManager manager = DashboardManager.getInstance();
+		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [DELETE] /v1/dashboards/ database is down");
+				throw new DatabaseDependencyUnavailableException();
+			}
+			logkeyHeaders("deleteDashboardByNameAndDesc()", userTenant, tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+			String name = "";
+			String desc = "";
+			if(inputJson.has("name"))
+				name = inputJson.getString("name");
+			if(inputJson.has("desc"))
+				desc = inputJson.getString("desc");
+			Dashboard dsb = manager.getDashboardByNameAndDescriptionAndOwner(name,desc,tenantId);
+			if(dsb == null){
+				throw new DashboardNotFoundException();
+			}
+			if (dsb != null && dsb.getIsSystem() != null && dsb.getIsSystem()) {
+				LOGGER.warn("Oracle's dashboard is not supported to be deleted.");
+				throw new DeleteSystemDashboardException();
+			}
+			BigInteger dashboardId = dsb.getDashboardId();
+			manager.deleteDashboard(dashboardId, tenantId);
+
+			return Response.ok(getJsonUtil().toJson(dsb)).build();
+		}
+		catch (JSONException e){
+			LOGGER.error(e);
+			LOGGER.error("Can't parse input parameters.");
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DashboardNotFoundException e) {
+			LOGGER.error(e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DeleteSystemDashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
+		}
+	}
 
 	@DELETE
 	@Path("{id: [1-9][0-9]*}")
