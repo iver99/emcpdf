@@ -271,7 +271,7 @@ project.task("unpackJSLibFromArtifactory") << {
 				into buildDOMPurifyUnzipDir.absolutePath
 			}
 			project.copy {
-				from buildDOMPurifyUnzipDir.absolutePath+'/DOMPurify/'
+				from buildDOMPurifyUnzipDir.absolutePath+'/DOMPurify-1.0.2/dist/'
 				into sourceDOMPurifyDesDir.absolutePath
 			}
 
@@ -279,7 +279,7 @@ project.task("unpackJSLibFromArtifactory") << {
 				def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/DOMPurify");
 				outputs.dir outputDir
 				project.copy {
-				from buildDOMPurifyUnzipDir.absolutePath+'/DOMPurify/'
+				from buildDOMPurifyUnzipDir.absolutePath+'/DOMPurify-1.0.2/dist/'
 				into outputDir
 				}
 			}
