@@ -118,6 +118,9 @@ public class DashboardAPI extends APIBase
 		catch (DashboardException e) {
 			if(e instanceof DashboardSameNameException){
 				LOGGER.warn("Dashboard with the same name exists already!");
+				ErrorEntity error = new ErrorEntity(e);
+				String errorJson = getJsonUtil().toJson(error);
+				return Response.status(Status.OK).entity(errorJson).build();
 			}else{
 				LOGGER.error(e.getLocalizedMessage(), e);
 			}

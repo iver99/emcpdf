@@ -1084,6 +1084,7 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
             self.getRegistrations = function (successCallback, toSendAsync, errorCallback) {
                 if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.registrations && 
                         ($.isFunction(window._uifwk.cachedData.registrations) ? window._uifwk.cachedData.registrations() : true)) {
+                    console.info("Getting registration data from window._uifwk.cachedData.registrations. It is function: " + $.isFunction(window._uifwk.cachedData.registrations));
                     successCallback($.isFunction(window._uifwk.cachedData.registrations) ? window._uifwk.cachedData.registrations() : 
                             window._uifwk.cachedData.registrations);
                 } else {
@@ -1093,19 +1094,12 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                     if (!window._uifwk.cachedData) {
                         window._uifwk.cachedData = {};
                     }
+                    console.info("Getting registration data by sending request. window._uifwk.cachedData.isFetchingRegistrations is " + window._uifwk.cachedData.isFetchingRegistrations);
                     if (!window._uifwk.cachedData.isFetchingRegistrations) {
                         window._uifwk.cachedData.isFetchingRegistrations = true;
                         if (!window._uifwk.cachedData.registrations) {
-                            window._uifwk.cachedData.registrations = ko.observable();
-                        }else{
-                            if (!$.isFunction(window._uifwk.cachedData.registrations));{
-                                console.info("EMCPDF-5019 is hit: BEGIN");
-                                console.info("registrations data: "+JSON.stringify(window._uifwk.cachedData.registrations));
-                                console.info("toSendAsync: "+toSendAsync);
-                                console.info("successCallback: "+successCallback);
-                                console.info("errorCallback: "+errorCallback);
-                                console.info("EMCPDF-5019 is hit: END");
-                            }                            
+                            console.info("initialize window.registrationFromRequest to ko observable");
+                            window.registrationFromRequest = ko.observable();
                         }
                         if (!window._uifwk.cachedData.errGetRegistration) {
                             window._uifwk.cachedData.errGetRegistration = ko.observable(false);
@@ -1115,13 +1109,14 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                         }
 
                         function doneCallback(data, textStatus, jqXHR) {
-                            if (!$.isFunction(window._uifwk.cachedData.registrations));{
-                                console.info("EMCPDF-5019 is hit 2: BEGIN");
-                                console.info("data: "+JSON.stringify(data));
-                                console.info(jqXHR);
-                                console.info("EMCPDF-5019 is hit 2: END");
-                            }                            
-                            window._uifwk.cachedData.registrations(data);
+                            if(window.registrationFromRequest && $.isFunction(window.registrationFromRequest)) {
+                                console.info("window.registrationFromRequest is ko observable");
+                                window.registrationFromRequest(data);
+                            }else {
+                                console.info("window.registrationFromRequest is not ko observable");
+                                window.registrationFromRequest = ko.observable(data);
+                            }
+                            window._uifwk.cachedData.registrations = data;
                             window._uifwk.cachedData.isFetchingRegistrations = false;
                             successCallback(data, textStatus, jqXHR);
                         }
@@ -1147,7 +1142,8 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                             });
                         }
                     } else {
-                        window._uifwk.cachedData.registrations.subscribe(function (data) {
+                        window.registrationFromRequest.subscribe(function (data) {
+                            console.info("window.registrationFromRequest is fetched from back end");
                             if (data) {
                                 successCallback(data);
                             }

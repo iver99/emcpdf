@@ -518,9 +518,20 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                         'contentType': 'application/json',
 
                         success: function(_model, _resp, _options) {
-                            $( "#cDsbDialog" ).css("cursor", "default");
-                            $( "#cDsbDialog" ).ojDialog( "close" );
-                            self.afterConfirmDashboardCreate(_model, _resp, _options);
+                            if(_resp.errorCode && _resp.errorCode === 10001){
+                                $( "#cDsbDialog" ).css("cursor", "default");
+                                var _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
+                                var _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
+                                _trackObj = new oj.InvalidComponentTracker();
+                                self.tracker(_trackObj);
+                                self.createMessages.push(new oj.Message(_m, _mdetail));
+                                _trackObj.showMessages();
+                                _trackObj.focusOnFirstInvalid();
+                            }else{
+                                $( "#cDsbDialog" ).css("cursor", "default");
+                                $( "#cDsbDialog" ).ojDialog( "close" );
+                                self.afterConfirmDashboardCreate(_model, _resp, _options);
+                            }
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             $( "#cDsbDialog" ).css("cursor", "default");

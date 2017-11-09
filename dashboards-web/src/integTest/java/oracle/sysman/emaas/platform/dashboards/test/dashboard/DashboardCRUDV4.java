@@ -346,7 +346,7 @@ public class DashboardCRUDV4
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).body(jsonString3).when().post("/dashboards");
 
-			Assert.assertTrue(res3.getStatusCode() == 400);
+			Assert.assertTrue(res3.getStatusCode() == 200);
 			Assert.assertEquals(res3.jsonPath().getString("errorCode"), "10001");
 			Assert.assertEquals(res3.jsonPath().getString("errorMessage"), "Dashboard with the same name exists already");
 
@@ -1042,7 +1042,7 @@ public class DashboardCRUDV4
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).body(jsonString3).when().post("/dashboards");
 
-			Assert.assertTrue(res4.getStatusCode() == 400);
+			Assert.assertTrue(res4.getStatusCode() == 200);
 			Assert.assertEquals(res4.jsonPath().getString("errorCode"), "10001");
 			Assert.assertEquals(res4.jsonPath().getString("errorMessage"), "Dashboard with the same name exists already");
 
