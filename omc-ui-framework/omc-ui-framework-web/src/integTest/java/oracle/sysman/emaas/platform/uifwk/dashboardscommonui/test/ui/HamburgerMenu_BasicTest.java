@@ -94,7 +94,8 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 	    WaitUtil.waitForPageFullyLoaded(webd);
 	    BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
 	    webd.capturePageState();
-	    String url = webd.getAttribute("omc_root_admin_addentity@href");
+	    webd.waitForElementPresent("id=omc_root_admin_addentity");
+		String url = webd.getElement("id=omc_root_admin_addentity").getAttribute("href");
 	    webd.getLogger().info("The URL is:"+ url);
 	    webd.capturePageState();
 	    BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ADD_ENTITY);
@@ -236,7 +237,7 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 		CommonUIUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
 	}
 
-	//@Test(alwaysRun = true)
+	@Test(alwaysRun = true)
 	public void testClickMonitoringMenuItem()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "");

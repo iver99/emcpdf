@@ -12,12 +12,17 @@ package oracle.sysman.emaas.platform.emcpdf.registry;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.util.FriendlyUrlProvider;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.TenantInfoClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
@@ -41,7 +46,6 @@ public class RegistryLookupUtil
 	private static Logger itrLogger = LogUtil.getInteractionLogger();
 	// keep the following the same with service name
 	public static final String APM_SERVICE = "ApmUI";
-
 	public static final String ITA_SERVICE = "emcitas-ui-apps";
 	public static final String LA_SERVICE = "LogAnalyticsUI";
 	public static final String TA_SERVICE = "TargetAnalytics";
@@ -54,6 +58,10 @@ public class RegistryLookupUtil
 
 	private static final String HTTP = "http";
 	private static final String HTTPS = "https";
+
+        // Cached the mapping of tenant ID to URL prefix
+        private static ConcurrentHashMap<String, String> cachedPublicURLPrefixes = 
+            new ConcurrentHashMap<String, String>();
 
     /**
      * get internal link for <b>non-tenant</b> request by 
@@ -81,20 +89,34 @@ public class RegistryLookupUtil
 	
 	public static VersionedLink getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
 	{
-		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName);
+		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, false);
+	}
+
+	public static VersionedLink getServiceInternalLink(String serviceName, String version, String rel, String tenantName, boolean useApiGWLookup)
+	{
+		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName, useApiGWLookup);
+	}
+
+	public static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, String tenantName, boolean useApiGwLookup)
+	{
+		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName,useApiGwLookup);
 	}
 
 	public static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
 	{
-		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName);
+		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName,false);
 	}
 
 	public static VersionedLink getServiceExternalLinkWithRelPrefix(String serviceName, String version, String rel,
-																	String tenantName){
-		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, true, tenantName);
+																	String tenantName, boolean useApiGWLookup){
+		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, true, tenantName,useApiGWLookup);
 	}
 
-	public static String getServiceExternalEndPoint(String serviceName, String version, String tenantName)
+	public static String getServiceExternalEndPoint(String serviceName, String version, String tenantName){
+		return getServiceExternalEndPoint(serviceName, version, tenantName, false);
+	}
+
+	public static String getServiceExternalEndPoint(String serviceName, String version, String tenantName, boolean useApiGWLookup)
 	{
 		LOGGER.debug(
 				"/getServiceExternalEndPoint/ Trying to retrieve service external end point for service: \"{}\", version: \"{}\", tenant: \"{}\"",
@@ -106,7 +128,8 @@ public class RegistryLookupUtil
 		InstanceInfo internalInstance = null;
 		try {
 			if (!StringUtil.isEmpty(tenantName)) {
-				internalInstance = LookupManager.getInstance().getLookupClient().getInstanceForTenant(queryInfo, tenantName);
+				internalInstance = useApiGWLookup == true? LookupManager.getInstance().getGatewayLookupClient().getInstanceForTenant(queryInfo, tenantName)
+						:LookupManager.getInstance().getLookupClient().getInstanceForTenant(queryInfo, tenantName);
 				itrLogger.debug("#1. Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance, tenantName);
 				if (internalInstance == null) {
 					LOGGER.error(
@@ -115,10 +138,12 @@ public class RegistryLookupUtil
 				}
 			}
 			else {
-				internalInstance = LookupManager.getInstance().getLookupClient().getInstance(queryInfo);
+				internalInstance = useApiGWLookup == true? LookupManager.getInstance().getGatewayLookupClient().getInstance(queryInfo)
+						: LookupManager.getInstance().getLookupClient().getInstance(queryInfo);
 				itrLogger.debug("Retrieved internal instance {} by using LookupClient.getInstance");
 			}
-			sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
+			sanitizedInstance = useApiGWLookup == true?LookupManager.getInstance().getGatewayLookupClient().getSanitizedInstanceInfo(internalInstance)
+					:LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
 			itrLogger.debug("Retrieved sanitized instance {} by using LookupClient.getSanitizedInstanceInfo");
 			if (sanitizedInstance == null) {
 				return RegistryLookupUtil.getInternalEndPoint(internalInstance);
@@ -143,9 +168,9 @@ public class RegistryLookupUtil
 		return null;
 	}
 
-	public static EndpointEntity getServiceExternalEndPointEntity(String serviceName, String version, String tenantName)
+	public static EndpointEntity getServiceExternalEndPointEntity(String serviceName, String version, String tenantName, boolean useApiGWLookup)
 	{
-		Link link = RegistryLookupUtil.getServiceExternalLink(serviceName, version, "sso.endpoint/virtual", tenantName);
+		Link link = RegistryLookupUtil.getServiceExternalLink(serviceName, version, "sso.endpoint/virtual", tenantName, useApiGWLookup);
 		if (link != null) {
 			return new EndpointEntity(serviceName, version, link.getHref());
 		}
@@ -154,7 +179,11 @@ public class RegistryLookupUtil
 		}
 	}
 
-	public static VersionedLink getServiceInternalEndpoint(String serviceName, String version, String tenantName)
+	public static VersionedLink getServiceInternalEndpoint(String serviceName, String version, String tenantName){
+		return getServiceInternalEndpoint(serviceName, version, tenantName, false);
+	}
+
+	public static VersionedLink getServiceInternalEndpoint(String serviceName, String version, String tenantName, boolean useApiGWLookup)
 	{
 		LOGGER.debug(
 				"/getServiceInternalEndpoint/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", tenant: \"{}\"",
@@ -164,7 +193,8 @@ public class RegistryLookupUtil
 		try {
 			List<InstanceInfo> result = null;
 			if (!StringUtil.isEmpty(tenantName)) {
-				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
+				InstanceInfo ins = useApiGWLookup ==true? LookupManager.getInstance().getGatewayLookupClient().getInstanceForTenant(info, tenantName)
+				:LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
 				itrLogger.debug("#2. Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
 				if (ins == null) {
 					LOGGER.error(
@@ -178,7 +208,8 @@ public class RegistryLookupUtil
 
 			}
 			else {
-				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+				result = useApiGWLookup == true? LookupManager.getInstance().getGatewayLookupClient().lookup(new InstanceQuery(info))
+				:LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			}
 			String endpoint = null;
 			if (result != null && !result.isEmpty()) {
@@ -216,7 +247,7 @@ public class RegistryLookupUtil
 	}
 
 	private static VersionedLink getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
-			String tenantName)
+			String tenantName, boolean useApiGWLookup)
 	{
 		LOGGER.debug(
 				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
@@ -226,7 +257,8 @@ public class RegistryLookupUtil
 		try {
 			List<InstanceInfo> result = null;
 			if (null != tenantName && !"".equals(tenantName.trim())) {
-				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
+				InstanceInfo ins = useApiGWLookup == true? LookupManager.getInstance().getGatewayLookupClient().getInstanceForTenant(info, tenantName)
+						: LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
 				LOGGER.debug("#3. Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
 				if (ins == null) {
 					LOGGER.error(
@@ -240,7 +272,8 @@ public class RegistryLookupUtil
 
 			}
 			else {
-				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+				result = useApiGWLookup == true? LookupManager.getInstance().getGatewayLookupClient().lookup(new InstanceQuery(info))
+					: LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			}
 			if (result != null && !result.isEmpty()) {
 				// [EMCPDF-733] Rest client can't handle https currently, so http protocol is enough for internal use
@@ -268,24 +301,28 @@ public class RegistryLookupUtil
 	}
 
 	private static VersionedLink getServiceExternalLink(String serviceName, String version, String rel, boolean prefixMatch,
-														String tenantName)
+														String tenantName, boolean useApiGWLookup)
 	{
 		LOGGER.debug(
-				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
-				serviceName, version, rel, tenantName);
+				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\", useApiGWLookup: \"{}\"",
+				serviceName, version, rel, tenantName,useApiGWLookup);
 		InstanceInfo info = getInstanceInfo(serviceName, version);
 		VersionedLink lk = null;
+		LOGGER.info("Is this a look up on APIGW registry? {}", useApiGWLookup);
 		try {
 			List<InstanceInfo> result = null;
+			InstanceInfo ins = null;
 			if (!StringUtil.isEmpty(tenantName)) {
-				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
+				ins = useApiGWLookup == true? LookupManager.getInstance().getGatewayLookupClient().getInstanceForTenant(info, tenantName)
+						: LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
 				LOGGER.debug("#4. Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
 				if (ins == null) {
 					LOGGER.error(
 							"#4.Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
 							serviceName, version, tenantName);
 					//TODO not sure if this is necessary, some RegistryLookupUtil have this line of code, some not.
-					result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+					result = useApiGWLookup == true? LookupManager.getInstance().getGatewayLookupClient().lookup(new InstanceQuery(info))
+							: LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 				}
 				else {
 					result = new ArrayList<InstanceInfo>();
@@ -294,7 +331,8 @@ public class RegistryLookupUtil
 
 			}
 			else {
-				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+				result = useApiGWLookup == true? LookupManager.getInstance().getGatewayLookupClient().lookup(new InstanceQuery(info))
+						: LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			}
 			if (result != null && !result.isEmpty()) {
 
@@ -314,7 +352,7 @@ public class RegistryLookupUtil
 								serviceName, version, rel, tenantName);
 					}
 
-					SanitizedInstanceInfo sanitizedInstance = RegistryLookupUtil.findSaniInsInfo(tenantName, internalInstance);
+					SanitizedInstanceInfo sanitizedInstance = RegistryLookupUtil.findSaniInsInfo(tenantName, internalInstance, useApiGWLookup);
 					if (sanitizedInstance != null) {
 						if (prefixMatch) {
 							links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("https", rel,
@@ -356,7 +394,7 @@ public class RegistryLookupUtil
 						version = internalInstance.getVersion();
 					}
 
-					SanitizedInstanceInfo sanitizedInstance = RegistryLookupUtil.findSaniInsInfo(tenantName, internalInstance);
+					SanitizedInstanceInfo sanitizedInstance = RegistryLookupUtil.findSaniInsInfo(tenantName, internalInstance, useApiGWLookup);
 					if (sanitizedInstance != null) {
 						if (prefixMatch) {
 							links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol(HTTP, rel,
@@ -442,19 +480,20 @@ public class RegistryLookupUtil
         return new String(authToken);
     }
 
-	private static SanitizedInstanceInfo findSaniInsInfo(String tenantName, InstanceInfo internalInstance)
+	private static SanitizedInstanceInfo findSaniInsInfo(String tenantName, InstanceInfo internalInstance, boolean useApiGWLookup)
 	{
 		SanitizedInstanceInfo sanitizedInstance = null;
 		try {
 			if (!StringUtil.isEmpty(tenantName)) {
-				sanitizedInstance = LookupManager.getInstance().getLookupClient()
-						.getSanitizedInstanceInfo(internalInstance, tenantName);
+				sanitizedInstance = useApiGWLookup == true? LookupManager.getInstance().getGatewayLookupClient().getSanitizedInstanceInfo(internalInstance, tenantName)
+						:LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance, tenantName);
 				LOGGER.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}", sanitizedInstance,
 						tenantName);
 			}
 			else {
 				LOGGER.warn("Failed to retrieve tenant when getting external end point. Using tenant non-specific APIs to get sanitized instance");
-				sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
+				sanitizedInstance = useApiGWLookup ==true ? LookupManager.getInstance().getGatewayLookupClient().getSanitizedInstanceInfo(internalInstance)
+				:LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
 			}
 		}
 		catch (Exception ex) {
@@ -463,7 +502,11 @@ public class RegistryLookupUtil
 		return sanitizedInstance;
 	}
 
-	public static Map<String, String> getVanityBaseURLs(String tenantName)
+	public static Map<String, String> getVanityBaseURLs(String tenantName){
+		return getVanityBaseURLs(tenantName,false);
+	}
+
+	public static Map<String, String> getVanityBaseURLs(String tenantName, boolean useApiGWLookup)
 	{
         ICacheManager cm = CacheManagers.getInstance().build();
         LOGGER.debug("/getVanityBaseURLs/ trying to get base vanity URLs for tenant: \"{}\"", tenantName);
@@ -486,7 +529,8 @@ public class RegistryLookupUtil
 		Link lk = null;
 		map = new HashMap<String, String>();
 		try {
-			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			List<InstanceInfo> result = useApiGWLookup == true? LookupManager.getInstance().getGatewayLookupClient().lookup(new InstanceQuery(info))
+					:LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			if (result != null && !result.isEmpty()) {
 				for (InstanceInfo internalInstance : result) {
 					if (map.containsKey(APM_SERVICE) && map.containsKey(ITA_SERVICE) && map.containsKey(LA_SERVICE)
@@ -656,6 +700,8 @@ public class RegistryLookupUtil
 			return vanityBaseUrl;
 		}
 
+                tenantName = mapTenantNameForEC(tenantName);
+
 		if (vanityBaseUrl.indexOf("://") != -1) {
 			String[] splittedProtocol = vanityBaseUrl.split("://");
 			StringBuilder sb = new StringBuilder();
@@ -674,6 +720,55 @@ public class RegistryLookupUtil
 		}
 		return vanityBaseUrl;
 	}
+
+        private static String mapTenantNameForEC(String tenantName)
+        {
+            String mappedTenantName = tenantName;
+            if (isExternalCompute()) {
+                try {
+                    FriendlyUrlProvider provider = new FriendlyUrlProvider();
+		    String publicURL = provider.mapToPublicURL(tenantName);
+                    if (publicURL != null) {
+                        // Parse the URL to extract the first label
+                        try {
+                            URI uri = new URI(publicURL);
+                            String serverName = uri.getHost();
+                            if (serverName == null || serverName.isEmpty())
+                            {
+                                throw new IllegalStateException("PublicUrlMapping for [" + tenantName +
+                                        "] returned a URI with an empty or null host");
+                            }
+                            String[] labels = serverName.split("\\.");
+                            if (labels == null || labels.length <= 1)
+                            {
+                                throw new IllegalStateException("PublicUrlMapping for [" + tenantName +
+                                        "] returned a URI with an invalid host [" + serverName + "]");
+                            }
+                            // The url prefix is the first label
+                            mappedTenantName = labels[0];
+                            // Update cache
+                            cachedPublicURLPrefixes.put(tenantName, mappedTenantName);
+                        } catch (URISyntaxException e) {
+                            throw new IllegalStateException("PublicUrlMapping for [" + tenantName +
+                                    "] returned an invalid URI [" + publicURL + "]", e);
+                        }
+		    } else {
+                        throw new IllegalStateException("PublicUrlMapping for [" + tenantName + "] returned null");
+		    }
+                } catch (Exception e) {
+                    // Something went wrong with the mapping
+                    LOGGER.error("Error mapping [" + tenantName + "] to public URL. Trying the cache", e);
+                    // Check if there is a cached value in LookupManager for the specific tenant ID
+                    String cachedPrefix = cachedPublicURLPrefixes.get(tenantName);
+                    if (cachedPrefix != null) {
+                        mappedTenantName = cachedPrefix;
+		    } else {
+                        throw new IllegalStateException("Couldn't find a cached public URL mapping for " + tenantName, e);
+		    }
+		}
+            }
+            return mappedTenantName;
+        }
 
 	private static String getExternalEndPoint(SanitizedInstanceInfo instance)
 	{
@@ -880,18 +975,24 @@ public class RegistryLookupUtil
 		}
 	}
 
+	public static List<VersionedLink> getAllServicesInternalLinksByRel(String rel) throws IOException{
+		return getAllServicesInternalLinksByRel(rel,false);
+	}
+
 	//Below method is not used by DF now(will be used by SSF)
-	public static List<VersionedLink> getAllServicesInternalLinksByRel(String rel) throws IOException
+	public static List<VersionedLink> getAllServicesInternalLinksByRel(String rel, boolean useApiGWLookup) throws IOException
 	{
 		LOGGER.debug("/getAllServicesInternalLinksByRel/ Trying to retrieve service internal link with rel: \"{}\"", rel);
 		//.initComponent() reads the default "looup-client.properties" file in class path
 		//.initComponent(List<String> urls) can override the default Registry urls with a list of urls
-		if (LookupManager.getInstance().getLookupClient() == null) {
+		LookupClient lc = useApiGWLookup ==true? LookupManager.getInstance().getGatewayLookupClient():LookupManager.getInstance().getLookupClient();
+		if (lc == null) {
 			// making sure the initComponent is only called once during the client lifecycle
 			LookupManager.getInstance().initComponent();
+                        TenantInfoClient.getInstance().initComponent();
 		}
-		List<InstanceInfo> instanceList = LookupManager.getInstance().getLookupClient().getInstancesWithLinkRelPrefix(rel,
-				HTTP);
+		List<InstanceInfo> instanceList = useApiGWLookup == true ? LookupManager.getInstance().getGatewayLookupClient().getInstancesWithLinkRelPrefix(rel, HTTP)
+			:LookupManager.getInstance().getLookupClient().getInstancesWithLinkRelPrefix(rel, HTTP);
 		if (instanceList == null) {
 			LOGGER.warn("Found no instances with specified http rel {}", rel);
 			return Collections.emptyList();
@@ -927,5 +1028,16 @@ public class RegistryLookupUtil
 		}
 	}
 
+    private static final String EC_JVM_PARAM = "com.oracle.omc.external";
 
+    /**
+     * Whether this is an external compute environment.
+     *
+     * @return true if this is an external compute environment
+     */
+    private static boolean isExternalCompute()
+    {
+        String ecVal = System.getProperty(EC_JVM_PARAM);
+        return ecVal != null && "true".equalsIgnoreCase(ecVal);
+    }
 }

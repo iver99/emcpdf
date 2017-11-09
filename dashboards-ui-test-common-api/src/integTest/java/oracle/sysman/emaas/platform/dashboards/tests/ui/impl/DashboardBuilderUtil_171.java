@@ -973,6 +973,12 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		Assert.assertTrue(false, "This method is not available in 1.7.1 version");
 		driver.getLogger().info("Method not available in 1.7.1 version");
 	}
+	
+	@Override
+	public void switchTextWidgetToEditMode(WebDriver driver, int index) {
+		Assert.assertTrue(false, "This method is not available in 1.7.1 version");
+		driver.getLogger().info("Method not available in 1.7.1 version");
+	}
 
 	@Override
 	public boolean showEntityFilter(WebDriver driver, boolean showEntityFilter)

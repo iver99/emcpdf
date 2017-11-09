@@ -22,6 +22,7 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.TenantInfoClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InfoManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.InstanceStatus;
@@ -222,6 +223,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_REFRESH_NLS = NAV_API_BASE + "refresh/nls";
 	private static final String NAV_REFRESH_WIDGET_CACHE = NAV_API_BASE + "refresh/widgetcache";
 	private static final String NAV_TOOL = NAV_API_BASE + "tool";
+	
+    // rel : tenant.offboard
+    private static final String INTERNALAPI_TENANT_OFFBOARD = "tenant.offboard";
+    private static final String NAV_TOOL_TENANT_OFFBOARD = NAV_API_BASE + "tool/offboard";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
@@ -333,6 +338,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 			LOGGER.info("Initialize lookup manager");
 			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
+                        TenantInfoClient.getInstance().initComponent();
 
 			//			LOGGER.info("Checking RegistryService");
 			//			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
@@ -536,6 +542,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
             }
             if (applicationUrlHttp != null) {
                 links.add(new Link().withRel("tool").withHref(applicationUrlHttp + NAV_TOOL));
+            }
+            if (applicationUrlHttp != null) {
+                links.add(new Link().withRel(INTERNALAPI_TENANT_OFFBOARD).withHref(applicationUrlHttp + NAV_TOOL_TENANT_OFFBOARD));
             }
 
 			InfoManager.getInstance().getInfo().setLinks(links);

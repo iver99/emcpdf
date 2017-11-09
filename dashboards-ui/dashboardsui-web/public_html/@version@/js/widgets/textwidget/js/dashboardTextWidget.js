@@ -81,6 +81,35 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                     $("#textEditor_" + self.textWidgetId).focus();
                 };
                 
+                params.tile.onDashboardItemChangeEvent = function(dashboardItemChangeEvent) {
+                    //When receive "Edit" event from dashboard, show text widget in edit mode
+                    if(dashboardItemChangeEvent && dashboardItemChangeEvent.tileChange && dashboardItemChangeEvent.tileChange.status === "POST_EDIT") {
+                        self.showTextEditor();
+                    }
+                };
+                
+                var TimeFn = null;
+                self.textWidgetDblClickHandler = function() {
+                    clearTimeout(TimeFn);
+                    self.showTextEditor();
+                };
+                
+                self.textWidgetClickHandler = function(data, event) {
+                    clearTimeout(TimeFn);
+                    TimeFn = setTimeout(function() {
+                        //If user clicks on hyperlink or image, open them instead of switching to edit mode
+                        if(event.target && event.target.tagName === "A" && event.target.href) {
+                            window.open(event.target.href);
+                            return false;
+                        }else if(event.target && event.target.tagName === "IMG" && event.target.src) {
+                            window.open(event.target.src);
+                            return false;
+                        }
+                        return true;
+                    }, 300);
+                    
+                }
+                
                 CKEDITOR.on("dialogDefinition", function(ev) {
                     var dialogName = ev.data.name;
                     var dialogDefinition = ev.data.definition;

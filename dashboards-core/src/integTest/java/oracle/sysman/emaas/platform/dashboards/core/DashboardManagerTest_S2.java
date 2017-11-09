@@ -20,6 +20,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
@@ -40,6 +41,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.TileParam;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.MockDashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
+import oracle.sysman.emaas.platform.emcpdf.cache.tool.Binary;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
@@ -97,7 +99,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 			LOGGER.info("context", e);
 		}
 		dm.getDashboardByName(null, 0L);
-		dm.getLastAccessDate(null, 0L);
+//		dm.getLastAccessDate(null, 0L);
 		try {
 			dm.isDashboardFavorite(null, 0L);
 		}
@@ -155,7 +157,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 			LOGGER.info("context", e);
 		}
 
-		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
+//		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
 		try {
 			dm.isDashboardFavorite(BigInteger.valueOf(1L), 0L);
 		}
@@ -208,7 +210,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 			LOGGER.info("context", e);
 		}
 
-		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
+//		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
 		try {
 			dm.isDashboardFavorite(BigInteger.valueOf(1L), 0L);
 		}
@@ -287,7 +289,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 			LOGGER.info("context", e);
 		}
 
-		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
+//		dm.getLastAccessDate(BigInteger.valueOf(1L), 0L);
 		try {
 			dm.isDashboardFavorite(BigInteger.valueOf(1L), 0L);
 		}
@@ -928,12 +930,6 @@ public class DashboardManagerTest_S2 extends BaseTest
 		ScreenshotData shot = dm.getDashboardBase64ScreenShotById(dbd1.getDashboardId(), tenantId1);
 		Assert.assertEquals(shot.getScreenshot(), testScreenshotDate);
 
-		List<Dashboard> ds = dm.listAllDashboards(tenantId1);
-		Assert.assertEquals(!ds.isEmpty(), true);
-		Assert.assertEquals(ds.get(0).getName(), dbd1.getName());
-		Assert.assertEquals(ds.get(0).getLastModifiedBy(), dbd1.getLastModifiedBy());
-		Assert.assertEquals(ds.get(0).getLastModificationDate(), dbd1.getLastModificationDate());
-
 		dm.addFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
 		Assert.assertEquals(dm.isDashboardFavorite(dbd1.getDashboardId(), tenantId1), true);
 	}
@@ -1041,43 +1037,6 @@ public class DashboardManagerTest_S2 extends BaseTest
 		}
 	}
 
-	@Test(groups = { "s2" })
-	public void testGetUpdateLastAccessDateS2() throws DashboardException, InterruptedException
-	{
-		loadMockBeforeMethod();
-		DashboardManager dm = DashboardManager.getInstance();
-		String name1 = "name1" + System.currentTimeMillis();
-		Long tenantId1 = 11L;
-		Dashboard dbd1 = new Dashboard();
-		dbd1.setName(name1);
-		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
-		Date lastAccess1 = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNotNull(lastAccess1);
-		//		dm.updateLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
-		Date lastAccess2 = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNotNull(lastAccess2);
-		Thread.sleep(2000);
-		//		dm.updateLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
-		Date newLastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertTrue(newLastAccess.getTime() >= lastAccess2.getTime() + 1900);
-
-		// delete dashboard/soft deletion
-		dm.deleteDashboard(dbd1.getDashboardId(), tenantId1);
-		Date lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNull(lastAccess);
-
-		// delete dashboard/hard deletion
-		try {
-			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
-		}
-		catch (DashboardNotFoundException e) {
-			LOGGER.info("context", e);
-		}
-		lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNull(lastAccess);
-	}
 
 	@Test(groups = "s2")
 	public void testListDashboardS2(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
@@ -1334,5 +1293,39 @@ public class DashboardManagerTest_S2 extends BaseTest
 		};
 		dashboardManager.getCombinedDashboardById(new BigInteger("1"), 1L, "username");
 
+	}
+
+	@Test(groups = {"s2"})
+	public void testGetDashboardIdsByNames(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
+											 @Mocked final EntityManager anyEntityManager, @Mocked final EntityTransaction andEntityTransaction,
+											 @Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber)
+	{
+		DashboardManager dm = DashboardManager.getInstance();
+		dm.getDashboardIdsByNames(new ArrayList<>(Arrays.asList("Test","Testing")),1L);
+	}
+
+	@Test(groups = {"s2"})
+	public void testGetDashboardSetsBySubId(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
+										   @Mocked final EntityManager anyEntityManager, @Mocked final EntityTransaction andEntityTransaction,
+										   @Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber,
+											@Mocked final EmsDashboard emsDashboard) throws Exception
+	{
+		DashboardManager dm = DashboardManager.getInstance();
+		new Expectations(){
+			{
+//				anyDashboardServiceFacade.getEmsDashboardById(BigInteger.valueOf(1L));
+//				result = emsDashboard;
+//				emsDashboard.getDeleted();
+//				result = BigInteger.ZERO;
+//				emsDashboard.getSharePublic().intValue();
+//				result = 1;
+				anyDashboardServiceFacade.getDashboardNameWithMaxSuffixNumber("name",1L);
+				result = "For Testing";
+				result = "For Testing _123";
+
+			}
+		};
+		Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"name");
+		Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"name");
 	}
 }
