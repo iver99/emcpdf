@@ -57,4 +57,18 @@ public class BrandingBarUtil_1250 extends BrandingBarUtil_1230 {
         }
     }
 
+    @Override
+    public boolean isHamburgerMenuDisplayed(WebDriver driver)
+    {
+        WaitUtil.waitForPageFullyLoaded(driver);
+        driver.takeScreenShot();
+        driver.savePageToFile();
+        if (driver.isDisplayed("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 }
