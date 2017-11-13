@@ -66,6 +66,7 @@ public class TableRowsSynchronizerTest {
         dashboardRowEntity.setEnableDescription(1);
         dashboardRowEntity.setExtendedOptions("options");
         dashboardRowEntity.setShowInHome(1);
+        dashboardRowEntity.setFederationSupported(1);
 
         dashboardTileParamsRowEntity.setTileId("1");
         dashboardTileParamsRowEntity.setParamName("name");
@@ -114,6 +115,7 @@ public class TableRowsSynchronizerTest {
         dashboardTileRowEntity.setWidgetDeletionDate("2016-08-11 13:31:00");
         dashboardTileRowEntity.setWidgetDeleted(0);
         dashboardTileRowEntity.setDeleted(0);
+        dashboardTileRowEntity.setFederationSupported(1);
 
         dashboardUserOptionsRowEntity.setUserName("name");
         dashboardUserOptionsRowEntity.setTenantId(1L);

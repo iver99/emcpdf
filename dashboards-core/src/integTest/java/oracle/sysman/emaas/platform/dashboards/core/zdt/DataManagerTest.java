@@ -323,6 +323,7 @@ public class DataManagerTest
 		Integer enableDescription = 1;
 		String extendedOptions = "extendedoptions";
 		Integer showInHome = 1;
+		Integer federationSupported = 0;
 		final Map<String, Object> objs = new HashMap<String,Object>();		
 		Date date = new Date();
 		objs.put("LAST_MODIFICATION_DATE", null);
@@ -353,49 +354,50 @@ public class DataManagerTest
 				enableEntityFilter,
 				enableDescription,
 				extendedOptions,
-				showInHome);
+				showInHome,
+				federationSupported);
 		dataManager.syncDashboardTableRow(entityManager,
 				null, name, type, description,
 				creationDate, lastModificationDate, lastModifiedBy,
 				owner, isSystem, applicationType, enableTimeRange,
 				screenShot, deleted, tenantId, enableRefresh,
 				sharePublic, enableEntityFilter, enableDescription,
-				extendedOptions, showInHome);
+				extendedOptions, showInHome, federationSupported);
 		dataManager.syncDashboardTableRow(entityManager,
 				dashboardId, null, type, description,
 				creationDate, lastModificationDate, lastModifiedBy,
 				owner, isSystem, applicationType, enableTimeRange,
 				screenShot, deleted, tenantId, enableRefresh,
 				sharePublic, enableEntityFilter, enableDescription,
-				extendedOptions, showInHome);
+				extendedOptions, showInHome, federationSupported);
 		dataManager.syncDashboardTableRow(entityManager,
 				dashboardId, name, null, description,
 				creationDate, lastModificationDate, lastModifiedBy,
 				owner, isSystem, applicationType, enableTimeRange,
 				screenShot, deleted, tenantId, enableRefresh,
 				sharePublic, enableEntityFilter, enableDescription,
-				extendedOptions, showInHome);
+				extendedOptions, showInHome, federationSupported);
 		dataManager.syncDashboardTableRow(entityManager,
 				dashboardId, name, type, description,
 				null, lastModificationDate, lastModifiedBy,
 				owner, isSystem, applicationType, enableTimeRange,
 				screenShot, deleted, tenantId, enableRefresh,
 				sharePublic, enableEntityFilter, enableDescription,
-				extendedOptions, showInHome);
+				extendedOptions, showInHome, federationSupported);
 		dataManager.syncDashboardTableRow(entityManager,
 				dashboardId, name, type, description,
 				creationDate, lastModificationDate, lastModifiedBy,
 				null, isSystem, applicationType, enableTimeRange,
 				screenShot, deleted, tenantId, enableRefresh,
 				sharePublic, enableEntityFilter, enableDescription,
-				extendedOptions, showInHome);
+				extendedOptions, showInHome, federationSupported);
 		dataManager.syncDashboardTableRow(entityManager,
 				dashboardId, name, type, description,
 				creationDate, lastModificationDate, lastModifiedBy,
 				owner, null, applicationType, enableTimeRange,
 				screenShot, deleted, tenantId, enableRefresh,
 				sharePublic, enableEntityFilter, enableDescription,
-				extendedOptions, showInHome);
+				extendedOptions, showInHome, federationSupported);
 
 	}	
 	@Test
@@ -421,6 +423,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 	Integer enableDescription = 1;
 	String extendedOptions = "extendedoptions";
 	Integer showInHome = 1;
+	Integer federationSupported = 1;
 	final List<Map<String, Object>> list = new ArrayList<>();
 	Map<String,Object> map = new HashMap<>();
 	map.put("CREATION_DATE","2017:09:09 09:09:09.000");
@@ -453,7 +456,8 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 			enableEntityFilter,
 			enableDescription,
 			extendedOptions,
-			showInHome);
+			showInHome,
+			federationSupported);
 
 }
 
@@ -496,6 +500,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 		Integer widgetDeleted = 0; 
 		String widgetDeletionDate = "widgetDeletionDate" ;
 		Integer deleted = 0;
+		Integer federationSupported = 2;
 		final Map<String, Object> objs = new HashMap<String,Object>();		
 		Date date = new Date();
 		objs.put("LAST_MODIFICATION_DATE", null);
@@ -510,63 +515,64 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 	 	dataManager.syncDashboardTile(entityManager, tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 								   width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 								   widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
-								   providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
+								   providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl,
+								widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted, federationSupported);
 		dataManager.syncDashboardTile(entityManager,null, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
-				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
+				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted, federationSupported);
 		dataManager.syncDashboardTile(entityManager,tileId, null, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
-				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
+				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted, federationSupported);
 		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, null, lastModificationDate, lastModifiedBy, owner, null, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
-				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
+				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted, federationSupported);
 		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, null, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
-				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
+				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted, federationSupported);
 		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, null, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
-				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
+				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted, federationSupported);
 		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, null, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
-				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
+				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted, federationSupported);
 		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, null, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
-				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
+				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted, federationSupported);
 		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, null, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
-				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
+				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted, federationSupported);
 		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, null, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
-				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
+				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted, federationSupported);
 		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, null, widgetKocName, widgetViewmode, widgetTemplate,
-				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
+				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted, federationSupported);
 		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, null, widgetViewmode, widgetTemplate,
-				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
+				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted, federationSupported);
 		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, null, widgetTemplate,
-				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
+				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted, federationSupported);
 		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, null,
-				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);	 	
+				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted, federationSupported);
 		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
-				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, null, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
+				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, null, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted, federationSupported);
 	}
 	@Test
 	public void testSyncDashboardTileInsert(@Mocked final PersistenceManager persistenceManager, 
@@ -606,6 +612,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 		Integer widgetDeleted = 0; 
 		String widgetDeletionDate = "widgetDeletionDate" ;
 		Integer deleted = 0;
+		Integer federationSupported = 1;
 
 		new Expectations() {
 			{
@@ -616,7 +623,7 @@ public void getSyncDashboardTableRowInsert(@Mocked final PersistenceManager pers
 		dataManager.syncDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 				width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 				widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
-				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted);
+				providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard, widgetDeleted,widgetDeletionDate,deleted, federationSupported);
 	}
 	@Test
 	public void testSyncDashboardTileParam(@Mocked final PersistenceManager persistenceManager, 
