@@ -175,9 +175,9 @@ function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, cxtModel, zdtModel)
                 self.invalidUrl = dfu.getUrlParam("invalidUrl");
                 if (self.invalidUrl) {
                     self.invalidUrl = decodeURIComponent(self.invalidUrl);
-                    if(checkInvalidUrlSecurity(self.invalidUrl)){ 
-                        self.invalidUrl = null;
+                    if(!checkInvalidUrlSecurity(self.invalidUrl)){
                         console.log("The invalid url is unsecurity,"+self.invalidUrl);
+                        self.invalidUrl = null;
                     }
                 }
                 self.invalidUrlLabel = oj.Translations.getResource("DBS_ERROR_URL");
@@ -206,10 +206,10 @@ function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, cxtModel, zdtModel)
                 self.invalidUrl = dfu.getUrlParam("invalidUrl");
                 if (self.invalidUrl) {
                     self.invalidUrl = decodeURIComponent(self.invalidUrl);
-                       if(!checkInvalidUrlSecurity(self.invalidUrl)){
-                        self.invalidUrl = null;
+                    if(!checkInvalidUrlSecurity(self.invalidUrl)){
                         console.log("The invalid url is unsecurity,"+self.invalidUrl);
-                       }
+                        self.invalidUrl = null;
+                    }
                 }
                 self.invalidUrlLabel = oj.Translations.getResource("DBS_ERROR_URL");
             }
