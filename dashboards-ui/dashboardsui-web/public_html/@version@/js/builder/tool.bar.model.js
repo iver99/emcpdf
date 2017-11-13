@@ -402,29 +402,6 @@ define(['knockout',
                     };
                     self.tilesViewModel.appendNewTile(textWidget.WIDGEET_NAME, textWidget.WIDGEET_DESCRIPTION, 4, 2, ko.toJS(textWidget));
                 }
-                
-                self.handleAddHtmlWidget = function () {
-                    var htmlWidget = {
-                        WIDGET_UNIQUE_ID: 2,
-                        WIDGET_NAME: 'HTML Widget',
-                        WIDGET_DESCRIPTION: 'HTML Widget provided by Oracle',
-                        WIDGET_OWNER: 'ORACLE',
-                        WIDGET_CREATION_TIME: '2017-06-18T00:00:00:000Z',
-                        WIDGET_SOURCE: 0,
-                        WIDGET_GROUP_NAME: 'Dashboard',
-                        WIDGET_SCREENSHOT_HREF: null,
-                        WIDGET_SUPPORT_TIME_CONTROL: 0,
-                        WIDGET_KOC_NAME: 'df-htmlwidget',
-                        WIDGET_TEMPLATE: '/js/widgets/htmlwidget/htmlwidget.html',
-                        WIDGET_VIEWMODEL: '/js/widgets/htmlwidget/js/htmlwidget.js',
-                        PROVIDER_NAME: "Dashboard-UI",
-                        PROVIDER_VERSION: '1.0',
-                        PROVIDER_ASSET_ROOT: 'assetRoot',
-                        content: null,
-                        type: 'HTML_WIDGET'
-                    };
-                    self.tilesViewModel.appendNewTile(htmlWidget.WIDGEET_NAME, htmlWidget.WIDGEET_DESCRIPTION, 4, 2, ko.toJS(htmlWidget));
-                };
                   
             var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
             var addFavoriteLabel = getNlsString('DBS_BUILDER_BTN_FAVORITES_ADD');

@@ -721,7 +721,7 @@ define(['knockout',
                 widget.height = widget.WIDGET_DEFAULT_HEIGHT ? widget.WIDGET_DEFAULT_HEIGHT: height;
                 widget.column = null;
                 widget.row = null;
-                if(koc_name === 'df-htmlwidget'){
+                if(koc_name === 'EMCPDF_HTMLWIDGET_V1'){
                     widget.type = 'HTML_WIDGET';
                 }
                 if(widget.type !== "TEXT_WIDGET" && widget.type !== 'HTML_WIDGET') {
