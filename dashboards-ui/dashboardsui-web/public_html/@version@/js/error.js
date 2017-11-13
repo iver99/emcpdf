@@ -175,6 +175,10 @@ function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, cxtModel, zdtModel)
                 self.invalidUrl = dfu.getUrlParam("invalidUrl");
                 if (self.invalidUrl) {
                     self.invalidUrl = decodeURIComponent(self.invalidUrl);
+                    if(checkInvalidUrlSecurity(self.invalidUrl)){ 
+                        self.invalidUrl = null;
+                        console.log("The invalid url is unsecurity,"+self.invalidUrl);
+                    }
                 }
                 self.invalidUrlLabel = oj.Translations.getResource("DBS_ERROR_URL");
             } else {
@@ -202,10 +206,18 @@ function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, cxtModel, zdtModel)
                 self.invalidUrl = dfu.getUrlParam("invalidUrl");
                 if (self.invalidUrl) {
                     self.invalidUrl = decodeURIComponent(self.invalidUrl);
+                       if(!checkInvalidUrlSecurity(self.invalidUrl)){
+                        self.invalidUrl = null;
+                        console.log("The invalid url is unsecurity,"+self.invalidUrl);
+                       }
                 }
                 self.invalidUrlLabel = oj.Translations.getResource("DBS_ERROR_URL");
             }
-
+        
+        function checkInvalidUrlSecurity(invalidUrl){
+            var isSecurity = invalidUrl.startsWith('https:\/\/',0) || invalidUrl.startsWith('\/emsaasui\/',0);
+            return isSecurity;
+        };
 
         self.signOut = function() {
             //Clear interval for extending user session
