@@ -292,7 +292,7 @@ public class DashboardAPI extends APIBase
 	* */
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Response deleteDashboardByNameAndDesc2(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+	public Response deleteDashboardByNameAndDesc(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 												 @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
 												 @DefaultValue("")@QueryParam("name") String name,
 												  @DefaultValue("")@QueryParam("desc") String desc)

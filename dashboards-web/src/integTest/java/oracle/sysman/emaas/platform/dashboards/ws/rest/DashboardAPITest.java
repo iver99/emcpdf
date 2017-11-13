@@ -147,27 +147,27 @@ public class DashboardAPITest
 		assertDeleteDashboard();
 	}
 
-//	@Test
-//	public void testDeleteDashboardByName(@Mocked final DependencyStatus anyDependencyStatus) throws Exception{
-//		new Expectations(){
-//			{
-//				anyDependencyStatus.isDatabaseUp();
-//				result = true;
-//			}
-//		};
-//		assertDeleteDashboardByName();
-//	}
+	@Test
+	public void testDeleteDashboardByNameAndDesc(@Mocked final DependencyStatus anyDependencyStatus) throws Exception{
+		new Expectations(){
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+			}
+		};
+		assertDeleteDashboardByNameAndDesc();
+	}
 
-//	@Test
-//	public void testDeleteDashboardByNameWithDataBaseDown(@Mocked final DependencyStatus anyDependencyStatus) throws Exception{
-//		new Expectations(){
-//			{
-//				anyDependencyStatus.isDatabaseUp();
-//				result = false;
-//			}
-//		};
-//		assertDeleteDashboardByName();
-//	}
+	@Test
+	public void testDeleteDashboardByNameAndDescWithDataBaseDown(@Mocked final DependencyStatus anyDependencyStatus) throws Exception{
+		new Expectations(){
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = false;
+			}
+		};
+		assertDeleteDashboardByNameAndDesc();
+	}
 
 	@Test
 	public void testDeleteDashboardBasicServiceMalfunctionException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
@@ -183,18 +183,18 @@ public class DashboardAPITest
 		assertDeleteDashboard();
 	}
 
-//	@Test
-//	public void testDeleteDashboardByNameBasicServiceMalfunctionException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception{
-//		new Expectations(){
-//			{
-//				anyDependencyStatus.isDatabaseUp();
-//				result = true;
-//				mockedAPIBase.getTenantId(anyString);
-//				result = new BasicServiceMalfunctionException("Test BasicServiceMalfunctionException", "emaas-platform");
-//			}
-//		};
-//		assertDeleteDashboardByName();
-//	}
+	@Test
+	public void testDeleteDashboardByNameAndDescBasicServiceMalfunctionException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception{
+		new Expectations(){
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				mockedAPIBase.getTenantId(anyString);
+				result = new BasicServiceMalfunctionException("Test BasicServiceMalfunctionException", "emaas-platform");
+			}
+		};
+		assertDeleteDashboardByNameAndDesc();
+	}
 
 	@Test
 	public void testDeleteDashboardWithDashboardException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
@@ -210,18 +210,18 @@ public class DashboardAPITest
 		assertDeleteDashboard();
 	}
 
-//	@Test
-//	public void testDeleteDashboardByNameWithDashboardException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception{
-//		new Expectations(){
-//			{
-//				anyDependencyStatus.isDatabaseUp();
-//				result = true;
-//				mockedDashboardManager.deleteDashboard((BigInteger) any, anyLong);
-//				result = new CommonSecurityException("Test Security Error");
-//			}
-//		};
-//		assertDeleteDashboardByName();
-//	}
+	@Test
+	public void testDeleteDashboardByNameAndDescWithDashboardException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception{
+		new Expectations(){
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				mockedDashboardManager.deleteDashboard((BigInteger) any, anyLong);
+				result = new CommonSecurityException("Test Security Error");
+			}
+		};
+		assertDeleteDashboardByNameAndDesc();
+	}
 
 	@Test
 	public void testDeleteDashboardWithDeleteSystemDashboardException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
@@ -239,33 +239,33 @@ public class DashboardAPITest
 		assertDeleteDashboard();
 	}
 
-//	@Test
-//	public void testDeleteDashboardByNameWithDeleteSystemDashboardException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception{
-//		final Dashboard mockDashboardResult = new Dashboard();
-//		mockDashboardResult.setIsSystem(true);
-//		new Expectations(){
-//			{
-//				anyDependencyStatus.isDatabaseUp();
-//				result = true;
-//				mockedDashboardManager.getDashboardByName( anyString, anyLong);
-//				result = mockDashboardResult;
-//			}
-//		};
-//		assertDeleteDashboardByName();
-//	}
+	@Test
+	public void testDeleteDashboardByNameAndDescWithDeleteSystemDashboardException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception{
+		final Dashboard mockDashboardResult = new Dashboard();
+		mockDashboardResult.setIsSystem(true);
+		new Expectations(){
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				mockedDashboardManager.getDashboardByNameAndDescriptionAndOwner( anyString,anyString, anyLong);
+				result = mockDashboardResult;
+			}
+		};
+		assertDeleteDashboardByNameAndDesc();
+	}
 
-//	@Test
-//	public void testDeleteDashboardByNameWithDashboardNotFoundException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception{
-//		new Expectations(){
-//			{
-//				anyDependencyStatus.isDatabaseUp();
-//				result = true;
-//				mockedDashboardManager.getDashboardByName( anyString, anyLong);
-//				result = null;
-//			}
-//		};
-//		assertDeleteDashboardByName();
-//	}
+	@Test
+	public void testDeleteDashboardByNameAndDescWithDashboardNotFoundException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception{
+		new Expectations(){
+			{
+				anyDependencyStatus.isDatabaseUp();
+				result = true;
+				mockedDashboardManager.getDashboardByNameAndDescriptionAndOwner( anyString,anyString, anyLong);
+				result = null;
+			}
+		};
+		assertDeleteDashboardByNameAndDesc();
+	}
 
 	@Test
 	public void getDashboardUserOptions(@Mocked final UserOptionsManager userOptionsManager,
@@ -798,12 +798,12 @@ public class DashboardAPITest
 		Assert.assertNotNull(resp);
 	}
 
-//	private void assertDeleteDashboardByName()
-//	{
-//		Response resp = dashboardAPI.deleteDashboardByName("tenant01", "tenant01.emcsadmin",
-//				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", "testName");
-//		Assert.assertNotNull(resp);
-//	}
+	private void assertDeleteDashboardByNameAndDesc()
+	{
+		Response resp = dashboardAPI.deleteDashboardByNameAndDesc("tenant01", "tenant01.emcsadmin",
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", "testName","testDesc");
+		Assert.assertNotNull(resp);
+	}
 
 	private void assertGetDashboardBase64ScreenShot()
 	{
