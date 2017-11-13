@@ -1,9 +1,8 @@
-define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg', 'DOMPurify'],
-        function (localrequire, ko, $, oj, nls, DOMPurify) {
+define(["require", "knockout", "jquery", "ojs/ojcore", 'DOMPurify'],
+        function (localrequire, ko, $, oj, DOMPurify) {
             function htmlWidgetViewModel(params) {
                 var self = this;
 
-                self.HTML_WIDGET_PROMPT_STRING = nls.HTML_WIDGET_PROMPT_STRING;
                 self.textAreaVal = ko.observable();
                 self.editing = ko.observable(false);
                 if(!params.tile.content) {

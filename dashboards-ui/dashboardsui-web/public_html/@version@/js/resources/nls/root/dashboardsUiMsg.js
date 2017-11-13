@@ -170,6 +170,7 @@ define({
       "DBS_BUILDER_BTN_ADD_HTML_WIDGET": "Add HTML Widget",
       "DBS_BUILDER_BTN_TEXT": "Add Text Widget",
       "DBS_BUILDER_TEXT_WIDGET_PROMPT_STRING": "Start typing...",
+      "HTML_WIDGET_PROMPT_STRING": "No Content",
       "DBS_BUILDER_SETTINGS": "Settings",
       "DBS_BUILDER_FILTERS": "Filters",
       "DBS_BUILDER_INCLUDE_TIME_CONTROL": "Include time control (range and refresh)",
