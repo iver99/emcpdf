@@ -39,7 +39,7 @@ public class TestErrorPage extends LoginAndLogout
 	private final String MSG_COMMON_ACCESS_NO_SUBS = "You currently don't have access to this page because you're not subscribed to the service being accessed.";
 	private final String MSG_COMMON_ACCESS_NO_SUBS_WITH_SERVICESNAME = "You currently don't have access to this page because you're not subscribed to ";
 
-	private final String MSG_URL = "Requested URL is: http";
+	private final String MSG_URL = "Requested URL is: https://invalidurl.com";
 
 	@BeforeClass
 	public void getURL()
@@ -82,7 +82,7 @@ public class TestErrorPage extends LoginAndLogout
 	{
 		try {
 			//init test
-			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?invalidUrl=http");
+			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?invalidUrl=https://invalidurl.com");
 
 			//verify the error message
 			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
@@ -137,7 +137,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_ACCESS_NO_PERMISSION
-					+ "&service=APM&invalidUrl=http");
+					+ "&service=APM&invalidUrl=https://invalidurl.com");
 			servicename = "Application Performance Monitoring";
 
 			//verify the error message
@@ -158,7 +158,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_ACCESS_NO_PERMISSION
-					+ "&invalidUrl=http");
+					+ "&invalidUrl=https://invalidurl.com");
 
 			//verify the error message
 			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
@@ -196,7 +196,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_ACCESS_NO_PERMISSION
-					+ "&service=ITAnalytics&invalidUrl=http");
+					+ "&service=ITAnalytics&invalidUrl=https://invalidurl.com");
 			servicename = "IT Analytics";
 
 			//verify the error message
@@ -236,7 +236,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_ACCESS_NO_PERMISSION
-					+ "&service=LogAnalytics&invalidUrl=http");
+					+ "&service=LogAnalytics&invalidUrl=https://invalidurl.com");
 			servicename = "Log Analytics";
 
 			//verify the error message
@@ -332,7 +332,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_ACCESS_NO_SUBS
-					+ "&service=APM&invalidUrl=http");
+					+ "&service=APM&invalidUrl=https://invalidurl.com");
 			servicename = "Application Performance Monitoring";
 
 			//verify the error message
@@ -353,7 +353,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_ACCESS_NO_SUBS
-					+ "&invalidUrl=http");
+					+ "&invalidUrl=https://invalidurl.com");
 
 			//verify the error message
 			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
@@ -391,7 +391,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_ACCESS_NO_SUBS
-					+ "&service=ITAnalytics&invalidUrl=http");
+					+ "&service=ITAnalytics&invalidUrl=https://invalidurl.com");
 			servicename = "IT Analytics";
 
 			//verify the error message
@@ -431,7 +431,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_ACCESS_NO_SUBS
-					+ "&service=LogAnalytics&invalidUrl=http");
+					+ "&service=LogAnalytics&invalidUrl=https://invalidurl.com");
 			servicename = "Log Analytics";
 
 			//verify the error message
@@ -471,7 +471,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_ACCESS_NO_SUBS
-					+ "&service=SecurityAnalytics&invalidUrl=http");
+					+ "&service=SecurityAnalytics&invalidUrl=https://invalidurl.com");
 			servicename = "Security Monitoring and Analytics";
 
 			//verify the error message
@@ -527,7 +527,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_PAGE_NO_SUBS
-					+ "&service=APM&invalidUrl=http");
+					+ "&service=APM&invalidUrl=https://invalidurl.com");
 			servicename = "Application Performance Monitoring";
 
 			//verify the error message
@@ -548,7 +548,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_PAGE_NO_SUBS
-					+ "&invalidUrl=http");
+					+ "&invalidUrl=https://invalidurl.com");
 
 			//verify the error message
 			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
@@ -586,7 +586,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_PAGE_NO_SUBS
-					+ "&service=ITAnalytics&invalidUrl=http");
+					+ "&service=ITAnalytics&invalidUrl=https://invalidurl.com");
 			servicename = "IT Analytics";
 
 			//verify the error message
@@ -626,7 +626,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_PAGE_NO_SUBS
-					+ "&service=LogAnalytics&invalidUrl=http");
+					+ "&service=LogAnalytics&invalidUrl=https://invalidurl.com");
 			servicename = "Log Analytics";
 
 			//verify the error message
@@ -666,7 +666,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_PAGE_NO_SUBS
-					+ "&service=SecurityAnalytics&invalidUrl=http");
+					+ "&service=SecurityAnalytics&invalidUrl=https://invalidurl.com");
 			servicename = "Security Monitoring and Analytics";
 
 			//verify the error message
@@ -703,7 +703,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_PAGE_NOT_FOUND
-					+ "&invalidUrl=http");
+					+ "&invalidUrl=https://invalidurl.com");
 
 			//verify the error message
 			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
@@ -737,7 +737,7 @@ public class TestErrorPage extends LoginAndLogout
 	{
 		try {
 			//init test
-			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_DBS_INTERNAL + "&invalidUrl=http");
+			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_DBS_INTERNAL + "&invalidUrl=https://invalidurl.com");
 
 			//verify the error message
 			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
@@ -771,7 +771,7 @@ public class TestErrorPage extends LoginAndLogout
 	{
 		try {
 			//init test
-			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_DBS_INVALID + "&invalidUrl=http");
+			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_DBS_INVALID + "&invalidUrl=https://invalidurl.com");
 
 			//verify the error message
 			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
@@ -806,7 +806,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_DBS_PAGE_NO_SUBS
-					+ "&invalidUrl=http");
+					+ "&invalidUrl=https://invalidurl.com");
 
 			//verify the error message
 			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
@@ -841,13 +841,28 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_DBS_PAGE_NOT_FOUND
-					+ "&invalidUrl=http");
+					+ "&invalidUrl=https://invalidurl.com");
 
 			//verify the error message
 			webd.getLogger().info(webd.getText("css=" + PageId.ERRORMESSAGE_CSS));
 			Assert.assertEquals(webd.getText("css=" + PageId.ERRORMESSAGE_CSS), MSG_DBS_PAGE_NOT_FOUND);
 			webd.getLogger().info(webd.getText("css=" + PageId.ERRORURL_CSS));
 			Assert.assertEquals(webd.getText("css=" + PageId.ERRORURL_CSS), MSG_URL);
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test(alwaysRun = true)
+	public void testErrorPageInsecurityInvalidURL()
+	{
+		try {
+			//init test
+			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_DBS_PAGE_NOT_FOUND
+					+ "&invalidUrl=https://invalidurl.com");
+			webd.waitForElementPresent("css=" + PageId.ERRORMESSAGE_CSS);
+			Assert.assertFalse(webd.isDisplayed("css=" + PageId.ERRORURL_CSS));
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
