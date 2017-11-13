@@ -771,7 +771,13 @@ public class DashboardManager
 	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
 			boolean ic) throws DashboardException
 	{
-		return listDashboards(queryString, offset, pageSize, tenantId, ic, null, null);
+		return listDashboards(queryString, offset, pageSize, tenantId, ic, null, null, false, false);
+	}
+
+
+	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
+											  boolean ic, String orderBy, DashboardsFilter filter) throws DashboardException {
+		return listDashboards(queryString, offset, pageSize, tenantId, ic, orderBy, filter, false, false);
 	}
 
 	/**
@@ -784,10 +790,12 @@ public class DashboardManager
 	 * @param tenantId
 	 * @param ic
 	 *            ignore case or not
+	 * @param federationEnabled used to indicate if currently it's running in federation mode or not (greenfield mode) when federation feature is enalbed (shown in UI)
+	 * @param federationFeatureShowInUi used to indicate if federation feature is enabled or not (shown in UI)
 	 * @return
 	 */
 	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
-			boolean ic, String orderBy, DashboardsFilter filter) throws DashboardException
+			boolean ic, String orderBy, DashboardsFilter filter, boolean federationEnabled, boolean federationFeatureShowInUi) throws DashboardException
 	{
 		LOGGER.debug(
 				"Listing dashboards with parameters: queryString={}, offset={}, pageSize={}, tenantId={}, ic={}, orderBy={}, filter={}",
@@ -826,7 +834,7 @@ public class DashboardManager
 		sb = new StringBuilder(" from Ems_Dashboard p  ");
 
 		boolean joinOptions = false;
-		if (getListDashboardsOrderBy(orderBy).toLowerCase().contains("access_date")) {
+		if (getListDashboardsOrderBy(orderBy, federationEnabled).toLowerCase().contains("access_date")) {
 			joinOptions = true;
 		}
 		if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
@@ -842,6 +850,16 @@ public class DashboardManager
 		sb.append("where 1=1 ");
 		if (filter!= null && filter.getShowInHome()) {
 			sb.append(" and p.show_inhome = 1 ");
+		}
+
+		if (!federationFeatureShowInUi) {	// federation actually not supported
+			sb.append(" and (p.federation_supported = 0) ");
+		} else {
+			if (!federationEnabled) { // running in non federation mode when federation feature suported
+				sb.append(" and (p.federation_supported = 0 or p.federation_supported = 1) ");
+			} else { // running in federation mode when federation feature suported
+				sb.append(" and (p.federation_supported = 1 or p.federation_supported = 2) ");
+			}
 		}
 
 		StringBuilder sbApps = new StringBuilder();
@@ -935,11 +953,12 @@ public class DashboardManager
 		//query
 		StringBuilder sbQuery = new StringBuilder(sb);
 		//order by
-		sbQuery.append(getListDashboardsOrderBy(orderBy));
+		sbQuery.append(getListDashboardsOrderBy(orderBy, federationEnabled));
 		//			sbQuery.append(sb);
 		sbQuery.insert(0,
 				"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.SHOW_INHOME,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
-						+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE,p.APPLICATION_TYPE ");
+						+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE,"
+						+ "p.APPLICATION_TYPE,p.FEDERATION_SUPPORTED ");
 		String jpqlQuery = sbQuery.toString();
 
 		LOGGER.debug("Executing SQL is: " + jpqlQuery);
@@ -1634,8 +1653,9 @@ public class DashboardManager
 	 * @param orderBy
 	 * @return
 	 */
-	private String getListDashboardsOrderBy(String orderBy)
+	private String getListDashboardsOrderBy(String orderBy, boolean federationEnabled)
 	{
+		LOGGER.info("Order by for dashboard list: orderBy {}, federationEnabled {}", orderBy, federationEnabled);
 		if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME.equals(orderBy)
 				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_ASC.equals(orderBy)) {
 			return " order by nlssort(name,'NLS_SORT=GENERIC_M'), p.dashboard_Id DESC";
@@ -1672,8 +1692,13 @@ public class DashboardManager
 			return " order by lower(p.owner) DESC, p.owner DESC, lower(p.name), p.name, p.dashboard_Id DESC";
 		}
 		else {
+			StringBuilder sb = new StringBuilder(" order by ");
+			if (federationEnabled) {
+				sb.append("p.is_system DESC, ");
+			}
 			//default order by
-				return " order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC, p.dashboard_Id DESC";
+			sb.append(" CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC, p.dashboard_Id DESC");
+			return sb.toString();
 		}
 	}
 
