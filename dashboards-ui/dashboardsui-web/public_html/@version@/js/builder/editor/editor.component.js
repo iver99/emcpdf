@@ -15,6 +15,7 @@ define(['knockout',
         'builder/editor/editor.tiles'
     ],
     function(ko, $, oj, dfu,userTenantUtilModel, cxtModel/*, TargetSelectorUtils*/) {
+        var cxtUtil = new cxtModel();
         function Cell(row, column) {
             var self = this;
 
@@ -236,12 +237,12 @@ define(['knockout',
             tile.linkedDashboard = ko.computed(function() {
                 if (tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()) {
                     var link = '/emsaasui/emcpdfui/builder.html?dashboardId=' + tile.WIDGET_LINKED_DASHBOARD();
-                    if((dashboard.enableTimeRange()==="TRUE" || Builder.isTimeRangeAvailInUrl()===true)&& timeSelectorModel && timeSelectorModel.viewStart()){
-                        link += '&startTime='+timeSelectorModel.viewStart().getTime()+'&endTime='+timeSelectorModel.viewEnd().getTime();
+                    
+                    if(Builder.isRunningInFederationMode()){
+                        link += "&federationEnabled=true";
                     }
-                    if(targets && targets()){
-                        link += "&targets="+encodeURI(JSON.stringify(targets()));
-                    }
+                    
+                    link = cxtUtil.appendOMCContext(link, true, true, true);
                     return link;
                 } else
                     return "#";
@@ -367,6 +368,10 @@ define(['knockout',
                     tile.isOpenInExplorerShown(false);
                     return;
                 }
+                if (tile.federationSupported && tile.federationSupported() !== 'NON_FEDERATION_ONLY') {
+                    tile.isOpenInExplorerShown(false);
+                    return;
+                }
                 if (tile.PROVIDER_NAME() === 'TargetAnalytics') {
                     dfu.getSubscribedApps2WithEdition(
                         //successCallback
@@ -398,7 +403,6 @@ define(['knockout',
                 }
             }
             
-            var cxtUtil = new cxtModel();
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
 //                var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
                 var url = dfu.getVisualAnalyzerUrl(tile.PROVIDER_NAME());//Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), versionPlus);
