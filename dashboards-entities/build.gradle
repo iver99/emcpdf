@@ -34,15 +34,11 @@ test {
 }
 
 dependencies {
-
-	//compile(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
-	//compile(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
-	compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1')  { transitive = false }
-	compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1')  { transitive = false }
-	compile(group: 'org.apache.logging.log4j', name:'log4j-slf4j-impl', version:'2.0.1')  { transitive = false }
-
-	compile getProjectArtifact('eclipselink')    
-	compile getProjectArtifact('javax.persistence')  
+	compile getProjectArtifact('eclipselink')
+	compile getProjectArtifact('javax.persistence')
+	compile getProjectArtifact('log4j-api')
+	compile getProjectArtifact('log4j-core')
+	compile getProjectArtifact('log4j-slf4j-impl')
 }
 
 eclipse {

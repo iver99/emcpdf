@@ -107,6 +107,8 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "WIDGET_DELETION_DATE")
 	private Date widgetDeletionDate;
+	@Column(name = "FEDERATION_SUPPORTED", nullable = false)
+	private Integer federationSupported;
 
 	@ManyToOne
 	@JoinColumns(value = { @JoinColumn(name = "DASHBOARD_ID", referencedColumnName = "DASHBOARD_ID"),
@@ -134,7 +136,7 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 			String widgetCreationTime, String widgetDescription, String widgetGroupName, String widgetHistogram,
 			String widgetIcon, String widgetKocName, String widgetName, String widgetOwner, Integer widgetSource,
 			String widgetTemplate, String widgetUniqueId, String widgetViewmode, Integer widgetSupportTimeControl, Integer width,
-			BigInteger widgetLinkedDashboard, Integer widgetDeleted, Date widgetDeletionDate)
+			BigInteger widgetLinkedDashboard, Integer widgetDeleted, Date widgetDeletionDate, Integer federationSupported)
 	{
 		this();
 		this.setCreationDate(creationDate);
@@ -170,6 +172,7 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 		this.width = width;
 		this.widgetDeleted = widgetDeleted;
 		this.widgetDeletionDate = widgetDeletionDate;
+		this.federationSupported = federationSupported;
 	}
 
 	public EmsDashboardTileParams addEmsDashboardTileParams(EmsDashboardTileParams emsDashboardTileParams)
@@ -363,6 +366,10 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 	public Integer getWidth()
 	{
 		return width;
+	}
+
+	public Integer getFederationSupported() {
+		return federationSupported;
 	}
 
 	public EmsDashboardTileParams removeEmsDashboardTileParams(EmsDashboardTileParams emsDashboardTileParams)
@@ -560,5 +567,9 @@ public class EmsDashboardTile extends EmBaseEntity implements Serializable
 	public void setWidth(Integer width)
 	{
 		this.width = width;
+	}
+
+	public void setFederationSupported(Integer federationSupported) {
+		this.federationSupported = federationSupported;
 	}
 }

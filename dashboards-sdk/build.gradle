@@ -22,19 +22,22 @@ publishing.publications {
 }
 
 dependencies {
-    compile getProjectArtifact('log4j-core')
-    compile getProjectArtifact('log4j-api')
-    compile getProjectArtifact('jackson-core-asl')
-    compile getProjectArtifact('servlet-api')
     compile getProjectArtifact('commons-lang3')
+    compile getProjectArtifact('emaas-platform-tenant-sdk')
+    compile getProjectArtifact('jackson-core-asl')
     compile getProjectArtifact('jackson-mapper-asl')
     compile getProjectArtifact('jackson-xc')
-    compile getProjectArtifact('registry-lookup-client')
+    compile getProjectArtifact('jersey-core')
+    compile getProjectArtifact('jersey-client')
+    compile getProjectArtifact('jettison')
+    compile getProjectArtifact('log4j-api')
+    compile getProjectArtifact('log4j-core')
     compile getProjectArtifact('registry-client')
-    compile getProjectArtifact('emaas-platform-tenant-sdk')
+    compile getProjectArtifact('registry-lookup-client')
     compile getProjectArtifact('security-client')
-    testCompile getProjectArtifact('jmockit')
+    compile getProjectArtifact('servlet-api')
     
+    testCompile getProjectArtifact('jmockit')
 }
 sourceSets {
     main {

@@ -45,7 +45,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.compositeCxtText = ko.observable();
             self.entitiesList = ko.observableArray();
             self.timeCxtText = ko.observable();
-
+            self.messageTimeOutEventList = [];
             self.renderEmaasAppheaderGlobalNavMenu = ko.observable(false);
 
             self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
@@ -604,7 +604,55 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             //Open help link
             var helpBaseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";
             var helpTopicId = appProperties["helpTopicId"] ? appProperties["helpTopicId"] : "em_home_gs";
+            
+            self.helpLinkMap = [
+                {
+                    "pageId": "omc_root_alerts",
+                    "linkParams": "em_alert"
+                },
+                {
+                    "pageId": "omc_root_dashboards",
+                    "linkParams": "em_dboard"
+                },
+                {
+                    "pageId": "omc_root_dataexplorer",
+                    "linkParams": "em_data_exp"
+                },
+                {
+                    "pageId": "omc_root_admin_alertrules",
+                    "linkParams": "em_alert_rules"
+                },
+                {
+                    "pageId": "omc_root_admin_notificationChannels",
+                    "linkParams": "em_not_channels"
+                },
+                {
+                    "pageId": "omc_root_admin_agents",
+                    "linkParams": "em_agents"
+                },
+                {
+                    "pageId": "omc_root_admin_addentity",    //?????
+                    "linkParams": "em_add_entity "
+                },
+                {
+                    "pageId": "omc_root_admin_clouddiscoveryprofiles",
+                    "linkParams": "em_cloud_profiles"
+                },
+                {
+                    "pageId": "omc_root_admin_entitiesconfig",
+                    "linkParams": "em_entities_config"
+                }
+            ];
+
             self.openHelpLink = function () {
+                var selectedPageId = window._uifwk && window._uifwk.currentOmcMenuItemId;
+                for (var index = 0; index < self.helpLinkMap.length; index++) {
+                    if (selectedPageId === self.helpLinkMap[index].pageId) {
+                        helpBaseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/management-cloud&id=";
+                        helpTopicId = self.helpLinkMap[index].linkParams;
+                        break;
+                    }
+                }
                 oj.Logger.info("Open help link: " + helpBaseUrl + helpTopicId);
                 window.open(helpBaseUrl + helpTopicId);
             };
@@ -659,6 +707,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if(!self.renderEmaasAppheaderGlobalNavMenu()){
                     self.renderEmaasAppheaderGlobalNavMenu(true);
                     $('#emaasAppheaderGlobalNavMenuId').ojMenu("refresh");
+                    aboutBoxComponentRegister();
                     self.aboutBoxImmediateLoading(true);
                 }
             };
@@ -667,40 +716,43 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var vmPath = "uifwk/js/widgets/navlinks/js/navigation-links";
 
             //Parameters for navigation links ko component
-            self.navLinksKocParams = {
-                navLinksNeedRefresh: self.navLinksNeedRefresh,
-                userName: self.userName,
-                tenantName: self.tenantName,
-                nlsStrings: nls,
-                appMap: appMap,
-                app: appProperties,
-                appDashboard: appMap[appIdDashboard],
-                appTenantManagement: appMap[appIdTenantManagement],
-                appEventUI: appMap[appIdEventUI],
-                sessionTimeoutWarnDialogId: self.sessionTimeoutWarnDialogId
-            };
-            //Register a Knockout component for navigation links
-            if (!ko.components.isRegistered('df-oracle-nav-links') && self.navLinksVisible) {
-                ko.components.register("df-oracle-nav-links", {
-                    viewModel: {require: vmPath},
-                    template: {require: 'text!' + templatePath}
-                });
+            function navLinksComponentRegister() {
+                self.navLinksKocParams = {
+                    navLinksNeedRefresh: self.navLinksNeedRefresh,
+                    userName: self.userName,
+                    tenantName: self.tenantName,
+                    nlsStrings: nls,
+                    appMap: appMap,
+                    app: appProperties,
+                    appDashboard: appMap[appIdDashboard],
+                    appTenantManagement: appMap[appIdTenantManagement],
+                    appEventUI: appMap[appIdEventUI],
+                    sessionTimeoutWarnDialogId: self.sessionTimeoutWarnDialogId
+                };
+                //Register a Knockout component for navigation links
+                if (!ko.components.isRegistered('df-oracle-nav-links') && self.navLinksVisible) {
+                    ko.components.register("df-oracle-nav-links", {
+                        viewModel: {require: vmPath},
+                        template: {require: 'text!' + templatePath}
+                    });
+                }
             }
 
             //Parameters for about dialog ko component
-            self.aboutBoxKocParams = {
-                id: self.aboutBoxId,
-                nlsStrings: nls};
-            //Register a Knockout component for about box
-            var aboutTemplatePath = "uifwk/js/widgets/aboutbox/html/aboutbox.html";
-            var aboutVmPath = "uifwk/js/widgets/aboutbox/js/aboutbox";
-            if (!ko.components.isRegistered('df-oracle-about-box')) {
-                ko.components.register("df-oracle-about-box", {
-                    viewModel: {require: aboutVmPath},
-                    template: {require: 'text!' + aboutTemplatePath}
-                });
+            function aboutBoxComponentRegister() {
+                self.aboutBoxKocParams = {
+                    id: self.aboutBoxId,
+                    nlsStrings: nls};
+                //Register a Knockout component for about box
+                var aboutTemplatePath = "uifwk/js/widgets/aboutbox/html/aboutbox.html";
+                var aboutVmPath = "uifwk/js/widgets/aboutbox/js/aboutbox";
+                if (!ko.components.isRegistered('df-oracle-about-box')) {
+                    ko.components.register("df-oracle-about-box", {
+                        viewModel: {require: aboutVmPath},
+                        template: {require: 'text!' + aboutTemplatePath}
+                    });
+                }
             }
-
             //Parameters for time selector
             if (params.timeSelectorParams) {
                 self.timeSelectorParams = params.timeSelectorParams;
@@ -732,6 +784,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
              * Navigation links button click handler
              */
             self.linkMenuHandler = function (event, item) {
+                navLinksComponentRegister();
                 self.navLinksNeedRefresh(true);
                 self.navLinksImmediateLoading(true);
                 $("#links_menu").slideToggle('normal');
@@ -780,6 +833,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             self.renderHamburgerMenu = omcHamburgerMenuOptIn && (!window._uifwk || !window._uifwk.hideHamburgerMenuOnPage) ? true : false;
             self.isHamburgerMenuRegistered = ko.observable(false);
             self.hamburgerBtnLabel = nls.BRANDING_BAR_HAMBURGER_BTN_LABEL;
+            self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
+            self.hamburgerMenuRendered = false;
             if (self.renderHamburgerMenu) {
                 self.menuParams = {'appId': self.appId, 'userName': self.userName, 'tenantName': self.tenantName, 'omcCurrentMenuId': params.omcCurrentMenuId};
                 if (!self.isHamburgerMenuRegistered()) {
@@ -794,12 +849,24 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                             });
                             self.isHamburgerMenuRegistered(true);
                         }     
-                        injectHamburgerMenuComponent();
+                        
+                        //delay binding hamburger menu when it is not open on page loaded
+                        var menuInitialStatus = retrieveHmaburgerMenuStatus();
+                        if(self.xlargeScreen() && (!menuInitialStatus || menuInitialStatus === 'opened')){
+                            !self.hamburgerMenuRendered && injectHamburgerMenuComponent();
+                            self.hamburgerMenuRendered = true;
+                        }else{
+                            self.xlargeScreen.subscribe(function(isXlarge){
+                                if(!self.hamburgerMenuRendered && isXlarge){
+                                    injectHamburgerMenuComponent();
+                                    self.hamburgerMenuRendered = true;
+                                }
+                            });
+                        }
                     });
                 }
                 else {
                     self.isHamburgerMenuRegistered(true);
-                    injectHamburgerMenuComponent();
                 }
                 
                 function resetCurrentHamburgerMenu() {
@@ -873,8 +940,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     $("#offcanvasInnerContainer").removeClass('oj-flex-items-pad');
                 }
 
-                self.xlargeScreen = oj.ResponsiveKnockoutUtils.createMediaQueryObservable('(min-width: 1440px)');
-
+                    
                 self.xlargeScreen.subscribe(function(isXlarge){
                     if (window._uifwk && (window._uifwk.isUnderPrint || window._uifwk.resizeTriggeredByPrint)) {
                         return;
@@ -953,6 +1019,10 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 });
 
                 self.toggleHamburgerMenu = function() {
+                    if(!self.hamburgerMenuRendered){
+                        injectHamburgerMenuComponent();
+                        self.hamburgerMenuRendered = true;
+                    }
                     if (avoidPageResizeOptIn) {
                         if (self.xlargeScreen()) {
                             $("#omcHamburgerMenu").toggle();
@@ -1347,9 +1417,15 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
                     //Remove message automatically if remove delay time is set
                     if (data.removeDelayTime && typeof (data.removeDelayTime) === 'number') {
-                        setTimeout(function () {
+                        var timeout = setTimeout(function () {
                             removeMessage(message);
                         }, data.removeDelayTime);
+                        
+                        var messageTimeOutEvent ={
+                                                    "messageId": message.id, 
+                                                    "timeout": timeout
+                                                };
+                        self.messageTimeOutEventList.push(messageTimeOutEvent);
                     }
 
                     //Fire message change event
@@ -1419,6 +1495,14 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
 
                 //Fire message change event
                 fireMessageChangeEvent('Delete', data.id);
+                for(var i in self.messageTimeOutEventList){
+                    var currentTimeOutEvent = self.messageTimeOutEventList[i];
+                    if(data.id === currentTimeOutEvent.messageId){
+                        clearTimeout(currentTimeOutEvent.timeout);
+                        self.messageTimeOutEventList.splice(i,1);
+                        console.log("clear the message time out event");
+                    }
+                }
             }
 
             function removeItemByValue(obj, value)
