@@ -69,6 +69,7 @@ public class RestClient {
         try {
             return innerGet(url, tenant, auth);
         }catch(UniformInterfaceException e){
+            LOGGER.error("HTTP Response code is {}", e.getResponse().getStatus());
             LOGGER.error("RestClient: Error occurred for [GET] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
             LOGGER.error(e);
             itrLogger.error("RestClient: Error occurred for [GET] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
@@ -161,6 +162,7 @@ public class RestClient {
             }
             return builder.put(requestEntity.getClass(), requestEntity).toString();
         }catch(UniformInterfaceException e){
+            LOGGER.error("HTTP Response code is {}", e.getResponse().getStatus());
             LOGGER.error("RestClient: Error occurred for [PUT] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
             LOGGER.error(e);
             itrLogger.error("RestClient: Error occurred for [PUT] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
@@ -227,6 +229,7 @@ public class RestClient {
                 return builder.post(requestEntity.getClass(), requestEntity);
             }
         }catch(UniformInterfaceException e){
+            LOGGER.error("HTTP Response code is {}", e.getResponse().getStatus());
             LOGGER.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
             itrLogger.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
             LOGGER.error(e);

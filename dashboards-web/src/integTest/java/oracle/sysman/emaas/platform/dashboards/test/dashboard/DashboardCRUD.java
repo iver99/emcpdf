@@ -338,7 +338,7 @@ public class DashboardCRUD
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).body(jsonString3).when().post("/dashboards");
 			
-			Assert.assertTrue(res3.getStatusCode() == 400);
+			Assert.assertTrue(res3.getStatusCode() == 200);
 			Assert.assertEquals(res3.jsonPath().getString("errorCode"), "10001");
 			Assert.assertEquals(res3.jsonPath().getString("errorMessage"), "Dashboard with the same name exists already");
 			
@@ -1635,7 +1635,7 @@ public class DashboardCRUD
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).body(jsonString3).when().post("/dashboards");
 			
-			Assert.assertTrue(res4.getStatusCode() == 400);
+			Assert.assertTrue(res4.getStatusCode() == 200);
 			Assert.assertEquals(res4.jsonPath().getString("errorCode"), "10001");
 			Assert.assertEquals(res4.jsonPath().getString("errorMessage"), "Dashboard with the same name exists already");
 			
@@ -1993,4 +1993,39 @@ public class DashboardCRUD
 		}
 	}
 
+	@Test
+	public void testSameNameCreationConflict(){
+		String dashboard = "{ \"name\":\"Test_SameName\"}";
+		Response creationResponse = RestAssured
+				.given()
+				.contentType(ContentType.JSON)
+				.log()
+				.everything()
+				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+						"Authorization", authToken).body(dashboard).when().post("/dashboards");
+		Assert.assertTrue(creationResponse.getStatusCode() == 201);
+
+		String dashboardId = creationResponse.jsonPath().getString("id");
+		Response creationSameNameResponse = RestAssured
+				.given()
+				.contentType(ContentType.JSON)
+				.log()
+				.everything()
+				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+						"Authorization", authToken).body(dashboard).when().post("/dashboards");
+
+		Assert.assertEquals(creationSameNameResponse.getStatusCode(), 200);
+		Assert.assertEquals(creationSameNameResponse.jsonPath().getString("errorCode"), "10001");
+
+		Response deletionResponse = RestAssured
+				.given()
+				.contentType(ContentType.JSON)
+				.log()
+				.everything()
+				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+						"Authorization", authToken).when().delete("/dashboards/" + dashboardId);
+
+		Assert.assertTrue(deletionResponse.getStatusCode() == 204);
+
+	}
 }
