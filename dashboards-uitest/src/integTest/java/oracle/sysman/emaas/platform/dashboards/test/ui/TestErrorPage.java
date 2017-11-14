@@ -276,7 +276,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_COMMON_ACCESS_NO_PERMISSION
-					+ "&service=SecurityAnalytics&invalidUrl=http");
+					+ "&service=SecurityAnalytics&invalidUrl=https://invalidurl.com");
 			servicename = "Security Monitoring and Analytics";
 
 			//verify the error message
