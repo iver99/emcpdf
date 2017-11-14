@@ -65,6 +65,9 @@ public class DashboardRowEntityTest
 		dre1.setExtendedOptions("options");
 		dre2.setExtendedOptions("options");
 		Assert.assertEquals(dre1, dre2);
+		dre1.setFederationSupported(1);
+		dre2.setFederationSupported(1);
+		Assert.assertEquals(dre1, dre2);
 
 		dre2.setDashboardId("2");
 		Assert.assertNotEquals(dre1, dre2);
@@ -118,6 +121,8 @@ public class DashboardRowEntityTest
 		Assert.assertNotEquals(dre1, dre2);
 		dre2.setExtendedOptions("options");
 		Assert.assertEquals(dre1, dre2);
+		dre2.setFederationSupported(2);
+		Assert.assertNotEquals(dre1, dre2);
 	}
 
 	@Test
@@ -177,6 +182,9 @@ public class DashboardRowEntityTest
 		dre1.setExtendedOptions("options");
 		dre2.setExtendedOptions("options");
 		Assert.assertEquals(dre1.hashCode(), dre2.hashCode());
+		dre1.setFederationSupported(2);
+		dre2.setFederationSupported(2);
+		Assert.assertEquals(dre1.hashCode(), dre2.hashCode());
 
 		dre2.setDashboardId("2");
 		Assert.assertNotEquals(dre1.hashCode(), dre2.hashCode());
@@ -230,6 +238,8 @@ public class DashboardRowEntityTest
 		Assert.assertNotEquals(dre1.hashCode(), dre2.hashCode());
 		dre2.setExtendedOptions("options");
 		Assert.assertEquals(dre1.hashCode(), dre2.hashCode());
+		dre2.setFederationSupported(0);
+		Assert.assertNotEquals(dre1.hashCode(), dre2.hashCode());
 	}
 	private CountsEntity countsEntity;
 	@Test

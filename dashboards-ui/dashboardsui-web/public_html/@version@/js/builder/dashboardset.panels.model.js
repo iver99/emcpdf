@@ -83,7 +83,7 @@ define([
                         }else {
                             headerViewModel && headerViewModel.brandingbarParams.showTimeSelector(true);
                         }
-                        if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="FALSE" || dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="TRUE") {
+                        if(dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="FALSE" || dashboardsetToolBarModel.dashboardInst.enableEntityFilter()==="TRUE" || Builder.isRunningInFederationMode()) {
                             headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(false);
                         }else {
                             headerViewModel && headerViewModel.brandingbarParams.showEntitySelector(true);

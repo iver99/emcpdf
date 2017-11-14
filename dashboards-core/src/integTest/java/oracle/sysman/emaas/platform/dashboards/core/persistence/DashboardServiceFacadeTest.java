@@ -4,12 +4,14 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
 import oracle.sysman.emaas.platform.dashboards.core.BaseTest;
+import oracle.sysman.emaas.platform.dashboards.core.model.FederationSupportedType;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.IdGenerator;
 import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
@@ -126,6 +128,7 @@ public class DashboardServiceFacadeTest extends BaseTest
 		//d.setTenantId("11");
 		d.setScreenShot("slslslslsl");
 		d.setType(0);
+		d.setFederationSupported(FederationSupportedType.NON_FEDERATION_ONLY.getValue());
 		return d;
 	}
 
@@ -161,6 +164,7 @@ public class DashboardServiceFacadeTest extends BaseTest
 		tile.setWidgetSupportTimeControl(1);
 		tile.setWidgetLinkedDashboard(BigInteger.valueOf(1L));
 		tile.setWidgetDeleted(0);
+		tile.setFederationSupported(FederationSupportedType.NON_FEDERATION_ONLY.getValue());
 		return tile;
 	}
 
@@ -335,4 +339,40 @@ public class DashboardServiceFacadeTest extends BaseTest
 		}
 	}
 
+	public void testGetEmsPreferencesByKeys()
+	{
+		EntityManager em = null;
+		try {
+			dashboardServiceFacade = new DashboardServiceFacade(TENANT_ID);
+			em = dashboardServiceFacade.getEntityManager();
+
+			EmsPreference p1 = new EmsPreference("prefKey1", "expectedValue", "test");
+			dashboardServiceFacade.persistEmsPreference(p1);
+			dashboardServiceFacade.commitTransaction();
+			EmsPreference p2 = new EmsPreference("prefKey2", "expectedValue", "test");
+			dashboardServiceFacade.persistEmsPreference(p2);
+			dashboardServiceFacade.commitTransaction();
+			EmsPreference p3 = new EmsPreference("prefKey3", "unexpectedValue", "test");
+			dashboardServiceFacade.persistEmsPreference(p3);
+			dashboardServiceFacade.commitTransaction();
+
+			List<String> keys = Arrays.asList("prefKey1", "prefKey2");
+			List<EmsPreference> prefs = dashboardServiceFacade.getEmsPreferencesByKeys("test", keys);
+			Assert.assertNotNull(prefs);
+			Assert.assertEquals(prefs.size(), 2);
+			Assert.assertEquals(prefs.get(0).getPrefValue(), "expectedValue");
+			Assert.assertEquals(prefs.get(1).getPrefValue(), "expectedValue");
+
+			dashboardServiceFacade.removeEmsPreference(p1);
+			dashboardServiceFacade.removeEmsPreference(p2);
+			dashboardServiceFacade.removeEmsPreference(p3);
+			dashboardServiceFacade.commitTransaction();
+			dashboardServiceFacade.removeAllEmsPreferences("test");
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
 }
