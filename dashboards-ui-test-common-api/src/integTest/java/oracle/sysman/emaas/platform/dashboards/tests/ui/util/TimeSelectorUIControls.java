@@ -98,8 +98,7 @@ public class TimeSelectorUIControls
 	// Begin: Components
 	public static final String sPickPanel = ".pickerPanel";//"[id^='pickerPanel_'].pickerPanel";
 	// End: Components
-	public static final String sDateTimePick_XPATH = "//div[contains(@id,'dateTimePicker_')]";
-	public static final String sEndDateInput_XPATH = "//input[contains(@id, 'inputEndDate_')]";
+	
 	// Begin: Time Filter
 	public static final String sTimeFilterIcon = "div[id^='timeFilterIcon_']";
 
