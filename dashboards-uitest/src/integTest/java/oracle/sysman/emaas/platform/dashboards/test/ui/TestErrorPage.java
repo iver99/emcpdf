@@ -860,7 +860,7 @@ public class TestErrorPage extends LoginAndLogout
 		try {
 			//init test
 			initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "?msg=" + KEY_DBS_PAGE_NOT_FOUND
-					+ "&invalidUrl=https://invalidurl.com");
+					+ "&invalidUrl=invalidurl.com");
 			webd.waitForElementPresent("css=" + PageId.ERRORMESSAGE_CSS);
 			Assert.assertFalse(webd.isDisplayed("css=" + PageId.ERRORURL_CSS));
 		}
