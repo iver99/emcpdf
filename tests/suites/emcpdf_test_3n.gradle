@@ -214,6 +214,7 @@ task QATest1(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]){
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_CompositeMenu.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_RegisterServiceMenu.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_ShowCurrentMenu.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestMessageBanner.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FixDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FlexibleDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_RecentUseOption.class"
