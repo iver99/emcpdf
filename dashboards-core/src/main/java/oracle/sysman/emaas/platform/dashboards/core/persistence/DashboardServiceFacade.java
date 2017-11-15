@@ -188,15 +188,16 @@ public class DashboardServiceFacade
 		return CombinedDashboard.valueOf(ed, ep, euo,null);
 	}
 
-	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(final String name, String owner, String description, boolean sysOwner){
+	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(String name, String owner, String description, boolean sysOwner){
 		String jpql = null;
 		Object[] params;
+		name = name.toUpperCase();
 		if(StringUtil.isEmpty(description)){
-			jpql = "select d from EmsDashboard d where d.name = ?1 and (d.owner = ?2 " + (sysOwner == true ? " or d.owner='Oracle' " : "") + " ) and d.description is null and d.deleted = ?3";
+			jpql = "select d from EmsDashboard d where upper(d.name) = ?1 and (d.owner = ?2 " + (sysOwner == true ? " or d.owner='Oracle' " : "") + " ) and d.description is null and d.deleted = ?3";
 			//remove StringEscapeUtils.escapeHtml4(name) when query, because in DB it is not encoded
 			params = new Object[]{name, owner, new Integer(0)};
 		}else {
-			jpql = "select d from EmsDashboard d where d.name = ?1 and (d.owner = ?2 " + (sysOwner == true ? " or d.owner='Oracle' " : "") + " ) and d.description = ?3 and d.deleted = ?4";
+			jpql = "select d from EmsDashboard d where upper(d.name) = ?1 and (d.owner = ?2 " + (sysOwner == true ? " or d.owner='Oracle' " : "") + " ) and d.description = ?3 and d.deleted = ?4";
 			//remove StringEscapeUtils.escapeHtml4(name) when query, because in DB it is not encoded
 			params = new Object[]{name, owner, description, new Integer(0)};
 
