@@ -26,23 +26,24 @@ define(['jquery',
         }
 
         function loadWidgets(keyword, successCallback) {
-            var widgetsUrl = dfu.getWidgetsUrl();
-
             if (!self.allWidgets) {
-                dfu.ajaxWithRetry({
-                    type: 'get',
-                    url: widgetsUrl,
-                    headers: dfu.getSavedSearchRequestHeader(),
-                    success: function (data) {
-                        sortWidgetsData(data);
-                        data && data.length > 0 && (filterWidgetsData(data, keyword));
-                        self.allWidgets = self.widget;
-                        successCallback && successCallback(self.widget);
-                    },
-                    error: function () {
-                        oj.Logger.error('Error when fetching widgets by URL: ' + widgetsUrl + '.');
-                    },
-                    async: true
+                var dfdWidgetsUrl = dfu.getWidgetsUrl();
+                $.when(dfdWidgetsUrl).done(function(widgetsUrl){
+                    dfu.ajaxWithRetry({
+                        type: 'get',
+                        url: widgetsUrl,
+                        headers: dfu.getSavedSearchRequestHeader(),
+                        success: function (data) {
+                            sortWidgetsData(data);
+                            data && data.length > 0 && (filterWidgetsData(data, keyword));
+                            self.allWidgets = self.widget;
+                            successCallback && successCallback(self.widget);
+                        },
+                        error: function () {
+                            oj.Logger.error('Error when fetching widgets by URL: ' + widgetsUrl + '.');
+                        },
+                        async: true
+                    });
                 });
             } else {
                 filterWidgetsData(self.allWidgets, keyword);

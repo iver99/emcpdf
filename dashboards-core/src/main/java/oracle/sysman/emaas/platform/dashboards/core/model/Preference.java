@@ -10,7 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
-import java.util.Date;
+import java.util.*;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
@@ -23,7 +23,18 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
  */
 public class Preference
 {
+	public static final String PREF_KEY_HM_DBMGMT_SHOW 					= "uifwk.hm.dbmgmt.show";
+	public static final String PREF_KEY_HM_FEDERATION_SHOW 				= "uifwk.hm.federation.show";
+	public static final Map<String, String> FEATURE_SHOW_PREF_DEFAULT_VALUES = new HashMap<String, String>();
+	public static final List<String> FEATURE_SHOW_PREF_SUPPORTED_KEYS 	= new ArrayList<String>();
+
 	public static final String KEY_REGEX = "[\\w\\-\\.]{1,256}"; // a to Z _ - .
+
+	static {
+		FEATURE_SHOW_PREF_DEFAULT_VALUES.put(PREF_KEY_HM_DBMGMT_SHOW, "false");
+		FEATURE_SHOW_PREF_DEFAULT_VALUES.put(PREF_KEY_HM_FEDERATION_SHOW, "false");
+		FEATURE_SHOW_PREF_SUPPORTED_KEYS.addAll(FEATURE_SHOW_PREF_DEFAULT_VALUES.keySet());
+	}
 
 	public static Preference valueOf(EmsPreference ep)
 	{

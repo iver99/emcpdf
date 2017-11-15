@@ -2,12 +2,14 @@
 define(['knockout',
         'jquery',
         'ojs/ojcore',
-        'dfutil'
+        'dfutil',
+        'uifwk/js/sdk/menu-util'
     ],
-    function(ko, $, oj, dfu) {
+    function(ko, $, oj, dfu, menuModel) {
         function EditDashboardDialogModel($b, tbModel) {
             var dsb = $b.dashboard;
             var self = this;
+            var menuUtil = new menuModel();
             self.dashboard = dsb;
             self.tbModel = tbModel;
             self.name = ko.observable(dsb.name());
@@ -129,6 +131,9 @@ define(['knockout',
                                 dfu.removeMessage(self.errSavindMsgId);
                             }
                             $('#edit-dashboard').ojDialog("close");
+                            //Fire event to refresh "Federated dashboard" and "Favorite dashabord" in HM
+                            menuUtil.fireFederatedDsbChangedEvent();
+                            menuUtil.fireFavoriteDsbChangedEvent();
                         },
                         error: function (jqXHR, textStatus, errorThrown) { 
                             if (self.errSavindMsgId) {
