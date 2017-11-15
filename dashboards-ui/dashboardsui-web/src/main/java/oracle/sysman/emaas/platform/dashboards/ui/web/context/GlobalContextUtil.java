@@ -27,7 +27,7 @@ public class GlobalContextUtil
 {
 	private final static Logger LOGGER = LogManager.getLogger(GlobalContextUtil.class);
 	// TODO should be the real domain here
-	private final static String[] WHITELIST = {"error.html", "build.html", "emsaasui"};
+	private final static String[] WHITELIST = {"error.html", "builder.html", "emsaasui"};
 	public final static String ERRORPAGE = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG";
 
 	public static String generateUrlWithGlobalContext(String baseUrl, HttpServletRequest request)
