@@ -1,10 +1,9 @@
-
 sourceSets {
 	test{
 		java {
 			srcDirs = ['src/integTest/java']
 		}
-		resources.srcDirs = ['src/integTest/java','src/main/java']
+		resources.srcDirs = ['src/integTest/java']
 		compileClasspath += configurations.testNG + configurations.testConfig
 	}
 }
@@ -15,16 +14,16 @@ task integTestJar (type:Jar) {
 }
 
 dependencies {
-	testConfig project(':dashboards-ui:dashboardsui-webutils')   { transitive = false }
-	testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
-        testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
-	testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
-	testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
-	testConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
-	testConfig(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2') { transitive = false }
-	testConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13') { transitive = false }
-	testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13') { transitive = false }
-	testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
-//	testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){transitive=false }
-	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+    testConfig getProjectArtifact('eclipselink')
+    testConfig getProjectArtifact('jackson-core-asl')
+    testConfig getProjectArtifact('jackson-mapper-asl')
+    testConfig getProjectArtifact('jackson-xc')
+    testConfig getProjectArtifact('javax.persistence')
+    testConfig getProjectArtifact('javax.transaction-api')
+    testConfig getProjectArtifact('jmockit')
+    testConfig getProjectArtifact('log4j-api')
+    testConfig getProjectArtifact('log4j-core')
+    testConfig getProjectArtifact('ojdbc6')
 }
+
+build.dependsOn integTestJar

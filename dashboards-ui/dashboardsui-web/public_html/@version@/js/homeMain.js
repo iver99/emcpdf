@@ -282,7 +282,7 @@ function getDateString(isoString) {
         var s = isoString.split(/[\-\.\+: TZ]/g);
         if (s.length > 1)
         {
-            return new Date(s[0], parseInt(s[1], 10) - 1, s[2], s[3], s[4], s[5], s[6]).toLocaleDateString();
+            return new Date(s[0], parseInt(s[1], 10) - 1, s[2], s[3], s[4], s[5], s[6]).toLocaleDateString(document.documentElement.lang);
         }
     }
     return "";
