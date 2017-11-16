@@ -50,12 +50,12 @@ public class LoggingAPITest {
 
     @Test(expectedExceptions = NullPointerException.class)
     public void testLogMsgWithNull(@Mocked final DependencyStatus anyDependencyStatus) {
-    	 new Expectations() {
-    		 {
-    			 anyDependencyStatus.isDatabaseUp();
- 				result = true;
-    		 }
-    	 };
+//    	 new Expectations() {
+//    		 {
+//    			 anyDependencyStatus.isDatabaseUp();
+// 				result = true;
+//    		 }
+//    	 };
         Assert.assertNull(loggingAPI.logMsg(null));
     }
 
@@ -68,8 +68,8 @@ public class LoggingAPITest {
 
         new Expectations() {
             {
-            	anyDependencyStatus.isDatabaseUp();
- 				result = true;
+//            	anyDependencyStatus.isDatabaseUp();
+// 				result = true;
                 jsonObject.getJSONObject("logs").getJSONArray("logArray");
                 result = jsonArray;
 
