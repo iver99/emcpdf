@@ -61,6 +61,34 @@ public class PreferenceManager
 		}
 	}
 
+	public List<Preference> getPreferenceByMultipleKeys(List<String> keys, Long tenantId) throws PreferenceNotFoundException
+	{
+		EntityManager em = null;
+		try {
+			String currentUser = UserContext.getCurrentUser();
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+
+			List<EmsPreference> epList = dsf.getEmsPreferencesByKeys(currentUser, keys);
+			if (epList == null) {
+				return null;
+			}
+
+			List<Preference> prefs = new ArrayList<Preference>();
+			for (EmsPreference ep : epList) {
+				Preference p = Preference.valueOf(ep);
+				prefs.add(p);
+			}
+
+			return prefs;
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
 	public List<Preference> listPreferences(Long tenantId)
 	{
 		EntityManager em = null;
