@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import java.util.Arrays;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
@@ -68,6 +69,18 @@ public class PreferenceManagerTest_S2 extends BaseTest
 		beforeMethod();
 		Preference p = pm.getPreferenceByKey("p2", TENANT_ID);
 		Assert.assertEquals(p.getKey(), "p2");
+		afterMethod();
+	}
+
+	@Test(groups = { "s2" })
+	public void testGetPreferencesByMultipleKeys() throws DashboardException
+	{
+		beforeMethod();
+		List<String> keys = Arrays.asList("p1", "p2");
+		List<Preference> psList = pm.getPreferenceByMultipleKeys(keys, TENANT_ID);
+		Assert.assertEquals(psList.size(), 2);
+		Assert.assertEquals("p1", psList.get(0).getValue());
+		Assert.assertEquals("p2", psList.get(1).getValue());
 		afterMethod();
 	}
 
