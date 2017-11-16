@@ -7,6 +7,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
+import com.sun.jersey.api.json.JSONConfiguration;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
 import oracle.sysman.emaas.platform.uifwk.util.LogUtil;
 import org.apache.logging.log4j.LogManager;
@@ -35,6 +36,9 @@ public class RestClient {
     private static final Integer NO_CONTENT = 204;
 
 	private static ClientConfig cc = new DefaultClientConfig();
+    static{
+        cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+    }
 	private static Client client = Client.create(cc);
 
     //timeout milli-seconds
@@ -70,7 +74,7 @@ public class RestClient {
         try {
             return innerGet(url, tenant, auth);
         }catch(UniformInterfaceException e){
-            LOGGER.error("HTTP Response code is {}", e.getResponse().getStatus());
+            LOGGER.warn("HTTP Response code is {}", e.getResponse().getStatus());
             //            Sometimes Jersey considers 204 an error because non-empty response content is expected:
             if(e.getResponse().getStatus() == NO_CONTENT){
                 LOGGER.info("204 response found in UniformInterfaceException exception, ignore.");
@@ -169,7 +173,7 @@ public class RestClient {
             }
             return builder.put(requestEntity.getClass(), requestEntity).toString();
         }catch(UniformInterfaceException e){
-            LOGGER.error("HTTP Response code is {}", e.getResponse().getStatus());
+            LOGGER.warn("HTTP Response code is {}", e.getResponse().getStatus());
 //           Sometimes Jersey considers 204 an error because non-empty response content is expected:
             if(e.getResponse().getStatus() == NO_CONTENT){
                 LOGGER.info("204 response found in UniformInterfaceException exception, ignore.");
@@ -237,7 +241,7 @@ public class RestClient {
                 return builder.post(requestEntity.getClass(), requestEntity);
             }
         }catch(UniformInterfaceException e){
-            LOGGER.error("HTTP Response code is {}", e.getResponse().getStatus());
+            LOGGER.warn("HTTP Response code is {}", e.getResponse().getStatus());
             //           Sometimes Jersey considers 204 an error because non-empty response content is expected:
             if(e.getResponse().getStatus() == NO_CONTENT){
                 LOGGER.info("204 response found in UniformInterfaceException exception, ignore.");

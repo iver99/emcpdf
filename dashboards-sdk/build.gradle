@@ -33,6 +33,7 @@ dependencies {
     compile getProjectArtifact('registry-client')
     compile getProjectArtifact('emaas-platform-tenant-sdk')
     compile getProjectArtifact('security-client')
+    compile getProjectArtifact('jersey-json')
     testCompile getProjectArtifact('jmockit')
     
 }
