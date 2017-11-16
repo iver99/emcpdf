@@ -205,9 +205,10 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 		webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 
-		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sRangeRadio);
+		webd.waitForElementVisible("css=" + TimeSelectorUIControls.sRangeRadio); 
+		//webd.waitForElementPresent("css=" + TimeSelectorUIControls.sRangeRadio);   
 		webd.click("css=" + TimeSelectorUIControls.sRangeRadio);
-
+		
 		//set start date time and end date time
 		webd.getLogger().info("Verify if custom panpel displayed...");
 		WebDriverWait wdwait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
