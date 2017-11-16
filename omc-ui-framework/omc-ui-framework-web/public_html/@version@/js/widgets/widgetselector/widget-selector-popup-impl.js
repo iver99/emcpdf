@@ -4,8 +4,9 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
     'uifwk/@version@/js/util/df-util-impl', 
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
-    'uifwk/@version@/js/util/typeahead-search-impl', 
+    'uifwk/@version@/js/util/typeahead-search-impl',
     'uifwk/@version@/js/util/mobile-util-impl',
+    'uifwk/@version@/js/util/preference-util-impl',
     'ojs/ojselectcombobox',
     'ojs/ojpopup',
     'ojs/ojinputtext',
@@ -13,7 +14,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
     'ojs/ojlistview', 
     'ojs/ojjsontreedatasource'
     ],
-        function (ko, $, dfumodel, oj, nls, typeaheadsearch, mbu) {
+        function (ko, $, dfumodel, oj, nls, typeaheadsearch, mbu, prefUtilModel) {
             function WidgetSelectorPopupViewModel(params) {
                 var self = this;
                 new typeaheadsearch(); //Initialize typeahead search
@@ -56,8 +57,10 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                 self.widgetGroupFilterVisible = ko.observable(widgetProviderName && widgetProviderVersion ? false : true);
                 self.searchText = ko.observable("");
                 self.clearButtonVisible = ko.computed(function(){return self.searchText() && '' !== self.searchText() ? true : false;});
+                self.builderInFederationMode = params.builderFederationMode && params.builderFederationMode === true;
 
                 var dfu = new dfumodel(self.userName, self.tenantName);
+                var prefUtil = new prefUtilModel(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
                 //Append uifwk css file into document head
                 dfu.loadUifwkCss();
 
@@ -256,6 +259,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     if (event.type === "keydown" && event.keyCode === 13 || event.type === "mousedown") {
                         $('#widget-selector').children().removeClass('oj-selected oj-focus oj-hover');
                         $('li[id^=created-by] > ul').children().removeClass('oj-selected oj-focus oj-hover');
+                        $('#widget-selector').children().blur();
                         var curWidget = self.currentWidget();
                         if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME ||
                             curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) { 
@@ -363,13 +367,25 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                 function getWidgets() {
                     var widgetsBaseUrl = '/sso.static/savedsearch.widgets';
                     var widgetsUrl = widgetsBaseUrl;
+                    var noFirstUrlParam = true;
                     if (dfu.isDevMode()){
                         widgetsBaseUrl = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
                         widgetsUrl = widgetsBaseUrl;
                         if (includeDashboardIneligible) {
                             widgetsUrl = widgetsBaseUrl + "?includeDashboardIneligible=true";
+                            noFirstUrlParam = false;
                         }
                     }
+                    if (self.builderInFederationMode) { // currently running in federation mode in builder page
+                        widgetsUrl = widgetsUrl + (noFirstUrlParam ? '?' : '&') + 'federationEnabled=true';
+                        noFirstUrlParam = false;
+                    }
+                    var showFederationInHM = prefUtil.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
+                    showFederationInHM.done(function(showInUI) {
+                        if (showInUI && showInUI.toUpperCase() === "TRUE") {
+                            widgetsUrl = widgetsUrl + (noFirstUrlParam ? '?' : '&') + "federationFeatureShowInUi=true";
+                        }
+                    });
  
                         return dfu.ajaxWithRetry({
                             url: widgetsUrl,

@@ -5,19 +5,12 @@ import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+import mockit.Deencapsulation;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import mockit.Verifications;
-import oracle.sysman.emaas.platform.emcpdf.cache.api.ICacheManager;
-import oracle.sysman.emaas.platform.emcpdf.cache.support.CacheManagers;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.DefaultKeyGenerator;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
-import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
-import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.core.MediaType;
@@ -25,6 +18,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by chehao on 2017/4/18 11:05.
@@ -164,5 +158,26 @@ public class RestClientTest {
         rc = new RestClient();
         rc.post("http://test.link.com",list.toString(), "emaastesttenant1", null);
 
+    }
+
+    @Test(groups = {"s2"})
+    public void testRestClientSetHeaders() {
+        RestClient rc = new RestClient();
+
+        String testKey = "testKey";
+        String testValue = "testValue";
+        rc.setHeader(testKey, testValue);
+        Map<String, Object> headers = Deencapsulation.getField(rc, "headers");
+        Assert.assertEquals(testValue, headers.get(testKey));
+        headers.clear();
+
+        // test null key
+        rc.setHeader(null, testValue);
+        headers = Deencapsulation.getField(rc, "headers");
+        Assert.assertFalse(headers.containsValue(testValue));
+
+        rc.setHeader(testKey, null);
+        headers = Deencapsulation.getField(rc, "headers");
+        Assert.assertFalse(headers.containsKey(testKey));
     }
 }

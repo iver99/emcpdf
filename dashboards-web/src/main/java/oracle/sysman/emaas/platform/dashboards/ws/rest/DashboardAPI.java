@@ -22,13 +22,10 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.resource.*;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CreateSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSystemDashboardException;
-import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.*;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableDescriptionState;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableEntityFilterState;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
-import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
-import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
-import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
@@ -37,6 +34,7 @@ import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.*;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.preferences.FeatureShowPreferences;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.ssfDatautil.SSFDataUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
@@ -625,6 +623,25 @@ public class DashboardAPI extends APIBase
 				}
 			});
 
+			Future<List<Preference>> featurePreferences = pool.submit(new Callable<List<Preference>>() {
+				@Override
+				public List<Preference> call() throws Exception {
+					try {
+						LOGGER.info("Parallel request to get preference settings for features...");
+						long startPrefs = System.currentTimeMillis();
+						Long internalTenantId = DashboardAPI.this.getTenantId(tenantIdParam);
+						UserContext.setCurrentUser(curUser);
+						List<Preference> prefs = FeatureShowPreferences.getFeatureShowPreferences(internalTenantId);
+						long endPrefs = System.currentTimeMillis();
+						LOGGER.info("Time to get features preferences: {}ms. Retrieved data is: {}", (endPrefs - startPrefs), prefs);
+						return prefs;
+					} catch (Exception e) {
+						LOGGER.error("Error occurred when retrieving feature preferences settings using parallel request!", e);
+						throw e;
+					}
+				}
+			});
+
 			Future<Dashboard> futureDashboard = null;
 			try {
 				if (!DependencyStatus.getInstance().isDatabaseUp()) {
@@ -752,6 +769,27 @@ public class DashboardAPI extends APIBase
 				LOGGER.error(e);
 			}
 
+			List<PreferenceEntity> prefs = new ArrayList<PreferenceEntity>();
+			try {
+				if(featurePreferences!=null){
+					List<Preference> prefList = featurePreferences.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					if (prefList != null) {
+						for (Preference pref : prefList) {
+							prefs.add(new PreferenceEntity(pref));
+						}
+					}
+					LOGGER.debug("Preference settings data is {}", prefList);
+				}
+			} catch (InterruptedException e) {
+				LOGGER.error(e);
+			} catch (ExecutionException e) {
+				LOGGER.error(e.getCause() == null ? e : e.getCause());
+			}catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				featurePreferences.cancel(true);
+				LOGGER.error(e);
+			}
+
 			sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
 			if (userInfo != null || userGrants != null) {
 				String userInfoRes = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity(userInfo, userGrants));
@@ -788,14 +826,20 @@ public class DashboardAPI extends APIBase
 					updateDashboardAllHref(dbd, curTenant);
 				}
 			}catch (ExecutionException e) {
-			LOGGER.error(e.getCause() == null? e : e.getCause());
-		}catch (InterruptedException e) {
-			LOGGER.error(e);
-		}catch(TimeoutException e){
-			//if timeout, and the task is still running, attempt to stop the task
-			futureDashboard.cancel(true);
-			LOGGER.error(e);
-		}
+				LOGGER.error(e.getCause() == null? e : e.getCause());
+			}catch (InterruptedException e) {
+				LOGGER.error(e);
+			}catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureDashboard.cancel(true);
+				LOGGER.error(e);
+			}
+
+			if (prefs != null) {
+				sb.append("window._uifwk.cachedData.preferences=");
+				sb.append(JsonUtil.buildNormalMapper().toJson(prefs));
+				sb.append(";");
+			}
 
 			LOGGER.info("Retrieving combined data cost {}ms", (System.currentTimeMillis() - begin));
 			return Response.ok(sb.toString()).build();
@@ -815,13 +859,14 @@ public class DashboardAPI extends APIBase
 			@QueryParam("queryString") String queryString, @DefaultValue("") @QueryParam("limit") Integer limit,
 			@DefaultValue("0") @QueryParam("offset") Integer offset,
 			@DefaultValue(DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME) @QueryParam("orderBy") String orderBy,
-			@QueryParam("filter") String filterString
+			@QueryParam("filter") String filterString, @DefaultValue("false") @QueryParam("federationEnabled") String federationEnabled,
+			@DefaultValue("false") @QueryParam("federationFeatureShowInUi") String federationFeatureShowInUi
 	/*@QueryParam("types") String types, @QueryParam("appTypes") String appTypes, @QueryParam("owners") String owners,
 	@QueryParam("onlyFavorites") Boolean onlyFavorites*/)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
-				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&filter={}", queryString,
-				limit, offset, orderBy, filterString);
+				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&filter={}&federationEnabled={}&federationFeatureShowInUi={}",
+				queryString, limit, offset, orderBy, filterString, federationEnabled, federationFeatureShowInUi);
 		logkeyHeaders("queryDashboards()", userTenant, tenantIdParam);
 		String qs = null;
 		try {
@@ -830,6 +875,14 @@ public class DashboardAPI extends APIBase
 		}
 		catch (UnsupportedEncodingException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
+		}
+		boolean federationMode = false;
+		if (Boolean.TRUE.toString().equalsIgnoreCase(federationEnabled)) {
+			federationMode = true;
+		}
+		boolean boolFederationFeatureShowInUi = false;
+		if (Boolean.TRUE.toString().equalsIgnoreCase(federationFeatureShowInUi)) {
+			boolFederationFeatureShowInUi = true;
 		}
 
 		try {
@@ -847,7 +900,7 @@ public class DashboardAPI extends APIBase
 			//filter.setIncludedTypesFromString(types);
 			//filter.setIncludedFavorites(onlyFavorites);
 			filter.initializeFilters(filterString);
-			PaginatedDashboards pd = manager.listDashboards(qs, offset, limit, tenantId, true, orderBy, filter);
+			PaginatedDashboards pd = manager.listDashboards(qs, offset, limit, tenantId, true, orderBy, filter, federationMode, boolFederationFeatureShowInUi);
 			if (pd != null && pd.getDashboards() != null) {
 				for (Dashboard d : pd.getDashboards()) {
 					updateDashboardAllHref(d, tenantIdParam);
@@ -1522,6 +1575,7 @@ public class DashboardAPI extends APIBase
 		newTile.setHeight(2);
 		newTile.setWidgetSource(1);
 		newTile.setType(0); //DEFAULT
+		newTile.setFederationSupported(ed.getFederationSupported() == null ? FederationSupportedType.NON_FEDERATION_ONLY.getValue() : ed.getFederationSupported());
 		//dashboard is empty
 		if((tileList == null) || tileList.isEmpty()){
 			tileList = new ArrayList<>();
