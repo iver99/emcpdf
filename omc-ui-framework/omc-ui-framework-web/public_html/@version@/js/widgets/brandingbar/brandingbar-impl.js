@@ -1594,7 +1594,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     var refreshTopology = true;
                     var omcContext = cxtUtil.getOMCContext();
                     var entityMeIds = cxtUtil.getEntityMeIds() ? cxtUtil.getEntityMeIds().sort().join() : null;
-                    var currentCompositeId = cxtUtil.getCompositeMeId() || entityMeIds;
+                    var currentCompositeId;
+                    if(cxtUtil.getCompositeMeId()) {
+                        if(entityMeIds) {
+                            currentCompositeId = cxtUtil.getCompositeMeId() + "," + entityMeIds;
+                        }else {
+                            currentCompositeId = cxtUtil.getCompositeMeId();
+                        }
+                    }else {
+                        currentCompositeId = entityMeIds;
+                    }
                     console.log("************currentCompositeId" + currentCompositeId);
                     if (currentCompositeId) {
                         if (self.topologyInitialized === true && currentCompositeId === omcContext.previousCompositeMeId) {
@@ -1605,7 +1614,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         else {
                             console.log("*******************refresh topology entities");
                             var compositeId = [];
-                            compositeId.push(currentCompositeId);
+                            compositeId.push(cxtUtil.getCompositeMeId() || entityMeIds);
                             self.entities(compositeId);
                             omcContext.previousCompositeMeId = currentCompositeId;
                             self.topologyInitialized = true;
