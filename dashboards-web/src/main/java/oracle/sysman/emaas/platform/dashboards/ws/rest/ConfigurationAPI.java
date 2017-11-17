@@ -36,6 +36,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.TenantSubscriptionsAPI.SubscribedAppsEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.preferences.FeatureShowPreferences;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.TenantSubscriptionInfo;
 import org.apache.logging.log4j.LogManager;
@@ -53,12 +54,13 @@ public class ConfigurationAPI extends APIBase
 	private static class CombinedBrandingBarData {
 		public CombinedBrandingBarData(UserInfoEntity userInfo, RegistrationEntity registration,
 									   SubscribedAppsEntity subscribedApps,String subscribedApps2,
-									   List<PreferenceEntity> preferences) {
+									   List<PreferenceEntity> preferences,Map<String, String> baseVanityUrls) {
 			this.userInfo = userInfo;
 			this.registration = registration;
 			this.subscribedApps = subscribedApps;
             this.subscribedApps2 = subscribedApps2;
 			this.preferences = preferences;
+			this.baseVanityUrls = baseVanityUrls;
 		}
 
 		private UserInfoEntity userInfo;
@@ -66,8 +68,17 @@ public class ConfigurationAPI extends APIBase
 		private String subscribedApps2;
         private SubscribedAppsEntity subscribedApps;
 		private List<PreferenceEntity> preferences;
+		private Map<String, String> baseVanityUrls;
 
-        public String getSubscribedApps2() {
+		public Map<String, String> getBaseVanityUrls() {
+			return baseVanityUrls;
+		}
+
+		public void setBaseVanityUrls(Map<String, String> baseVanityUrls) {
+			this.baseVanityUrls = baseVanityUrls;
+		}
+
+		public String getSubscribedApps2() {
             return subscribedApps2;
         }
 
@@ -136,6 +147,12 @@ public class ConfigurationAPI extends APIBase
 			if (preferences != null) {
 				sb.append("window._uifwk.cachedData.preferences=");
 				sb.append(JsonUtil.buildNormalMapper().toJson(preferences));
+				sb.append(";");
+			}
+
+			if(baseVanityUrls != null){
+				sb.append("window._uifwk.cachedData.baseVanityUrls=");
+				sb.append(JsonUtil.buildNormalMapper().toJson(baseVanityUrls));
 				sb.append(";");
 			}
 			return sb.toString();
@@ -225,6 +242,7 @@ public class ConfigurationAPI extends APIBase
             Future<String> futureUserGrants =null;
             Future<List<String>> futureSubscribedApps =null;
 			Future<List<Preference>> featurePreferences = null;
+			Future<Map<String, String>> futureBaseVanityUrls =null;
             ExecutorService pool = ParallelThreadPool.getThreadPool();
 
             final String curTenant = TenantContext.getCurrentTenant();
@@ -263,6 +281,27 @@ public class ConfigurationAPI extends APIBase
                     }
                 }
             });
+
+            //retrieve base vanity urls
+			futureBaseVanityUrls = pool.submit(new Callable<Map<String, String>>() {
+				@Override
+				public Map<String, String> call() throws Exception {
+					try{
+						long start = System.currentTimeMillis();
+						_LOGGER.info("Parallel request to get user grants...");
+						Map<String, String> baseVanityUrls = RegistryLookupUtil.getVanityBaseURLs(tenantIdParam);
+						_LOGGER.info("Retrieved base Vanity Urls are {}", baseVanityUrls);
+						Map<String, String> copyBaseVanityUrls = new HashMap<>();
+						RegistryLookupAPI.handleBaseVanityUrls(tenantIdParam, baseVanityUrls, copyBaseVanityUrls);
+						long end = System.currentTimeMillis();
+						_LOGGER.info("Time to get base vanity urls took: {}ms, result is {}", (end - start), copyBaseVanityUrls);
+						return copyBaseVanityUrls;
+					}catch(Exception e){
+						_LOGGER.error("Error occurred when get base vanity urls using parallel request!", e);
+						throw e;
+					}
+				}
+			});
             
             //retrieve subscribapp api data
 			final TenantSubscriptionInfo tenantSubscriptionInfo= new TenantSubscriptionInfo();
@@ -355,6 +394,22 @@ public class ConfigurationAPI extends APIBase
                 _LOGGER.error(e);
             }
 
+			Map<String, String> baseVanityUrls = null;
+            try{
+            	if(futureBaseVanityUrls != null){
+					baseVanityUrls = futureBaseVanityUrls.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					_LOGGER.debug("baseVanityUrls {}", baseVanityUrls);
+				}
+			}catch (InterruptedException e) {
+				_LOGGER.error(e);
+			} catch (ExecutionException e) {
+				_LOGGER.error(e.getCause() == null ? e : e.getCause());
+			}catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureBaseVanityUrls.cancel(true);
+				_LOGGER.error(e);
+			}
+
 			List<PreferenceEntity> prefs = new ArrayList<PreferenceEntity>();
 			try {
 				if(featurePreferences!=null){
@@ -378,7 +433,7 @@ public class ConfigurationAPI extends APIBase
 
 			SubscribedAppsEntity sae = subApps == null ? null : new SubscribedAppsEntity(subApps);
 			RegistrationEntity re = new RegistrationEntity(sessionExpiryTime, userRoles);
-			CombinedBrandingBarData cbbd = new CombinedBrandingBarData(new UserInfoEntity(userRoles, userGrants), re, sae,subApps2, prefs);
+			CombinedBrandingBarData cbbd = new CombinedBrandingBarData(new UserInfoEntity(userRoles, userGrants), re, sae,subApps2, prefs, baseVanityUrls);
 			String brandingBarData = cbbd.getBrandingbarInjectedJS();
             long end = System.currentTimeMillis();
 			_LOGGER.info("Response for [GET] /v1/configurations/brandingbardata is \"{}\". It takes {}ms for this API", brandingBarData, (end - start));
