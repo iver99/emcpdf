@@ -245,12 +245,6 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	}
 
 	@Mock
-	public List<EmsDashboard> getEmsDashboardFindAll()
-	{
-		return this.localFind(EmsDashboard.class, null);
-	}
-
-	@Mock
 	public List<EmsDashboard> getEmsDashboardsBySubId(BigInteger subDashboardId)
 	{
 		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(subDashboardId, null, null, null));
@@ -262,6 +256,22 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	{
 		List<EmsPreference> ps = this.localFind(EmsPreference.class, new EmsPreferenceSelector(username, prefKey));
 		return ps.isEmpty() ? null : ps.get(0);
+	}
+
+	@Mock
+	public List<EmsPreference> getEmsPreferencesByKeys(String userName, List<String> keys)
+	{
+		if (keys == null) {
+			return null;
+		}
+		List<EmsPreference> prefs = new ArrayList<EmsPreference>();
+		for (String prefKey : keys) {
+			List<EmsPreference> ps = this.localFind(EmsPreference.class, new EmsPreferenceSelector(userName, prefKey));
+			if (ps != null) {
+				prefs.addAll(ps);
+			}
+		}
+		return prefs.isEmpty() ? null : prefs;
 	}
 
 	@Mock

@@ -196,12 +196,6 @@ public class DashboardServiceFacade
 		return emsDashboard;
 	}
 
-	/** <code>select o from EmsDashboard o</code> */
-	public List<EmsDashboard> getEmsDashboardFindAll()
-	{
-		return em.createNamedQuery("EmsDashboard.findAll", EmsDashboard.class).getResultList();
-	}
-
 	public void removePreferenceByKey(String userName, String key, long tenantId)
 	{
 		String sql = "select * from ems_preference p where p.user_Name ='"+userName+"' and p.pref_key = '"+key+"' and (p.tenant_id="
@@ -218,6 +212,22 @@ public class DashboardServiceFacade
 	public EmsPreference getEmsPreference(String username, String prefKey)
 	{
 		return em.find(EmsPreference.class, new EmsPreferencePK(prefKey, username));
+	}
+
+	/**
+	 *
+	 * @param userName
+	 * @param keys
+     * @return
+     */
+	public List<EmsPreference> getEmsPreferencesByKeys(String userName, List<String> keys)
+	{
+		String jpql = "select o from EmsPreference o where o.userName = :userName and o.prefKey in :ids";
+		Query query = em.createQuery(jpql);
+		query.setParameter("userName", userName);
+		query.setParameter("ids", keys);
+		List result = query.getResultList();
+		return (List<EmsPreference>)result;
 	}
 
 	//	/** <code>select o from EmsDashboardTile o</code> */

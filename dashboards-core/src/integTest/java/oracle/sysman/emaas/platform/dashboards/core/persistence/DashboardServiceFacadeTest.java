@@ -4,12 +4,14 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
 import oracle.sysman.emaas.platform.dashboards.core.BaseTest;
+import oracle.sysman.emaas.platform.dashboards.core.model.FederationSupportedType;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.IdGenerator;
 import oracle.sysman.emaas.platform.dashboards.core.util.ZDTContext;
@@ -126,6 +128,7 @@ public class DashboardServiceFacadeTest extends BaseTest
 		//d.setTenantId("11");
 		d.setScreenShot("slslslslsl");
 		d.setType(0);
+		d.setFederationSupported(FederationSupportedType.NON_FEDERATION_ONLY.getValue());
 		return d;
 	}
 
@@ -161,6 +164,7 @@ public class DashboardServiceFacadeTest extends BaseTest
 		tile.setWidgetSupportTimeControl(1);
 		tile.setWidgetLinkedDashboard(BigInteger.valueOf(1L));
 		tile.setWidgetDeleted(0);
+		tile.setFederationSupported(FederationSupportedType.NON_FEDERATION_ONLY.getValue());
 		return tile;
 	}
 
@@ -261,7 +265,7 @@ public class DashboardServiceFacadeTest extends BaseTest
 		//testGetEmsDashboardTileFindAll();
 		testMergeEmsDashboard();
 		testGetEmsDashboardById();
-		testGetEmsDashboardFindAll();
+//		testGetEmsDashboardFindAll();
 		//testGetEmsDashboardLastAccessFindAll();
 		//testGetEmsDashboardTileParamsFindAll();
 		//testGetEmsDashboardFavoriteFindAll();
@@ -287,97 +291,6 @@ public class DashboardServiceFacadeTest extends BaseTest
 			}
 		}
 	}
-
-	//	/**
-	//	 * Test method for
-	//	 * {@link oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade#getEmsDashboardFavoriteFindAll()}.
-	//	 */
-	//	public void testGetEmsDashboardFavoriteFindAll()
-	//	{
-	//		for (EmsDashboardFavorite emsdashboardfavorite : dashboardServiceFacade.getEmsDashboardFavoriteFindAll()) {
-	//			DashboardServiceFacadeTest.assertEmsDashboardFavorite(emsdashboardfavorite);
-	//		}
-	//	}
-
-	/**
-	 * Test method for
-	 * {@link oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade#getEmsDashboardFindAll()}.
-	 */
-	public void testGetEmsDashboardFindAll()
-	{
-		EntityManager em = null;
-		try {
-			dashboardServiceFacade = new DashboardServiceFacade(TENANT_ID);
-			for (EmsDashboard emsdashboard : dashboardServiceFacade.getEmsDashboardFindAll()) {
-				DashboardServiceFacadeTest.assertEmsDashboard(emsdashboard);
-			}
-		}
-		finally {
-			if (em != null) {
-				em.close();
-			}
-		}
-	}
-
-	//	/**
-	//	 * Test method for
-	//	 * {@link oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade#getEmsDashboardLastAccessFindAll()}.
-	//	 */
-	//	public void testGetEmsDashboardLastAccessFindAll()
-	//	{
-	//		EntityManager em = null;
-	//		try {
-	//			dashboardServiceFacade = new DashboardServiceFacade(TENANT_ID);
-	//			for (EmsDashboardLastAccess emsdashboardlastaccess : dashboardServiceFacade.getEmsDashboardLastAccessFindAll()) {
-	//				DashboardServiceFacadeTest.assertEmsDashboardLastAccess(emsdashboardlastaccess);
-	//			}
-	//		}
-	//		finally {
-	//			if (em != null) {
-	//				em.close();
-	//			}
-	//		}
-	//	}
-
-	//	/**
-	//	 * Test method for
-	//	 * {@link oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade#getEmsDashboardTileFindAll()}.
-	//	 */
-	//	public void testGetEmsDashboardTileFindAll()
-	//	{
-	//		EntityManager em = null;
-	//		try {
-	//			dashboardServiceFacade = new DashboardServiceFacade(TENANT_ID);
-	//			for (EmsDashboardTile emsdashboardtile : dashboardServiceFacade.getEmsDashboardTileFindAll()) {
-	//				DashboardServiceFacadeTest.assertEmsDashboardTile(emsdashboardtile);
-	//			}
-	//		}
-	//		finally {
-	//			if (em != null) {
-	//				em.close();
-	//			}
-	//		}
-	//	}
-
-	//	/**
-	//	 * Test method for
-	//	 * {@link oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade#getEmsDashboardTileParamsFindAll()}.
-	//	 */
-	//	public void testGetEmsDashboardTileParamsFindAll()
-	//	{
-	//		EntityManager em = null;
-	//		try {
-	//			dashboardServiceFacade = new DashboardServiceFacade(TENANT_ID);
-	//			for (EmsDashboardTileParams emsdashboardtileparams : dashboardServiceFacade.getEmsDashboardTileParamsFindAll()) {
-	//				DashboardServiceFacadeTest.assertEmsDashboardTileParams(emsdashboardtileparams);
-	//			}
-	//		}
-	//		finally {
-	//			if (em != null) {
-	//				em.close();
-	//			}
-	//		}
-	//	}
 
 	/**
 	 * Test method for
@@ -426,39 +339,40 @@ public class DashboardServiceFacadeTest extends BaseTest
 		}
 	}
 
-	public void testOOBWidgetNotHiden() {
-		dashboardServiceFacade = new DashboardServiceFacade(1L);
-		List<EmsDashboard> emsDashboards = dashboardServiceFacade.getEmsDashboardFindAll();
-		for (EmsDashboard emsDashboard : emsDashboards) {
-			List<EmsDashboardTile> emsDashboardTiles = emsDashboard.getDashboardTileList();
-			for (EmsDashboardTile emsDashboardTile : emsDashboardTiles) {
-				if ("Oracle".equalsIgnoreCase(emsDashboardTile.getOwner())&& "Summary".equalsIgnoreCase(emsDashboardTile.getTitle())) {
-					List<EmsDashboardTileParams> emsDashboardTileParamses = emsDashboardTile.getDashboardTileParamsList();
-					for (EmsDashboardTileParams emsDashboardTileParams : emsDashboardTileParamses) {
-						if ("DF_HIDE_TITLE".equals(emsDashboardTileParams.getParamName()) && "true".equalsIgnoreCase(emsDashboardTileParams.getParamValueStr())) {
-							Assert.fail("Widget: id = " + emsDashboardTile.getTileId() + " is hidden");
-						}
-					}
-				}
+	public void testGetEmsPreferencesByKeys()
+	{
+		EntityManager em = null;
+		try {
+			dashboardServiceFacade = new DashboardServiceFacade(TENANT_ID);
+			em = dashboardServiceFacade.getEntityManager();
+
+			EmsPreference p1 = new EmsPreference("prefKey1", "expectedValue", "test");
+			dashboardServiceFacade.persistEmsPreference(p1);
+			dashboardServiceFacade.commitTransaction();
+			EmsPreference p2 = new EmsPreference("prefKey2", "expectedValue", "test");
+			dashboardServiceFacade.persistEmsPreference(p2);
+			dashboardServiceFacade.commitTransaction();
+			EmsPreference p3 = new EmsPreference("prefKey3", "unexpectedValue", "test");
+			dashboardServiceFacade.persistEmsPreference(p3);
+			dashboardServiceFacade.commitTransaction();
+
+			List<String> keys = Arrays.asList("prefKey1", "prefKey2");
+			List<EmsPreference> prefs = dashboardServiceFacade.getEmsPreferencesByKeys("test", keys);
+			Assert.assertNotNull(prefs);
+			Assert.assertEquals(prefs.size(), 2);
+			Assert.assertEquals(prefs.get(0).getPrefValue(), "expectedValue");
+			Assert.assertEquals(prefs.get(1).getPrefValue(), "expectedValue");
+
+			dashboardServiceFacade.removeEmsPreference(p1);
+			dashboardServiceFacade.removeEmsPreference(p2);
+			dashboardServiceFacade.removeEmsPreference(p3);
+			dashboardServiceFacade.commitTransaction();
+			dashboardServiceFacade.removeAllEmsPreferences("test");
+		}
+		finally {
+			if (em != null) {
+				em.close();
 			}
 		}
 	}
-
-	//	/**
-	//	 * Test method for
-	//	 * {@link oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade#queryByRange(java.lang.String, java.lang.Class, java.util.Map, int, int)}
-	//	 * .
-	//	 */
-	//	@SuppressWarnings({ "rawtypes", "unchecked" })
-	//	public void testQueryByRange()
-	//	{
-	//		String sql = "select o from EmsDashboard o where o.name = :name";
-	//		HashMap<String, Object> params = new HashMap<String, Object>();
-	//		params.put("name", "test");
-	//		List dqr = dashboardServiceFacade.queryByRange(sql, EmsDashboard.class, params, 0, 0);
-	//		for (EmsDashboard emsdashboard : (List<EmsDashboard>) dqr) {
-	//			DashboardServiceFacadeTest.assertEmsDashboard(emsdashboard);
-	//		}
-	//	}
-
 }

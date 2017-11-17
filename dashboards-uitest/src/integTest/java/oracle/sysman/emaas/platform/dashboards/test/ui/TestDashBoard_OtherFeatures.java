@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
@@ -15,14 +14,9 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil.TimeRange;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -48,14 +42,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_duplicate = "";
 	private String dbName_duplicateOOB = "";
 	private String dbName_saveConfirmation = "";
-	private String dbName_textWidget = "";
-	private String dbName_textWidget_toolbar = "";
 	private String dbName_longName = "dashboardNamedashboardNamedashboardNamedashboardNamedashboardNam";
-	private String dbName_textWidget_image = "";
-	private String dbName_textWidget_link = "";
-	private String dbName_textWidget_multiLink = "";
-	private String dbName_textWidget_order = "";
-	private String dbName_textWidget_empty = "";
 
 	private final String customWidgetName = "Execution Details";
 	private final String OOBName = "Middleware Operations";
@@ -120,12 +107,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_Test);
 		DashBoardUtils.deleteDashboard(webd, dbName_duplicate);
 		DashBoardUtils.deleteDashboard(webd, dbName_duplicateOOB);
-		DashBoardUtils.deleteDashboard(webd, dbName_textWidget);
 		DashBoardUtils.deleteDashboard(webd, dbName_longName);
-		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_toolbar);
-		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_link);
-		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_multiLink);
-		DashBoardUtils.deleteDashboard(webd, dbName_textWidget_order);
 		
 		webd.getLogger().info("All test data have been removed");
 
@@ -163,9 +145,8 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.getLogger().info("Get narrower widgets");
 		for (int i = 1; i <= 4; i++) {
 			DashboardBuilderUtil.resizeWidget(webd, widgetName, DashboardBuilderUtil.TILE_NARROWER);
-
-
 		}
+		
 		webd.getLogger().info("Finished to get narrower widgets");
 
 		webd.getLogger().info("Get wider widgets");
@@ -197,6 +178,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.getLogger().info("Verfiy if the OOB dashboard can be deleted");
 		DashboardHomeUtil.search(webd, "Application Performance Monitoring");
 		webd.click(DashBoardPageId.INFOBTNID);
+		
 		WebElement removeButton = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RMBTNID));
 		Assert.assertFalse(removeButton.isEnabled(), "delete is enabled for OOB dashboard");
 	}
@@ -312,11 +294,8 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 
 		webd.getLogger().info("Verfiy the favortie checkbox is checked");
 		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites option is NOT checked");
-		//		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
-		//		Assert.assertTrue(el.isSelected());
-
+		
 		webd.getLogger().info("Verfiy the dashboard is favorite");
-		//DashboardHomeUtil.search(webd, dbName_favorite);
 		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_favorite), "Can not find the dashboard");
 
 		webd.getLogger().info("Open the dashboard");
@@ -333,21 +312,16 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		BrandingBarUtil.visitMyFavorites(webd);
 		webd.getLogger().info("Verfiy the favortie checkbox is checked");
 		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "favorites"), "My Favorites option is NOT checked");
-		//		el = webd.getWebDriver().findElement(By.id(DashBoardPageId.Favorite_BoxID));
-		//		Assert.assertTrue(el.isSelected());
+		
 		webd.getLogger().info("Verfiy the dashboard is not favorite");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, dbName_favorite),
 				"The dashboard is still my favorite dashboard");
-		//		DashboardHomeUtil.search(webd, dbName_favorite);
-		//		Assert.assertEquals(webd.getAttribute(DashBoardPageId.DashboardSerachResult_panelID + "@childElementCount"), "0");
-		//		webd.getLogger().info("no favorite dashboard");
-
+		
 		//delete the dashboard
 		webd.getLogger().info("start to delete the dashboard");
-
-		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.FAVORITE_BOXID));
-		if (el.isSelected()) {
-			el.click();
+		
+		if (webd.isSelected("id=" + DashBoardPageId.FAVORITE_BOXID)) {
+			webd.click("id=" + DashBoardPageId.FAVORITE_BOXID);
 		}
 		DashboardHomeUtil.deleteDashboard(webd, dbName_favorite, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 		webd.getLogger().info("the dashboard has been deleted");
@@ -613,12 +587,15 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashboardBuilderUtil.restoreWidget(webd, "Host Logs Trend", 0);
 
 		//verify the edit/add button not displayed in the page: [changed] element does not exist
-		List<WebElement> addButtons = webd.getWebDriver().findElements(By.xpath("//button[@title='Add Content']"));
-		Assert.assertFalse(addButtons != null && addButtons.size() > 0, "Unexpected: Add button exists in system dashboard set");
-
-		List<WebElement> editButtons = webd.getWebDriver().findElements(By.xpath("//button[@title='Edit Settings']"));
-		Assert.assertFalse(editButtons != null && editButtons.size() > 0,
-				"Unexpected: Edit button exists in system dashboard set");
+		if(webd.getElementCount("//button[@title='Add Content']")>0)
+		{
+			Assert.fail("Unexpected: Add button exists in system dashboard");
+		}
+		
+		if(webd.getElementCount("//button[@title='Edit Settings']")>0)
+		{
+			Assert.fail("Unexpected: Edit button exists in system dashboard");
+		}
 	}
 
 	//test maxmize/restore widget in self created dashboard
@@ -661,15 +638,12 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertTrue(webd.isDisplayed("css=" + ".dbd-widget[data-tile-name=\"All Logs Trend\"]"),
 				"Widget 'All Logs Trend' is not displayed");
 
-		//verify the edit/add button displayed in the page
-		WebElement addButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));
-		Assert.assertTrue(addButton.isDisplayed(), "Add button isn't displayed in system dashboard set");
-
-		WebElement editButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));
-		Assert.assertTrue(editButton.isDisplayed(), "Edit button isn't displayed in system dashboard set");
+		//verify the edit/add button displayed in the page		
+		Assert.assertTrue(webd.isDisplayed("//button[@title='Add Content']"), "Add button isn't displayed in system dashboard set");
+		Assert.assertTrue(webd.isDisplayed("//button[@title='Edit Settings']"), "Edit button isn't displayed in system dashboard set");
 	}
 
-	@Test
+	//@Test
 	public void testSaveConfirmation()
 	{
 		dbName_saveConfirmation = "TestSaveConfirmation-" + DashBoardUtils.generateTimeStamp();
@@ -707,8 +681,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 
 		//verify if in the home page
 		webd.getLogger().info("Verify if in the home page");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PageId.DASHBOARDDISPLAYPANELCSS)));
+		webd.waitForElementPresent("css=" + PageId.DASHBOARDDISPLAYPANELCSS);
 	}
 
 	@Test
@@ -886,14 +859,14 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		}
 		catch (ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		try {
 			dTmpEnd = fmt.parse(tmpEndDate);
 		}
 		catch (ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 
 		String tmpStartDateNew = df.format(dTmpStart);
@@ -913,51 +886,16 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 
 		//verify the url
 		webd.switchToWindow();
-		//WaitUtil.waitForPageFullyLoaded(webd);
 		webd.getLogger().info("Wait for the widget loading....");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
+		webd.waitForServer();
+		webd.waitForElementPresent("//*[@id='srchSrch']");
 
-		String url = webd.getWebDriver().getCurrentUrl();
+		String url = webd.getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		if (!url.substring(url.indexOf("emsaasui") + 9).contains(
 				"startTime%3D" + String.valueOf(StartTimeStamp) + "%26endTime%3D" + String.valueOf(EndTimeStamp))) {
 			Assert.fail("not open the correct widget");
 		}
-	}
-	
-	@Test
-	public void testTextWidget()
-	{
-		dbName_textWidget = "Dashboard_textWidget-" + DashBoardUtils.generateTimeStamp();
-		
-		String dbDesc = "Add text widget into dashboard";
-		String content = "This is the dashboard which is used to test the new feature of adding text widget";
-		//String content_Hyperlink = "";
-		
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testTextWidget");
-
-		DashboardHomeUtil.gridView(webd);
-
-		webd.getLogger().info("Create the dashboard, then to add text widget");
-		DashboardHomeUtil.createDashboard(webd, dbName_textWidget, dbDesc, DashboardHomeUtil.DASHBOARD);
-		
-		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget, dbDesc, true), "Create dashboard failed!");		
-		
-		DashboardBuilderUtil.addTextWidgetToDashboard(webd);
-		
-		//Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, widgetName), "text widget isn't added into the dashboard successfully");
-		DashboardBuilderUtil.editTextWidgetAddContent(webd, 1, content);
-		
-		DashboardBuilderUtil.saveDashboard(webd);
-		
-		//Verify the content is added successfully
-		webd.getLogger().info("Verify the content is added successfully");
-		
-		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-		Assert.assertEquals(textContent.getText(), content);
 	}
 	
 	@Test
@@ -985,276 +923,4 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.getLogger().info("Verify the long name is wrapped displayed in dashboard information dialog");
 		webd.isElementPresent(DashBoardPageId.DASHBOARDOFLONGNAMELOCATOR);	
     }
-
-    @Test
-	public void testTextWidget_Image()
-	{
-		dbName_textWidget_image = "Dashboard_textWidgetImage-" + DashBoardUtils.generateTimeStamp();
-		
-		String dbDesc = "Add text widget into dashboard, test the image feature";
-		String urlString = "emsaasui/uifwk/images/o_logo.png";
-		String url = "";
-		String alternativeText = "test_image";
-		
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test image in testTextWidget");
-
-		DashboardHomeUtil.gridView(webd);
-		
-		String currentUrl = webd.getWebDriver().getCurrentUrl();
-		url = (currentUrl.substring(0, currentUrl.indexOf("emsaasui"))).concat(urlString);
-
-		webd.getLogger().info("Create the dashboard, then to add text widget");
-		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_image, dbDesc, DashboardHomeUtil.DASHBOARD);
-		
-		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_image, dbDesc, true), "Create dashboard failed!");		
-		
-		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
-		
-		DashboardBuilderUtil.addImageInTextWidget(webd, 1, url, alternativeText);
-		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
-		
-		DashboardBuilderUtil.addImageInTextWidget(webd, 1, url, null);
-		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
-
-		List<WebElement> images = webd.getWebDriver().findElements(By.cssSelector(DashBoardPageId.IMAGESCSS));	
-		
-		for (WebElement img : images)
-		{
-			Assert.assertEquals(img.isDisplayed(), true);
-		}
-		
-		DashboardBuilderUtil.saveDashboard(webd);	
-	}
-
-	public void testTextWidget_Link()
-	{
-		dbName_textWidget_link = "Dashboard_textWidgetURL-" + DashBoardUtils.generateTimeStamp();
-		
-		String dbDesc = "Add text widget into dashboard, test the link feature";
-		String url = "www.baidu.com";
-		
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test link in testTextWidget");
-
-		DashboardHomeUtil.gridView(webd);
-
-		webd.getLogger().info("Create the dashboard, then to add text widget");
-		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_link, dbDesc, DashboardHomeUtil.DASHBOARD);
-		
-		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_link, dbDesc, true), "Create dashboard failed!");		
-		
-		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
-		
-		//Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, widgetName), "text widget isn't added into the dashboard successfully");
-		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTP);
-		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
-		//Verify the content is added successfully
-		webd.getLogger().info("Verify the url is added successfully");	
-		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-		webd.getLogger().info(textContent.getText());
-		Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_HTTP + url);		
-		
-		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTPS);
-		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
-		//Verify the content is added successfully
-		webd.getLogger().info("Verify the url is added successfully");			
-		textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-		webd.getLogger().info(textContent.getText());
-		Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_HTTPS + url);				
-		
-		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_FTP);
-		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
-		//Verify the content is added successfully
-		webd.getLogger().info("Verify the url is added successfully");	
-		textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-		webd.getLogger().info(textContent.getText());
-		Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_FTP + url);		
-		
-		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_NEWS);
-		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
-		//Verify the content is added successfully
-		webd.getLogger().info("Verify the url is added successfully");				
-		textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-		webd.getLogger().info(textContent.getText());
-		Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_NEWS + url);		
-		
-		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_OTHER);
-		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
-		//Verify the content is added successfully
-		webd.getLogger().info("Verify the url is added successfully");		
-		textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-		webd.getLogger().info(textContent.getText());
-		Assert.assertEquals(textContent.getText(), DashBoardPageId.PROTOCOLOPTION_OTHER + url);		
-		
-		DashboardBuilderUtil.saveDashboard(webd);				
-	}
-	
-	@Test
-	public void testTextWidget_multiLink()
-	{
-		dbName_textWidget_multiLink = "Dashboard_textWidgetMultiURL-" + DashBoardUtils.generateTimeStamp();
-		
-		String dbDesc = "Add text widget into dashboard, add multi link";
-		String url = "www.baidu.com";
-		
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test link in testTextWidget");
-
-		DashboardHomeUtil.gridView(webd);
-
-		webd.getLogger().info("Create the dashboard, then to add text widget");
-		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_multiLink, dbDesc, DashboardHomeUtil.DASHBOARD);
-		
-		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_multiLink, dbDesc, true), "Create dashboard failed!");		
-		
-		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
-		
-		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTP);	
-		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
-		
-		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-		textContent.click();
-		webd.getWebDriver().switchTo().activeElement().sendKeys(Keys.ENTER);
-		webd.getWebDriver().switchTo().activeElement().sendKeys(Keys.ARROW_UP);
-		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
-
-		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTPS);	
-		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
-		
-		//Verify the content is added successfully
-		webd.getLogger().info("Verify the two urls are added successfully");	
-		WebElement textContent1 = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.TEXTCONTENT1));
-		Assert.assertEquals(textContent1.getText(), DashBoardPageId.PROTOCOLOPTION_HTTPS + url);			
-					
-		WebElement textContent2 = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.TEXTCONTENT2));
-		Assert.assertEquals(textContent2.getText(), DashBoardPageId.PROTOCOLOPTION_HTTP + url);		
-		
-		DashboardBuilderUtil.saveDashboard(webd);	
-	}
-	
-	@Test
-	public void testTextWidget_order()
-	{
-		dbName_textWidget_order = "Dashboard_textWidgetOrder-" + DashBoardUtils.generateTimeStamp();
-		
-		String dbDesc = "Add text widget into dashboard, and test its order";
-		
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test the order of Text Widget");
-
-		DashboardHomeUtil.gridView(webd);
-
-		webd.getLogger().info("Create the dashboard");
-		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_order, dbDesc, DashboardHomeUtil.DASHBOARD);
-		
-		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_order, dbDesc, true), "Create dashboard failed!");		
-		
-		DashboardBuilderUtil.addWidgetToDashboard(webd, customWidgetName);
-		Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, customWidgetName), "The widget added failed");
-				
-		DashboardBuilderUtil.addTextWidgetToDashboard(webd);	
-		
-		DashboardBuilderUtil.editTextWidgetAddContent(webd, 1, "This is a Text Widget");
-		
-		//Verify the Text Widget is ordered in the first place
-		webd.getLogger().info("Verify the Text Widget is order in first place");	
-		List<WebElement> widgets = webd.getWebDriver().findElements(By.cssSelector(DashBoardPageId.TILESLISTCSS)); 
-		
-		WebElement widget1 = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTWIDGETCSS));
-		Assert.assertTrue(widgets.get(0).equals(widget1), "The text widget isn't placed in the first place");
-		//Assert.assertTrue(widgets.get(0).getAttribute("data-tile-name").equals("Text Widget"), "The text widget isn't placed in the first place");
-
-		DashboardBuilderUtil.saveDashboard(webd);				
-	}
-	
-	@Test
-	public void testTextWidget_toolbar()
-	{		
-		dbName_textWidget_toolbar = "Dashboard_textWidgetToolbar-" + DashBoardUtils.generateTimeStamp();
-		String dbDesc = "Test whether text widget remove the Maximize/Remove icon and add delete icon";
-		
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testTextWidget_toolbarIcon");
-
-		DashboardHomeUtil.gridView(webd);
-
-		webd.getLogger().info("Create the dashboard");
-		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_toolbar, dbDesc, DashboardHomeUtil.DASHBOARD);
-		
-		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_toolbar, dbDesc, true), "Create dashboard failed!");		
-				
-		DashboardBuilderUtil.addTextWidgetToDashboard(webd);
-
-		webd.getLogger().info("Verify there is no Maximize icon in Text Widget");
-		Assert.assertFalse(webd.isElementPresent(DashBoardPageId.MAXIMIZEICON), "There is Maximize icon in the text widget");	
-		
-		WebElement textTileTitle = webd.getElement("css=" + DashBoardPageId.TILETITLECSS);
-		
-		Actions actions = new Actions(webd.getWebDriver()); 			
-		actions.moveToElement(textTileTitle).build().perform();
-		
-		webd.click("css=" + DashBoardPageId.CONFIGTILECSS);
-		
-		webd.getLogger().info("Verify remove icon is substituted by delete icon");
-		Assert.assertTrue(webd.isDisplayed(DashBoardPageId.DELETETILE), "Don't find delete icon");
-		Assert.assertFalse(webd.isDisplayed(DashBoardPageId.REMOVETILECSS), "Find the remove icon");
-		
-		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
-		
-		DashboardBuilderUtil.editTextWidgetAddContent(webd, 1, "This is a Text Widget");
-		
-		DashboardBuilderUtil.saveDashboard(webd);
-	}
-
-	@Test(alwaysRun = true)
-	public void testEmptyTextWidget()
-	{
-		dbName_textWidget_empty= "Empty Text Widget - " + DashBoardUtils.generateTimeStamp();
-		//initialize the test
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testEmptyTextWidget");
-
-		//reset all filter options
-		webd.getLogger().info("Reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//switch to grid view
-		webd.getLogger().info("Switch to grid view");
-		DashboardHomeUtil.gridView(webd);
-
-		//create a dashboard
-		webd.getLogger().info("Create a dashboard");
-		DashboardHomeUtil.createDashboard(webd, dbName_textWidget_empty, "", DashboardHomeUtil.DASHBOARD);
-
-		//Add a text widget
-		webd.getLogger().info("Add a empty text widget");
-		DashboardBuilderUtil.addTextWidgetToDashboard(webd);
-
-		//save the dashboard
-		webd.getLogger().info("Save the dashboard");
-		DashboardBuilderUtil.saveDashboard(webd);
-
-		//back to the dashboard home page
-		webd.getLogger().info("Back to the dashboard home page");
-		BrandingBarUtil.visitDashboardHome(webd);
-
-		//open the created dashboard
-		webd.getLogger().info("Open the dashboard");
-		DashboardHomeUtil.selectDashboard(webd, dbName_textWidget_empty);
-
-		//verify the dashbaord
-		webd.getLogger().info("Verify the empty dashboard was saved");
-		DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_empty, "", true);
-
-		//verify the text widget
-		webd.getLogger().info("Verify the text widget in the dashboard");
-		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTWIDGETCONTENTCSS));
-		Assert.assertEquals(textContent.getText().trim(), "Start typing...");
-	}
 }

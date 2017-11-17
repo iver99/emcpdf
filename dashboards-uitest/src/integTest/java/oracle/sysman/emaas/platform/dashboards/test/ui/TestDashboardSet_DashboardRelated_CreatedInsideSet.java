@@ -40,9 +40,9 @@ public class TestDashboardSet_DashboardRelated_CreatedInsideSet extends LoginAnd
 	@BeforeClass
 	public void createTestData()
 	{
-		dbsetName_Test2 = "DashboardSet_Test_Delete-" + generateTimeStamp();
+		dbsetName_Test2 = "DashboardSet_Test_Delete-" + DashBoardUtils.generateTimeStamp();
 		String dbsetDesc = "Test delete the dashboard set";
-		dbName_InSet2 = "DashboardInSet2-" + generateTimeStamp();
+		dbName_InSet2 = "DashboardInSet2-" + DashBoardUtils.generateTimeStamp();
 
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -113,9 +113,9 @@ public class TestDashboardSet_DashboardRelated_CreatedInsideSet extends LoginAnd
 	public void testCreateDashboardInSet()
 	{
 		//create dashboard set
-		dbsetName_Test1 = "DashboardSet_For_Test_DashboardInsideSet-" + generateTimeStamp();
+		dbsetName_Test1 = "DashboardSet_For_Test_DashboardInsideSet-" + DashBoardUtils.generateTimeStamp();
 		String dbsetDesc = "create the dashboard set to test create dashboard in set";
-		dbName_InSet1 = "DashboardInSet-" + generateTimeStamp();
+		dbName_InSet1 = "DashboardInSet-" + DashBoardUtils.generateTimeStamp();
 
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -320,10 +320,5 @@ public class TestDashboardSet_DashboardRelated_CreatedInsideSet extends LoginAnd
 		WebElement removeButton = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RMBTNID));
 		Assert.assertFalse(removeButton.isEnabled(), "delete is enabled for current dashboard");
 
-	}
-
-	private String generateTimeStamp()
-	{
-		return String.valueOf(System.currentTimeMillis());
 	}
 }

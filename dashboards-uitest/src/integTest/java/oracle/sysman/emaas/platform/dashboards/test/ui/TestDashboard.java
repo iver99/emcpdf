@@ -6,9 +6,6 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -55,7 +52,7 @@ public class TestDashboard extends LoginAndLogout
 	@Test(groups = "first run")
 	public void testDashboardPerformance1() throws InterruptedException 
 	{
-		dbName = "selfDb-" + generateTimeStamp();
+		dbName = "selfDb-" + DashBoardUtils.generateTimeStamp();
 		
 		//initialize the test
 		initTestCustom(Thread.currentThread().getStackTrace()[1].getMethodName(),"emcsadmin","emaastesttenantnoita");
@@ -86,21 +83,14 @@ public class TestDashboard extends LoginAndLogout
 		
 		DashboardBuilderUtil.showEntityFilter(webd, true);
 		
-		((JavascriptExecutor) webd.getWebDriver()).executeScript("scroll(0,0)");
+		webd.evalJavascript("scroll(0,0)");
 		
-		//find "All Entities" button and click it
-		WebElement entitiesBtn = webd.getWebDriver().findElement(By.xpath(PageId.ENTITYBUTTON));
-		Assert.assertTrue(entitiesBtn.isDisplayed(), "'All Entities' button isn't displayed in self dashboard");
+		//find "All Entities" button and click it		
+		Assert.assertTrue(webd.isDisplayed(PageId.ENTITYBUTTON), "'All Entities' button isn't displayed in self dashboard");
 		webd.click(PageId.ENTITYBUTTON);	
 		
-		//find Cancel(Select) button and click it  
-		WebElement cancelButton = webd.getWebDriver().findElement(By.xpath(PageId.CANCELBUTTON));
-		Assert.assertTrue(cancelButton.isDisplayed(), "Cancel/Select button isn't displayed in Select Entities dialog");
+		//find Cancel(Select) button and click it  		
+		Assert.assertTrue(webd.isDisplayed(PageId.CANCELBUTTON), "Cancel/Select button isn't displayed in Select Entities dialog");
 		webd.click(PageId.CANCELBUTTON);
-	}
-	
-	private String generateTimeStamp()
-	{
-		return String.valueOf(System.currentTimeMillis());
 	}
 }

@@ -1,6 +1,6 @@
 <!-- ko if: useIn === 'normal' -->
-        <div class="widget-selector-main-new"  data-testapiversion="1.23.0" 
-             data-bind="ojComponent:{component: 'ojPopup', autoDismiss:'focusLoss', beforeOpen: beforeOpenDialog, title: widgetSelectorTitle,
+        <div class="widget-selector-main-new"  data-testapiversion="1.24.0"
+             data-bind="ojComponent:{component: 'ojPopup', autoDismiss:'focusLoss', beforeOpen: beforeOpenDialog, open: onOpenDialog, title: widgetSelectorTitle,
                 rootAttributes: { style: 'width: 600px;'}}, attr: {id: dialogId}">   
             <div style="overflow: hidden;" >
                 <!--<label for="categorySelect" hidden style='padding: 0px; margin: 0px; width:0px;height:0px;' data-bind="text: widgetGroupLabel"></label>-->
@@ -87,7 +87,7 @@
                         <li data-bind="attr: {id: WIDGET_UNIQUE_ID}, event:{keydown: $parent.widgetBoxClicked, mousedown: $parent.widgetBoxClicked}">
                             <div class="oj-flex widget-selector-list-grid" style="flex-wrap: nowrap; overflow: hidden;">
                                 <span class="oj-flex-item-0 widget-selector-screenshot-border" >
-                                    <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_SCREENSHOT_HREF}" class="widget-selector-screenshot" />
+                                    <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL}" class="widget-selector-screenshot" />
                                 </span>
                                 <div class="oj-flex-item" style="vertical-align: middle; overflow: hidden;">
                                     <p>

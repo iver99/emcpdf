@@ -1757,8 +1757,154 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .textWidgetWrapper img {
     max-width: 100% !important;
     height: auto !important;
+    
+    &:hover {
+        cursor: pointer;
+    }
 }
 
 #uifwkLayoutMainContainer{
     overflow: hidden !important;
 }
+
+//hack ckeditor dialog default css style to oj style
+.cke_dialog{
+    .cke_dialog_body{
+        .cke_dialog_title{
+            background-image: none;
+            padding: 0.8571rem 0.8571rem 0.8571rem 0.8571rem;
+            background-color: #f0f0f0;
+            border-width: 0 0 1px 0;
+            border-style: solid;
+            border-bottom-color: #c4ced7;
+            font-size: 1.143rem;
+            color: #252525;
+            font-weight: bold;
+            position: relative;
+        }
+        .cke_dialog_close_button{
+            height: 2.28571rem;
+            margin-bottom: -.85714rem;
+            opacity:.6;
+        }
+        .cke_dialog_contents{
+            background: #f9f9f9;
+
+            a.cke_dialog_ui_button{
+                display: inline-block;
+                vertical-align: middle;
+                padding: 0;
+                border: 1px solid;
+                margin-bottom: 4px;
+                text-align: center;
+                white-space: nowrap;
+                border-radius: 2px;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                height: 2.286rem;
+                line-height: 2.286rem;
+                font-size: 1rem;
+                font-family: inherit;
+                -webkit-tap-highlight-color: transparent;
+                background-color: #e4e8ea;
+                background-image: -webkit-linear-gradient(top,#fff 0%,#f1f3f4 3.64%,#e8ebed 50%,#e4e8ea 100%);
+                background-image: linear-gradient(to bottom,#fff 0%,#f1f3f4 3.64%,#e8ebed 50%,#e4e8ea 100%);
+                border-color: #c4ced7;
+                color: #000;
+                span{
+                    padding: 0 0.857rem;
+                    font-size: 1rem;
+                }
+                &:hover{
+                    background-color: #f7f8f9;
+                    border-color: #c4ced7;
+                    color: #0572ce;
+                }
+            }
+            .cke_dialog_ui_labeled_label{
+                display: block;
+                color: #4f4f4f;
+                font-weight: bold;
+                margin-bottom: 0.25em;
+            }
+
+            //input css hack
+            .cke_dialog_ui_labeled_content  >.cke_dialog_ui_input_text{
+                margin-bottom: 4px;
+                vertical-align: middle;
+                box-sizing: border-box;
+                display: inline-block;
+                font-size: 1rem;
+                width: 100%;
+                input{
+                    height: 2.286rem;
+                    padding: 0 5px;
+                    -moz-box-sizing: border-box;
+                    box-sizing: border-box;
+                    text-align: left;
+                    color: #333;
+                    background-color: #fcfdfe;
+                    border-style: solid;
+                    border-color: #dfe4e7;
+                    border-width: 1px;
+                    border-radius: 2px;
+                    -webkit-appearance: none;
+                    -webkit-tap-highlight-color: transparent;
+                    outline: 0;
+                    -moz-box-sizing: border-box;
+                    box-sizing: border-box;
+                    font-family: inherit;
+                    font-weight: normal;
+                    width: 100%;
+                }
+            }
+
+
+            //select css hack
+            .cke_dialog_ui_labeled_content >.cke_dialog_ui_input_select{
+                position: relative;
+                display: inline-block;
+                max-width: 18em;
+                min-width: 8em;
+                width: 100%;
+                font-size: 1rem;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+
+                select{
+                    width: 100%;
+                    text-align: left;
+                    color: #333;
+                    background-color: #fcfdfe;
+                    border-style: solid;
+                    border-color: #dfe4e7;
+                    border-width: 1px;
+                    border-radius: 2px;
+                    /* -webkit-appearance: none; */
+                    -webkit-tap-highlight-color: transparent;
+                    -moz-box-sizing: border-box;
+                    box-sizing: border-box;
+                    /* display: block; */
+                    position: relative;
+                    white-space: nowrap;
+                    background-clip: padding-box;
+                    text-overflow: ellipsis;
+                    height: 2.286rem;
+                    line-height: 2.286rem;
+                }
+            }
+            //dialog footer
+            .cke_dialog_footer{
+                outline: none;
+                box-shadow: none;
+                background:#f9f9f9;
+                background-image: none;
+                .cke_resizer{
+                    margin-top: 32px;
+                    margin-right: 3px;
+                }
+            }
+        }
+    }
+}
+

@@ -40,6 +40,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName, url);
 		CommonUIUtils.loadWebDriver(webd);
+		CommonUIUtils.checkCrossDay();
 	}
 	
 	@Test(alwaysRun = true)
@@ -211,7 +212,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		webd.getLogger().info("Start the test case: testTimePicker_MillionSecond_StartDateAfterCurrentDate");
 		
 		Date now = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss:SSS a");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss.SSS a");
 		String currentDate = dateFormat.format( now ); 
 		
 		Calendar c = Calendar.getInstance();
@@ -238,7 +239,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		webd.getLogger().info("Start the test case: testTimePicker_MillionSecond_EndDateAfterCurrentDate");
 		
 		Date now = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss:SSS a");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss.SSS a");
 		String currentDate = dateFormat.format( now ); 
 		
 		Calendar c = Calendar.getInstance();
@@ -265,7 +266,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 		webd.getLogger().info("Start the test case: testTimePicker_MillionSecond_EndDateBeforeStartDate");
 		
 		Date now = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss:SSS a");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss.SSS a");
 		String currentDate = dateFormat.format( now ); 
 		
 		Calendar c = Calendar.getInstance();

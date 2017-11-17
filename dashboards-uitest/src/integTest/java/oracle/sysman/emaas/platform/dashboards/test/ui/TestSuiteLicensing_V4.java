@@ -140,7 +140,7 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		webd.getLogger().info("Test opening Data Explorers-Search in welcome page finished!!!");
 	}
 
-	//@Test(alwaysRun = true)
+	@Test(alwaysRun = true)
 	public void testOpenInfrastructureMonitoringPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -301,9 +301,8 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 
 		//verify the url of opened page
 		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ita");
-
-		WebElement el = webd.getWebDriver().findElement(By.id(PageId.ITA_BOXID));
-		Assert.assertTrue(el.isSelected());
+				
+		Assert.assertTrue(webd.isSelected("id=" + PageId.ITA_BOXID));
 		DashBoardUtils.itaOobExist(webd);
 		DashBoardUtils.outDateOob(webd);
 		DashBoardUtils.laOobNotExist(webd);

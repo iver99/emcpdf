@@ -44,6 +44,7 @@ define(['knockout',
             $b.registerObject(self, 'DashboardTilesViewModel');
             self.scrollbarWidth = uiutil.getScrollbarWidth();
             self.isUnderSet = ko.unwrap(dashboardInst.type) === "SET" ? true : false;
+            self.isRunningInFederationMode = Builder.isRunningInFederationMode();
 
             widgetAreaContainer = $b.findEl('.widget-area');
 
@@ -292,9 +293,13 @@ define(['knockout',
                         self.notifyTileChange(tile, new Builder.TileChange("POST_SHORTER"));
                         break;
                     case "edit":
-                        self.editor.editTile(tile);
-                        self.show();
-                        self.notifyTileChange(tile, new Builder.TileChange("POST_EDIT"));
+                        if(ko.unwrap(tile.type) === "TEXT_WIDGET") {
+                            self.notifyTileChange(tile, new Builder.TileChange("POST_EDIT"));
+                        }else {
+                            self.editor.editTile(tile);
+                            self.show();
+                            self.notifyTileChange(tile, new Builder.TileChange("POST_EDIT"));
+                        }
                         break;
                     case "up":
                         self.editor.moveUpTile(tile);

@@ -28,6 +28,7 @@ import oracle.sysman.emaas.platform.emcpdf.cache.tool.Keys;
 import oracle.sysman.emaas.platform.emcpdf.cache.tool.Tenant;
 import oracle.sysman.emaas.platform.emcpdf.cache.api.CacheLoader;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.CacheConstants;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.TenantInfoClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
@@ -153,6 +154,7 @@ public class RegistrationEntity implements Serializable
 			if (LookupManager.getInstance().getLookupClient() == null) {
 				// to ensure initComponent is only called once during the entire lifecycle
 				LookupManager.getInstance().initComponent();
+                                TenantInfoClient.getInstance().initComponent();
 			}
 			successfullyInitialized = true;
 		}
@@ -452,7 +454,14 @@ public class RegistrationEntity implements Serializable
 								if (serviceAppMapping.containsKey(serviceName)) {
 									sme.setAppId(serviceAppMapping.get(serviceName));
 								}
-
+								if (!StringUtil.isEmpty(le.getName())) {
+									if (le.getName().equalsIgnoreCase("hasAdminMenu=true")) {
+										sme.setHasAdminMenu(Boolean.TRUE);
+									}
+									else if (le.getName().equalsIgnoreCase("hasAdminMenu=false")) {
+										sme.setHasAdminMenu(Boolean.FALSE);
+									}
+								}
 								sme.setServiceName(serviceName);
 								sme.setVersion(le.getVersion());
 								sme.setMetaDataHref(le.getHref());
@@ -827,7 +836,7 @@ public class RegistrationEntity implements Serializable
 				_LOGGER.error("Error to get SanitizedInstanceInfo", e);
 			}
 			if (NAME_DASHBOARD_UI_SERVICENAME.equals(internalInstance.getServiceName())
-					&& NAME_DASHBOARD_UI_VERSION.equals(internalInstance.getVersion())) {
+					&& NAME_DASHBOARD_UI_VERSION.equals(internalInstance.getVersion()) || "OMC-UI-Framework".equalsIgnoreCase(internalInstance.getServiceName())) {
 				addToLinksMap(dashboardLinksMap, links, internalInstance.getServiceName(), internalInstance.getVersion());
 			}
 			else if (!checkSubscribedApps || subscribedApps != null && subscribedApps.contains(internalInstance.getServiceName())) {

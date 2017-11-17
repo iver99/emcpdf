@@ -81,7 +81,7 @@ task onboardAllTenants(dependsOn:[omcOnboardTenants(testTenants_v3)]){
 task suiteLicensingTest(type: EMTest, dependsOn:[onboardAllTenants]){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 	environment "VNC_SIZE", "1600x1200"
-     	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"   
+ //    	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"   
 	test('name': 'suiteLicensingTest') {
 	    classes([:]) {
 //		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMC')
@@ -105,7 +105,7 @@ apply from: 'onboard_tenant.gradle'
 task e2e (type: EMTest, dependsOn:[omcSetup, onboardTenant] ){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         environment "VNC_SIZE", "1600x1200"
-        environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
+//        environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
         test('name': 'DashboardUITest') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestHomePage_BasicTest')
@@ -135,12 +135,14 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 	environment "SKIP_OMCSETUP", "true"
 	environment "SKIP_OMCTEARDOWN", "1"
 	environment "VNC_SIZE", "1600x1200"
-	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
+//	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
         test('name': 'DashboardUITest') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage_V4')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_BuilderPage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoardSet_BuilderPage')
             }
         }
     }
@@ -166,6 +168,8 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage_V1')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestErrorPage')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.VerifyOOB_V1')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_BuilderPage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoardSet_BuilderPage')
             }
         }
     }

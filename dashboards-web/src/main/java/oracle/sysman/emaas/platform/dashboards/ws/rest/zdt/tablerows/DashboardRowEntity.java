@@ -77,6 +77,9 @@ public class DashboardRowEntity implements RowEntity
 	@JsonProperty("SHOW_INHOME")
 	private Integer showInHome;
 
+	@JsonProperty("FEDERATION_SUPPORTED")
+	private Integer federationSupported;
+
 	public DashboardRowEntity()
 	{
 	}
@@ -231,6 +234,14 @@ public class DashboardRowEntity implements RowEntity
 	public Long getType()
 	{
 		return type;
+	}
+
+	/**
+	 *
+	 * @return the federationSupported
+	 */
+	public Integer getFederationSupported() {
+		return federationSupported;
 	}
 
 	/**
@@ -414,6 +425,13 @@ public class DashboardRowEntity implements RowEntity
 		this.showInHome = showInHome;
 	}
 
+	public void setFederationSupported(Integer federationSupported) {
+		this.federationSupported = federationSupported;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -460,6 +478,7 @@ public class DashboardRowEntity implements RowEntity
 		result = prime * result
 				+ ((tenantId == null) ? 0 : tenantId.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((federationSupported == null) ? 0 : federationSupported.hashCode());
 		return result;
 	}
 
@@ -572,6 +591,12 @@ public class DashboardRowEntity implements RowEntity
 				return false;
 		} else if (!type.equals(other.type))
 			return false;
+		if (federationSupported == null) {
+			if (other.federationSupported != null)
+				return false;
+		} else if (!federationSupported.equals(other.federationSupported))
+			return false;
+
 		return true;
 	}
 
@@ -589,7 +614,7 @@ public class DashboardRowEntity implements RowEntity
 				+ ", enableEntityFilter=" + enableEntityFilter
 				+ ", enableDescription=" + enableDescription
 				+ ", extendedOptions=" + extendedOptions + ", showInHome="
-				+ showInHome + "]";
+				+ showInHome + ", federationSupported=" + federationSupported + "]";
 	}
 	
 	
