@@ -1477,7 +1477,7 @@ public class DashboardAPI extends APIBase
 	/*
 	 * Updates the specified dashboard by generating all href fields
 	 */
-	private Dashboard updateDashboardAllHref(Dashboard dbd, String tenantName)
+	protected Dashboard updateDashboardAllHref(Dashboard dbd, String tenantName)
 	{
 		updateDashboardHref(dbd, tenantName);
 		updateDashboardScreenshotHref(dbd, tenantName);
