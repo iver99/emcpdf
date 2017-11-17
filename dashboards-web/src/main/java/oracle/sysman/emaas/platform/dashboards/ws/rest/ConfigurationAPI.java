@@ -249,7 +249,7 @@ public class ConfigurationAPI extends APIBase
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCombinedBrandingBarData(final @HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-												 @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+												 @HeaderParam(value = "X-REMOTE-USER") final String userTenant, @HeaderParam(value = "Referer") String referer,
 												 @HeaderParam(value = "SESSION_EXP") String sessionExpiryTime)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/configurations/brandingbardata");
@@ -278,6 +278,7 @@ public class ConfigurationAPI extends APIBase
 					try{
 						long start = System.currentTimeMillis();
 						_LOGGER.info("Parallel request to get favorite dashboards...");
+						initializeUserContext(tenantIdParam, userTenant);
 						String filterString = "favorites";
 						boolean federationMode = false;//FIXME
 						boolean boolFederationFeatureShowInUi = false;//FIXME
@@ -291,7 +292,7 @@ public class ConfigurationAPI extends APIBase
 								new DashboardAPI().updateDashboardAllHref(d, tenantIdParam);
 							}
 						}
-						_LOGGER.info("Retrieved get favorite dashboard is {}");
+						_LOGGER.info("Retrieved get favorite dashboard is {}", pd);
 
 						long end = System.currentTimeMillis();
 						_LOGGER.info("Time to get favorite dashboard took: {}ms", (end - start));
