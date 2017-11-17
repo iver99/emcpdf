@@ -82,8 +82,6 @@ public class WelcomeUtil_175 extends WelcomeUtil_171
 					break;
 			}
 			driver.click(eleXpath);
-			
-//			driver.select("oj-select-choice-ITA_options", "value='mw_perf'");
 		}
 	}
 	

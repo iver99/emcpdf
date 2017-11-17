@@ -24,8 +24,6 @@ public class WelcomeUtil_1150 extends WelcomeUtil_175
 				DATA_EXPLORERS_SEARCH);
 
 		WaitUtil.waitForPageFullyLoaded(driver);
-		
-//		driver.select("xpath=//select[@id='dataExp_options']", "value='Data Explorer'");
 
 		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID);
 		driver.click("id=oj-select-choice-" + DashBoardPageId.WELCOME_DATAEXP_SELECTID);

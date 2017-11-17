@@ -440,13 +440,16 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
             if ( !self.selectedDashboard() || self.selectedDashboard() === null ) {
                 return;
             }
-
+            var conformButton = $("button[name*='dbs_cfmDialog_delete']");
+            conformButton.attr('disabled','disabled'); 
             self.datasource['pagingDS'].remove(self.selectedDashboard().dashboardModel,
                    {
                         success: function () {
+                            conformButton.removeAttr('disabled');
                             self.confirmDialogModel.close();
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
+                            conformButton.removeAttr('disabled');
                             var _m = "";
                             if (jqXHR && jqXHR[0] && jqXHR[0].responseJSON && jqXHR[0].responseJSON.errorMessage)
                             {

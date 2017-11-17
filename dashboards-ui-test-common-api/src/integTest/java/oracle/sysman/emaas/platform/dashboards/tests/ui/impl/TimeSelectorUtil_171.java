@@ -442,16 +442,6 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 			return dateConvert(webd, returnTimeRange, rangeoption, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a", Index);
 		}
 		else {
-//			String returnStartDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartDateInput))
-//					.get(Index - 1).getAttribute("value")
-//					+ " "
-//					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).get(Index - 1)
-//					.getAttribute("value");
-//			String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndDateInput))
-//					.get(Index - 1).getAttribute("value")
-//					+ " "
-//					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(Index - 1)
-//					.getAttribute("value");
 			String returnStartDate = webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + Index + "]" 
 					+ TimeSelectorUIControls.sStartDateInput_XPATH + "@value")
 					+ " "
@@ -546,16 +536,6 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 			return dateConvert(webd, returnTimeRange, rangeOption, "MM/dd/yyyy", "MMM d, yyyy", index);
 		}
 		else {
-//			String returnStartDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartDateInput))
-//					.get(index - 1).getAttribute("value")
-//					+ " "
-//					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).get(index - 1)
-//					.getAttribute("value");
-//			String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndDateInput))
-//					.get(index - 1).getAttribute("value")
-//					+ " "
-//					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(index - 1)
-//					.getAttribute("value");
 			String returnStartDate = webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" 
 					+ TimeSelectorUIControls.sStartDateInput_XPATH + "@value")
 					+ " "
@@ -796,8 +776,6 @@ public class TimeSelectorUtil_171 extends TimeSelectorUtil_Version implements IT
 		//click the datetimepicker component
 		webd.waitForElementPresent("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + Index + "]");
 		webd.click("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + Index + "]");
-//		webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1).click();
-
 	}
 
 	protected String dateConvert(WebDriver driver, String convertDate, TimeRange timerange, String fromDateFormat,

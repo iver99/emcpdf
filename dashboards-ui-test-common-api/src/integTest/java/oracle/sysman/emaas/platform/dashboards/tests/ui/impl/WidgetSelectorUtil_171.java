@@ -100,19 +100,12 @@ public class WidgetSelectorUtil_171 extends WidgetSelectorUtil_Version implement
 		driver.click(widgetItemByNameLocator);
 		
 		int tileTitlesCount = driver.getElementCount("xpath=" + widgetItemByNameLocator);
-
-//		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(widgetItemByNameLocator));
 		if (tileTitlesCount <= index) {
 			throw new NoSuchElementException("Widget with widgetName=" + widgetName + ", index=" + index + " is not found");
 		}
-//		tileTitles.get(index).click();
-//		driver.takeScreenShot();
-//		driver.savePageToFile();
-		
-		int i = index + 1;
-		
+	
+		int i = index + 1;		
 		driver.click("xpath=(" + widgetItemByNameLocator + ")[" + i + "]");
-//		return tileTitles.get(index);
 		return i;
 	}
 

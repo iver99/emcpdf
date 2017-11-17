@@ -41,21 +41,6 @@ public class DashboardBuilderUtil_1100 extends DashboardBuilderUtil_190
 			}
 			
 		}
-//		
-//
-//		WebElement widgetEl = null;
-//		try {
-//			widgetEl = getWidgetByName(driver, widgetName, index);
-//		}
-//		catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//        focusOnWidgetHeader(driver, widgetEl);
-//        driver.takeScreenShot();
-//        driver.savePageToFile();
-
         String tileMoveCSS = null;
         switch (moveOption) {
             case TILE_UP:

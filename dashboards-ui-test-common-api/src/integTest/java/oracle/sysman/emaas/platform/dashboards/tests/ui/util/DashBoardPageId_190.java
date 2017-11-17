@@ -321,6 +321,9 @@ public class DashBoardPageId_190
 	public static final String RIGHTDRAWEREDITDBFILTERCSS = ".dbd-right-panel-editdashboard-filters>span";
 	public static final String RIGHTDRAWERSEARCHINPUTCSS = ".dbd-left-panel input.widget-search-input";
 
+	public static final String RIGHTDRAWEREDITSEARCHCOLLAPSEDCSS = ".dbd-right-panel-editdashboard-share.oj-collapsed";
+	public static final String RIGHTDRAWEREDITSEARCHEXPANDCSS = ".dbd-right-panel-editdashboard-share.oj-expanded";
+
 	public static final String RIGHTDRAWEREDITDBFILTERCOLLAPSEDCSS = ".dbd-right-panel-editdashboard-filters.oj-collapsed";
 	public static final String RIGHTDRAWEREDITDBFILTEREXPANDCSS = ".dbd-right-panel-editdashboard-filters.oj-expanded";
 

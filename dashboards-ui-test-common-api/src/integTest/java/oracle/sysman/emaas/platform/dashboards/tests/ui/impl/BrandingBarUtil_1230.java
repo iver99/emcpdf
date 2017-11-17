@@ -24,7 +24,6 @@ public class BrandingBarUtil_1230 extends BrandingBarUtil_1180 {
         driver.click(DashBoardPageId.BRAND_BAR_USER_MENU);
         Assert.assertTrue(driver.isDisplayed("id=" + DashBoardPageId.USERMENUPOPUPID));
         driver.getLogger().info("User menu popup is displayed.");
-//        WebElement menuItem = driver.getWebDriver().findElement(By.cssSelector(item));
         Assert.assertTrue(text.equals(driver.getText("css=" + item)));
         driver.getLogger().info("verifyUserMenuItemByText finished");
     }

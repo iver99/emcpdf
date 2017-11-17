@@ -207,9 +207,6 @@ public class TimeSelectorUtil_1240 extends TimeSelectorUtil_1170
 		String optionLocator = getOptionsLocator(driver, relTimeUnit.getTimeUnit());
 		driver.click("css=" + optionLocator);
 		
-//		driver.select("css=" + TimeSelectorUIControls.sFlexRelTimeOpt, "value='" + relTimeUnit.getTimeUnit() + "'");
-//		driver.select("//div[contains(@id,'pickerPanel')]//select", "value='" + relTimeUnit.getTimeUnit() + "'");
-
 		try {
 			clickApplyButton(driver);
 		}
@@ -223,16 +220,6 @@ public class TimeSelectorUtil_1240 extends TimeSelectorUtil_1170
 					"MMM d, yyyy hh:mm:ss.SSS a", index);
 		}
 		else {
-//			String returnStartDate = driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick))
-//					.get(index - 1).findElement(By.cssSelector(TimeSelectorUIControls.sStartDateInput)).getAttribute("value")
-//					+ " "
-//					+ driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick)).get(index - 1)
-//							.findElement(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).getAttribute("value");
-//			String returnEndDate = driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick))
-//					.get(index - 1).findElement(By.cssSelector(TimeSelectorUIControls.sEndDateInput)).getAttribute("value")
-//					+ " "
-//					+ driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick)).get(index - 1)
-//							.findElement(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).getAttribute("value");
 			String returnStartDate = driver.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" 
 					+ TimeSelectorUIControls.sStartDateInput_XPATH + "@value")
 					+ " "
@@ -382,16 +369,6 @@ public class TimeSelectorUtil_1240 extends TimeSelectorUtil_1170
 					index);
 		}
 		else {
-//			String returnStartDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick))
-//					.get(index - 1).findElement(By.cssSelector(TimeSelectorUIControls.sStartDateInput)).getAttribute("value")
-//					+ " "
-//					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick)).get(index - 1)
-//					.findElement(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).getAttribute("value");
-//			String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick))
-//					.get(index - 1).findElement(By.cssSelector(TimeSelectorUIControls.sEndDateInput)).getAttribute("value")
-//					+ " "
-//					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sDateTimePick)).get(index - 1)
-////					.findElement(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).getAttribute("value");
 			String returnStartDate = webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" 
 					+ TimeSelectorUIControls.sStartDateInput_XPATH + "@value")
 					+ " "

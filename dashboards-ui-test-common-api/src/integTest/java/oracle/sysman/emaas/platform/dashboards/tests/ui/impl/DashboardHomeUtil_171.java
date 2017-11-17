@@ -464,17 +464,12 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	{	
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableCreatedByHeader");	
 		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLECREATEDBYHEADERLOCATOR);	
-//		WebElement tableHeader = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.LISTVIEWTABLECREATEDBYHEADERLOCATOR));	
-//		WebElement tableSort = tableHeader.findElement(By.cssSelector(DashBoardPageId.LISTVIEWSORTLOCATORCSS));	
-//		Actions actions = new Actions(driver.getWebDriver());	
+
 		driver.getLogger().info("Focus to the table header");	
 		driver.moveToElement("xpath=" + DashBoardPageId.LISTVIEWTABLECREATEDBYHEADERLOCATOR);
-//		actions.moveToElement(tableHeader).build().perform();	
+
 		driver.getLogger().info("Click Sort icon");		
 		driver.click("xpath=" + DashBoardPageId.LISTVIEWTABLECREATEDBYHEADERLOCATOR + DashBoardPageId.LISTVIEWSORTLOCATORXPATH);
-//		actions.moveToElement(tableSort).click().perform();	
-//		driver.takeScreenShot();	
-				
 		WaitUtil.waitForPageFullyLoaded(driver);		
 	}
 
@@ -487,19 +482,12 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableLastModifiedHeader");
 		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR);
 		
-//		WebElement tableHeader = driver.getWebDriver().findElement(
-//				By.xpath(DashBoardPageId.LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR));
-//		WebElement tableSort = tableHeader.findElement(By.cssSelector(DashBoardPageId.LISTVIEWSORTLOCATORCSS));
-		
-//		Actions actions = new Actions(driver.getWebDriver());
 		driver.getLogger().info("Focus to the table header");	
 		driver.moveToElement("xpath=" + DashBoardPageId.LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR);
-//		actions.moveToElement(tableHeader).build().perform();	
+
 		driver.getLogger().info("Click Sort icon");		
-//		actions.moveToElement(tableSort).click().perform();	
 		driver.click("xpath=" + DashBoardPageId.LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR + DashBoardPageId.LISTVIEWSORTLOCATORXPATH);
-		WaitUtil.waitForPageFullyLoaded(driver);
-			
+		WaitUtil.waitForPageFullyLoaded(driver);			
 	}
 
 	/* (non-Javadoc)
@@ -510,16 +498,12 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call clickListViewTableNameHeader");
 		driver.waitForElementPresent(DashBoardPageId.LISTVIEWTABLENAMEHEADERLOCATOR);	
-//		WebElement tableHeader = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.LISTVIEWTABLENAMEHEADERLOCATOR));	
-//		WebElement tableSort = tableHeader.findElement(By.cssSelector(DashBoardPageId.LISTVIEWSORTLOCATORCSS));	
-//		Actions actions = new Actions(driver.getWebDriver());	
+	
 		driver.getLogger().info("Focus to the table header");	
 		driver.moveToElement("xpath=" + DashBoardPageId.LISTVIEWTABLENAMEHEADERLOCATOR);
-//		actions.moveToElement(tableHeader).build().perform();		
+		
 		driver.getLogger().info("Click Sort icon");	
 		driver.click("xpath=" + DashBoardPageId.LISTVIEWTABLENAMEHEADERLOCATOR + DashBoardPageId.LISTVIEWSORTLOCATORXPATH);
-//		actions.moveToElement(tableSort).click().perform();			
-		
 		WaitUtil.waitForPageFullyLoaded(driver);
 	}
 
@@ -568,26 +552,6 @@ public class DashboardHomeUtil_171 extends DashboardHomeUtil_Version implements 
 				break;
 			}
 		}
-//		WebElement gridTable = driver.getElement(convertCss(DashBoardPageId.DASHBOARD_GRID_TABLE_CSS));
-//		List<WebElement> dashboardList = gridTable.findElements(By.tagName("div"));
-//		for (WebElement dashboard : dashboardList) {
-//			if (dashboardName.equals(dashboard.getAttribute("aria-label"))) {
-//				dashboard.findElement(By.cssSelector("button")).click(); // click "i" button
-//
-//				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON)); // click delete
-//
-//				driver.waitForElementPresent(convertCss(DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG));
-//				driver.getLogger().info("foucus on the delete button");
-//				driver.sendKeys(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM), Keys.TAB);
-//				
-//				driver.getLogger().info("click on the delete button");
-//				driver.click(convertName(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM)); // confirm to delete
-//
-//				driver.getLogger().info("wait for the popup dialog close");				
-//				driver.waitForElementNotVisible("css=" + DashBoardPageId.DASHBOARD_HOME_DELETE_DIALOG);
-//				break;
-//			}
-//		}
 	}
 
 	private void deleteDashboardInList(WebDriver driver, String dashboardName)

@@ -270,38 +270,22 @@ public class DashboardBuilderUtil_1200 extends DashboardBuilderUtil_1190
 	 		case DashBoardPageId.PROTOCOLOPTION_HTTP:
 	 			driver.getLogger().info("Click http protocol");
 	 			driver.click("css=" + DashBoardPageId.HTTPCSS);
-				
-//	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.HTTPCSS)).findElement(By.xpath("..")).click();
-//	 			driver.click("css=" + DashBoardPageId.HTTPCSS);
-			    
 	 			break;
 	 		case DashBoardPageId.PROTOCOLOPTION_HTTPS:
 	 			driver.getLogger().info("Click https protocol");			
-		
-//			    driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.HTTPSCSS)).findElement(By.xpath("..")).click();
-			    driver.click("css=" + DashBoardPageId.HTTPSCSS);
-			    
+			    driver.click("css=" + DashBoardPageId.HTTPSCSS);		    
 	 			break;	
 	 		case DashBoardPageId.PROTOCOLOPTION_FTP:
 	 			driver.getLogger().info("Click ftp protocol");
-	 			
-//	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.FTPCSS)).findElement(By.xpath("..")).click();
-	 			driver.click("css=" + DashBoardPageId.FTPCSS);
-	 			
+	 			driver.click("css=" + DashBoardPageId.FTPCSS);	 			
 	 			break;
 	 		case DashBoardPageId.PROTOCOLOPTION_NEWS:
 	 			driver.getLogger().info("Click news protocol");
-	 			
-//	 			driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.NEWSCSS)).findElement(By.xpath("..")).click();
-	 			driver.click("css=" + DashBoardPageId.NEWSCSS);
-	 			
+	 			driver.click("css=" + DashBoardPageId.NEWSCSS);	 			
 	 			break;
 	 		case DashBoardPageId.PROTOCOLOPTION_OTHER:
 	 			driver.getLogger().info("Click other protocol");
-	 			
-//	 			driver.getWebDriver().findElement(By.xpath(DashBoardPageId.OTHERXPATH)).findElement(By.xpath("..")).click();
 	 			driver.click("xpath=" + DashBoardPageId.OTHERXPATH);
-
 	 			break;
 	 		default:
 	 				break;
