@@ -29,6 +29,7 @@ public class AdditionalDataFilter implements Filter {
     public static String WELCOME_URI = "/emsaasui/emcpdfui/welcome.html";
     public static String BUILDER_URI = "/emsaasui/emcpdfui/builder.html";
     public static String ERROR_URI = "/emsaasui/emcpdfui/error.html";
+    public static String TEST_URI = "/emsaasui/emcpdfui/testdashboard.html";
 
     private static class CaptureWrapper extends HttpServletResponseWrapper
     {

@@ -105,9 +105,6 @@ require(['ojs/ojcore',
 ],
         function (oj, ko, $, dfu, dfumodel, _emJETCustomLogger, cxtModel, menuModel) // this callback gets executed when all required modules are loaded
         {
-            var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-            var cxtUtil = new cxtModel();
-            var menuUtil = new menuModel();
             var logger = new _emJETCustomLogger();
             var logReceiver = dfu.getLogUrl();
 
@@ -139,6 +136,8 @@ require(['ojs/ojcore',
                 });
             }
 
+            var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
+            var menuUtil = new menuModel();
             function HeaderViewModel() {
                 var self = this;
                 self.userName = dfu.getUserName();
