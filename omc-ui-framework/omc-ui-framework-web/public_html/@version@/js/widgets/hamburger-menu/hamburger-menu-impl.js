@@ -23,6 +23,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 var prefUtil = new pfumodel(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
                 var userTenantUtil = new utModel();
                 var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
+                var prefKeyFederatedViewId = "uifwk.hm.federation.show";
                 var isSetAsHomeChecked = false;
                 var omcHomeUrl = null;
                 var menuUtil = new menumodel();
@@ -38,6 +39,8 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 var sessionCacheUserRolesKey = 'user_roles';
                 var sessionCacheAllServiceDataKey = 'all_service_data';
                 var sessionCacheFavoriteDashboardKey = 'favorite_dashboards';
+                var sessionCacheShowFederatedViewKey = "show_federated_view";
+                var sessionCacheFederatedDashboardKey = 'federated_dashboards';
                 var omcMenuSeparatorId = 'omc_service_menu_separator';
                 
                 var userName = params.userName;
@@ -208,6 +211,10 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 //                    {'id': 'omc_root_applications', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_APPS_LABEL, 'externalUrl': '#'},
                     {'id': 'omc_root_dashboards', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_DASHBOARDS_LABEL, 'externalUrl': '#'},
 //                    {'id': 'omc_root_savedsearches', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_SAVEDSEARCH_LABEL, 'externalUrl': '#'},
+                    {'id': 'omc_root_federatedview', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_FEDERATEDVIEW_LABEL, 'externalUrl': '#', children: [
+                            {'id': 'omc_federatedview_grp_40000', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_FEDERATEDVIEW_OVERVIEW_LABEL, 'externalUrl': '#'},
+                            {'id': 'omc_federatedview_grp_90000', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_FEDERATEDVIEW_ALERTS_LABEL, 'externalUrl': '#'}
+                    ]},
                     {'id': 'omc_root_dataexplorer', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_DATAEXPLORER_LABEL, 'externalUrl': '#'},
                     {'id': 'omc_root_divider', type: 'divider', 'label': '', 'externalUrl': '#'},
                     {'id': 'omc_root_APM', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_ROOT_APM_LABEL, 'externalUrl': '#'},
@@ -234,10 +241,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             {'id': 'omc_root_admin_grp_Compliance', type: 'menu_item', 'label': nls.BRANDING_BAR_HAMBURGER_MENU_COMPLIANCE_ADMIN_LABEL, 'externalUrl': '#'}
                     ]}
                 ];
-                
+                                
                 var defaultMenuIds = ['omc_root_home',
                     'omc_root_alerts',
                     'omc_root_dashboards',
+                    'omc_root_federatedview',
                     'omc_root_admin', 
                     'omc_root_admin_alertrules', 
                     'omc_root_admin_notificationChannels',
@@ -249,6 +257,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 
                 self.privilegeList = null;
                 self.subscribedApps = [];
+                self.showFederatedView = null;
                 self.serviceMenuData = [];
                 self.baseVanityUrls = null;
                 self.userRoles = null;
@@ -280,6 +289,24 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     return dfdGetUserRoles;
                 }
                 
+                function getShowFederatedViewValue() {
+                    var dfdGetHMItemPref = $.Deferred();
+                    if(!self.showFederatedView) {
+                        function succCallback(data) {
+                            self.showFederatedView = data;
+                            dfdGetHMItemPref.resolve();
+                        }
+                        function errorCallback() {
+                            self.showFederatedView = "false"; //Hide menu item in HM by defauult
+                            dfdGetHMItemPref.resolve();
+                        }
+                        prefUtil.getHMItemShowPreference(prefKeyFederatedViewId, succCallback, errorCallback);
+                    }else {
+                        dfdGetHMItemPref.resolve();
+                    }
+                    return dfdGetHMItemPref;
+                }
+                
                 //Get favorite dashboards
                 function getFavoriteDsb(forceRefresh) {
                     var dfdGetFavoriteDsb = $.Deferred();
@@ -309,7 +336,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     });
                     return dfdGetFavoriteDsb;
                 }
-
+                
                 function updateFavoriteDsb(toRefresh){
                     function updateFavoriteDsbInServiceMenuData(){
                         var menuId = findAppItemIndex(rootMenuData, 'omc_root_dashboards');
@@ -345,6 +372,91 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 menuUtil.subscribeFavoriteDsbChangedEvent(function(){
                     updateFavoriteDsb(true);
                 });
+                
+                //Get federated dashboards
+                function getFederatedDsb(forceRefresh) {
+                    var dfdGetFederatedDsb = $.Deferred();
+                    if(!forceRefresh && self.federatedDsb){
+                        dfdGetFederatedDsb.resolve();//use the cached data
+                        return dfdGetFederatedDsb;
+                    }
+                    self.federatedDsb = [];
+                    var header = dfu.getDefaultHeader();
+                    //TO DO: change below rest api to get federated dashboard
+                    var federationFeatureShow = prefUtil.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
+                    var federationFeatureShowUrl = "";
+                    federationFeatureShow.done(function(showInUI) {
+                        if (showInUI && showInUI.toUpperCase() === "TRUE") {
+                            federationFeatureShowUrl = "&federationFeatureShowInUi=true";
+                        } else {
+                            federationFeatureShowUrl = "&federationFeatureShowInUi=false";
+                        }
+                    })
+                    .fail(function(){
+                        federationFeatureShowUrl = "&federationFeatureShowInUi=false";
+                    });
+                    var url = dfu.isDevMode() ? dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards") : '/sso.static/dashboards.service';
+                    url+='?orderBy=default&federationEnabled=true' + federationFeatureShowUrl;
+                    dfu.ajaxWithRetry(url, {
+                        type: 'get',
+                        dataType: 'json',
+                        contentType: "application/json",
+                        headers: header,
+                        success: function (data) {
+                            $.each(data.dashboards, function (idx, dsb) {
+                                self.federatedDsb.push({id: dsb.id, name: dsb.name, href: "/emsaasui/emcpdfui/builder.html?dashboardId="+dsb.id+"&federationEnabled=true"});
+                            });
+                            sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheFederatedDashboardKey, self.federatedDsb);
+                            dfdGetFederatedDsb.resolve();
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            oj.Logger.error("Failed to load federated dashboards due to error: " + textStatus);
+                            dfdGetFederatedDsb.resolve();
+                        }
+                    });
+                    return dfdGetFederatedDsb;
+                }
+                
+                function updateFederatedDsb(toRefresh, toExpand){
+                    function updateFederatedDsbInServiceMenuData(){
+                        var menuId = findAppItemIndex(rootMenuData, 'omc_root_federatedview');
+                        if(self.federatedDsb){
+                            self.serviceMenuData[menuId].children = [];
+                            $.each(self.federatedDsb, function (idx, dsb) {
+                                self.serviceMenuData[menuId].children.push({'appId': 'FederatedDashboard', 'id': 'omc_federatedview_grp_' + dsb.id, type: 'menu_item', 'label': dsb.name, 'externalUrl': dsb.href, 'disabled': false});
+                            });
+                        }else{
+                            delete self.serviceMenuData[menuId].children;
+                        }
+                    }
+                    if(toRefresh){
+                        $.when(getFederatedDsb(toRefresh)).done(function(){
+                            updateFederatedDsbInServiceMenuData();
+                            var menuId = findAppItemIndex(rootMenuData, 'omc_root_federatedview');
+                            var item = self.serviceMenuData[menuId];
+                            var menuItem = getMenuItem(item);
+                            $.each(omcMenus, function(idx, _item){
+                                if(menuItem.attr && _item.attr && _item.attr.id === menuItem.attr.id){
+                                    omcMenus[idx] = menuItem;
+                                }
+                            });
+                            self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+//                            $("#omcMenuNavList").ojNavigationList("refresh");
+                            if(toExpand) {
+                                setTimeout(function() {$("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", "omc_root_federatedview", true);}, 1);
+                            }
+                            sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheOmcMenusDataKey, omcMenus);
+                            sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheServiceMenuDataKey, self.serviceMenuData);
+                        });
+                    }else{
+                        updateFederatedDsbInServiceMenuData();
+                    }
+                }
+                menuUtil.subscribeFederatedDsbChangedEvent(function(){
+                    if(self.showFederatedView === "true") {
+                        updateFederatedDsb(true, false);
+                    }
+                });
 
                 //Get vanity base URLs for all subscribed services
                 function fetchBaseVanityUrls() {
@@ -372,9 +484,18 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     self.serviceMenuToLoad = [];
                     self.serviceMenuDeferLoad = [];
                     if (allServiceMenus && allServiceMenus.length > 0) {
-                        if ($.inArray(serviceAppId, ['Error', 'Dashboard']) === -1) {
+                        if ($.inArray(serviceAppId, ['Error', 'Dashboard', 'FederatedDashboard']) === -1) {
                             if (currentMenuId && currentMenuId.indexOf('omc_root_admin_') === 0) {
-                                self.serviceMenuToLoad = $.extend([], allServiceMenus);
+//                                self.serviceMenuToLoad = $.extend([], allServiceMenus);
+                                for (var i = 0; i < allServiceMenus.length; i++) {
+                                    var menuDefItem = allServiceMenus[i];
+                                    if (menuDefItem && menuDefItem.hasOwnProperty('hasAdminMenu')) {
+                                        self.serviceMenuDeferLoad.push(menuDefItem);
+                                    }
+                                    else {
+                                        self.serviceMenuToLoad.push(menuDefItem);
+                                    }
+                                }
                             }
                             else {
                                 for (var i = 0; i < allServiceMenus.length; i++) {
@@ -450,7 +571,12 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         serviceItem.version = linkItem.version;
                         serviceItem.serviceMenuMsgBundle = {};
                         serviceItem.serviceMenus = [{"id": "omc_service_menu_separator"}];
-                        serviceItem.serviceAdminMenus = {};
+                        if (linkItem.hasAdminMenu) {
+                            serviceItem.serviceAdminMenus = {"id": "omc_service_menu_separator", "children": [{"id": "omc_service_menu_separator"}]};
+                        }
+                        else {
+                            serviceItem.serviceAdminMenus = {};
+                        }
                         self.allServiceData.push(serviceItem);
                     });
                 }
@@ -596,11 +722,23 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     return dfdLoadSingleSvcMenu;
                 }
 
-                function findAllUnloadedServiceMenus() {
+//                function findAllUnloadedServiceMenus() {
+//                    var unloadedMenus = [];
+//                    if(self.serviceLinks && self.serviceLinks.length > 0){
+//                        $.each(self.serviceLinks, function(idx, linkItem){
+//                            if (!isServiceMenuLoaded(linkItem.appId)) {
+//                                unloadedMenus.push(linkItem);
+//                            }
+//                        });
+//                    }
+//                    return unloadedMenus;
+//                }
+                
+                function findUnloadedServiceMenusWithoutHasAdminRel() {
                     var unloadedMenus = [];
                     if(self.serviceLinks && self.serviceLinks.length > 0){
                         $.each(self.serviceLinks, function(idx, linkItem){
-                            if (!isServiceMenuLoaded(linkItem.appId)) {
+                            if (!isServiceMenuLoaded(linkItem.appId) && !linkItem.hasOwnProperty('hasAdminMenu')) {
                                 unloadedMenus.push(linkItem);
                             }
                         });
@@ -624,7 +762,17 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             }
                             if (key) {
                                 self.dataSource(new oj.JsonTreeDataSource(omcMenus));
-                                setTimeout(function(){$("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", key, true);}, 1);
+                                if (key.indexOf('omc_root_admin_grp_') > -1) {
+                                    setTimeout(function(){
+                                        //When expand service admin, need to expand the global Administration first
+                                        $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", 'omc_root_admin', true);
+                                        //Then expand the specific service admin under the global Administration
+                                        $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", key, true);
+                                    }, 1);
+                                }
+                                else {
+                                    setTimeout(function(){$("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand", key, true);}, 1);
+                                }
                             }
                             updateServiceMenuCache();
                             if (callback) {
@@ -636,7 +784,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 
                 function refreshAllUnloadedServiceMenus() {
                     var dfdRefreshUnloadedMenus = $.Deferred();
-                    var allUnloadedMenus = findAllUnloadedServiceMenus();
+
+                    var allUnloadedMenus = findUnloadedServiceMenusWithoutHasAdminRel();//findAllUnloadedServiceMenus();
+
                     if (allUnloadedMenus && allUnloadedMenus.length > 0) {
                         loadServiceData(allUnloadedMenus).done(function() {
                             omcMenus = [];
@@ -801,7 +951,15 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     self.baseVanityUrls = cachedMenus[sessionCacheBaseVanityUrlsKey];
                     self.userRoles = cachedMenus[sessionCacheUserRolesKey];
                     self.favoriteDsb = cachedMenus[sessionCacheFavoriteDashboardKey];
+                    self.showFederatedView = cachedMenus[sessionCacheShowFederatedViewKey];
+                    self.federatedDsb = cachedMenus[sessionCacheFederatedDashboardKey];
                     self.allServiceData = cachedMenus[sessionCacheAllServiceDataKey];
+                    
+                    //remove "Federated View" from HM if it is configured not to show
+                    if(self.showFederatedView === "false") {
+                        var index = findAppItemIndex(rootMenuData, "omc_root_federatedview");
+                        index && rootMenuData.splice(index,1);
+                    }
 
                     function refreshHamburgerMenuFromCache() {
                         cachedMenus = sessionCaches[0].retrieveDataFromCache(sessionCacheAllMenusKey);
@@ -821,7 +979,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 }
                 //otherwise, get all service menus from service registries
                 else {
-                    $.when(loadServiceMenus(), getUserGrants(), getSubscribedApps(), fetchBaseVanityUrls(), getUserRoles(), getFavoriteDsb()).done(function() {
+                    $.when(loadServiceMenus(), getUserGrants(), getSubscribedApps(), fetchBaseVanityUrls(), getUserRoles(), getFavoriteDsb(), getShowFederatedViewValue()).done(function() {
                         if (hitErrorsWhenLoading) {
                             //Show error message to warn user
                             msgUtil.showMessage({
@@ -831,6 +989,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             });
                         }
 
+                        //remove "Federated View" from HM if it is configured not to show
+                        if(self.showFederatedView === "false") {
+                            var index = findAppItemIndex(rootMenuData, "omc_root_federatedview");
+                            index && rootMenuData.splice(index,1);
+                        }
                         fetchGlobalMenuLinks(self.registration);
                         for (var k = 0; k < rootMenuData.length; ++k) {
 //                            rootMenuData[k].externalUrl = globalMenuIdHrefMapping[rootMenuData[k].id] ? globalMenuIdHrefMapping[rootMenuData[k].id] : '#';
@@ -857,6 +1020,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheBaseVanityUrlsKey, self.baseVanityUrls);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheUserRolesKey, self.userRoles);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheFavoriteDashboardKey, self.favoriteDsb);
+                        sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheShowFederatedViewKey, self.showFederatedView);
                         sessionCaches[0].updateCacheData(sessionCacheAllMenusKey, sessionCacheAllServiceDataKey, self.allServiceData);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
                         self.hamburgerMenuLoaded(true);
@@ -908,7 +1072,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 function isAppSubscribed(appId) {
                     if (self.subscribedApps) {
                         for (var i = 0; i < self.subscribedApps.length; i++) {
-                            if (self.subscribedApps[i].id === appId || 'Dashboard' === appId) {
+                            if (self.subscribedApps[i].id === appId || 'Dashboard' === appId || 'FederatedDashboard' === appId) {
                                 return true;
                             }
                         }
@@ -1348,6 +1512,9 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     globalMenuIdHrefMapping['omc_root_home'] = omcHomeUrl ? omcHomeUrl : '/emsaasui/emcpdfui/welcome.html';
                     globalMenuIdHrefMapping['omc_root_alerts'] = fetchLinkFromRegistrationData(data, 'homeLinks', 'EventUI');
                     globalMenuIdHrefMapping['omc_root_dashboards'] = '/emsaasui/emcpdfui/home.html';
+                    //hard-code url for federated OOB dashboard for now
+                    globalMenuIdHrefMapping['omc_federatedview_grp_40000'] = '/emsaasui/emcpdfui/builder.html?dashboardId=40000&federationEnabled=true';
+                    globalMenuIdHrefMapping['omc_federatedview_grp_90000'] = '/emsaasui/emcpdfui/builder.html?dashboardId=90000&federationEnabled=true';
                     globalMenuIdHrefMapping['omc_root_dataexplorer'] = fetchLinkFromRegistrationData(data, 'visualAnalyzers', 'TargetAnalytics');
                     globalMenuIdHrefMapping['omc_root_APM'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'ApmUI');
                     globalMenuIdHrefMapping['omc_root_Monitoring'] = fetchLinkFromRegistrationData(data, 'cloudServices', 'MonitoringServiceUI');
@@ -1467,6 +1634,13 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         event.stopPropagation();
                         self.preventExpandForAPMLabel = false;
                         return false;
+                    }else if(ui.key === "omc_root_federatedview") {
+                        //Load federated dashboards list first if it is not loaded
+                        if(!self.federatedDsb) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            updateFederatedDsb(true, true);
+                        }
                     }
                     else if (ui.key.indexOf("omc_root_") > -1 && ui.key.indexOf("omc_root_admin") < 0) {
                         var appId = ui.key.substring(9);
@@ -1477,9 +1651,18 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
 //                            $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand",ui.key, true);
                         }
                     }
+                    else if (ui.key.indexOf("omc_root_admin_grp_") > -1) {
+                        var appId = ui.key.substring(19);
+                        if (!isServiceMenuLoaded(appId)) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            refreshSingleServiceMenu(appId, ui.key);
+//                            $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand",ui.key, true);
+                        }
+                    }
                     else if (ui.key === "omc_root_admin") {
                         //If not all service menus have been loaded, then load them
-                        if (findAllUnloadedServiceMenus().length > 0) {
+                        if (findUnloadedServiceMenusWithoutHasAdminRel().length > 0) {
                             event.preventDefault();
                             event.stopPropagation();
                             refreshAllUnloadedServiceMenus().done(function(){
@@ -1579,7 +1762,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                         },0);
                                     }
                                 }
-                                if (eventData.menuItemId.indexOf("omc_root_admin_") > -1 && findAllUnloadedServiceMenus().length > 0) {
+                                if (eventData.menuItemId.indexOf("omc_root_admin_") > -1 && findUnloadedServiceMenusWithoutHasAdminRel().length > 0) {
                                     //If not all service menus have been loaded, then load them
                                     refreshAllUnloadedServiceMenus().done(function(){
                                         setCurrentMenuItem();

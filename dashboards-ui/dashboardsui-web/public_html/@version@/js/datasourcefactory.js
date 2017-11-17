@@ -11,11 +11,12 @@ function(dm, dc, dp, oj, ko, $)
  */
 
 
-    var DatasourceFactory = function(dashbaordsUrl, sortBy, filter) {
+    var DatasourceFactory = function(dashbaordsUrl, sortBy, filter, federationFeatureShowInUi) {
         var self = this;
         self.dashbaordsUrl = dashbaordsUrl;
         self.sortBy = sortBy;
         self.filter = filter;
+        self.federationFeatureShowInUi = federationFeatureShowInUi;
         self.build = function(query, pageSize) {
           return (function () {
             var _orderby = self.sortBy, _filter = self.filter,
@@ -35,7 +36,8 @@ function(dm, dc, dp, oj, ko, $)
                          'query': query,
                          'orderBy': _orderby,
                          'filter': _filter,
-                         'model': _model});
+                         'model': _model,
+                         'federationFeatureShowInUi': federationFeatureShowInUi});
             var _pagingds = new dp.DashboardPaging(_collection);
             _pagingds.setPageSize(_pageSize);
             return {'model' : _model, 'collection': _collection, "pagingDS": _pagingds};

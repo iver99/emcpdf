@@ -14,6 +14,7 @@ function(dfu, oj, ko, $)
         self.queryString = _options['query'] || null;
         self.orderBy = _options['orderBy'] || null;
         self.filter = _options['filter'] || null;
+        self.federationFeatureShowInUi = _options['federationFeatureShowInUi'] || false;
         //self.url
         var _customPagingOptions = function(response){
           var _ret = {
@@ -46,6 +47,9 @@ function(dfu, oj, ko, $)
                 if (self.filter !== null && self.filter.trim().length > 0)
                 {
                      __url = __url + "&filter=" + self.filter.trim();
+                }
+                if (self.federationFeatureShowInUi === true) {
+                     __url = __url + "&federationFeatureShowInUi=true";
                 }
             }
             return {

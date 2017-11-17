@@ -9,6 +9,7 @@ define(['knockout',
     'idfbcutil',
     'uifwk/js/util/screenshot-util',
     'uifwk/js/sdk/context-util',
+    'uifwk/js/sdk/menu-util',
     'ojs/ojcore',
     'builder/tool-bar/edit.dialog',
     'builder/tool-bar/duplicate.dialog',
@@ -17,7 +18,7 @@ define(['knockout',
     'uifwk/js/util/zdt-util',
     'builder/builder.core'
 ],
-    function (ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu,mbu,zdtUtilModel) {
+    function (ko, $, dfu, idfbcutil, ssu, cxtModel, menuModel, oj, ed, dd, pfu,mbu,zdtUtilModel) {
         // dashboard type to keep the same with return data from REST API
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
 
@@ -69,6 +70,8 @@ define(['knockout',
             self.dashboardsetName =ko.observable(ko.unwrap(dashboardInst.name()));
 
             self.dashboardsetDescription = ko.observable(ko.unwrap(dashboardInst.description) || "");
+
+            self.federationEnabled = Builder.isRunningInFederationMode();
 
 
             self.dashboardsetConfig = {
@@ -391,7 +394,7 @@ define(['knockout',
                     "endOfGroup": false,
                     "showOnMobile": true,
                     "showOnViewer":true,
-                    "visibility":visibilityOnDifDevice(true,true) && self.notZdtStatus,
+                    "visibility":visibilityOnDifDevice(true,true) && self.notZdtStatus && !self.federationEnabled,
                     "subMenu": []
                 },
                 {
@@ -705,7 +708,8 @@ define(['knockout',
                 this.deleteDbs = function(dbsToolBar){
                     //TODO:ajax to delete
                     var _url = "/sso.static/dashboards.service/";
-			var cxtUtil = new cxtModel();
+		    var cxtUtil = new cxtModel();
+                    var menuUtil = new menuModel();
                     if (dfu.isDevMode()) {
                         _url = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/");
                     }
@@ -716,6 +720,9 @@ define(['knockout',
                             if (!self.dashboardsetConfig.setHome()) {                                
                                 localStorage.deleteHomeDbd=true;
                             }
+                            //Fire event to refresh "Federated dashboard" and "Favorite dashabord" in HM
+                            menuUtil.fireFederatedDsbChangedEvent();
+                            menuUtil.fireFavoriteDsbChangedEvent();
                             window.location = cxtUtil.appendOMCContext( document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html', true, true, true);
                         },
                         error: function (jqXHR, textStatus, errorThrown) {

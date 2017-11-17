@@ -234,6 +234,22 @@ public class DashboardServiceFacade
 		return em.find(EmsPreference.class, new EmsPreferencePK(prefKey, username));
 	}
 
+	/**
+	 *
+	 * @param userName
+	 * @param keys
+     * @return
+     */
+	public List<EmsPreference> getEmsPreferencesByKeys(String userName, List<String> keys)
+	{
+		String jpql = "select o from EmsPreference o where o.userName = :userName and o.prefKey in :ids";
+		Query query = em.createQuery(jpql);
+		query.setParameter("userName", userName);
+		query.setParameter("ids", keys);
+		List result = query.getResultList();
+		return (List<EmsPreference>)result;
+	}
+
 	//	/** <code>select o from EmsDashboardTile o</code> */
 	//	public List<EmsDashboardTile> getEmsDashboardTileFindAll()
 	//	{
