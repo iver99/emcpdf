@@ -225,7 +225,7 @@ DashboardPaging.prototype.setPage = function(v, opts)
   return new Promise(function(resolve, reject)
   {
     $("#loading").show();
-    self.fetch({'startIndex': self._startIndex, 'silent': options['silent'],
+        self.fetch({'startIndex': self._startIndex, 'silent': options['silent'],
             'success': function() {
                 $("#loading").hide();
                 DashboardPaging.superclass.handleEvent.call(self, oj.PagingModel.EventType['PAGE'], {'page' : self._page, 'previousPage' : previousPage});

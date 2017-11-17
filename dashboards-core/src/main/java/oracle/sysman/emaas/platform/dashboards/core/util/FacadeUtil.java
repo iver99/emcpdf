@@ -52,6 +52,7 @@ public class FacadeUtil
 		result.setSharePublic(dsb.getSharePublic());
 		result.setTenantId(dsb.getTenantId());
 		result.setType(dsb.getType());
+		result.setFederationSupported(dsb.getFederationSupported());
 
 		return result;
 	}
@@ -102,6 +103,7 @@ public class FacadeUtil
 		result.setWidgetUniqueId(dt.getWidgetUniqueId());
 		result.setWidgetViewmode(dt.getWidgetViewmode());
 		result.setWidth(dt.getWidth());
+		result.setFederationSupported(dt.getFederationSupported());
 
 		return result;
 	}

@@ -19,6 +19,23 @@ public class ServiceMenuEntity
 	private String serviceName = null;
 	private String version = null;
 	private String metaDataHref = null;
+	private Boolean hasAdminMenu = null;
+
+	/**
+	 * @return the hasAdminMenu
+	 */
+	public Boolean getHasAdminMenu()
+	{
+		return hasAdminMenu;
+	}
+
+	/**
+	 * @param hasAdminMenu the hasAdminMenu to set
+	 */
+	public void setHasAdminMenu(Boolean hasAdminMenu)
+	{
+		this.hasAdminMenu = hasAdminMenu;
+	}
 
 	/**
 	 * @return the appId
