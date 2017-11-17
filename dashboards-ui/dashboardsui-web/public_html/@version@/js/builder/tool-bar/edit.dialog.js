@@ -104,61 +104,75 @@ define(['knockout',
                 if (self.nameValidated() === false || dfu.getUserName()!==self.dashboard.owner()){
                     return;
                 }
-
-                var url = "/sso.static/dashboards.service/";
-                if (dfu.isDevMode()) {
-                        url = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/");
-                }
-                dfu.ajaxWithRetry(url + self.dashboard.id() + "/quickUpdate", {
-                        type: 'PUT',
-                        dataType: "json",
-                        contentType: 'application/json',
-                        data: JSON.stringify({name: self.name(), description: self.description(), enableDescription: isEditDsbOptionEnabled(self.descriptionValue) ? "TRUE" : "FALSE", enableEntityFilter: (isEditDsbOptionEnabled(self.entityFilterValue) ? "TRUE" : "FALSE"), enableTimeRange: (isEditDsbOptionEnabled(self.timeRangeFilterValue) ? "TRUE" : "FALSE")}),
-
-                        headers: dfu.getDashboardsRequestHeader(),
-                        success: function (result) {
-                            self.dashboard.name(self.name());
-                            self.tbModel && self.tbModel.dashboardName(self.name());
-                            if (self.dashboard.description)
-                            {
-                                self.dashboard.description(self.description());
-                            }
-                            else
-                            {
-                                self.dashboard.description = ko.observable(self.description());
-                            }
-                            if (self.errSavindMsgId) {
-                                dfu.removeMessage(self.errSavindMsgId);
-                            }
-                            $('#edit-dashboard').ojDialog("close");
-                            //Fire event to refresh "Federated dashboard" and "Favorite dashabord" in HM
-                            menuUtil.fireFederatedDsbChangedEvent();
-                            menuUtil.fireFavoriteDsbChangedEvent();
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) { 
-                            if (self.errSavindMsgId) {
-                                dfu.removeMessage(self.errSavindMsgId);
-                            }
-                            if (jqXHR && jqXHR[0] && jqXHR[0].responseJSON && jqXHR[0].responseJSON.errorCode === 10001)
-                            {
-                                 _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
-                                 _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
-                                  self.errSavindMsgId = dfu.showMessage({type: 'error', summary: _m, detail: _mdetail });
-                            }else if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.errorCode === 10001)
-                            {
-                                _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
-                                _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
-                                 self.errSavindMsgId = dfu.showMessage({type: 'error', summary: _m, detail: _mdetail});
-                            }
-                            else
-                            {
-                                // a server error record
-                                 oj.Logger.error("Error when creating dashboard. " + (jqXHR ? jqXHR.responseText : ""));
-                                 self.errSavindMsgId = dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: ''});
-                            } 
-                            
-                        }                       
-                    });
+                
+                var successCallback = function(result) {
+                    self.dashboard.name(self.name());
+                    self.tbModel && self.tbModel.dashboardName(self.name());
+                    if (self.dashboard.description) {
+                        self.dashboard.description(self.description());
+                    }else {
+                        self.dashboard.description = ko.observable(self.description());
+                    }
+                    if (self.errSavindMsgId) {
+                        dfu.removeMessage(self.errSavindMsgId);
+                    }
+                    $('#edit-dashboard').ojDialog("close");
+                    //Fire event to refresh "Federated dashboard" and "Favorite dashabord" in HM
+                    menuUtil.fireFederatedDsbChangedEvent();
+                    menuUtil.fireFavoriteDsbChangedEvent();
+                };
+                var errorCallback = function(jqXHR, textStatus, errorThrown) {
+                    if (self.errSavindMsgId) {
+                        dfu.removeMessage(self.errSavindMsgId);
+                    }
+                    if (jqXHR && jqXHR[0] && jqXHR[0].responseJSON && jqXHR[0].responseJSON.errorCode === 10001)
+                    {
+                        _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
+                        _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
+                        self.errSavindMsgId = dfu.showMessage({type: 'error', summary: _m, detail: _mdetail});
+                    }else if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.errorCode === 10001)
+                    {
+                        _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
+                        _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
+                        self.errSavindMsgId = dfu.showMessage({type: 'error', summary: _m, detail: _mdetail});
+                    }else if(ko.unwrap(jqXHR.errorCode) === 10001) {
+                        _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
+                        _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
+                        self.errSavindMsgId = dfu.showMessage({type: 'error', summary: _m, detail: _mdetail});
+                    }
+                    else
+                    {
+                        // a server error record
+                        oj.Logger.error("Error when creating dashboard. " + (jqXHR ? jqXHR.responseText : ""));
+                        self.errSavindMsgId = dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: ''});
+                    }
+                };
+                
+                var fieldsToUpdate = {
+                    name: self.name(),
+                    description: self.description(),
+                    enableDescription: isEditDsbOptionEnabled(self.descriptionValue) ? "TRUE" : "FALSE",
+                    enableEntityFilter: (isEditDsbOptionEnabled(self.entityFilterValue) ? "TRUE" : "FALSE"),
+                    enableTimeRange: (isEditDsbOptionEnabled(self.timeRangeFilterValue) ? "TRUE" : "FALSE")
+                };
+                var newDasboardJs = ko.mapping.toJS(self.dashboard, {
+                    'include': ['screenShot', 'description', 'height',
+                        'isMaximized', 'title', 'type', 'width',
+                        'tileParameters', 'name', 'systemParameter',
+                        'tileId', 'value', 'content', 'linkText',
+                        'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
+                    'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
+                        "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
+                        "customParameters", "clientGuid", "dashboard",
+                        "fireDashboardItemChangeEvent", "getParameter",
+                        "maximizeEnabled", "narrowerEnabled",
+                        "onDashboardItemChangeEvent", "restoreEnabled",
+                        "setParameter", "shouldHide", "systemParameters",
+                        "tileDisplayClass", "widerEnabled", "widget",
+                        "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
+                });
+                $.extend(newDasboardJs, fieldsToUpdate);
+                new Builder.DashboardDataSource().updateDashboardData(self.dashboard.id(), JSON.stringify(newDasboardJs), successCallback, errorCallback);
             };
 
             self.clear = function() {
