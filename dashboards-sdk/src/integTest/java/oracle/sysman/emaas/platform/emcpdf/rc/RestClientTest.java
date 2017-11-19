@@ -174,10 +174,10 @@ public class RestClientTest {
         // test null key
         rc.setHeader(null, testValue);
         headers = Deencapsulation.getField(rc, "headers");
-        Assert.assertFalse(headers.containsValue(testValue));
+        Assert.assertTrue(headers.containsValue(testValue));
 
         rc.setHeader(testKey, null);
         headers = Deencapsulation.getField(rc, "headers");
-        Assert.assertFalse(headers.containsKey(testKey));
+        Assert.assertTrue(headers.containsKey(testKey));
     }
 }

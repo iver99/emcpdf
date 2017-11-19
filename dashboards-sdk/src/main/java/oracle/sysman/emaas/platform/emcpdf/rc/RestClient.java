@@ -103,23 +103,8 @@ public class RestClient {
         }
         itrLogger.info("RestClient call to [GET] {}",url);
         WebResource.Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth);
-        if (type != null) {
-            builder = builder.type(type);
-        }
-        if (accept != null) {
-            builder = builder.accept(accept);
-        }
-        if (headers != null && !headers.isEmpty()) {
-            for (Map.Entry entry : headers.entrySet()) {
-                String key = entry.getKey().toString();
-                String value = entry.getValue().toString();
-                if (HttpHeaders.AUTHORIZATION.equals(key)) {
-                    continue;
-                }
-                builder.header(key, value);
-                itrLogger.info("[GET] Setting header ({}, {}) for call to {}", key, value, url);
-            }
-        }
+        //Handle type, accept header info before request
+        builder = preRequest(url, builder, "GET");
         return builder.get(String.class);
     }
 
@@ -143,23 +128,8 @@ public class RestClient {
         itrLogger.info("RestClient call to [PUT] {}",url);
         try{
             WebResource.Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth);
-            if (type != null) {
-                builder = builder.type(type);
-            }
-            if (accept != null) {
-                builder = builder.accept(accept);
-            }
-            if (headers != null) {
-                for (Map.Entry entry : headers.entrySet()) {
-                    String key = entry.getKey().toString();
-                    String value = entry.getValue().toString();
-                    if (HttpHeaders.AUTHORIZATION.equals(key)) {
-                        continue;
-                    }
-                    builder.header(key, value);
-                    itrLogger.info("[PUT] Setting header ({}, {}) for call to {}", key, value, url);
-                }
-            }
+            //Handle type, accept header info before request
+            builder = preRequest(url, builder, "PUT");
             return builder.put(requestEntity.getClass(), requestEntity).toString();
         }catch(UniformInterfaceException e){
             LOGGER.error("HTTP Response code is {}", e.getResponse().getStatus());
@@ -201,23 +171,8 @@ public class RestClient {
         try{
 
             WebResource.Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth);
-            if (type != null) {
-                builder = builder.type(type);
-            }
-            if (accept != null) {
-                builder = builder.accept(accept);
-            }
-            if (headers != null) {
-                for (Map.Entry entry : headers.entrySet()) {
-                    String key = entry.getKey().toString();
-                    String value = entry.getValue().toString();
-                    if (HttpHeaders.AUTHORIZATION.equals(key)) {
-                        continue;
-                    }
-                    builder.header(key, value);
-                    itrLogger.info("[POST] Setting header ({}, {}) for call to {}", key, value, url);
-                }
-            }
+            //Handle type, accept header info before request
+            builder = preRequest(url, builder, "POST");
             if(requestEntity == null) {
                 builder.post();
                 LOGGER.info("RestClient is sending POST request without input, will return null...");
@@ -246,11 +201,6 @@ public class RestClient {
         if (headers == null) {
             headers = new HashMap<String, Object>();
         }
-        // not allow invalid header or value
-        if (header == null || value == null) {
-            LOGGER.warn("Ignore to set null header or null value. Header: {}, value: {}", header, value);
-            return;
-        }
         headers.put(header, value);
     }
 
@@ -260,6 +210,34 @@ public class RestClient {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    private WebResource.Builder preRequest(String url, WebResource.Builder builder, String method) {
+        if (type != null) {
+            builder = builder.type(type);
+        }
+        if (accept != null) {
+            builder = builder.accept(accept);
+        }
+        if (headers != null) {
+            for (Map.Entry entry : headers.entrySet()) {
+                Object key = entry.getKey();
+                Object value = entry.getValue();
+                if(key == null || value == null){
+                    builder.header(key == null? null : key.toString(), value == null ? null : value.toString());
+                    LOGGER.warn("Null header name or header value found!");
+                    itrLogger.warn("Null header name or header value found!");
+                    itrLogger.warn("[{}] Setting header ({}, {}) for call to {}", method, key, value, url);
+                    continue;
+                }
+                if (HttpHeaders.AUTHORIZATION.equals(key.toString())) {
+                    continue;
+                }
+                builder.header(key.toString(), value.toString());
+                itrLogger.info("[{}] Setting header ({}, {}) for call to {}", method, key, value, url);
+            }
+        }
+        return builder;
     }
 
 }
