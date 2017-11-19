@@ -429,7 +429,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	}
 
 	@Mock
-	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(String name, String owner, String description){
+	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(String name, String owner, String description, boolean sys){
 		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(null, name, owner, true));
 		return ps.isEmpty() ? null : ps.get(0);
 	}
