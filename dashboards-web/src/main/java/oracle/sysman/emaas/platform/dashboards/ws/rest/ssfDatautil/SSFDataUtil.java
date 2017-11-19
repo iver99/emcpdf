@@ -40,19 +40,18 @@ public class SSFDataUtil {
 		RestClient rc = new RestClient();
         Link ssfLink = RegistryLookupUtil.getServiceInternalLink(SERVICE_NAME, VERSION, PATH, null);
         if (ssfLink == null) {
-        	LOGGER.error("can not get ssf link");
+        	LOGGER.error("Can not get ssf link from ServiceRegistry!");
         	return null;
         }
         String tenantHref = ssfLink.getHref() + "/" + uri;
         String tenantName = TenantContext.getCurrentTenant();
         String savedSearchResponse = null;
         try {
-        	//LOGGER.info("auth is "+((VersionedLink) ssfLink).getAuthToken());
 			rc.setHeader(RestClient.X_USER_IDENTITY_DOMAIN_NAME, tenantName);
 			rc.setHeader(RestClient.OAM_REMOTE_USER, remoteUser);
         	savedSearchResponse = rc.put(tenantHref, data, tenantName, 
         	        ((VersionedLink) ssfLink).getAuthToken());
-        	LOGGER.info("response is "+savedSearchResponse);
+        	LOGGER.info("Response of request SSF service is {} ", savedSearchResponse);
         }catch (Exception e) {
         	LOGGER.error(e);
         }
