@@ -2,9 +2,6 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.*;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class DashboardBuilderUtil_1190 extends DashboardBuilderUtil_1150
 {
@@ -16,14 +13,13 @@ public class DashboardBuilderUtil_1190 extends DashboardBuilderUtil_1150
 		Validator.notEmptyString("dashboardName", dashboardName);
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR)));
+		driver.waitForElementVisible(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
 		driver.click(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
 		
-		String realName = driver.getElement(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR).getAttribute("title");
+		String realName = driver.getAttribute(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR + "@title");
 		if (!dashboardName.equals(realName)) {
 			driver.getLogger().info(
 					"DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected dashboard name is "
@@ -32,7 +28,7 @@ public class DashboardBuilderUtil_1190 extends DashboardBuilderUtil_1150
 		}
 
 		if (driver.isElementPresent(DashBoardPageId_1120.BUILDERDESCRIPTIONTEXTLOCATOR)) {
-			String realDesc = driver.getElement(DashBoardPageId_1120.BUILDERDESCRIPTIONTEXTLOCATOR).getAttribute("title");
+			String realDesc = driver.getAttribute(DashBoardPageId_1120.BUILDERDESCRIPTIONTEXTLOCATOR + "@title");
 			if (description == null || "".equals(description)) {
 				if (realDesc != null && !"".equals(realDesc.trim())) {
 					driver.getLogger().info(

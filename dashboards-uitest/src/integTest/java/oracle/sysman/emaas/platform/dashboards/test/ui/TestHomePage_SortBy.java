@@ -13,7 +13,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import sun.font.TrueTypeFont;
 
 public class TestHomePage_SortBy extends LoginAndLogout
 {
@@ -85,7 +84,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by created by Ascending");
-		DashboardHomeUtil.sortListViewByCreateBy(webd);
+		DashboardHomeUtil.sortListViewByCreateBy(webd, "asc");
 
 		//WaitUtil.waitForPageFullyLoaded(webd);
 
@@ -100,7 +99,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//sort the dashboard by name Descending
 		webd.getLogger().info("Sort the dashboard by created by Descending");
-		DashboardHomeUtil.sortListViewByCreateBy(webd);
+		DashboardHomeUtil.sortListViewByCreateBy(webd, "dsc");
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Descending");
@@ -408,7 +407,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by last modified Ascending");
-		DashboardHomeUtil.sortListViewByLastModified(webd);
+		DashboardHomeUtil.sortListViewByLastModified(webd, "asc");
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Ascending");
@@ -420,7 +419,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//sort the dashboard by name Descending
 		webd.getLogger().info("Sort the dashboard by last modifiedi Descending");
-		DashboardHomeUtil.sortListViewByLastModified(webd);
+		DashboardHomeUtil.sortListViewByLastModified(webd, "dsc");
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Descending");
@@ -529,7 +528,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by name Ascending");
-		DashboardHomeUtil.sortListViewByName(webd);
+		DashboardHomeUtil.sortListViewByName(webd, "asc");
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Ascending");
@@ -541,7 +540,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//sort the dashboard by name Descending
 		webd.getLogger().info("Sort the dashboard by name Descending");
-		DashboardHomeUtil.sortListViewByName(webd);
+		DashboardHomeUtil.sortListViewByName(webd, "dsc");
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Descending");

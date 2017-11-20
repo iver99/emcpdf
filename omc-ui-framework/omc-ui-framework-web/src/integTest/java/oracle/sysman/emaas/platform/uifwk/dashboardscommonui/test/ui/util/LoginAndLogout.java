@@ -5,7 +5,6 @@ import oracle.sysman.emsaas.login.PageUtils;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
-import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.AfterMethod;
 
 public class LoginAndLogout

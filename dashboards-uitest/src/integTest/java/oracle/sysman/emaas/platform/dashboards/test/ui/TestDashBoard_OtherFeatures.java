@@ -114,7 +114,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		LoginAndLogout.logoutMethod();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testDashboardWith12Columns()
 	{
 		dbName_columncheck = "DashboardWith12Columns-" + DashBoardUtils.generateTimeStamp();
@@ -160,7 +160,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashboardBuilderUtil.saveDashboard(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testDeleteOOB()
 	{
 		//initialize the test
@@ -183,7 +183,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertFalse(removeButton.isEnabled(), "delete is enabled for OOB dashboard");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testDuplicateDashboard()
 	{
 		dbName_duplicate = dbName_Test + "-duplicated";
@@ -224,7 +224,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashboardHomeUtil.isDashboardExisted(webd, dbName_duplicate);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testDuplicateOOBDashboard()
 	{
 		dbName_duplicateOOB = OOBName + "-duplicated-" + DashBoardUtils.generateTimeStamp();
@@ -258,7 +258,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashboardHomeUtil.isDashboardExisted(webd, dbName_duplicateOOB);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testFavorite()
 	{
 		dbName_favorite = "favoriteDashboard-" + DashBoardUtils.generateTimeStamp();
@@ -376,7 +376,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, OOBName),"The dashboard is still my favorite dashboard");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testFilterITADashboard()
 	{
 		dbName_ITADashboard = "ITADashboard-" + DashBoardUtils.generateTimeStamp();
@@ -427,7 +427,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testFilterLADashboard()
 	{
 		dbName_LADashboard = "LADashboard-" + DashBoardUtils.generateTimeStamp();
@@ -478,7 +478,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testHideEntityFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -503,7 +503,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertFalse(webd.isDisplayed("css=" + PageId.TARGETSELECTOR_CSS), "The target selector is in the page");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testHideOpenInIconForCustomWidget()
 	{
 		dbName_CustomWidget = "DashboardWithCustomWidget-" + DashBoardUtils.generateTimeStamp();
@@ -544,7 +544,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 				"The 'Open In' icon is displayed for the custom widget");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testHideTimeRangeFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -569,7 +569,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertFalse(webd.isDisplayed("css=" + PageId.DATETIMEPICK_CSS), "The time range filter is in the page");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testMaximizeRestoreWidgetOOBDb()
 	{
 		//initialize the test
@@ -599,7 +599,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	}
 
 	//test maxmize/restore widget in self created dashboard
-	@Test
+	@Test(alwaysRun = true)
 	public void testMaximizeRestoreWidgetSelfDashboard()
 	{
 		dbName_testMaximizeRestore = "selfDb-" + DashBoardUtils.generateTimeStamp();
@@ -643,7 +643,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertTrue(webd.isDisplayed("//button[@title='Edit Settings']"), "Edit button isn't displayed in system dashboard set");
 	}
 
-	//@Test
+	//@Test(alwaysRun = true)
 	public void testSaveConfirmation()
 	{
 		dbName_saveConfirmation = "TestSaveConfirmation-" + DashBoardUtils.generateTimeStamp();
@@ -684,7 +684,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.waitForElementPresent("css=" + PageId.DASHBOARDDISPLAYPANELCSS);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testShareDashboard()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -706,7 +706,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testShowEntityFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -731,7 +731,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertTrue(webd.isDisplayed("css=" + PageId.TARGETSELECTOR_CSS), "The target selector is NOT in the page");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testShowTimeRangeFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -787,7 +787,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertFalse(DashboardBuilderUtil.toggleShareDashboard(webd), "Stop sharing the dashboard failed!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testTimePicker()
 	{
 		dbName_timepicker = "TestDashboardTimeselector-" + DashBoardUtils.generateTimeStamp();
@@ -898,7 +898,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		}
 	}
 	
-	@Test
+	@Test(alwaysRun = true)
 	public void testLongName_display()
 	{		
 		String dbDesc = "Test its display when dashboard with long name";
