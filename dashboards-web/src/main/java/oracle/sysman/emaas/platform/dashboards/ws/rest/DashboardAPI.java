@@ -75,7 +75,7 @@ import java.util.concurrent.*;
 public class DashboardAPI extends APIBase
 {
 	private static final Logger LOGGER = LogManager.getLogger(DashboardAPI.class);
-	
+
 	private static final String TEXT_WIDGET_ID = "1";
 
 	public DashboardAPI()
@@ -575,7 +575,7 @@ public class DashboardAPI extends APIBase
 					}
 				}
 			});
-			
+
 			//retrieve user granted privileges
 			String userGrants = null;
 			final Future<String> futureUserGrants = pool.submit(new Callable<String>() {
@@ -752,7 +752,7 @@ public class DashboardAPI extends APIBase
 			futureReg.cancel(true);
 			LOGGER.error(e);
 		}
-			
+
 			//get user grants
 			try {
 				if (futureUserGrants != null) {
@@ -1202,15 +1202,13 @@ public class DashboardAPI extends APIBase
 		}
 	}
 
-	
+
 	@PUT
 	@Path("/export")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response exportDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant, 
-			@HeaderParam(value = "Referer") String referer,
-			JSONArray array){
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer, JSONArray array){
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/export");
 		List<String> dbdNames = new ArrayList<String>();
 		if (array != null && array.length() > 0) {
@@ -1219,14 +1217,15 @@ public class DashboardAPI extends APIBase
 					dbdNames.add(array.getString(i));
 				} catch (JSONException e) {
 					LOGGER.error(e);
-					return Response.status(Status.BAD_REQUEST).build();
+					return Response.status(Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportExportMsgModel(false ,"JSONException error found!"))).build();
 				}
 			}
 		} else {
 			LOGGER.error("Error to export dashboard as no input dashboard names");
-			return Response.status(Status.BAD_REQUEST).build();
+			return Response.status(Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportExportMsgModel(false ,"Error to export dashboard as no input dashboard names"))).build();
+
 		}
-		
+		LOGGER.info("Prepare to export dashboards list: {}", array.toString());
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp())  {
@@ -1236,34 +1235,45 @@ public class DashboardAPI extends APIBase
 			logkeyHeaders("export()", userTenant, tenantIdParam);
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
+			/**
+			 * FIXME: What if 2 different dashboards have same name? It will break this function
+			 * PK in DB is Dashboard id and tenant id
+			 * UK in DB is DESCRIPTION, OWNER, TENANT_ID, DELETED
+			 */
 			List<BigInteger> dbdIds = dm.getDashboardIdsByNames(dbdNames, tenantId);
+			LOGGER.info("dashboard id list is {}", dbdIds);
+			if(dbdIds == null || dbdIds.isEmpty()){
+				LOGGER.warn("Dashboards are not found with specified id...");
+				throw new DashboardNotFoundException();
+			}
 			List<String> widgetIds = new ArrayList<String>();
 			JSONArray finalArray = new JSONArray();
 			for (int i = 0; i < dbdIds.size(); i++) {
 				JSONArray dbdArray = new JSONArray();
 				BigInteger id = dbdIds.get(i);
+				LOGGER.info("exporting dashboard with id {}", id);
 				Dashboard dbd = dm.getDashboardById(id, tenantId);
 				List<Dashboard> subDbds = null;
 				List<Tile> allTiles = new ArrayList<Tile>();
+				//handle sub dashboards.
 				if (dbd != null && dbd.getSubDashboards() != null && !dbd.getSubDashboards().isEmpty()) {
 					subDbds = new ArrayList<Dashboard>();
 					for (Dashboard subDbd : dbd.getSubDashboards()) {
 						BigInteger subId = subDbd.getDashboardId();
 						Dashboard completeSubDashboard = dm.getDashboardById(subId, tenantId);
 						if (completeSubDashboard.getTileList() != null && !completeSubDashboard.getTileList().isEmpty()) {
-							
 							allTiles.addAll(completeSubDashboard.getTileList());
 						}
 						subDbds.add(completeSubDashboard);
 					}
 				}
-				
+
 				if (subDbds != null) {
 					for (Dashboard d : subDbds) {
 						updateDashboardAllHref(d, tenantIdParam);
 						BigInteger dbdId = d.getDashboardId();
 						ScreenshotData screenshotData = dm.getDashboardBase64ScreenShotById(dbdId, tenantId);
-						String dbdJson = getJsonUtil().toJson(d);						
+						String dbdJson = getJsonUtil().toJson(d);
 						JSONObject dbdJsonObjSub = new JSONObject(dbdJson);
 						dbdJsonObjSub.put("screenShot", screenshotData.getScreenshot());
 						dbdArray.put(dbdJsonObjSub);
@@ -1280,10 +1290,10 @@ public class DashboardAPI extends APIBase
 				JSONObject dbdJsonObj = new JSONObject(dbdJson);
 				dbdJsonObj.put("screenShot", screenshotDataForOriginalDbd.getScreenshot());
 				dbdArray.put(dbdJsonObj);
-				
+
 				JSONObject insideOjb = new JSONObject();
 				insideOjb.put("Dashboard", dbdArray);
-				
+
 				//Savedsearch data
 				if (allTiles != null && !allTiles.isEmpty()) {
 					for (Tile tile : allTiles) {
@@ -1291,157 +1301,173 @@ public class DashboardAPI extends APIBase
 						widgetIds.add(widgetUniqueId);
 					}
 				}
-				
+				LOGGER.info("Widget id list is {}", widgetIds);
 				JSONArray requestEntity = new JSONArray();
-				if (widgetIds != null) {				
+				if (widgetIds != null) {
 					for (String widgetId : widgetIds) {
+						//TODO: Text widget will not be exported. please confirm
 						if (!widgetId.equals(TEXT_WIDGET_ID)) {
 							requestEntity.put(widgetId);
-						}						
+						}
 					}
 				}
 				JSONArray ssfObject = null;
+				LOGGER.info("Prepare to get SSF data from SSF service...");
 				if (requestEntity.length() > 0) {
+					// save or update widget data  into SSF
 					String ssfDataResponse = SSFDataUtil.getSSFData(userTenant, requestEntity.toString());
+					LOGGER.info("Get ssf data response is {}", ssfDataResponse);
 					if (ssfDataResponse != null && ssfDataResponse.startsWith("[")) {
 						ssfObject = new JSONArray(ssfDataResponse);
 					} else {
-						return Response.status(Status.BAD_REQUEST).entity("Could not get ssf data by widget unique ids").build();
+						return Response.status(Status.BAD_REQUEST).entity(new ImportExportMsgModel(false, "Could not get ssf data by widget unique ids")).build();
 					}
-					
 				}
-				
 				//Combine dbd json and savedsearch json
 				if (ssfObject == null) {
 					ssfObject = new JSONArray();
-					
-				} 
+				}
 				insideOjb.put("Savedsearch", ssfObject);
 				finalArray.put(insideOjb);
 			}
-		
+
 			return Response.ok(finalArray.toString()).build();
-		}
-		catch(DashboardNotFoundException e){
-			//suppress error information in log file
-			LOGGER.warn("Specific dashboard not found");
+		}catch(DashboardNotFoundException e){
+			LOGGER.warn("Specific dashboard not found...dashboard list is {}",array.toString());
 			return buildErrorResponse(new ErrorEntity(e));
-		}
-		catch (DashboardException e) {
+		}catch (DashboardException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
-		}
-		catch (BasicServiceMalfunctionException e) {
+		}catch (BasicServiceMalfunctionException e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		} catch (JSONException e) {
-			LOGGER.error(e.getLocalizedMessage(), e);		
+			LOGGER.error(e.getLocalizedMessage(), e);
 		} catch (Exception e) {
 			LOGGER.error(e.getLocalizedMessage(), e);
 		}
 		finally {
 			clearUserContext();
 		}
-		
-		return Response.status(Status.BAD_REQUEST).build();
+
+		return Response.status(Status.BAD_REQUEST).entity(new ImportExportMsgModel(false, "Error occurred when export dashboards!")).build();
 	}
 
 
 	@PUT
 	@Path("/import")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response importDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant,@HeaderParam(value = "Referer") String referer,
-			@QueryParam("override") boolean override,
+			@DefaultValue("false") @QueryParam("override") boolean override,
 			JSONArray jsonArray){
-		
-		infoInteractionLogAPIIncomingCall(tenantIdParam, null, "Service call to [PUT] /v1/dashboards/import");
+
+		infoInteractionLogAPIIncomingCall(tenantIdParam, null, "Service call to [PUT] /v1/dashboards/import?override={}",override);
 		try {
 			if (!DependencyStatus.getInstance().isDatabaseUp())  {
 				LOGGER.error("Error to call [PUT] /v1/dashboards: database is down");
 				throw new DatabaseDependencyUnavailableException();
 			}
-			if (jsonArray == null) {
-				return Response.status(Status.BAD_REQUEST).entity("Could not import any dashboard as the input data is null").build();
+			if (jsonArray == null || (jsonArray !=null && jsonArray.length() == 0)) {
+				LOGGER.error("Input json array is null/empty!");
+				return Response.status(Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportExportMsgModel(false,"Could not import any dashboard as the input data is null/empty"))).build();
 			}
 			int length = jsonArray.length();
 			JSONArray outputJson = new JSONArray();
 			logkeyHeaders("importDashboard()", userTenant, tenantIdParam);
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
-			
+
 			if (length > 0) {
+				LOGGER.info("Prepare to import dashboard array...");
 				for (int i = 0; i < length; i ++) {
 					JSONObject jsonObject = jsonArray.getJSONObject(i);
 					if (!jsonObject.has("Dashboard")) {
-						return Response.status(Status.BAD_REQUEST).entity("JsonObject[\"Dashboard\"] not found!").build();
+						LOGGER.error("JsonObject[\"Dashboard\"] not found in the input!");
+						return Response.status(Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportExportMsgModel(false, "JsonObject[\"Dashboard\"] not found in the input!"))).build();
 					}
+					LOGGER.info("Input contains Dashboard data...");
 					JSONObject ssfIdMapObj = null;
 					if (jsonObject.has("Savedsearch")) {
-						JSONArray ssfArray = jsonObject.getJSONArray("Savedsearch");						
+						LOGGER.info("Input contains saved search data...");
+						JSONArray ssfArray = jsonObject.getJSONArray("Savedsearch");
 						if (ssfArray != null && ssfArray.length() > 0) {
+							LOGGER.info("Prepare to save SSF data: {}", ssfArray.toString());
 							String ssfResponse = SSFDataUtil.saveSSFData(userTenant, ssfArray.toString(),override);
+							LOGGER.info("Response from save SSF data is {}", ssfResponse);
 							if (ssfResponse != null && ssfResponse.startsWith("{")) {
 								ssfIdMapObj = new JSONObject(ssfResponse);
-								
+							}else{
+								LOGGER.error("Error occurred when save SSF data!");
+//								throw new Exception("Error occurred when save SSF data!");
+								return Response.status(Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportExportMsgModel(false,
+										"Could not import SSF data successfully!(#1.Are you attempting to override OOB dashboards or search? If yes, please specify override=false and try again. #2.Did you increase the max connection pool size in weblogic console? If not, please increase it into 200 then retry.)"))).build();
 							}
 						}
 					}
-					
+
 					JSONArray dbdArray = jsonObject.getJSONArray("Dashboard");
 					if (dbdArray != null) {
-						Map<BigInteger, BigInteger> idMap = new HashMap<BigInteger, BigInteger>();
-						Map<String, String> nameMap = new HashMap<String, String>();
+//						Map<BigInteger, BigInteger> idMap = new HashMap<BigInteger, BigInteger>();
+//						Map<String, String> nameMap = new HashMap<String, String>();
+						LOGGER.info("Input contains {} dashboards...", dbdArray.length());
 						 for (int j = 0; j < dbdArray.length(); j++) {
 							// in dbd array, dbd is saved in order; Dashboard set will be saved at last
-						    JSONObject dbdObj = dbdArray.getJSONObject(j);
-						    
+							JSONObject dbdObj = dbdArray.getJSONObject(j);
+							LOGGER.info("Importing dashboard named {} and id {}", dbdObj.getString("name"),dbdObj.getString("id"));
 						    Dashboard d = getJsonUtil().fromJson(dbdObj.toString(), Dashboard.class);
+						    //handle dashboard set
 						    if (d.getType().equals(Dashboard.DASHBOARD_TYPE_SET)) {
 						    	if (d.getSubDashboards() != null) {
 						    		for (Dashboard dashboard : d.getSubDashboards()) {
+						    			//handle sub dashboards' tile
 						    			if (dashboard.getTileList() != null) {
 						    				for (Tile tile : dashboard.getTileList()) {
 						    					String widgetId = tile.getWidgetUniqueId();
+						    					//widget id could be changed after request SSF APi, so update tiles' id
 						    					if (ssfIdMapObj != null && ssfIdMapObj.has(widgetId)) {
 						    						tile.setWidgetUniqueId(ssfIdMapObj.getString(widgetId));
 						    					}
 						    				}
 						    			}
-						    			if (idMap.containsKey(dashboard.getDashboardId())) {
-						    				dashboard.setDashboardId(idMap.get(dashboard.getDashboardId()));
-						    			}
-						    			if (nameMap.containsKey(dashboard.getName())) {
-						    				dashboard.setName(nameMap.get(dashboard.getName()));
-						    			}
+//						    			if (idMap.containsKey(dashboard.getDashboardId())) {
+//						    				dashboard.setDashboardId(idMap.get(dashboard.getDashboardId()));
+//						    			}
+//						    			if (nameMap.containsKey(dashboard.getName())) {
+//						    				dashboard.setName(nameMap.get(dashboard.getName()));
+//						    			}
 						    		}
 						    	}
 						    }
-						    BigInteger originalId = d.getDashboardId();
-						    String originalName = d.getName();
+//						    BigInteger originalId = d.getDashboardId();
+//						    String originalName = d.getName();
+						    LOGGER.info("Before save to DB, dashboard name is {} and dashboard id is {}", d.getName(), d.getDashboardId());
 							DashboardManager manager = DashboardManager.getInstance();
 							if (d.getTileList() != null) {
 			    				for (Tile tile : d.getTileList()) {
 			    					String widgetId = tile.getWidgetUniqueId();
+									//widget id could be changed after request SSF APi, so update tiles' id
 			    					if (ssfIdMapObj != null && ssfIdMapObj.has(widgetId)) {
 			    						tile.setWidgetUniqueId(ssfIdMapObj.getString(widgetId));
 			    					}
 			    				}
 			    			}
 							d = manager.saveForImportedDashboard(d, tenantId,override);
-							BigInteger changedId = d.getDashboardId();
-							String changedName = d.getName();
+//							BigInteger changedId = d.getDashboardId();
+//							String changedName = d.getName();
+							LOGGER.info("After save to DB, dashboard name is {} and dashboard id is {}", d.getName(), d.getDashboardId());
 							updateDashboardAllHref(d, tenantIdParam);
 							outputJson.put(new JSONObject(getJsonUtil().toJson(d)));
-							idMap.put(originalId, changedId);
-							nameMap.put(originalName, changedName);
+//							idMap.put(originalId, changedId);
+//							nameMap.put(originalName, changedName);
 						  }
 					}
-					
-					
+
+
 				}
 			}
-			
+
 			return Response.status(Status.CREATED).entity(outputJson.toString()).build();
 		}
 		catch (IOException e) {
@@ -1454,7 +1480,6 @@ public class DashboardAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			//e.printStackTrace();
 			LOGGER.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		} catch (JSONException e) {
@@ -1464,11 +1489,11 @@ public class DashboardAPI extends APIBase
 		}
 		finally {
 			clearUserContext();
-		}	
-		return Response.status(Status.BAD_REQUEST).build();
+		}
+		return Response.status(Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ImportExportMsgModel(false, "Error occurred when import dashboards"))).build();
 	}
 
-	
+
 	private void logkeyHeaders(String api, String x_remote_user, String domain_name)
 	{
 		LOGGER.info("Headers of " + api + ": X-REMOTE-USER=" + x_remote_user + ", X-USER-IDENTITY-DOMAIN-NAME=" + domain_name);
@@ -1640,6 +1665,6 @@ public class DashboardAPI extends APIBase
 		}
 		return maxPosition;
 	}
-	
+
 
 }

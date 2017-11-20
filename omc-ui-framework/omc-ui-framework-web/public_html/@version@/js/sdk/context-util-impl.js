@@ -1239,6 +1239,12 @@ define('uifwk/@version@/js/sdk/context-util-impl', [
                     //Fix EMCPDF-4727: if no composite in GC and entity meids are changed, update previousCompositeMeId
                     if(!self.getCompositeMeId()) {
                         omcContext.previousCompositeMeId = currentEntityIds;
+                    }else {
+                        if(currentEntityIds) {
+                            omcContext.previousCompositeMeId = self.getCompositeMeId() + "," + currentEntityIds;
+                        }else {
+                            omcContext.previousCompositeMeId = self.getCompositeMeId();
+                        }
                     }
 
                     if (self._getEntityFilterExpression()) {

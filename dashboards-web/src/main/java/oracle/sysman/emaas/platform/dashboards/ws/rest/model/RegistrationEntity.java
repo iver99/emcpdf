@@ -114,10 +114,11 @@ public class RegistrationEntity implements Serializable
 	public static final String SECURITY_ANALYTICS_VERSION = "1.0+";
 	public static final String SECURITY_ANALYTICS_HOME_LINK = "sso.analytics-ui";
 	// Orchestration cloud service
+	//emsaasui/cosUi/wfDashboard.html
 	public static final String ORCHESTRATION_OPC_APPNAME = "Orchestration";
 	public static final String ORCHESTRATION_SERVICENAME = "CosUIService";
 	public static final String ORCHESTRATION_VERSION = "1.0+";
-	public static final String ORCHESTRATION_URL = "/emsaasui/emcpdfui/home.html?filter=ocs";
+	public static final String ORCHESTRATION_HOME_LINK = "sso.wfdashboard";
 	// Compliance service
 	public static final String COMPLIANCE_OPC_APPNAME = "Compliance";
 	public static final String COMPLIANCE_SERVICENAME = "ComplianceUIService";
@@ -370,8 +371,16 @@ public class RegistrationEntity implements Serializable
 					list.add(le);
 				}
 				else if (ORCHESTRATION_SERVICENAME.equals(app)) {
-					list.add(new LinkEntity(ORCHESTRATION_OPC_APPNAME, ORCHESTRATION_URL, ORCHESTRATION_SERVICENAME,
-							ORCHESTRATION_VERSION));
+					Link l = RegistryLookupUtil.getServiceExternalLink(ORCHESTRATION_SERVICENAME,
+							ORCHESTRATION_VERSION, ORCHESTRATION_HOME_LINK, tenantName);
+					if (l == null) {
+						throw new Exception("Link for " + app + "return null");
+					}
+					//TODO update to use ApplicationEditionConverter.ApplicationOPCName once it's updated in tenant sdk
+					LinkEntity le = new LinkEntity(ORCHESTRATION_OPC_APPNAME, l.getHref(), ORCHESTRATION_SERVICENAME,
+							ORCHESTRATION_VERSION);
+					le = replaceWithVanityUrl(le, tenantName, ORCHESTRATION_SERVICENAME);
+					list.add(le);
 				}
 				else if (COMPLIANCE_SERVICENAME.equals(app)) {
 					VersionedLink l = RegistryLookupUtil.getServiceExternalLink(COMPLIANCE_SERVICENAME, COMPLIANCE_VERSION,
@@ -445,7 +454,14 @@ public class RegistrationEntity implements Serializable
 								if (serviceAppMapping.containsKey(serviceName)) {
 									sme.setAppId(serviceAppMapping.get(serviceName));
 								}
-
+								if (!StringUtil.isEmpty(le.getName())) {
+									if (le.getName().equalsIgnoreCase("hasAdminMenu=true")) {
+										sme.setHasAdminMenu(Boolean.TRUE);
+									}
+									else if (le.getName().equalsIgnoreCase("hasAdminMenu=false")) {
+										sme.setHasAdminMenu(Boolean.FALSE);
+									}
+								}
 								sme.setServiceName(serviceName);
 								sme.setVersion(le.getVersion());
 								sme.setMetaDataHref(le.getHref());
@@ -820,7 +836,7 @@ public class RegistrationEntity implements Serializable
 				_LOGGER.error("Error to get SanitizedInstanceInfo", e);
 			}
 			if (NAME_DASHBOARD_UI_SERVICENAME.equals(internalInstance.getServiceName())
-					&& NAME_DASHBOARD_UI_VERSION.equals(internalInstance.getVersion())) {
+					&& NAME_DASHBOARD_UI_VERSION.equals(internalInstance.getVersion()) || "OMC-UI-Framework".equalsIgnoreCase(internalInstance.getServiceName())) {
 				addToLinksMap(dashboardLinksMap, links, internalInstance.getServiceName(), internalInstance.getVersion());
 			}
 			else if (!checkSubscribedApps || subscribedApps != null && subscribedApps.contains(internalInstance.getServiceName())) {

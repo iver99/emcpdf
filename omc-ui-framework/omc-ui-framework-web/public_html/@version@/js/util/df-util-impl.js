@@ -1,10 +1,11 @@
-define(['knockout',
+define('uifwk/@version@/js/util/df-util-impl',['knockout',
     'jquery',
     'ojs/ojcore',
     'uifwk/@version@/js/util/ajax-util-impl',
-    'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg'
+    'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
+    'uifwk/@version@/js/sdk/SessionCacheUtil'
 ],
-    function (ko, $, oj, ajaxUtilModel, nls)
+    function (ko, $, oj, ajaxUtilModel, nls, sessionCacheModel)
     {
         function DashboardFrameworkUtility(userName, tenantName) {
             var self = this;
@@ -18,6 +19,23 @@ define(['knockout',
                 if (window.DEV_MODE) {
                     self.userName = window.DEV_MODE.user;
                     self.tenantName = window.DEV_MODE.tenant;
+                }
+            }
+            
+            var subscribedApps2CacheName = "_uifwk_subscribedapps2cache";
+            var subscribedApps2CacheDataKey = "subscribedapps2";
+            var subscribedApps2Cache = new sessionCacheModel(subscribedApps2CacheName, 1);
+            
+            if(!window._uifwk) {
+                window._uifwk = {};
+            }
+            
+            if (window.performance) {
+                //We should ony clear the cache once during a page refresh, otherwise
+                //it may cause cached data lost though subscribed apps data already fetched
+                if (window.performance.navigation.type === 1 && !window._uifwk.isOmcSubscribedAppsCacheCleared) {
+                    subscribedApps2Cache.clearCache();
+                    window._uifwk.isOmcSubscribedAppsCacheCleared = true;
                 }
             }
 
@@ -951,10 +969,17 @@ define(['knockout',
             }
             
             self.getSubscribedApps2WithEdition = function(successCallback, errorCallback) {
-                if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.subscribedapps2 &&
+                var cachedData = subscribedApps2Cache.retrieveDataFromCache(subscribedApps2CacheName)
+                if(cachedData && cachedData[subscribedApps2CacheDataKey]) {
+                    console.log("******get subscribed apps from session storage cache, result is " + JSON.stringify(cachedData[subscribedApps2CacheDataKey]));
+                    successCallback(cachedData[subscribedApps2CacheDataKey]);
+                }else if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.subscribedapps2 &&
                         ($.isFunction(window._uifwk.cachedData.subscribedapps2) ? window._uifwk.cachedData.subscribedapps2() : true)) {
-                    successCallback($.isFunction(window._uifwk.cachedData.subscribedapps2) ? window._uifwk.cachedData.subscribedapps2() :
-                            window._uifwk.cachedData.subscribedapps2);
+                    var subscribedApps2 = $.isFunction(window._uifwk.cachedData.subscribedapps2) ? window._uifwk.cachedData.subscribedapps2() :
+                            window._uifwk.cachedData.subscribedapps2;
+                    console.log("******get subscribed apps from window._uifwk cache, result is " + JSON.stringify(subscribedApps2));
+                    subscribedApps2Cache.updateCacheData(subscribedApps2CacheName, subscribedApps2CacheDataKey, subscribedApps2);
+                    successCallback(subscribedApps2);
                 } else {
                     if (!window._uifwk) {
                         window._uifwk = {};
@@ -969,6 +994,8 @@ define(['knockout',
                         }
 
                         function doneCallback(data, textStatus, jqXHR) {
+                            console.log("******get subscribed apps by sending request, result is " + JSON.stringify(data));
+                            subscribedApps2Cache.updateCacheData(subscribedApps2CacheName, subscribedApps2CacheDataKey, data);
                             window._uifwk.cachedData.subscribedapps2(data);
                             window._uifwk.cachedData.isFetchingSubscribedApps2 = false;
                             successCallback(data, textStatus, jqXHR);

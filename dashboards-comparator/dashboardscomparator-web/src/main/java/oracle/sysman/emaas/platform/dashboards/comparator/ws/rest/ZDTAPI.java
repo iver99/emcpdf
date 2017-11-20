@@ -11,10 +11,8 @@
 package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest;
 
 import java.text.DecimalFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.text.DecimalFormatSymbols;
+import java.util.*;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -394,7 +392,8 @@ public class ZDTAPI
 
 	private double calcPercentage(int totalRows, int differentRow){
 		double percen = (double)differentRow/(double)totalRows;
-		DecimalFormat df = new DecimalFormat("#.##########");
+		DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+		DecimalFormat df = new DecimalFormat("#.##########", symbols);
 		return Double.parseDouble(df.format(percen));
 	}
 

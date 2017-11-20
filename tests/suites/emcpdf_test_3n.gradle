@@ -165,15 +165,30 @@ useRestAssured = true
 
 //Task added from "emcpdf_qa_test_3n"
 task QATest(type:EMTest,dependsOn:[omcSetup,suitePricingV4Tests]) {
-    include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
-	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
-	include "oracle/sysman/emaas/platform/dashboards/logging/*"
-	include "oracle/sysman/emaas/platform/dashboards/test/Configuration/*"
-	include "oracle/sysman/emaas/platform/dashboards/test/RegistryLookup/*"
-	include "oracle/sysman/emaas/platform/dashboards/test/preference/*"
-	include "oracle/sysman/emaas/platform/dashboards/test/screenshot/*"
-	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/TenantSubscriptions.class"
+options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':'none') {
+    test('name': 'DashboardRestAPITest', 'preserve-order':'true') {
+    packages([:]) {
+                'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.dashboard')
+                'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.common')
+                'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.logging')
+                'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.Configuration')
+                'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.RegistryLookup')
+                'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.preference')
+                'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.screenshot')
+	}
+	}
 
+	test('name': 'DashboardRestAPITest_TenantSubscriptions', 'preserve-order':'true'){
+	    classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.TenantSubscriptions.TenantSubscriptions')
+	    }
+	}
+	test('name': 'DashboardRestAPITest_offboardTenant', 'preserve-order':'true'){
+	    classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.offboard.offboardTenant')//this class file must be run at last
+	    }
+	}
+	}
 	useRestAssured=true
 	ext.set("testType", "integration")
 }
@@ -191,7 +206,7 @@ apply from: 'onboard_tenant.gradle'
 task QATest1(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]){ 
  	environment "VNC_SIZE", "1600x1200"       
 
-        environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
+     // environment "WEBDRIVER_WAIT_TIMEOUT", "300000"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestAnalyzerPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestDashboardPage.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/BrandingBar_TestOtherPage.class"
@@ -240,6 +255,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
             classes([:]) {
                 'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SimpleCRUD')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_OtherFeatures')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_TextWidget')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_SimpleCRUD')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashboardSet_OtherFeatures')
