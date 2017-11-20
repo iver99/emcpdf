@@ -71,7 +71,22 @@ role value for that section to represent the appropriate content type.
                         }">
                     </div>
                 </div>
-                
+
+                <div id="show-message-buttons" class="oj-col">
+                    <button id="confirm-message-button" class="oj-button oj-default oj-button-half-chrome"
+                                    data-bind="click: showConfirmMsg, ojComponent: {
+                                          component:'ojButton', label: confirmBtnTitle
+                              }, attr: {title: confirmBtnTitle}"></button>
+                    <button id="warn-message-button" class="oj-button oj-default oj-button-half-chrome"
+                                    data-bind="click: showWarnMsg, ojComponent: {
+                                          component:'ojButton', label: warnBtnTitle
+                              }, attr: {title: warnBtnTitle}"></button>
+                    <button id="error-message-button" class="oj-button oj-default oj-button-half-chrome"
+                                    data-bind="click: showErrorMsg, ojComponent: {
+                                          component:'ojButton', label: errorBtnTitle
+                              }, attr: {title: errorBtnTitle}"></button>
+                </div>
+
                 <div id="widgets-container" class="oj-col" data-bind="style: {padding: widgetsContainerPadding}">
                     <!-- ko foreach: widgetList -->
                     <div class="sample-widget-box">

@@ -1349,6 +1349,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     message.type = data.type;
                     message.summary = data.summary;
                     message.detail = data.detail;
+                    message.link = data.link;
                     message.category = data.category;
                     if (data.type && data.type.toUpperCase() === 'ERROR') {
                         message.iconAltText = self.altTextError;

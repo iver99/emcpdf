@@ -263,6 +263,9 @@
                         <!-- ko if: detail && detail !== '' -->
                         <span class="emaas-appheader-message emaas-appheader-message-detail" data-bind="text: detail"></span>
                         <!-- /ko -->
+                        <!-- ko if: link && link !== '' && link.text && link.href -->
+                        <a class="emaas-appheader-message emaas-appheader-message-link" data-bind="text: link.text, attr: {href: link.href}"></a>
+                        <!-- /ko -->
                     </div>
                 </div>
                 <div style="float:right;padding-right: 20px;">
