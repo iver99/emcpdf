@@ -26,6 +26,10 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
             var subscribedApps2CacheDataKey = "subscribedapps2";
             var subscribedApps2Cache = new sessionCacheModel(subscribedApps2CacheName, 1);
             
+            if(!window._uifwk) {
+                window._uifwk = {};
+            }
+            
             if (window.performance) {
                 //We should ony clear the cache once during a page refresh, otherwise
                 //it may cause cached data lost though subscribed apps data already fetched
