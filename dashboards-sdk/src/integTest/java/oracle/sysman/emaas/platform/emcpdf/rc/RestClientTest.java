@@ -146,8 +146,11 @@ public class RestClientTest {
             }
         };
         rc = new RestClient();
+try{
         rc.post("http://test.link.com",list.toString(), "emaastesttenant1", null);
-
+}catch(Exception e){
+	e.printStackTrace();
+}
         // test ClientHandlerException
         new NonStrictExpectations() {
             {
@@ -155,8 +158,12 @@ public class RestClientTest {
                 result = new ClientHandlerException();
             }
         };
+try{
         rc = new RestClient();
         rc.post("http://test.link.com",list.toString(), "emaastesttenant1", null);
+}catch(Exception e){
+	e.printStackTrace();
+}
 
     }
 
