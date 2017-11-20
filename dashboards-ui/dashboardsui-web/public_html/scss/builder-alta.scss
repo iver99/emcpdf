@@ -1746,15 +1746,12 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 
 .textWidgetWrapper {
-    width: -moz-calc(100% - 20px);
-    width: -webkit-calc(100% - 20px);
-    width: -o-calc(100% - 20px);
-    width: calc(100% - 20px);
+    width: 100%;
     height: -moz-calc(100% - 20px);
     height: -webkit-calc(100% - 20px);
     height: -o-calc(100% - 20px);
     height: calc(100% - 20px);
-    margin: 0px 10px;
+    margin: 0px;
 }
 
 //set image max-width to 100% so that image smaller than tile show its original size, image lager than tile show 100% width

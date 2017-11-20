@@ -1,7 +1,8 @@
-define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
-        function (localrequire, ko, $) {
+define(["require", "knockout", "jquery", "ojs/ojcore", "DOMPurify", "ojs/ojtabs", "ckeditor"],
+        function (localrequire, ko, $, oj, DOMPurify) {
             function textWidgetViewModel(params) {
                 var self = this;
+                self.isEditing = ko.observable(false);
                 if(!params.tile.content) {
                     params.tile.content = ko.observable();
                 }
@@ -45,20 +46,26 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
 
                 var editor;
                 self.loadTextEditor = function () {
+                    if(self.isCKEditorInited) {
+                        $("#textEditor_" + self.textWidgetId).focus();
+                        return;
+                    }
                     $("#textEditor").attr("id", "textEditor_" + self.textWidgetId);
                     $("#textEditor_" + self.textWidgetId).attr("contenteditable", "true");
                     editor = CKEDITOR.inline("textEditor_" + self.textWidgetId, configOptions);
                         
                     editor.on("instanceReady", function () {
                         this.setData(self.content());
-                        $('#textEditorWrapper_'+self.textWidgetId).hide();
                         $("#textEditor_" + self.textWidgetId).focus();
                     });
 
                     editor.on("blur", function () {
+                        if(self.switchToHtmlMode) {
+                            self.switchToHtmlMode = false;
+                        }else {
+                            self.showRenderedMode();
+                        }
                         self.content(this.getData());
-                        $('#textContentWrapper_'+self.textWidgetId).show();
-                        $('#textEditorWrapper_'+self.textWidgetId).hide();
                     });
                     
                     editor.on("focus", function() {
@@ -73,12 +80,64 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                         var _self = this;
                         setTimeout(function(){self.content(_self.getData());}, 100);
                     });
+                    self.isCKEditorInited = true;
                 };
                 
                 self.showTextEditor = function() {
-                    $('#textContentWrapper_'+self.textWidgetId).hide();
-                    $('#textEditorWrapper_'+self.textWidgetId).show();
-                    $("#textEditor_" + self.textWidgetId).focus();
+                    self.isEditing(true);
+                    setTimeout(function() {
+                        self.loadTextEditor();
+                    }, 0);
+                };
+                
+                self.showRenderedMode = function() {
+                    self.isEditing(false);
+                    //When setting isEditing to false, editor in html will be removed
+                    //Next time when entering editing mode, need to initiaize ckeditor self.loadTextEditor
+                    self.isCKEditorInited = false;
+                };
+                
+                self.showHtmlEditor = function() {
+                    self.isEditing(true);
+                    setTimeout(function() {
+                        $("#htmlEditor_" + self.textWidgetId).focus();
+                    }, 0);
+                };
+
+                var config = {
+                    ALLOWED_TAGS: ['a','abbr','acronym','address','area','article','aside','b','bdi','bdo','big','blockquote','br','br','caption','center','cite','code','col','colgroup','dd','del','del','dfn','dir','div','dl','dt','em','figcaption','figure','font','footer','h1','h2','h3','h4','h5','h6','header','hgroup','hr','i','img','ins','kbd','label','li','map','map','mark','menu','nav','ol','p','pre','q','rp','rt','ruby','s','samp','section','small','span','strike','strong','sub','sup','table','tbody','td','tfoot','th','thead','time','tr','tt','u','ul','var','wbr'],
+                    ALLOWED_ATTR: ['abbr','align','alt','axis','bgcolor','border','cellpadding','cellspacing','class','clear','color','cols','colspan','compact','coords','dir','face','headers','height','hreflang','hspace','ismap','lang','language','nohref','nowrap','rel','rev','rows','rowspan','rules','scope','scrolling','shape','size','span','start','summary','tabindex','target','title','type','valign','value','vspace','width','background','cite','href','src','style'],
+                    ALLOW_DATA_ATTR: false
+                };
+                $("#htmlEditor").attr("id", "htmlEditor_" + self.textWidgetId);
+                $("#htmlEditor_" + self.textWidgetId).attr("contenteditable", "true");
+                self.previewHTMLData = function(){
+                    //Use "setTimeout" to make sure html widget "blur" event is later than "Back to text widget" "click" event
+                    setTimeout(function() {
+                        
+                        var rawHtml = self.content();
+                        var filteredHtml = DOMPurify.sanitize(rawHtml, config);
+                        self.content(filteredHtml);
+                        
+                        if(self.switchToTextMode) {
+                            //"blur" event triggered by clicking "Back to text widget button"
+                            self.switchToTextMode = false;
+                        }else {
+                            //"blur" event triggered by clicking outside widget
+                            self.showRenderedMode();
+                        }
+                    }, 300);
+                    
+                };
+                
+                self.editModeChangehandler = function(event, data) {
+                    if(data.value === "textMode") {
+                        self.switchToTextMode = true;
+                        self.showTextEditor();
+                    }else if(data.value === "htmlMode") {
+                        self.switchToHtmlMode = true;
+                        self.showHtmlEditor();
+                    }
                 };
                 
                 params.tile.onDashboardItemChangeEvent = function(dashboardItemChangeEvent) {
@@ -141,8 +200,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "ckeditor"],
                         linkType.items = [["URL", "url"], ["E-mail", "email"]];
                     }
                 });
-                
-                self.loadTextEditor();
             }
             return textWidgetViewModel;
         });
