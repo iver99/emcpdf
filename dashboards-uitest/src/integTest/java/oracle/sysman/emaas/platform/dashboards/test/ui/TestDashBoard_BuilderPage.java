@@ -5,11 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -264,11 +261,15 @@ public class TestDashBoard_BuilderPage extends LoginAndLogout
 
 		//delete the dashboard
 		webd.getLogger().info("start to delete the dashboard");
-
-		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.FAVORITE_BOXID));
-		if (el.isSelected()) {
-			el.click();
+		
+		if (webd.isSelected("id=" + DashBoardPageId.FAVORITE_BOXID)) {
+			webd.click("id=" + DashBoardPageId.FAVORITE_BOXID);
 		}
+		
+//		WebElement el = webd.getWebDriver().findElement(By.id(DashBoardPageId.FAVORITE_BOXID));
+//		if (el.isSelected()) {
+//			el.click();
+//		}
 		DashboardHomeUtil.deleteDashboard(webd, dbName_favorite, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 		webd.getLogger().info("the dashboard has been deleted");
 	}
@@ -362,11 +363,13 @@ public class TestDashBoard_BuilderPage extends LoginAndLogout
 				"Widget 'All Logs Trend' is not displayed");
 
 		//verify the edit/add button displayed in the page
-		WebElement addButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));
-		Assert.assertTrue(addButton.isDisplayed(), "Add button isn't displayed in system dashboard set");
+//		WebElement addButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Add Content']"));		
+//		Assert.assertTrue(addButton.isDisplayed(), "Add button isn't displayed in system dashboard set");
+		Assert.assertTrue(webd.isDisplayed("xpath=//button[@title='Add Content']"), "Add button isn't displayed in system dashboard set");
 
-		WebElement editButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));
-		Assert.assertTrue(editButton.isDisplayed(), "Edit button isn't displayed in system dashboard set");
+//		WebElement editButton = webd.getWebDriver().findElement(By.xpath("//button[@title='Edit Settings']"));
+//		Assert.assertTrue(editButton.isDisplayed(), "Edit button isn't displayed in system dashboard set");
+		Assert.assertTrue(webd.isDisplayed("xpath=//button[@title='Edit Settings']"), "Edit button isn't displayed in system dashboard set");
 	}
 	
 	@Test(alwaysRun = true)
@@ -573,10 +576,11 @@ public class TestDashBoard_BuilderPage extends LoginAndLogout
 		webd.switchToWindow();
 		//WaitUtil.waitForPageFullyLoaded(webd);
 		webd.getLogger().info("Wait for the widget loading....");
-		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
+		webd.waitForElementPresent("xpath=//*[@id='srchSrch']");
+//		WebDriverWait wait1 = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+//		wait1.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='srchSrch']")));
 
-		String url = webd.getWebDriver().getCurrentUrl();
+		String url = webd.getCurrentUrl();
 		webd.getLogger().info("url = " + url);
 		if (!url.substring(url.indexOf("emsaasui") + 9).contains(
 				"startTime%3D" + String.valueOf(StartTimeStamp) + "%26endTime%3D" + String.valueOf(EndTimeStamp))) {
@@ -614,8 +618,8 @@ public class TestDashBoard_BuilderPage extends LoginAndLogout
 		//Verify the content is added successfully
 		webd.getLogger().info("Verify the content is added successfully");
 		
-		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-		Assert.assertEquals(textContent.getText(), content);
+//		WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
+		Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTCONTENTCSS), content);
 	}
 	
 	@Test(alwaysRun = true)
@@ -649,7 +653,7 @@ public class TestDashBoard_BuilderPage extends LoginAndLogout
 		webd.getLogger().info("Change the time range, verify the url will be changed");
 		GlobalContextUtil.setTimeRange(webd, TimeRange.NewLast7Days);
 
-		String currentURL = webd.getWebDriver().getCurrentUrl();
+		String currentURL = webd.getCurrentUrl();
 		Assert.assertEquals(currentURL.contains("timePeriod%3DLAST_7_DAY"), true);
 
 		//open the widget
