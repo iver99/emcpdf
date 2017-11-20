@@ -35,37 +35,36 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "DOMPurify", "ojs/ojtabs"
                         {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']},
                         {name: 'links', items: ['Link', 'Image']}
                     ],
+                    //Below 2 configs will remove bottom bar in ckeditor
                     removePlugins: 'elementspath,magicline',
-                    startupFocus: false,
+                    resize_enabled: false,
+                    startupFocus: true,
                     uiColor: "#FFFFFF",
                     linkShowAdvancedTab: false,
                     linkShowTargetTab: false,
                     enterMode: CKEDITOR.ENTER_BR
-
                 };
 
                 var editor;
                 self.loadTextEditor = function () {
                     if(self.isCKEditorInited) {
-                        $("#textEditor_" + self.textWidgetId).focus();
+                        editor.focus();
                         return;
                     }
-                    $("#textEditor").attr("id", "textEditor_" + self.textWidgetId);
-                    $("#textEditor_" + self.textWidgetId).attr("contenteditable", "true");
-                    editor = CKEDITOR.inline("textEditor_" + self.textWidgetId, configOptions);
+                    editor = CKEDITOR.replace("textEditor_" + self.textWidgetId, configOptions);
                         
                     editor.on("instanceReady", function () {
+                        self.setTextEditorContentHeight();
                         this.setData(self.content());
-                        $("#textEditor_" + self.textWidgetId).focus();
                     });
 
                     editor.on("blur", function () {
+                        self.content(this.getData());
                         if(self.switchToHtmlMode) {
                             self.switchToHtmlMode = false;
                         }else {
                             self.showRenderedMode();
                         }
-                        self.content(this.getData());
                     });
                     
                     editor.on("focus", function() {
@@ -83,6 +82,13 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "DOMPurify", "ojs/ojtabs"
                     self.isCKEditorInited = true;
                 };
                 
+                self.setTextEditorContentHeight = function() {
+                    var textEditorHeight = $("#cke_textEditor_" + self.textWidgetId + " .cke_inner").height();
+                    var textEditorToolbarHeight = $("#cke_textEditor_" + self.textWidgetId + " .cke_top").outerHeight();
+                    var height = textEditorHeight - textEditorToolbarHeight;
+                    $("#cke_textEditor_" + self.textWidgetId + " .cke_contents").css("height", height + "px");
+                };
+                
                 self.showTextEditor = function() {
                     self.isEditing(true);
                     setTimeout(function() {
@@ -90,7 +96,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "DOMPurify", "ojs/ojtabs"
                     }, 0);
                 };
                 
-                self.showRenderedMode = function() {
+                self.showRenderedMode = function() {                   
                     self.isEditing(false);
                     //When setting isEditing to false, editor in html will be removed
                     //Next time when entering editing mode, need to initiaize ckeditor self.loadTextEditor
@@ -142,8 +148,12 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "DOMPurify", "ojs/ojtabs"
                 
                 params.tile.onDashboardItemChangeEvent = function(dashboardItemChangeEvent) {
                     //When receive "Edit" event from dashboard, show text widget in edit mode
-                    if(dashboardItemChangeEvent && dashboardItemChangeEvent.tileChange && dashboardItemChangeEvent.tileChange.status === "POST_EDIT") {
-                        self.showTextEditor();
+                    if(dashboardItemChangeEvent && dashboardItemChangeEvent.tileChange) {
+                        if(dashboardItemChangeEvent.tileChange.status === "POST_EDIT") {
+                            self.showTextEditor();
+                        }else if($.inArray(dashboardItemChangeEvent.tileChange.status, ["POST_WIDER", "POST_NARROWER", "POST_TALLER", "POST_SHORTER"])) {
+                            self.setTextEditorContentHeight();
+                        }
                     }
                 };
                 

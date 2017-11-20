@@ -1767,3 +1767,8 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 #uifwkLayoutMainContainer{
     overflow: hidden !important;
 }
+
+div[id^='cke_textWditor'], .cke_inner {
+    height: 100% !important;
+}
+
