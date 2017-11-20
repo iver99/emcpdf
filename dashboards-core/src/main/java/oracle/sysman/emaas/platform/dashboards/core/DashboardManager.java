@@ -255,7 +255,7 @@ public class DashboardManager
 	 * @param tenantId
 	 * @return
 	 */
-	public List<BigInteger> getDashboardIdsByNames(List<String> names, Long tenantId){
+	public List<BigInteger> getDashboardIdsByNames(List<String> names, Long tenantId) throws DashboardNotFoundException{
     	if (names == null || names.isEmpty()) {
     		LOGGER.debug("Dashboard not found for no input names");
     		return null;
@@ -265,14 +265,14 @@ public class DashboardManager
     		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
     		em = dsf.getEntityManager();
     		return dsf.getDashboardIdsByNames(names, tenantId);   		
-    	} catch (NoResultException e) {
-    		LOGGER.error(e.getLocalizedMessage(), e);
+    	} catch (Exception e) {
+    		LOGGER.error(e);
+    		throw new DashboardNotFoundException();
     	} finally {
     		if (em != null) {
     			em.close();
     		}
     	}
-    	return null;
     }
 	
 
@@ -595,16 +595,22 @@ public class DashboardManager
 	}
 
 	public Dashboard getDashboardByNameAndDescriptionAndOwner(String name, String description, Long tenantId){
+
+		return getDashboardByNameAndDescriptionAndOwner(name, description, tenantId, false);
+	}
+
+	public Dashboard getDashboardByNameAndDescriptionAndOwner(String name, String description, Long tenantId, boolean sysOwner){
 		if(StringUtil.isEmpty(name)){
-			LOGGER.debug("Dashboard not found for name \"{}\" is invalid", name);
+			LOGGER.warn("Dashboard not found for name \"{}\" is invalid", name);
 			return null;
 		}
 		String currentUser = UserContext.getCurrentUser();
+		LOGGER.info("Get dashboard  by name={} desc={} and owner={}", name, description,currentUser);
 		EntityManager entityManager = null;
 		try{
 			DashboardServiceFacade dashboardServiceFacade = new DashboardServiceFacade(tenantId);
 			entityManager = dashboardServiceFacade.getEntityManager();
-			EmsDashboard emsDashboard = dashboardServiceFacade.getEmsDashboardByNameAndDescriptionAndOwner(name, currentUser,description);
+			EmsDashboard emsDashboard = dashboardServiceFacade.getEmsDashboardByNameAndDescriptionAndOwner(name, currentUser,description, sysOwner);
 			return Dashboard.valueOf(emsDashboard);
 		}catch (NoResultException e) {
 			LOGGER.debug("Dashboard not found for name \"{}\" because NoResultException is caught", name);
@@ -1070,36 +1076,43 @@ public class DashboardManager
 			}
 		}
 	}
-	
-	private String generateNewName(DashboardServiceFacade dsf,Long tenantId,String name) {
-		String existingName = dsf.getDashboardNameWithMaxSuffixNumber(name, tenantId);
-		String finalString  = null;
-		if (existingName != null) {
-			if (name.equals(existingName)) {
-				finalString = name + "_1";
+
+	/**
+	 * genereate a new name = original name + '_' and a increasing number
+	 * ***Attention: This method may doesn't act as expected when name is end with '_', fix in the future.***
+	 */
+	private String generateNewName(String originalName, String latestExistingName) {
+		String newName  = null;
+		if (latestExistingName != null) {
+			if (originalName.equals(latestExistingName)) {
+				newName = originalName + "_1";
 			} else {
 				Pattern pattern = Pattern.compile("\\d+$");
-				Matcher matcher = pattern.matcher(existingName);
+				Matcher matcher = pattern.matcher(latestExistingName);
 				if (matcher.find()) {
 					Integer num = new Integer(matcher.group());
 					int increaseNum = num.intValue() + 1;
-					if (existingName.endsWith("_"+num)) {
-						int flag = existingName.lastIndexOf("_");
-						String subName = existingName.substring(0, flag);
-						if (subName.equals(name)) {
-							finalString = subName + "_" + increaseNum; 
+					if (latestExistingName.endsWith("_"+num)) {
+						int flag = latestExistingName.lastIndexOf("_");
+						String subName = latestExistingName.substring(0, flag);
+						if (subName.equals(originalName)) {
+							newName = subName + "_" + increaseNum;
 						} else {
-							finalString = name + "_1";
+							newName = originalName + "_1";
 						}						
 					} else {
-						finalString = name + "_1";
+						newName = originalName + "_1";
 					}						
 				} else {
-					finalString = name + "_1";
+					newName = originalName + "_1";
 				}
 			}			
+		}else{
+			LOGGER.warn("latestExistingName is null, return original name: {}", originalName);
+			return originalName;
 		}
-		return finalString;
+		LOGGER.info("Original Name is {}, and latest existing name is {}, and new name is {}", originalName, latestExistingName, newName);
+		return newName;
 	}
 	
 	private Dashboard resetDateAndOwnerForDashboard(Dashboard dbd) {
@@ -1122,25 +1135,35 @@ public class DashboardManager
 	
 	public Dashboard saveForImportedDashboard(Dashboard dbd, Long tenantId, boolean overrided) throws DashboardException {		
 		//reset creation date and owner
+		LOGGER.info("Prepare to reset dashboard's data...");
 		resetDateAndOwnerForDashboard(dbd);
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
-			Dashboard sameName = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId);
-			if (sameName != null) {
+			Dashboard originalDashboard = getDashboardByNameAndDescriptionAndOwner(dbd.getName(), dbd.getDescription(), tenantId, true);
+			LOGGER.info("Is dashboard null? {}", originalDashboard);
+			if (originalDashboard != null) {
+				LOGGER.info("Get dashboard name by name and description and owner: name={}, desc={}, id={}, owner={}, override={}", originalDashboard.getName(), originalDashboard.getDescription(), originalDashboard.getDashboardId(), originalDashboard.getOwner(), overrided);
 				if (overrided) {
 					// update existing row
-					dbd.setDashboardId(sameName.getDashboardId());
+					dbd.setDashboardId(originalDashboard.getDashboardId());
+					//FIXME: below will make fields encoded.
 					return updateDashboard(dbd,tenantId);
 				} else {
-					// regenerated id and name and then insert new row
+					// regenerated id and name/desc and then insert new row
 					dbd.setDashboardId(null);
-					dbd.setName(generateNewName(dsf, tenantId, sameName.getName()));					
+					String latestExistingName = dsf.getDashboardNameWithMaxSuffixNumber(originalDashboard.getName(), tenantId, "name");
+					String generatedName = generateNewName(originalDashboard.getName(), latestExistingName);
+					dbd.setName(generatedName);
+					String latestExistingDesc = dsf.getDashboardNameWithMaxSuffixNumber(originalDashboard.getDescription(), tenantId, "description");
+					String generatedDesc = generateNewName(originalDashboard.getDescription(), latestExistingDesc);
+					dbd.setDescription(generatedDesc);
 					return saveNewDashboard(dbd, tenantId);
 				}
 			} else {
 				// re-generate dashboard ID and then directly insert
+				 LOGGER.info("Original dashboard is not existing, will create a new dashboard...");
 				 dbd.setDashboardId(null);
 				 return saveNewDashboard(dbd, tenantId);
 			}
