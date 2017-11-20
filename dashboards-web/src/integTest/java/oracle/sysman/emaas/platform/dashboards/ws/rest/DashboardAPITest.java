@@ -22,6 +22,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.model.ParameterModel;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.SearchModel;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -42,7 +43,6 @@ import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashboard;
-import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.ssfDatautil.SSFDataUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
@@ -104,7 +104,7 @@ public class DashboardAPITest
 	}
 
 	@Test
-	public void testCreateDashboardWithDashboardException(@SuppressWarnings("unused") @Mocked final JsonUtil jsonUtil,@Mocked final DependencyStatus anyDependencyStatus)
+	public void testCreateDashboardWithDashboardException(@SuppressWarnings("unused") @Mocked final JsonUtil jsonUtil, @Mocked final DependencyStatus anyDependencyStatus)
 			throws IOException, DashboardException
 	{
 		new Expectations() {

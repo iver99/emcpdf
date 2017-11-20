@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import com.sun.jersey.core.util.Base64;
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.*;
