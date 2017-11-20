@@ -250,14 +250,14 @@ public class RestClient {
                 LOGGER.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
                 itrLogger.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
                 LOGGER.error(e);
+                throw e;
             }
         }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
             LOGGER.error("Error occurred for [POST] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
             itrLogger.error("Error occurred for [POST] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
             LOGGER.error(e);
+            throw e;
         }
-
-        return null;
     }
 
     public void setHeader(String header, Object value) {
