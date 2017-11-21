@@ -108,6 +108,20 @@ public class DashboardServiceFacade
         return null;
 	}
 
+	public List<EmsDashboard> getEmsDashboardsByName(String name){
+		String jpql = "select d from EmsDashboard d where d.name = :name and (d.owner = :owner or d.isSystem = 1 or d.sharePublic = 1) and d.deleted = 0";
+		TypedQuery<EmsDashboard> query = em.createQuery(jpql,EmsDashboard.class);
+		List<EmsDashboard> list = query.setParameter("name",StringEscapeUtils.escapeHtml4(name))
+										.setParameter("owner", UserContext.getCurrentUser()).getResultList();
+		if(list != null && !list.isEmpty()){
+			return list;
+		}
+		return null;
+	}
+
+	/*
+	Warning: The name is no longer the primary key of the Dashboard, be careful to use this api
+	* */
 	@SuppressWarnings("unchecked")
 	public EmsDashboard getEmsDashboardByName(String name)
 	{
