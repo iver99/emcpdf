@@ -512,7 +512,7 @@ public class DashboardAPI extends APIBase
 			logkeyHeaders("queryDashboardsByName()", userTenant, tenantIdParam);
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
-			List<Dashboard> dbList = dm.getDashboardsByName("name",tenantId);
+			List<Dashboard> dbList = dm.getDashboardsByName(name,tenantId);
 			if(dbList == null)
 				throw new DashboardNotFoundException();
 			return Response.ok(getJsonUtil().toJson(dbList)).build();
