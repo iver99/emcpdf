@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WidgetSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1240;
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.CommonUIUtils;
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.UIControls;
@@ -91,7 +92,7 @@ public class BrandingBar_TestDashboardPage extends LoginAndLogout
 
 	//Testcase for adding widget using widgetselector
 	@Test
-	public void testWidgetSelector()
+	public void testWidgetSelectorInDialog()
 	{
 		String WidgetName_1 = "Database Errors Trend";
 
@@ -104,12 +105,37 @@ public class BrandingBar_TestDashboardPage extends LoginAndLogout
 
 		//click on Add button
 		webd.getLogger().info("Click the Add icon");
-		webd.waitForElementEnabled("id=" + DashBoardPageId.WIDGETSELECTOR_ADDBUTTONID);
-		webd.click("id=" + DashBoardPageId.WIDGETSELECTOR_ADDBUTTONID);
+		webd.waitForElementEnabled("id=" + DashBoardPageId_1240.WIDGETSELECTOR_ADDBUTTONIDFORDIALOG);
+		webd.click("id=" + DashBoardPageId_1240.WIDGETSELECTOR_ADDBUTTONIDFORDIALOG);
 
 		//Adding widgets using widgetSElector dialog
 		webd.getLogger().info("satrt widget selector dialog box opens");
 		webd.waitForElementPresent("css=div[id^='ojDialogWrapper-'].oj-dialog");
+
+		webd.getLogger().info("Add widget");
+		WidgetSelectorUtil.addWidget(webd, WidgetName_1);
+	}
+
+
+	@Test
+	public void testWidgetSelectorInPopUp(){
+		String WidgetName_1 = "Database Errors Trend";
+
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName(), "");
+		webd.getLogger().info("Start the test case: testWidgetSelector");
+
+		CommonUIUtils.verifyPageContent(webd, sAppName);
+
+		webd.waitForServer();
+
+		//click on Add button
+		webd.getLogger().info("Click the Add icon");
+		webd.waitForElementEnabled("id=" + DashBoardPageId_1240.WIDGETSELECTOR_ADDBUTTONIDFORPOPUP);
+		webd.click("id=" + DashBoardPageId_1240.WIDGETSELECTOR_ADDBUTTONIDFORPOPUP);
+
+		//Adding widgets using widgetSElector dialog
+		webd.getLogger().info("satrt widget selector dialog box opens");
+		webd.waitForElementPresent("css=button[id^='widget-selector-search-button_']");
 
 		webd.getLogger().info("Add widget");
 		WidgetSelectorUtil.addWidget(webd, WidgetName_1);

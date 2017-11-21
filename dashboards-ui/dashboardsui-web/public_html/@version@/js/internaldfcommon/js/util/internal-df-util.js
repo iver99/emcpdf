@@ -8,10 +8,11 @@ define(['knockout',
         'uifwk/js/util/df-util',
         'uifwk/js/util/usertenant-util',
         'uifwk/js/util/ajax-util',
-        'uifwk/js/util/message-util'
+        'uifwk/js/util/message-util',
+        'uifwk/js/util/preference-util'
     ],
 
-    function(ko, $, dfumodel, userTenantUtilModel, ajaxUtilModel, msgUtilModel)
+    function(ko, $, dfumodel, userTenantUtilModel, ajaxUtilModel, msgUtilModel, prefUtilModel)
     {
         function InternalDashboardFrameworkUtility() {
             var self = this;
@@ -27,6 +28,7 @@ define(['knockout',
             var userName = getUserName(userTenant);
             var tenantName = userTenant && userTenant.tenant ? userTenant.tenant : null;
             var dfu = new dfumodel(userName, tenantName);
+            var prefUtil = new prefUtilModel(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
             var isDevMode=dfu.isDevMode();
             var devData = dfu.getDevData();
             if (isDevMode){
@@ -111,11 +113,32 @@ define(['knockout',
             };
 
             self.getWidgetsUrl = function(){
-                if (self.isDevMode()){
-                    return self.buildFullUrl(self.getDevData().ssfRestApiEndPoint,"/widgets");
-                }else{
-                    return '/sso.static/savedsearch.widgets';
-                }
+                var dfdgetWidgetsUrl = $.Deferred();
+
+                var federationEnabled = Builder.isRunningInFederationMode();
+                var federationEnabledUrl = "";
+                var showFederationInHM = prefUtil.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
+                showFederationInHM.done(function(showInUI) {
+                    if (showInUI && showInUI.toUpperCase() === "TRUE") {
+                        federationEnabledUrl = "?federationFeatureShowInUi=true";
+                        if (federationEnabled) {
+                            federationEnabledUrl += "&federationEnabled=true";
+                        }
+                    }
+                    if (self.isDevMode()){
+                        dfdgetWidgetsUrl.resolve(self.buildFullUrl(self.getDevData().ssfRestApiEndPoint,"/widgets" + federationEnabledUrl));
+                    }else{
+                        dfdgetWidgetsUrl.resolve('/sso.static/savedsearch.widgets' + federationEnabledUrl);
+                    }
+                })
+                .fail(function(){
+                    if (self.isDevMode()){
+                        dfdgetWidgetsUrl.resolve(self.buildFullUrl(self.getDevData().ssfRestApiEndPoint,"/widgets" + federationEnabledUrl));
+                    }else{
+                        dfdgetWidgetsUrl.resolve('/sso.static/savedsearch.widgets' + federationEnabledUrl);
+                    }
+                });
+                return dfdgetWidgetsUrl;
             };
             self.getPreferencesUrl=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
@@ -124,6 +147,9 @@ define(['knockout',
                 }else{
                     return '/sso.static/dashboards.preferences';
                 }
+            };
+            self.getHMItemShowPreferenceSync=function(key) {
+                return prefUtil.getHMItemShowPreferenceSync(key);
             };
 
             self.getSubscribedappsUrl=function(){

@@ -14,7 +14,7 @@ import org.testng.annotations.Test;
 public class EmsDashboardTileTest { 
     Date now = new Date();
     private EmsDashboard emsDashboard = new EmsDashboard(now,BigInteger.valueOf(10L),BigInteger.valueOf(10L),"elephant",10,10,10,10,10,10, now,
-            "elephant","elephant","elephant","elephant",10,10,1,"{}");
+            "elephant","elephant","elephant","elephant",10,10,1,"{}", 0);
 
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(
             now,
@@ -48,7 +48,8 @@ public class EmsDashboardTileTest {
             10,
             BigInteger.valueOf(10L),
             1,
-            new Date());
+            new Date(),
+			0);
 
     private EmsDashboardTileParams emsDashboardTileParams = new
             EmsDashboardTileParams(
@@ -270,6 +271,12 @@ public class EmsDashboardTileTest {
     public void testGetWidth() {
         emsDashboardTile.setWidth(10);
         Assert.assertEquals(emsDashboardTile.getWidth(),new Integer(10));
+    }
+
+    @Test
+    public void testGetFederationSupported() {
+        emsDashboardTile.setFederationSupported(1);
+        Assert.assertEquals(emsDashboardTile.getFederationSupported(),new Integer(1));
     }
 
     @Test

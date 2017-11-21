@@ -347,15 +347,15 @@ public class DataManager
 	{
 		String sql = "SELECT  TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID,  NAME, TYPE, DESCRIPTION, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY,"
 				+ " OWNER, IS_SYSTEM, APPLICATION_TYPE, ENABLE_TIME_RANGE, SCREEN_SHOT, TO_CHAR(DELETED) AS DELETED, TENANT_ID, ENABLE_REFRESH, "
-				+ "SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS, SHOW_INHOME FROM EMS_DASHBOARD where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
+				+ "SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS, SHOW_INHOME, FEDERATION_SUPPORTED FROM EMS_DASHBOARD where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and  is_system <> 1";
 		String sqlByTenant = "SELECT  TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID,  NAME, TYPE, DESCRIPTION, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY,"
 				+ " OWNER, IS_SYSTEM, APPLICATION_TYPE, ENABLE_TIME_RANGE, SCREEN_SHOT, TO_CHAR(DELETED) AS DELETED, TENANT_ID, ENABLE_REFRESH, "
-				+ "SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS, SHOW_INHOME FROM EMS_DASHBOARD where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
+				+ "SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS, SHOW_INHOME, FEDERATION_SUPPORTED FROM EMS_DASHBOARD where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and  is_system <> 1 and tenant_Id = ?";
 		String sqlByDate = "SELECT  TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID,  NAME, TYPE, DESCRIPTION, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY,"
 				+ " OWNER, IS_SYSTEM, APPLICATION_TYPE, ENABLE_TIME_RANGE, SCREEN_SHOT, TO_CHAR(DELETED) AS DELETED, TENANT_ID, ENABLE_REFRESH, "
-				+ "SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS, SHOW_INHOME FROM EMS_DASHBOARD "
+				+ "SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS, SHOW_INHOME, FEDERATION_SUPPORTED FROM EMS_DASHBOARD "
 				+ "WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and  is_system <> 1";
 		return getDBTableRows(em, type, lastComparisonDate, maxComparedDate, tenant, sql, sqlByTenant, sqlByDate);
@@ -391,17 +391,17 @@ public class DataManager
 		String sql = "SELECT TILE_ID, TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY, OWNER, TITLE, HEIGHT, WIDTH, IS_MAXIMIZED, POSITION, TENANT_ID,"
 				+ "WIDGET_UNIQUE_ID, WIDGET_NAME, WIDGET_DESCRIPTION, WIDGET_GROUP_NAME, WIDGET_ICON, WIDGET_HISTOGRAM, WIDGET_OWNER, "
 				+ "WIDGET_CREATION_TIME, WIDGET_SOURCE, WIDGET_KOC_NAME, WIDGET_VIEWMODE, WIDGET_TEMPLATE, PROVIDER_NAME, PROVIDER_VERSION, PROVIDER_ASSET_ROOT, "
-				+ "TILE_ROW, TILE_COLUMN, TYPE, WIDGET_SUPPORT_TIME_CONTROL, WIDGET_LINKED_DASHBOARD, WIDGET_DELETED, WIDGET_DELETION_DATE, DELETED FROM EMS_DASHBOARD_TILE where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
+				+ "TILE_ROW, TILE_COLUMN, TYPE, WIDGET_SUPPORT_TIME_CONTROL, WIDGET_LINKED_DASHBOARD, WIDGET_DELETED, WIDGET_DELETION_DATE, DELETED, FEDERATION_SUPPORTED FROM EMS_DASHBOARD_TILE where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and dashboard_id in (select dashboard_id from ems_dashboard where is_system <>1)";
 		String sqlByTenant = "SELECT TILE_ID, TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY, OWNER, TITLE, HEIGHT, WIDTH, IS_MAXIMIZED, POSITION, TENANT_ID,"
 				+ "WIDGET_UNIQUE_ID, WIDGET_NAME, WIDGET_DESCRIPTION, WIDGET_GROUP_NAME, WIDGET_ICON, WIDGET_HISTOGRAM, WIDGET_OWNER, "
 				+ "WIDGET_CREATION_TIME, WIDGET_SOURCE, WIDGET_KOC_NAME, WIDGET_VIEWMODE, WIDGET_TEMPLATE, PROVIDER_NAME, PROVIDER_VERSION, PROVIDER_ASSET_ROOT, "
-				+ "TILE_ROW, TILE_COLUMN, TYPE, WIDGET_SUPPORT_TIME_CONTROL, WIDGET_LINKED_DASHBOARD, WIDGET_DELETED, WIDGET_DELETION_DATE, DELETED FROM EMS_DASHBOARD_TILE where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
+				+ "TILE_ROW, TILE_COLUMN, TYPE, WIDGET_SUPPORT_TIME_CONTROL, WIDGET_LINKED_DASHBOARD, WIDGET_DELETED, WIDGET_DELETION_DATE, DELETED, FEDERATION_SUPPORTED FROM EMS_DASHBOARD_TILE where LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and dashboard_id in (select dashboard_id from ems_dashboard where is_system <>1) and tenant_Id = ?";
 		String sqlByDate = "SELECT TILE_ID, TO_CHAR(DASHBOARD_ID) AS DASHBOARD_ID, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY, OWNER, TITLE, HEIGHT, WIDTH, IS_MAXIMIZED, POSITION, TENANT_ID,"
 				+ "WIDGET_UNIQUE_ID, WIDGET_NAME, WIDGET_DESCRIPTION, WIDGET_GROUP_NAME, WIDGET_ICON, WIDGET_HISTOGRAM, WIDGET_OWNER, "
 				+ "WIDGET_CREATION_TIME, WIDGET_SOURCE, WIDGET_KOC_NAME, WIDGET_VIEWMODE, WIDGET_TEMPLATE, PROVIDER_NAME, PROVIDER_VERSION, PROVIDER_ASSET_ROOT, "
-				+ "TILE_ROW, TILE_COLUMN, TYPE, WIDGET_SUPPORT_TIME_CONTROL, WIDGET_LINKED_DASHBOARD, WIDGET_DELETED, WIDGET_DELETION_DATE, DELETED FROM EMS_DASHBOARD_TILE "
+				+ "TILE_ROW, TILE_COLUMN, TYPE, WIDGET_SUPPORT_TIME_CONTROL, WIDGET_LINKED_DASHBOARD, WIDGET_DELETED, WIDGET_DELETION_DATE, DELETED, FEDERATION_SUPPORTED FROM EMS_DASHBOARD_TILE "
 				+ "WHERE LAST_MODIFICATION_DATE > to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') and LAST_MODIFICATION_DATE < to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff')"
 				+ " and dashboard_id in (select dashboard_id from ems_dashboard where is_system <>1)";
 		return getDBTableRows(em, type, lastComparisonDate, maxComparedDate, tenant, sql, sqlByTenant, sqlByDate);
@@ -517,10 +517,10 @@ public class DataManager
 
 	public int syncDashboardTableRow(EntityManager entityManager,BigInteger dashboardId, String name, Long type, String description, String creationDate, String lastModificationDate, String lastModifiedBy, String owner,
 									 Integer isSystem, Integer applicationType, Integer enableTimeRange, String screenShot, BigInteger deleted, Long tenantId, Integer enableRefresh, Integer sharePublic,
-									 Integer enableEntityFilter, Integer enableDescription, String extendedOptions, Integer showInHome) throws SyncException {
+									 Integer enableEntityFilter, Integer enableDescription, String extendedOptions, Integer showInHome, Integer federationSupported) throws SyncException {
 		logger.info("Calling the DataManager.syncDashboardTableRow");
 		//these check are db constraint
-		if (checkDbDashboardConstraint(dashboardId, name, type, creationDate, owner, isSystem, enableTimeRange, deleted, tenantId, enableRefresh, sharePublic, enableEntityFilter, enableDescription, showInHome))
+		if (checkDbDashboardConstraint(dashboardId, name, type, creationDate, owner, isSystem, enableTimeRange, deleted, tenantId, enableRefresh, sharePublic, enableEntityFilter, enableDescription, showInHome, federationSupported))
 			return 0;
 
 
@@ -550,18 +550,22 @@ public class DataManager
 				}
 				return updateDashboard(entityManager, dashboardId, name, type, description, creationDate, lastModificationDate, lastModifiedBy, owner,
 						isSystem, applicationType, enableTimeRange, screenShot, deleted, tenantId, enableRefresh, sharePublic,
-						enableEntityFilter, enableDescription, extendedOptions, showInHome);
+						enableEntityFilter, enableDescription, extendedOptions, showInHome, federationSupported);
 			}
 			logger.info("Dashboard with id {} not exist insert now", dashboardId);
 			return insertDashboard(entityManager, dashboardId, name, type, description, creationDate, lastModificationDate, lastModifiedBy, owner,
-					isSystem, applicationType, enableTimeRange, screenShot, deleted, tenantId, enableRefresh, sharePublic, enableEntityFilter, enableDescription, extendedOptions, showInHome);
+					isSystem, applicationType, enableTimeRange, screenShot, deleted, tenantId, enableRefresh, sharePublic, enableEntityFilter,
+					enableDescription, extendedOptions, showInHome, federationSupported);
 		} catch (Exception e) {
 			logger.error(e);
 			throw new SyncException("Error occur when sync dashboard set table..");
 		}
 	}
 
-	private boolean checkDbDashboardConstraint(BigInteger dashboardId, String name, Long type, String creationDate, String owner, Integer isSystem, Integer enableTimeRange, BigInteger deleted, Long tenantId, Integer enableRefresh, Integer sharePublic, Integer enableEntityFilter, Integer enableDescription, Integer showInHome) {
+	private boolean checkDbDashboardConstraint(BigInteger dashboardId, String name, Long type, String creationDate, String owner,
+						Integer isSystem, Integer enableTimeRange, BigInteger deleted, Long tenantId, Integer enableRefresh,
+						Integer sharePublic, Integer enableEntityFilter, Integer enableDescription, Integer showInHome,
+						Integer federationSupported) {
 		if (dashboardId == null) {
 			logger.warn("dashboard id cannot be null!");
 			return true;
@@ -618,6 +622,10 @@ public class DataManager
 			logger.warn("showInHome cannot be null!");
 			return true;
 		}
+		if (federationSupported == null) {
+			logger.warn("federationSupported cannot be null!");
+			return true;
+		}
 		return false;
 	}
 
@@ -625,10 +633,10 @@ public class DataManager
 								 Long width, Integer isMaximized, Long position, Long tenantId, String widgetUniqueId, String widgetName, String widgetDescription, String widgetGroupName,
 								 String widgetIcon, String widgetHistogram, String widgetOwner, String widgetCreationTime, Long widgetSource, String widgetKocName, String widgetViewmode, String widgetTemplate,
 								 String providerName, String providerVersion, String providerAssetRoot, Long tileRow, Long tileColumn, Long type, Integer widgetSupportTimeControl, 
-								 Long widgetLinkedDashboard, Integer widgetDeleted, String widgetDeletionDate, Integer deleted) throws SyncException {
+								 Long widgetLinkedDashboard, Integer widgetDeleted, String widgetDeletionDate, Integer deleted, Integer federationSupported) throws SyncException {
 		logger.info("Calling the DataManager,syncDashboardTile");
 		//db constraint check
-		if (checkDbDashboardTileConstraint(dashboardId, creationDate, owner, title, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate, widgetSupportTimeControl, widgetDeleted, deleted))
+		if (checkDbDashboardTileConstraint(dashboardId, creationDate, owner, title, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate, widgetSupportTimeControl, widgetDeleted, deleted, federationSupported))
 			return 0;
 		if (!entityManager.getTransaction().isActive()) {
 			entityManager.getTransaction().begin();
@@ -659,21 +667,24 @@ public class DataManager
 						width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 						widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
 						providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard,
-						widgetDeleted,widgetDeletionDate,  deleted);
+						widgetDeleted,widgetDeletionDate,  deleted, federationSupported);
 			}
 			logger.info("Tile with id {} not exist insert now", tileId);
 			return insertDashboardTile(entityManager,tileId, dashboardId, creationDate, lastModificationDate, lastModifiedBy, owner, title, height,
 					width, isMaximized, position, tenantId, widgetUniqueId, widgetName, widgetDescription, widgetGroupName,
 					widgetIcon, widgetHistogram, widgetOwner, widgetCreationTime, widgetSource, widgetKocName, widgetViewmode, widgetTemplate,
 					providerName, providerVersion, providerAssetRoot, tileRow, tileColumn, type, widgetSupportTimeControl, widgetLinkedDashboard,
-					widgetDeleted,widgetDeletionDate,  deleted);
+					widgetDeleted,widgetDeletionDate,  deleted, federationSupported);
 		} catch (Exception e) {
 			logger.error(e);
 			throw new SyncException("Error occur when sync dashboard tile table..");
 		}
 	}
 
-	private boolean checkDbDashboardTileConstraint(BigInteger dashboardId, String creationDate, String owner, String title, Integer isMaximized, Long position, Long tenantId, String widgetUniqueId, String widgetName, String widgetOwner, String widgetCreationTime, Long widgetSource, String widgetKocName, String widgetViewmode, String widgetTemplate, Integer widgetSupportTimeControl, Integer widgetDeleted, Integer deleted) {
+	private boolean checkDbDashboardTileConstraint(BigInteger dashboardId, String creationDate, String owner, String title,
+				Integer isMaximized, Long position, Long tenantId, String widgetUniqueId, String widgetName, String widgetOwner,
+				String widgetCreationTime, Long widgetSource, String widgetKocName, String widgetViewmode, String widgetTemplate,
+				Integer widgetSupportTimeControl, Integer widgetDeleted, Integer deleted, Integer federationSupported) {
 		if (dashboardId == null) {
 			logger.warn("DASHBOARD_ID is null!");
 			return true;
@@ -744,6 +755,10 @@ public class DataManager
 		}
 		if (deleted == null) {
 			logger.warn("deleted is null!");
+			return true;
+		}
+		if (federationSupported == null) {
+			logger.warn("federationSupported is null!");
 			return true;
 		}
 		return false;
@@ -1026,10 +1041,10 @@ public class DataManager
 
 	private int insertDashboard(EntityManager entityManager, BigInteger dashboardId, String name, Long type, String description, String creationDate, String lastModificationDate, String lastModifiedBy, String owner,
 								Integer isSystem, Integer applicationType, Integer enableTimeRange, String screenShot, BigInteger deleted, Long tenantId, Integer enableRefresh, Integer sharePublic,
-								Integer enableEntityFilter, Integer enableDescription, String extendedOptions, Integer showInHome) {
+								Integer enableEntityFilter, Integer enableDescription, String extendedOptions, Integer showInHome, Integer federationSupported) {
 		logger.info("Calling the Datamanager.insertDashboard");
 		int result;
-		String sql = "INSERT INTO EMS_DASHBOARD(DASHBOARD_ID,  NAME, TYPE, DESCRIPTION, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY, OWNER, IS_SYSTEM, APPLICATION_TYPE, ENABLE_TIME_RANGE, SCREEN_SHOT, DELETED, TENANT_ID, ENABLE_REFRESH, SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS, SHOW_INHOME)values(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') ,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') ,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO EMS_DASHBOARD(DASHBOARD_ID,  NAME, TYPE, DESCRIPTION, CREATION_DATE, LAST_MODIFICATION_DATE, LAST_MODIFIED_BY, OWNER, IS_SYSTEM, APPLICATION_TYPE, ENABLE_TIME_RANGE, SCREEN_SHOT, DELETED, TENANT_ID, ENABLE_REFRESH, SHARE_PUBLIC, ENABLE_ENTITY_FILTER, ENABLE_DESCRIPTION, EXTENDED_OPTIONS, SHOW_INHOME, FEDERATION_SUPPORTED)values(?,?,?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') ,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') ,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, dashboardId)
 				.setParameter(2, name)
@@ -1050,7 +1065,8 @@ public class DataManager
 				.setParameter(17, enableEntityFilter)
 				.setParameter(18, enableDescription)
 				.setParameter(19, extendedOptions)
-				.setParameter(20, showInHome);
+				.setParameter(20, showInHome)
+				.setParameter(21, federationSupported);
 		result = query.executeUpdate();
 		return result;
 	}
@@ -1059,7 +1075,7 @@ public class DataManager
 									Long width, Integer isMaximized, Long position, Long tenantId, String widgetUniqueId, String widgetName, String widgetDescription, String widgetGroupName,
 									String widgetIcon, String widgetHistogram, String widgetOwner, String widgetCreationTime, Long widgetSource, String widgetKocName, String widgetViewmode, String widgetTemplate,
 									String providerName, String providerVersion, String providerAssetRoot, Long tileRow, Long tileColumn, Long type, Integer widgetSupportTimeControl, Long widgetLinkedDashboard
-									,Integer widgetDeleted, String widgetDeletionDate, Integer deleted) {
+									,Integer widgetDeleted, String widgetDeletionDate, Integer deleted, Integer federationSupported) {
 		logger.info("Calling DataManager.insertDashboardTiles");
 		int result;
 		String sql = "INSERT INTO EMS_DASHBOARD_TILE(TILE_ID, DASHBOARD_ID, CREATION_DATE, LAST_MODIFICATION_DATE,"
@@ -1067,14 +1083,15 @@ public class DataManager
 				+ "WIDGET_NAME, WIDGET_DESCRIPTION, WIDGET_GROUP_NAME, WIDGET_ICON, WIDGET_HISTOGRAM, WIDGET_OWNER, "
 				+ "WIDGET_CREATION_TIME, WIDGET_SOURCE, WIDGET_KOC_NAME, WIDGET_VIEWMODE, WIDGET_TEMPLATE, PROVIDER_NAME, "
 				+ "PROVIDER_VERSION, PROVIDER_ASSET_ROOT, TILE_ROW, TILE_COLUMN, TYPE, WIDGET_SUPPORT_TIME_CONTROL,"
-				+ " WIDGET_LINKED_DASHBOARD, WIDGET_DELETED, WIDGET_DELETION_DATE, DELETED)"
+				+ " WIDGET_LINKED_DASHBOARD, WIDGET_DELETED, WIDGET_DELETION_DATE, DELETED, FEDERATION_SUPPORTED)"
 				+ "values(?,?,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') ,to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') "
 				+ ",?,?,?,?,?,"
 				+ "?,?,?,?,?,"
 				+ "?,?,?,?,?,"
 				+ "?,?,?,?,?,"
 				+ "?,?,?,?,?,"
-				+ "?,?,?,?,?,?)";
+				+ "?,?,?,?,?,"
+				+ "?,?)";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, tileId).setParameter(2, dashboardId)
 				.setParameter(3, creationDate).setParameter(4, lastModificationDate)
@@ -1094,7 +1111,8 @@ public class DataManager
 				.setParameter(31, widgetSupportTimeControl).setParameter(32, widgetLinkedDashboard)
 				.setParameter(33, widgetDeleted)
 				.setParameter(34, widgetDeletionDate)
-				.setParameter(35, deleted);
+				.setParameter(35, deleted)
+				.setParameter(36, federationSupported);
 		result = query.executeUpdate();
 		return result;
 	}
@@ -1182,13 +1200,13 @@ public class DataManager
 
 	private int updateDashboard(EntityManager entityManager, BigInteger dashboardId, String name, Long type, String description, String creationDate, String lastModificationDate, String lastModifiedBy, String owner,
 								Integer isSystem, Integer applicationType, Integer enableTimeRange, String screenShot, BigInteger deleted, Long tenantId, Integer enableRefresh, Integer sharePublic,
-								Integer enableEntityFilter, Integer enableDescription, String extendedOptions, Integer showInHome) {
+								Integer enableEntityFilter, Integer enableDescription, String extendedOptions, Integer showInHome, Integer federationSupported) {
 		logger.info("Calling the Datamanager.updateDashboard");
 		int result;
 		String sql = "UPDATE EMS_DASHBOARD SET  NAME=?, TYPE=?, DESCRIPTION=?, CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'),"
 				+ " LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff'), LAST_MODIFIED_BY=?, OWNER=?, IS_SYSTEM=?, "
 				+ "APPLICATION_TYPE=?, ENABLE_TIME_RANGE=?, SCREEN_SHOT=?, DELETED=?, ENABLE_REFRESH=?, SHARE_PUBLIC=?, ENABLE_ENTITY_FILTER=?,"
-				+ " ENABLE_DESCRIPTION=?, EXTENDED_OPTIONS=?, SHOW_INHOME=? WHERE DASHBOARD_ID=? AND TENANT_ID=?";
+				+ " ENABLE_DESCRIPTION=?, EXTENDED_OPTIONS=?, SHOW_INHOME=?, FEDERATION_SUPPORTED=? WHERE DASHBOARD_ID=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, name)
 				.setParameter(2, type)
@@ -1208,8 +1226,9 @@ public class DataManager
 				.setParameter(16, enableDescription)
 				.setParameter(17, extendedOptions)			
 				.setParameter(18, showInHome)
-				.setParameter(19, dashboardId)
-				.setParameter(20, tenantId);
+				.setParameter(19, federationSupported)
+				.setParameter(20, dashboardId)
+				.setParameter(21, tenantId);
 		result = query.executeUpdate();
 		return result;
 	}
@@ -1218,14 +1237,14 @@ public class DataManager
                                     Long width, Integer isMaximized, Long position, Long tenantId, String widgetUniqueId, String widgetName, String widgetDescription, String widgetGroupName,
                                     String widgetIcon, String widgetHistogram, String widgetOwner, String widgetCreationTime, Long widgetSource, String widgetKocName, String widgetViewmode, String widgetTemplate,
                                     String providerName, String providerVersion, String providerAssetRoot, Long tileRow, Long tileColumn, Long type, Integer widgetSupportTimeControl, Long widgetLinkedDashboard,
-                                    Integer widgetDeleted, String widgetDeletionDate, Integer deleted) {
+                                    Integer widgetDeleted, String widgetDeletionDate, Integer deleted, Integer federationSupported) {
 		logger.info("Calling Datamanager.updateDashboardTiles");
 		int result;
 		String sql = "UPDATE EMS_DASHBOARD_TILE SET CREATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') , LAST_MODIFICATION_DATE=to_timestamp(?,'yyyy-mm-dd hh24:mi:ss.ff') , "
 				+ "LAST_MODIFIED_BY=?, OWNER=?, TITLE=?, HEIGHT=?, WIDTH=?, IS_MAXIMIZED=?, POSITION=?, WIDGET_UNIQUE_ID=?, WIDGET_NAME=?, WIDGET_DESCRIPTION=?, WIDGET_GROUP_NAME=?,"
 				+ " WIDGET_ICON=?, WIDGET_HISTOGRAM=?, WIDGET_OWNER=?, WIDGET_CREATION_TIME=?, WIDGET_SOURCE=?, WIDGET_KOC_NAME=?, WIDGET_VIEWMODE=?, WIDGET_TEMPLATE=?, "
 				+ "PROVIDER_NAME=?, PROVIDER_VERSION=?, PROVIDER_ASSET_ROOT=?, TILE_ROW=?, TILE_COLUMN=?, TYPE=?, WIDGET_SUPPORT_TIME_CONTROL=?, WIDGET_LINKED_DASHBOARD=?,"
-				+ "WIDGET_DELETED=?,WIDGET_DELETION_DATE=?,DELETED=? "
+				+ "WIDGET_DELETED=?,WIDGET_DELETION_DATE=?,DELETED=?,FEDERATION_SUPPORTED=? "
 				+ "WHERE TILE_ID=? AND DASHBOARD_ID=? AND TENANT_ID=?";
 		Query query = entityManager.createNativeQuery(sql)
 				.setParameter(1, creationDate)
@@ -1260,9 +1279,10 @@ public class DataManager
 				.setParameter(30, widgetDeleted)
 				.setParameter(31, widgetDeletionDate)
 				.setParameter(32, deleted)
-				.setParameter(33, tileId)
-				.setParameter(34, dashboardId)
-				.setParameter(35, tenantId);
+				.setParameter(33, federationSupported)
+				.setParameter(34, tileId)
+				.setParameter(35, dashboardId)
+				.setParameter(36, tenantId);
 		result = query.executeUpdate();
 		return result;
 	}

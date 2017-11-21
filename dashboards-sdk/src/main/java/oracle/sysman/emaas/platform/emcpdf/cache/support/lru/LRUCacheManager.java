@@ -76,9 +76,12 @@ public class LRUCacheManager extends AbstractCacheManager{
         SAXParserFactory factory = SAXParserFactory.newInstance();
         String fileName = configFileName == null ? DEFAULT_CONIFIGURATION_FILE_NAME : configFileName;
         LOGGER.info("Detected cache Configuration file name is {}", configFileName);
+        InputStream f = null;
         try {
+            // forbid DTD to avoid XXE(XML External Entity Injection)
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
             SAXParser parser = factory.newSAXParser();
-            InputStream f = LRUCacheManager.class.getClassLoader().getResourceAsStream(fileName);
+            f = LRUCacheManager.class.getClassLoader().getResourceAsStream(fileName);
             CacheSAXParser dh = new CacheSAXParser();
             parser.parse(f, dh);
         } catch (ParserConfigurationException e) {
@@ -87,6 +90,14 @@ public class LRUCacheManager extends AbstractCacheManager{
             LOGGER.error(e);
         } catch (IOException e) {
             LOGGER.error(e);
+        } finally {
+            if (f != null) {
+                try {
+                    f.close();
+                } catch (IOException e) {
+                    LOGGER.error("parseCacheConfig - Fail to close the InputStream : {}", e.getMessage());
+                }
+            }
         }
     }
 

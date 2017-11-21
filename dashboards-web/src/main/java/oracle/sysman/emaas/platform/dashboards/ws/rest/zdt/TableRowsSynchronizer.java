@@ -98,7 +98,8 @@ public class TableRowsSynchronizer {
                     , dashboardRowEntity.getCreationDate(), dashboardRowEntity.getLastModificationDate(), dashboardRowEntity.getLastModifiedBy(), dashboardRowEntity.getOwner()
                     , dashboardRowEntity.getIsSystem(), dashboardRowEntity.getApplicationType(), dashboardRowEntity.getEnableTimeRange(), dashboardRowEntity.getScreenShot()
                     , new BigInteger(dashboardRowEntity.getDeleted()), dashboardRowEntity.getTenantId(), dashboardRowEntity.getEnableRefresh(), dashboardRowEntity.getSharePublic()
-                    , dashboardRowEntity.getEnableEntityFilter(), dashboardRowEntity.getEnableDescription(), dashboardRowEntity.getExtendedOptions(), dashboardRowEntity.getShowInHome());
+                    , dashboardRowEntity.getEnableEntityFilter(), dashboardRowEntity.getEnableDescription(), dashboardRowEntity.getExtendedOptions(), dashboardRowEntity.getShowInHome()
+					, dashboardRowEntity.getFederationSupported());
         }
         return result;
     }
@@ -136,7 +137,8 @@ public class TableRowsSynchronizer {
                     , dashboardTileRowEntity.getWidgetCreationTime(), dashboardTileRowEntity.getWidgetSource(), dashboardTileRowEntity.getWidgetKocName(), dashboardTileRowEntity.getWidgetViewmode()
                     , dashboardTileRowEntity.getWidgetTemplate(), dashboardTileRowEntity.getProviderName(), dashboardTileRowEntity.getProviderVersion(), dashboardTileRowEntity.getProviderAssetRoot()
                     , dashboardTileRowEntity.getTileRow(), dashboardTileRowEntity.getTileColumn(), dashboardTileRowEntity.getType(), dashboardTileRowEntity.getWidgetSupportTimeControl()
-                    , dashboardTileRowEntity.getWidgetLinkedDashboard(),  dashboardTileRowEntity.getWidgetDeleted(),dashboardTileRowEntity.getWidgetDeletionDate(),dashboardTileRowEntity.getDeleted());
+                    , dashboardTileRowEntity.getWidgetLinkedDashboard(),  dashboardTileRowEntity.getWidgetDeleted(),dashboardTileRowEntity.getWidgetDeletionDate(),dashboardTileRowEntity.getDeleted()
+					, dashboardTileRowEntity.getFederationSupported());
         }
         return result;
     }
