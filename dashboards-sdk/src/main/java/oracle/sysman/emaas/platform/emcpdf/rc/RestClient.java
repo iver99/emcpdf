@@ -224,6 +224,9 @@ public class RestClient {
                 Object key = entry.getKey();
                 Object value = entry.getValue();
                 if(key == null || value == null){
+                    if (HttpHeaders.AUTHORIZATION.equals(key)) {
+                        continue;
+                    }
                     builder.header(key == null? null : key.toString(), value == null ? null : value.toString());
                     LOGGER.warn("Null header name or header value found!");
                     itrLogger.warn("Null header name or header value found!");

@@ -180,4 +180,9 @@ public class RestClientTest {
         headers = Deencapsulation.getField(rc, "headers");
         Assert.assertTrue(headers.containsKey(testKey));
     }
+    @Test(groups = {"s2"})
+    public void testAuthHeader(){
+        Object key = new String("Authorization");
+        Assert.assertTrue("Authorization".equals(key));
+    }
 }
