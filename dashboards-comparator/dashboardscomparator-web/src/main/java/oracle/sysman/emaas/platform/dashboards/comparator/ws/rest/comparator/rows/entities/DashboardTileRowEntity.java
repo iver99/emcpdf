@@ -50,6 +50,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * WIDGET_DELETION_DATE
  * TILE_ID
  * DELETED
+ * FEDERATION_SUPPORTED
  */
 public class DashboardTileRowEntity implements RowEntity
 {
@@ -157,7 +158,9 @@ public class DashboardTileRowEntity implements RowEntity
 	
 	@JsonProperty("DELETED")
 	private Integer deleted;
-	
+
+	@JsonProperty("FEDERATION_SUPPORTED")
+	private Integer federationSupported;
 	
 
 	public Integer getWidgetDeleted() {
@@ -441,6 +444,13 @@ public class DashboardTileRowEntity implements RowEntity
 		return width;
 	}
 
+	/**
+	 *
+	 * @return the federationSupported
+	 */
+	public Integer getFederationSupported() {
+		return federationSupported;
+	}
 
 	/**
 	 * @param creationDate
@@ -730,6 +740,15 @@ public class DashboardTileRowEntity implements RowEntity
 		this.width = width;
 	}
 
+	/**
+	 *
+	 * @param federationSupported
+	 * 				the federationSupported to set
+	 */
+	public void setFederationSupported(Integer federationSupported) {
+		this.federationSupported = federationSupported;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -745,7 +764,8 @@ public class DashboardTileRowEntity implements RowEntity
 				+ widgetCreationTime + ", widgetSource=" + widgetSource + ", widgetKocName=" + widgetKocName + ", widgetViewmode="
 				+ widgetViewmode + ", widgetTemplate=" + widgetTemplate + ", providerName=" + providerName + ", providerVersion="
 				+ providerVersion + ", providerAssetRoot=" + providerAssetRoot + ", tileRow=" + tileRow + ", tileColumn="
-				+ tileColumn + ", type=" + type + ", widgetSupportTimeControl=" + widgetSupportTimeControl + "]";
+				+ tileColumn + ", type=" + type + ", widgetSupportTimeControl=" + widgetSupportTimeControl + ", federationSupported="
+				+ federationSupported + "]";
 	}
 
 	@Override
@@ -828,6 +848,8 @@ public class DashboardTileRowEntity implements RowEntity
 		result = prime * result
 				+ ((widgetViewmode == null) ? 0 : widgetViewmode.hashCode());
 		result = prime * result + ((width == null) ? 0 : width.hashCode());
+		result = prime * result
+				+ ((federationSupported == null) ? 0 : federationSupported.hashCode());
 		return result;
 	}
 
@@ -1015,6 +1037,11 @@ public class DashboardTileRowEntity implements RowEntity
 			if (other.width != null)
 				return false;
 		} else if (!width.equals(other.width))
+			return false;
+		if (federationSupported == null) {
+			if (other.federationSupported != null)
+				return false;
+		} else if (!federationSupported.equals(other.federationSupported))
 			return false;
 		return true;
 	}

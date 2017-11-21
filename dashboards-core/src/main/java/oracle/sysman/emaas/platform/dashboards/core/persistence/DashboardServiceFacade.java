@@ -7,10 +7,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
+import javax.persistence.*;
 
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
@@ -169,16 +166,36 @@ public class DashboardServiceFacade
 		return ids;
 	}
 
-	public String getDashboardNameWithMaxSuffixNumber(String name, Long tenantId) {
+	public String getDashboardNameWithMaxSuffixNumber(String name, Long tenantId, String dbFields) {
+		LOGGER.info("Get name/desc with max suffix number: {} for tenant {}", name, tenantId);
+		if(name == null){
+			LOGGER.warn("Name is null which is not expected.");
+			return null;
+		}
+		//FIXME: Why?
 		if (name.contains("'")) {
 			name  = name.replaceAll("'", "''");
 		}
-		String sql = "select name from (" + "select name from ems_dashboard where name like '" + name + "%' and (tenant_Id = " + tenantId
-				+ " or tenant_id = " + NON_TENANT_ID + " ) order by name desc" + ") where rownum = 1";
-		Query query = em.createNativeQuery(sql);
-		Object result = query.getSingleResult();
-		if (result != null) {
-			return result.toString();
+		String sql = null;
+		try{
+			if("name".equalsIgnoreCase(dbFields)){
+				sql = "select name from (select name from ems_dashboard where name like '"+ name +"%'and (tenant_Id = ? or tenant_id = ? ) order by creation_date DESC) where rownum = 1";
+			}else if("description".equalsIgnoreCase(dbFields)){
+				sql = "select description from (select description from ems_dashboard where description like '"+ name +"%'and (tenant_Id = ? or tenant_id = ? ) order by creation_date DESC) where rownum = 1";
+			}
+			LOGGER.info("SQL is {}", sql);
+			Query query = em.createNativeQuery(sql);
+			query.setParameter(1, tenantId);
+			query.setParameter(2, NON_TENANT_ID);
+			List results = query.getResultList();
+			if (results != null && !results.isEmpty()) {
+				LOGGER.info("Result list is not empty, return.... {}", (String)results.get(0));
+				return (String)results.get(0);
+			}
+		}catch(NoResultException e){
+			LOGGER.warn("No result found getting dashboard name/desc with max suffix number for input name {} and tenant {}", name, tenantId);
+		}catch(Exception e){
+			LOGGER.error("Error occurred when get max suffix name/desc from DB.");
 		}
 		return null;
 	}
@@ -190,16 +207,18 @@ public class DashboardServiceFacade
 		return CombinedDashboard.valueOf(ed, ep, euo,null);
 	}
 
-	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(String name, String owner, String description){
-		String jpql;
+	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(String name, String owner, String description, boolean sysOwner){
+		String jpql = null;
 		Object[] params;
 		name = name.toUpperCase();
 		if(StringUtil.isEmpty(description)){
-			jpql = "select d from EmsDashboard d where upper(d.name) = ?1 and d.owner = ?2 and d.description is null and d.deleted = ?3";
-			params = new Object[]{StringEscapeUtils.escapeHtml4(name), owner, new Integer(0)};
+			jpql = "select d from EmsDashboard d where upper(d.name) = ?1 and (d.owner = ?2 " + (sysOwner == true ? " or d.owner='Oracle' " : "") + " ) and d.description is null and d.deleted = ?3";
+			//remove StringEscapeUtils.escapeHtml4(name) when query, because in DB it is not encoded
+			params = new Object[]{name, owner, new Integer(0)};
 		}else {
-			jpql = "select d from EmsDashboard d where upper(d.name) = ?1 and d.owner = ?2 and d.description = ?3 and d.deleted = ?4";
-			params = new Object[]{StringEscapeUtils.escapeHtml4(name), owner, description, new Integer(0)};
+			jpql = "select d from EmsDashboard d where upper(d.name) = ?1 and (d.owner = ?2 " + (sysOwner == true ? " or d.owner='Oracle' " : "") + " ) and d.description = ?3 and d.deleted = ?4";
+			//remove StringEscapeUtils.escapeHtml4(name) when query, because in DB it is not encoded
+			params = new Object[]{name, owner, description, new Integer(0)};
 
 		}
 		Query query = em.createQuery(jpql);
@@ -212,6 +231,7 @@ public class DashboardServiceFacade
 			// ignores multiple results
 			emsDashboard = (EmsDashboard)results.get(0);
 		}
+		LOGGER.info("getEmsDashboardByNameAndDescriptionAndOwner() returning...{}", emsDashboard);
 		return emsDashboard;
 	}
 
@@ -231,6 +251,22 @@ public class DashboardServiceFacade
 	public EmsPreference getEmsPreference(String username, String prefKey)
 	{
 		return em.find(EmsPreference.class, new EmsPreferencePK(prefKey, username));
+	}
+
+	/**
+	 *
+	 * @param userName
+	 * @param keys
+     * @return
+     */
+	public List<EmsPreference> getEmsPreferencesByKeys(String userName, List<String> keys)
+	{
+		String jpql = "select o from EmsPreference o where o.userName = :userName and o.prefKey in :ids";
+		Query query = em.createQuery(jpql);
+		query.setParameter("userName", userName);
+		query.setParameter("ids", keys);
+		List result = query.getResultList();
+		return (List<EmsPreference>)result;
 	}
 
 	//	/** <code>select o from EmsDashboardTile o</code> */

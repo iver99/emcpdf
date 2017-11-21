@@ -45,10 +45,6 @@ public class LoggingAPI
 	public JSONObject logMsg(JSONObject jsonReceived)
 	{
 		try {
-			if (!DependencyStatus.getInstance().isDatabaseUp())  {
-				mLogger.error("Error to call [POST] /v1/logging: database is down");
-				throw new DatabaseDependencyUnavailableException();
-			}
 			String tenantId = jsonReceived.getString("tenantId");
 			String remoteIpAddress = request.getRemoteAddr();
 			String remoteAgent = request.getHeader("User-Agent");
@@ -90,17 +86,6 @@ public class LoggingAPI
 				mLogger.log(logLevel, "tenantId::: = " + tenantId + " - " + log + System.getProperty("line.separator")
 						+ remoteInfo);
 			}
-		}
-		catch(DashboardException e){
-			mLogger.error(e.getLocalizedMessage(), e);
-			JSONObject errorJson=new JSONObject();
-			try {
-				errorJson.put("errorCode",e.getErrorCode());
-				errorJson.put("message",e.getMessage());
-			} catch (JSONException e1) {
-				mLogger.log(Level.ERROR, "Exception thrown when returning error information: ", e1);
-			}
-			return errorJson;
 		}
 		catch (JSONException e1) {
 			mLogger.log(Level.ERROR, "Exception thrown when receiving logs: ", e1);

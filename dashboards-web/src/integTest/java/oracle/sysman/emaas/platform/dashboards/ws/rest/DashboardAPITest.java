@@ -524,7 +524,7 @@ public class DashboardAPITest
 				anyDependencyStatus.isDatabaseUp();
 				result = true;
 				mockedDashboardManager.listDashboards(anyString, anyInt, anyInt, anyLong, anyBoolean, anyString,
-						withAny(new DashboardsFilter()));
+						withAny(new DashboardsFilter()), anyBoolean, anyBoolean);
 				PaginatedDashboards dashboardsResult = new PaginatedDashboards();
 				List<Dashboard> dashboardList = new ArrayList<>();
 				Dashboard dashboard1 = new Dashboard();
@@ -848,7 +848,7 @@ public class DashboardAPITest
 	{
 		Assert.assertNotNull(dashboardAPI.queryDashboards("tenant01", "tenant01.emcsadmin",
 				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", "query str", 10, 5,
-				"name", null));
+				"name", null, "false", "false"));
 	}
 
 	private void assertQuickUpdateDashboard() throws JSONException

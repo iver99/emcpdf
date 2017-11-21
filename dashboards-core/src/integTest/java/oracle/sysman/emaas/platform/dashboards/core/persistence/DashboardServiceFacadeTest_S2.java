@@ -20,6 +20,7 @@ import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import oracle.sysman.emaas.platform.dashboards.core.BaseTest;
+import oracle.sysman.emaas.platform.dashboards.core.model.FederationSupportedType;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringEscapeUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.*;
@@ -165,6 +166,7 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		tile.setWidgetHistogram("widgetHistogram");
 		tile.setWidgetSupportTimeControl(1);
 		tile.setWidgetLinkedDashboard(BigInteger.valueOf(1L));
+		tile.setFederationSupported(FederationSupportedType.NON_FEDERATION_ONLY.getValue());
 		return tile;
 	}
 
@@ -448,7 +450,7 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 	@Test(groups = {"s2"})
 	public void testGetDashboardIdsByNames(@Mocked final Query query, @Mocked final PersistenceManager mockpm,@Mocked final EntityManager em, @Mocked final EntityManagerFactory mockemf) {
 		final List<Object> fakeList = new ArrayList<>();
-		fakeList.add(1);
+		fakeList.add("1");
 		new Expectations() {
 			{
 				PersistenceManager.getInstance();
@@ -466,7 +468,7 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 		names.add("'Also Testing'");
 		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
 		dsf.getDashboardIdsByNames(names,1L);
-		dsf.getDashboardNameWithMaxSuffixNumber("'Also Testing'",1L);
+		dsf.getDashboardNameWithMaxSuffixNumber("'Also Testing'",1L, "name");
 	}
 
 	@Test(groups = {"s2"})
@@ -490,7 +492,7 @@ public class DashboardServiceFacadeTest_S2 extends BaseTest
 			}
 		};
 		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
-		Assert.assertEquals(dsf.getEmsDashboardByNameAndDescriptionAndOwner("Test","ownwer","description"),emsDashboard);
+		Assert.assertEquals(dsf.getEmsDashboardByNameAndDescriptionAndOwner("Test","ownwer","description", false),emsDashboard);
 	}
 
 	@Test(groups = {"s2"})

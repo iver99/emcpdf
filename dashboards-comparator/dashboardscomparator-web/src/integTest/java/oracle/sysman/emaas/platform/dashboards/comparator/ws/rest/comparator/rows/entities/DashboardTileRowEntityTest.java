@@ -94,6 +94,9 @@ public class DashboardTileRowEntityTest
 		dtre1.setWidgetSupportTimeControl(1);
 		dtre2.setWidgetSupportTimeControl(1);
 		Assert.assertEquals(dtre1, dtre2);
+		dtre1.setFederationSupported(1);
+		dtre2.setFederationSupported(1);
+		Assert.assertEquals(dtre1, dtre2);
 
 		dtre2.setDashboardId("22");
 		Assert.assertNotEquals(dtre1, dtre2);
@@ -177,6 +180,8 @@ public class DashboardTileRowEntityTest
 		Assert.assertNotEquals(dtre1, dtre2);
 		dtre2.setWidgetSupportTimeControl(1);
 		Assert.assertEquals(dtre1, dtre2);
+		dtre2.setFederationSupported(2);
+		Assert.assertNotEquals(dtre1, dtre2);
 	}
 
 	@Test
@@ -266,6 +271,9 @@ public class DashboardTileRowEntityTest
 		dtre1.setWidgetSupportTimeControl(1);
 		dtre2.setWidgetSupportTimeControl(1);
 		Assert.assertEquals(dtre1.hashCode(), dtre2.hashCode());
+		dtre1.setFederationSupported(1);
+		dtre2.setFederationSupported(1);
+		Assert.assertEquals(dtre1.hashCode(), dtre2.hashCode());
 
 		dtre2.setDashboardId("22");
 		Assert.assertNotEquals(dtre1.hashCode(), dtre2.hashCode());
@@ -349,5 +357,7 @@ public class DashboardTileRowEntityTest
 		Assert.assertNotEquals(dtre1.hashCode(), dtre2.hashCode());
 		dtre2.setWidgetSupportTimeControl(1);
 		Assert.assertEquals(dtre1.hashCode(), dtre2.hashCode());
+		dtre2.setFederationSupported(0);
+		Assert.assertNotEquals(dtre1.hashCode(), dtre2.hashCode());
 	}
 }

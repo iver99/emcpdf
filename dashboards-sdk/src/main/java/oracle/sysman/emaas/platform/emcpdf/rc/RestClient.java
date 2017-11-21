@@ -78,10 +78,8 @@ public class RestClient {
             itrLogger.error("RestClient: Error occurred for [GET] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
 
         }catch (Exception e) {
-            LOGGER.error("RestClient: Exception when RestClient trying to get response from specified service. Message:"
-                    + e);
-            itrLogger.error("RestClient: Exception when RestClient trying to get response from specified service. Message:"
-                    + e);
+            LOGGER.error("RestClient: Exception when RestClient trying to get response from specified service. Message:", e);
+            itrLogger.error("RestClient: Exception when RestClient trying to get response from specified service. Message:", e);
         }
         return null;
     }
@@ -244,6 +242,11 @@ public class RestClient {
     public void setHeader(String header, Object value) {
         if (headers == null) {
             headers = new HashMap<String, Object>();
+        }
+        // not allow invalid header or value
+        if (header == null || value == null) {
+            LOGGER.warn("Ignore to set null header or null value. Header: {}, value: {}", header, value);
+            return;
         }
         headers.put(header, value);
     }

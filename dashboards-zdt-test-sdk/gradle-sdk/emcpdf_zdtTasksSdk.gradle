@@ -30,12 +30,12 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest
 
 dependencies
 {
-    	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-zdt-test-sdk-integ-tests', version: "${REPO_BID}") {transitive = false}
-     	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}") {transitive = true}
-	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}") {transitive = true}
-	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}") {transitive = true}
-        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${REPO_BID}")
-      	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${REPO_BID}") {transitive = true}
+    	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-zdt-test-sdk-integ-tests', version: "${emcpdf_REPO_BID}") {transitive = false}
+     	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${emcpdf_REPO_BID}") {transitive = true}
+	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${emcpdf_REPO_BID}") {transitive = true}
+	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${emcpdf_REPO_BID}") {transitive = true}
+        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${emcpdf_REPO_BID}")
+      	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils', version: "${emcpdf_REPO_BID}") {transitive = true}
      	testConfig(group: 'com.oracle.emaas.emcpdf.testsdk.ui', name: 'dashboards-ui-test-common-api', version: emcpdfCommonAPIVer)
 
 }

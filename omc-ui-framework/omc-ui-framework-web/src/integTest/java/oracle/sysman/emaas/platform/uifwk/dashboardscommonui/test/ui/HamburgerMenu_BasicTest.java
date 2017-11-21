@@ -94,7 +94,8 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 	    WaitUtil.waitForPageFullyLoaded(webd);
 	    BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
 	    webd.capturePageState();
-	    String url = webd.getAttribute("omc_root_admin_addentity@href");
+	    webd.waitForElementPresent("id=omc_root_admin_addentity");
+		String url = webd.getElement("id=omc_root_admin_addentity").getAttribute("href");
 	    webd.getLogger().info("The URL is:"+ url);
 	    webd.capturePageState();
 	    BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ADD_ENTITY);
@@ -263,7 +264,7 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the url of opened page
-		CommonUIUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ocs");
+		CommonUIUtils.verifyURL_WithPara(webd, "cosUi/wfDashboard.html");
 	}
 
 	@Test(alwaysRun = true)

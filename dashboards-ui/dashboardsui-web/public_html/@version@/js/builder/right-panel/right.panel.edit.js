@@ -2,11 +2,13 @@ define([
     'knockout',
     'ojs/ojcore',
     'jquery',
-    'dfutil'
-], function (ko, oj, $, dfu) {
+    'dfutil',
+    'uifwk/js/sdk/menu-util'
+], function (ko, oj, $, dfu, menuModel) {
 
     function rightPanelEditModel($b, dashboardsetToolBarModel) {
         var self = this;
+        var menuUtil = new menuModel();
         self.$b = ko.observable($b);
         self.dashboardsetToolBarModel=dashboardsetToolBarModel;
         self.isDashboardSet = self.dashboardsetToolBarModel.isDashboardSet;
@@ -143,6 +145,10 @@ define([
                     self.dashboardsetShare(result.sharePublic() === true ? "on" : "off");
                     self.notifyDashboardsetToolBarChange("dashboardsetName",result.name());
                     self.notifyDashboardsetToolBarChange("dashboardsetDes",result.description());
+                    
+                    //Fire event to refresh "Federated dashboard" and "Favorite dashabord" in HM
+                    menuUtil.fireFederatedDsbChangedEvent();
+                    menuUtil.fireFavoriteDsbChangedEvent();
                 }, 
                 function (jqXHR, textStatus, errorThrown) {
                     if (self.saveMessageId) {
