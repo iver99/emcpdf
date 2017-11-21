@@ -4,8 +4,6 @@ import oracle.sysman.emsaas.login.LoginUtils;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
-import org.openqa.selenium.JavascriptExecutor;
-
 public class LoginAndLogout
 {
 	protected static WebDriver webd = null;

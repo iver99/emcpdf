@@ -12,7 +12,6 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -33,7 +32,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 	private String dbName_textWidget_multiLink = "";
 	private String dbName_textWidget_order = "";
 	private String dbName_textWidget_empty = "";
-        private String dbName_textWidget_clickLink1 = "";
+    private String dbName_textWidget_clickLink1 = "";
 	private String dbName_textWidget_clickLink2 = "";
 	private String dbName_textWidget_clickImage = "";
 	

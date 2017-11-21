@@ -9,6 +9,7 @@ define(['knockout',
         'idfbcutil',
         'uifwk/js/util/screenshot-util',
         'uifwk/js/sdk/context-util',
+        'uifwk/js/sdk/menu-util',
         'ojs/ojcore',
         'builder/tool-bar/edit.dialog',
         'builder/tool-bar/duplicate.dialog',
@@ -17,11 +18,12 @@ define(['knockout',
         'builder/builder.core',
         'builder/dashboardDataSource/dashboard.datasource'
     ],
-    function(ko, $, dfu, idfbcutil, ssu, cxtModel, oj, ed, dd, pfu, zdtUtilModel) {
+    function(ko, $, dfu, idfbcutil, ssu, cxtModel, menuModel, oj, ed, dd, pfu, zdtUtilModel) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
         var cxtUtil = new cxtModel();
+        var menuUtil = new menuModel();
         var omcTimeConstants = cxtUtil.OMCTimeConstants;
 
         function ToolBarModel($b,dashboardSetOptions) {
@@ -43,6 +45,7 @@ define(['knockout',
             self.zdtStatus = ko.observable(false);
             self.notZdtStatus = ko.observable(true);
             self.renderDashboardOptsMenu = ko.observable(false);
+            self.federationEnabled = Builder.isRunningInFederationMode();
             var dashboardOptsMenuInitialized = false;
             self.onDashboardOptsMenuClicked = function(){   //trigger event to dashboardset.panels.model to hide some menu items
                 if(dashboardOptsMenuInitialized){
@@ -200,6 +203,9 @@ define(['knockout',
                     type: 'DELETE',
                     headers: dfu.getDashboardsRequestHeader(),
                     success: function (result) {
+                        //Fire event to refresh "Federated dashboard" and "Favorite dashabord" in HM
+                        menuUtil.fireFederatedDsbChangedEvent();
+                        menuUtil.fireFavoriteDsbChangedEvent();
                         if (selectedDashboardInst().toolBarModel.isUnderSet) {
                             var removeId = selectedDashboardInst().toolBarModel.dashboardId;
                             var selectedTab = $('#dashboardTab-' + removeId);
@@ -211,7 +217,7 @@ define(['knockout',
                                 localStorage.deleteHomeDbd=true;
                             }
                             window.location = cxtUtil.appendOMCContext( document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html', true, true, true);
-                        }     
+                        }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {}
                 });
@@ -398,7 +404,8 @@ define(['knockout',
                         PROVIDER_ASSET_ROOT: "assetRoot",
 //                        WIDGET_EDITABLE: "true",
                         content: null,
-                        type: "TEXT_WIDGET"
+                        type: "TEXT_WIDGET",
+                        federationSupported: "FEDERATION_AND_NON_FEDERATION"
                     };
                     self.tilesViewModel.appendNewTile(textWidget.WIDGEET_NAME, textWidget.WIDGEET_DESCRIPTION, 4, 2, ko.toJS(textWidget));
                 }
@@ -728,8 +735,14 @@ define(['knockout',
                         $(".dashboard-content-main:hidden").each(function (index, currentValue) {
                             $(currentValue).addClass("no-print");
                         });
+                        $(".head-bar-container:hidden").each(function (index, currentValue) {
+                            $(currentValue).addClass("no-print");
+                        });
                         window.print();
                         $(".dashboard-content-main").each(function (index, currentValue) {
+                            $(currentValue).removeClass("no-print");
+                        });
+                        $(".head-bar-container").each(function (index, currentValue) {
                             $(currentValue).removeClass("no-print");
                         });
                         break;
@@ -869,7 +882,7 @@ define(['knockout',
                     "name":self.favoriteName,
                     "icon": self.favoritesIcon, //"dbd-toolbar-icon-favorites",
                     "title": "", //self.favoriteLabel,
-                    "disabled": false,
+                    "disabled": self.federationEnabled,
                     "showOnMobile": true,
                     "showSubMenu": false,
                     "showInZdt":self.notZdtStatus,
@@ -882,7 +895,7 @@ define(['knockout',
                     "name":self.dashboardAsHomeName,
                     "icon": self.dashboardsAsHomeIcon,
                     "title": "", //self.setAsHomeLabel,
-                    "disabled": false,
+                    "disabled": self.federationEnabled,
                     "showOnMobile": true,
                     "showSubMenu": false,
                     "showInZdt":self.notZdtStatus,

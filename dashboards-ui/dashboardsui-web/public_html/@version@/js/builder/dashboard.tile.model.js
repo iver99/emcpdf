@@ -44,6 +44,7 @@ define(['knockout',
             $b.registerObject(self, 'DashboardTilesViewModel');
             self.scrollbarWidth = uiutil.getScrollbarWidth();
             self.isUnderSet = ko.unwrap(dashboardInst.type) === "SET" ? true : false;
+            self.isRunningInFederationMode = Builder.isRunningInFederationMode();
 
             widgetAreaContainer = $b.findEl('.widget-area');
 
@@ -172,7 +173,9 @@ define(['knockout',
             self.onBuilderResize = function(width, height, leftWidth, topHeight) {
                 widgetAreaWidth = Math.min(widgetAreaContainer.width(), $b.findEl(".tiles-col-container").width()-25);
                 window.DEV_MODE && console.debug('widget area width is ' + widgetAreaWidth);
-                self.show();
+                if(widgetAreaWidth>0){
+                    self.show();
+                }  
             };
 
             self.initTileKoRightBtnsResizeHdls = ko.observable(false);

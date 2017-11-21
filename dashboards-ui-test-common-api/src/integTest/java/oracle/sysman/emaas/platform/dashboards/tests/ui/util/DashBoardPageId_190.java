@@ -152,7 +152,7 @@ public class DashBoardPageId_190
 	//id of dashboard desc
 	public static final String DASHBOARDDESCID = "/html/body/div[*]/div/div/div/div[2]/div/span/span";
 	public static final String MDASHBOARDDESCID = "/html/body/div[3]/div/div/div/div[2]/div/span/span";
-	//remove dashboard/html/body/div[3]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button
+
 	public static final String INFOBTNID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";//"/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";///html/body/div[*]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button";
 
 	public static final String RMBTNID = "/html/body/div[1]/div/div/div[1]/div/div/div[2]/button";//"/html/body/div/div/div/div/div/div/div[2]/button";
@@ -187,13 +187,16 @@ public class DashBoardPageId_190
 	public static final String BUILDERTILESEDITAREA = "//div[contains(@class, 'dashboard-content') and  contains(@class, 'page-break') and contains(@style, 'visibility: visible') and not(contains(@style, 'display: none'))]//div[contains(@class, 'tiles-wrapper')]";
 
 	public static final String BUILDERTILETITLELOCATOR = "//h2[contains(@class, 'dbd-tile-title') and @data-tile-title='%s']";
-	public static final String BUILDERTILECONFIGLOCATOR = "following-sibling::*//button[contains(@class, 'dbd-tile-action')]";
+	public static final String BUILDERTILEHEADERLOCATOR = "//div[contains(@class,'dbd-tile-header')]";
+	public static final String BUILDERTILELOCATOR = "//div[contains(@class,'dbd-tile-header')]/h2";
 
-	public static final String BUILDERTILEDATAEXPLORELOCATOR = "following-sibling::*//button[contains(@class, 'dbd-data-explore')]";
+	public static final String BUILDERTILECONFIGLOCATOR = "//button[contains(@class, 'dbd-tile-action')]";
+	public static final String BUILDERTILEDATAEXPLORELOCATOR = "//button[contains(@class, 'dbd-data-explore')]";
 	public static final String BUILDERTILESHOWLOCATOR = "//ul[not(contains(@style,'display:none'))]/li[@data-option='showhide-title']/a[@data-show-hide-title='show']";
 	public static final String BUILDERTILEHIDELOCATOR = "//ul[not(contains(@style,'display:none'))]/li[@data-option='showhide-title']/a[@data-show-hide-title='hide']";
 	//dashboard builder options
 	public static final String BUILDEROPTIONSMENULOCATOR = ".df-toolbar .dashboardOptsBtn[title=\"Options\"]";
+	public static final String BUILDEROPTIONSMENUXPATH = "//button[contains(@id, 'dashboardOptsBtn')]";
 
 	public static final String BUILDEROPTIONSAUTOREFRESHLOCATOR = "//li[@data-singledb-option='Auto-refresh']/a";
 	public static final String BUILDEROPTIONSAUTOREFRESHOFFLOCATOR = "//li[@data-singledb-option='Off']/a";
@@ -222,12 +225,14 @@ public class DashBoardPageId_190
 	public static final String BUILDEROPTIONSDUPLICATESAVECSS = ".createDsb-1";
 	public static final String DASHBOARDSETCONTAINERCSS = "div.dashboard-content";
 	public static final String RIGHDRAWER_WIDGET_ADD_CSS = "i.dbd-toolbar-fa-icon.fa-plus";
+	public static final String DASHBOARDSETCONTAINERXPATH = "//div[@id=\"dashboards-tabs-contents\"]/div[contains(@class, 'dashboard-content')]";
 
 	// dashboard set name
 	public static final String DASHBOARDSETNAMETEXTLOCATOR = "//div[@id='dbd-set-name']/span";
 	//dashboard set options
 	public static final String DASHBOARDSETNAVSCONTAINERCSS = "#dbd-set-tabs";
 	public static final String DASHBOARDSETNAVSCSS = ".dbd-tabs-nav .oj-tabs-tab";
+	public static final String DASHBOARDSETNAVSXPATH = "//li[contains(@id, 'dashboardTab-')]";
 	public static final String DASHBOARDSETTABNAMECSS = ".dbd-tabs-nav .oj-tabs-tab[data-tabs-name='_name_'] .oj-tabs-close-icon";
 	public static final String DASHBOARDSETNAVREMOVEBTNCSS = ".oj-tabs-close-icon";
 	public static final String DASHBOARDSETNAVADDBTNCSS = "#add-nav";
@@ -260,6 +265,7 @@ public class DashBoardPageId_190
 	public static final String DASHBOARDSETOPTIONSADDHOMECSS = "#dbs-home a[dashboardset-option=\"Set as Home\"]";
 	//dashboard tool bar
 	public static final String DASHBOARDSAVECSS = "button.dashboardSaveBtn";
+	public static final String DASHBOARDSAVEXPATH = "//button[contains(@id, 'dashboardSaveBtn')]";
 
 	//dashboard delete dialog
 	public static final String BUILDERDELETEDIALOGLOCATOR = "id=ojDialogWrapper-delete-dashboard";
@@ -294,7 +300,9 @@ public class DashBoardPageId_190
 	public static final String WIDGETTITLECSS = ".dbd-widget";
 
 	public static final String TILETITLECSS = "h2.dbd-tile-title";
+	public static final String TILETITLEXPATH = "//*[@class='dbd-tile-title']";
 	public static final String CONFIGTILECSS = "button[id^=actionButton]";
+	public static final String CONFIGTILEXPATH = "//button[contains(@id, 'actionButton')]";
 	public static final String WIDERTILECSS = "li[data-option=wider]";
 	public static final String NARROWERTILECSS = "li[data-option=narrower]";
 	public static final String SHORTERTILECSS = "li[data-option=shorter]";

@@ -22,6 +22,7 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 'GLOBAL_HOME': 'omc_root_home',
                 'GLOBAL_ALERTS': 'omc_root_alerts',
                 'GLOBAL_DASHBOARDS': 'omc_root_dashboards',
+                'GLOBAL_FEDERATEDVIEW': 'omc_root_federatedview',
                 'GLOBAL_DATAEXPLORER': 'omc_root_dataexplorer',
                 'GLOBAL_APM': 'omc_root_APM',
                 'GLOBAL_MONITORING': 'omc_root_Monitoring',
@@ -99,8 +100,8 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                 };
                 window.addEventListener("message", onServiceMenuLoaded, false);
             };
-
-            /**
+            
+             /**
              * Fire event to indicate that favorite dashboards have been changed
              * 
              * @returns
@@ -135,6 +136,41 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                     }
                 };
                 window.addEventListener("message", onFavoriteDsbChanged, false);
+            };
+            
+            /**
+             * Fire event to indicate that federated dashboards have been changed
+             * 
+             * @returns
+             */
+            self.fireFederatedDsbChangedEvent = function() {
+                if(!window._uifwk) {
+                    window._uifwk = {};
+                }
+                var message = {'tag': 'EMAAS_OMC_GLOBAL_MENU_FEDERATED_DSB_CHANGED'};
+                window.postMessage(message, window.location.href);
+            };
+            
+            /**
+             * Add listener to repond federated dashboard changed event.
+             * 
+             * @param {Function} callback Callback to be invoked
+             * 
+             * @returns
+             */
+            self.subscribeFederatedDsbChangedEvent = function(callback) {
+                function onFederatedDsbChanged(event) {
+                    if(event.origin !== window.location.protocol + '//' + window.location.host) {
+                        return;
+                    }
+                    var eventData = event.data;
+                    if(eventData && eventData.tag && eventData.tag === 'EMAAS_OMC_GLOBAL_MENU_FEDERATED_DSB_CHANGED') {
+                        if($.isFunction(callback)) {
+                            callback();
+                        }
+                    }
+                }
+                window.addEventListener("message", onFederatedDsbChanged, false);
             };
 
             /**
@@ -289,6 +325,7 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
             self.getServiceBaseVanityUrls = function(callbackForVanityUrls) {
                 if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.baseVanityUrls && 
                         ($.isFunction(window._uifwk.cachedData.baseVanityUrls) ? window._uifwk.cachedData.baseVanityUrls() : true)) {
+                    console.info("Getting baseVanityUrls from window._uifwk.cachedData.baseVanityUrls. It is function: " + $.isFunction(window._uifwk.cachedData.baseVanityUrls));
                     callbackForVanityUrls($.isFunction(window._uifwk.cachedData.baseVanityUrls) ? window._uifwk.cachedData.baseVanityUrls() : 
                             window._uifwk.cachedData.baseVanityUrls);
                 } else {
@@ -298,14 +335,23 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                     if (!window._uifwk.cachedData) {
                         window._uifwk.cachedData = {};
                     }
+                    console.info("Getting baseVanityUrls by sending request. window._uifwk.cachedData.isFetchingVanityUrls is " + window._uifwk.cachedData.isFetchingVanityUrls);
                     if (!window._uifwk.cachedData.isFetchingVanityUrls) {
                         window._uifwk.cachedData.isFetchingVanityUrls = true;
                         if (!window._uifwk.cachedData.baseVanityUrls) {
-                            window._uifwk.cachedData.baseVanityUrls = ko.observable();
+                            console.info("initialize window.baseVanityUrlsFromRequest to ko observable");
+                            window.baseVanityUrlsFromRequest = ko.observable();
                         }
 
                         function doneCallback(data, textStatus, jqXHR) {
-                            window._uifwk.cachedData.baseVanityUrls(data);
+                            if(window.baseVanityUrlsFromRequest && $.isFunction(window.baseVanityUrlsFromRequest)) {
+                                console.info("window.baseVanityUrlsFromRequest is ko observable");
+                                window.baseVanityUrlsFromRequest(data);
+                            }else {
+                                console.info("window.baseVanityUrlsFromRequest is not ko observable");
+                                window.baseVanityUrlsFromRequest = ko.observable(data);
+                            }
+                            window._uifwk.cachedData.baseVanityUrls = data;
                             window._uifwk.cachedData.isFetchingVanityUrls = false;
                             callbackForVanityUrls(data);
                         }
@@ -330,7 +376,8 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                             }
                         });
                     } else {
-                        window._uifwk.cachedData.baseVanityUrls.subscribe(function (data) {
+                        window.baseVanityUrlsFromRequest.subscribe(function (data) {
+                            console.info("window.baseVanityUrlsFromRequest is fetched from back end");
                             callbackForVanityUrls(data);
                         });
                     }

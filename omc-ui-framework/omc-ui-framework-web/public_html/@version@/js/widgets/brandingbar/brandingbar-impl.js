@@ -707,6 +707,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if(!self.renderEmaasAppheaderGlobalNavMenu()){
                     self.renderEmaasAppheaderGlobalNavMenu(true);
                     $('#emaasAppheaderGlobalNavMenuId').ojMenu("refresh");
+                    aboutBoxComponentRegister();
                     self.aboutBoxImmediateLoading(true);
                 }
             };
@@ -715,40 +716,43 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
             var vmPath = "uifwk/js/widgets/navlinks/js/navigation-links";
 
             //Parameters for navigation links ko component
-            self.navLinksKocParams = {
-                navLinksNeedRefresh: self.navLinksNeedRefresh,
-                userName: self.userName,
-                tenantName: self.tenantName,
-                nlsStrings: nls,
-                appMap: appMap,
-                app: appProperties,
-                appDashboard: appMap[appIdDashboard],
-                appTenantManagement: appMap[appIdTenantManagement],
-                appEventUI: appMap[appIdEventUI],
-                sessionTimeoutWarnDialogId: self.sessionTimeoutWarnDialogId
-            };
-            //Register a Knockout component for navigation links
-            if (!ko.components.isRegistered('df-oracle-nav-links') && self.navLinksVisible) {
-                ko.components.register("df-oracle-nav-links", {
-                    viewModel: {require: vmPath},
-                    template: {require: 'text!' + templatePath}
-                });
+            function navLinksComponentRegister() {
+                self.navLinksKocParams = {
+                    navLinksNeedRefresh: self.navLinksNeedRefresh,
+                    userName: self.userName,
+                    tenantName: self.tenantName,
+                    nlsStrings: nls,
+                    appMap: appMap,
+                    app: appProperties,
+                    appDashboard: appMap[appIdDashboard],
+                    appTenantManagement: appMap[appIdTenantManagement],
+                    appEventUI: appMap[appIdEventUI],
+                    sessionTimeoutWarnDialogId: self.sessionTimeoutWarnDialogId
+                };
+                //Register a Knockout component for navigation links
+                if (!ko.components.isRegistered('df-oracle-nav-links') && self.navLinksVisible) {
+                    ko.components.register("df-oracle-nav-links", {
+                        viewModel: {require: vmPath},
+                        template: {require: 'text!' + templatePath}
+                    });
+                }
             }
 
             //Parameters for about dialog ko component
-            self.aboutBoxKocParams = {
-                id: self.aboutBoxId,
-                nlsStrings: nls};
-            //Register a Knockout component for about box
-            var aboutTemplatePath = "uifwk/js/widgets/aboutbox/html/aboutbox.html";
-            var aboutVmPath = "uifwk/js/widgets/aboutbox/js/aboutbox";
-            if (!ko.components.isRegistered('df-oracle-about-box')) {
-                ko.components.register("df-oracle-about-box", {
-                    viewModel: {require: aboutVmPath},
-                    template: {require: 'text!' + aboutTemplatePath}
-                });
+            function aboutBoxComponentRegister() {
+                self.aboutBoxKocParams = {
+                    id: self.aboutBoxId,
+                    nlsStrings: nls};
+                //Register a Knockout component for about box
+                var aboutTemplatePath = "uifwk/js/widgets/aboutbox/html/aboutbox.html";
+                var aboutVmPath = "uifwk/js/widgets/aboutbox/js/aboutbox";
+                if (!ko.components.isRegistered('df-oracle-about-box')) {
+                    ko.components.register("df-oracle-about-box", {
+                        viewModel: {require: aboutVmPath},
+                        template: {require: 'text!' + aboutTemplatePath}
+                    });
+                }
             }
-
             //Parameters for time selector
             if (params.timeSelectorParams) {
                 self.timeSelectorParams = params.timeSelectorParams;
@@ -780,6 +784,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
              * Navigation links button click handler
              */
             self.linkMenuHandler = function (event, item) {
+                navLinksComponentRegister();
                 self.navLinksNeedRefresh(true);
                 self.navLinksImmediateLoading(true);
                 $("#links_menu").slideToggle('normal');
@@ -1344,6 +1349,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     message.type = data.type;
                     message.summary = data.summary;
                     message.detail = data.detail;
+                    message.link = data.link;
                     message.category = data.category;
                     if (data.type && data.type.toUpperCase() === 'ERROR') {
                         message.iconAltText = self.altTextError;
@@ -1589,7 +1595,16 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                     var refreshTopology = true;
                     var omcContext = cxtUtil.getOMCContext();
                     var entityMeIds = cxtUtil.getEntityMeIds() ? cxtUtil.getEntityMeIds().sort().join() : null;
-                    var currentCompositeId = cxtUtil.getCompositeMeId() || entityMeIds;
+                    var currentCompositeId;
+                    if(cxtUtil.getCompositeMeId()) {
+                        if(entityMeIds) {
+                            currentCompositeId = cxtUtil.getCompositeMeId() + "," + entityMeIds;
+                        }else {
+                            currentCompositeId = cxtUtil.getCompositeMeId();
+                        }
+                    }else {
+                        currentCompositeId = entityMeIds;
+                    }
                     console.log("************currentCompositeId" + currentCompositeId);
                     if (currentCompositeId) {
                         if (self.topologyInitialized === true && currentCompositeId === omcContext.previousCompositeMeId) {
@@ -1600,7 +1615,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                         else {
                             console.log("*******************refresh topology entities");
                             var compositeId = [];
-                            compositeId.push(currentCompositeId);
+                            compositeId.push(cxtUtil.getCompositeMeId() || entityMeIds);
                             self.entities(compositeId);
                             omcContext.previousCompositeMeId = currentCompositeId;
                             self.topologyInitialized = true;

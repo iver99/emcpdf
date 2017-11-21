@@ -100,13 +100,13 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 	    webd.capturePageState();
 	    BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.GLOBAL_ADMIN_MENU_ADD_ENTITY);
 	    WaitUtil.waitForPageFullyLoaded(webd);
-	    String currurl = webd.getWebDriver().getCurrentUrl();
+	    String currurl = webd.getCurrentUrl();
 	    String currurl1 = currurl.substring(0,currurl.indexOf("&"));
 	    if(currurl1.equalsIgnoreCase(url)){
 	    	webd.getLogger().info("The url is correct");	
 	    }
 	    else{
-	    Assert.assertTrue(currurl1.contains("cmsConfigureEntityDiscovery"), "The url is incorrect");
+	    	Assert.assertTrue(currurl1.contains("cmsConfigureEntityDiscovery"), "The url is incorrect");
 	    }
 	}
 
@@ -264,7 +264,7 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the url of opened page
-		CommonUIUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ocs");
+		CommonUIUtils.verifyURL_WithPara(webd, "cosUi/wfDashboard.html");
 	}
 
 	@Test(alwaysRun = true)

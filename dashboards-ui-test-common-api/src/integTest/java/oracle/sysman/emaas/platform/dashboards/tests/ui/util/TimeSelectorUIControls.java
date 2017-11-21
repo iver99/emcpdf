@@ -24,19 +24,26 @@ public class TimeSelectorUIControls
 
 	// Begin: InputText
 	public static final String sStartDateInput = "input[id^='inputStartDate_']";
+	public static final String sStartDateInput_XPATH = "//input[contains(@id, 'inputStartDate_')]";
 
 	public static final String sStartTimeInput = "input[id^='inputStartTime_'].oj-inputdatetime-input";
+	public static final String sStartTimeInput_XPATH = "//input[contains(@id,'inputStartTime_')]";
+	
 	public static final String sEndDateInput = "input[id^='inputEndDate_']";
+	public static final String sEndDateInput_XPATH = "//input[contains(@id, 'inputEndDate_')]";
+	
 	public static final String sEndTimeInput = "input[id^='inputEndTime_'].oj-inputdatetime-input";
-	//public static final String sTimeExcludedInput = "input.oj-col.oj-sm-10.oj-md-10.oj-inputtext-input";
+	public static final String sEndTimeInput_XPATH = "//input[contains(@id,'inputEndTime_')]";
 	// End: InputText
 	// Begin: Button
 	public static final String sApplyBtn = "button[id^='applyButton']";
 
 	public static final String sCancelBtn = "button[id^='cancelButton']";
 	public static final String sDateTimePick = "[id^='dateTimePicker_']";
+	public static final String sDateTimePick_XPATH = "//div[contains(@id,'dateTimePicker_')]";
 
 	public static final String sTimeRangeBtn = ".oj-select-choice[id^='dropDown']";//".dropdown[id^='dropDown']";"[id^='dateTimePicker_'] .oj-select-choice .oj-select-arrow";
+	public static final String sTimeRangeBtn_XPATH = "//span[@class='oj-select-choice'][contains(@id,'dropDown')]"; 
 	public static final String sDisplayDateTime = "[id^='dateTimePicker_'] .oj-select-choice .oj-select-chosen";
 	//	public static final String sFilterInfoIndicator = "[id^='tfInfoIndicator_'].time-filter-indicator";
 	//	public static final String sFilterInfo = "div[id^='tfInfo_'] [data-bind='html: timeFilterInfo']";
@@ -91,7 +98,7 @@ public class TimeSelectorUIControls
 	// Begin: Components
 	public static final String sPickPanel = ".pickerPanel";//"[id^='pickerPanel_'].pickerPanel";
 	// End: Components
-
+	
 	// Begin: Time Filter
 	public static final String sTimeFilterIcon = "div[id^='timeFilterIcon_']";
 
@@ -107,6 +114,7 @@ public class TimeSelectorUIControls
 	public static final String sFlexRelTimeVal = "div[id^='pickerPanel'][id$='wrapper'] input[id^='flexRelTimeVal']";
 	public static final String sFlexRelTimeOpt = "div[id^='pickerPanel'][id$='wrapper'] div[id^='flexRelTimeOpt'] .oj-select-choice";
 	public static final String sFlexRelTimeOptList = "div[id^=pickerPanel][id$='wrapper'] div[id^='pickerPanel'] select option";
+	public static final String sFlexRelTimeOptList_XPATH = "//div[contains(@id,'pickerPanel')]//div[contains(@id,'pickerPanel')]//select/option";
 	public static final String sFlexRelTimeOptStart = "div[id^='pickerPanel'][id$='_wrapper_layer'] div[data-oj-containerid^='flexRelTimeOpt'] ul li:nth-of-type(";
 	public static final String sFlexRelTimeOptEnd = ")";
 	public static final String sRangeRadio = "div[id^='pickerPanel'] input[value='timeLevelCtrl']";

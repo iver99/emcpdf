@@ -4,8 +4,9 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
     'uifwk/@version@/js/util/df-util-impl', 
     'ojs/ojcore',
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
-    'uifwk/@version@/js/util/typeahead-search-impl', 
+    'uifwk/@version@/js/util/typeahead-search-impl',
     'uifwk/@version@/js/util/mobile-util-impl',
+    'uifwk/@version@/js/util/preference-util-impl',
     'ojs/ojselectcombobox',
     'ojs/ojpopup',
     'ojs/ojinputtext',
@@ -13,7 +14,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
     'ojs/ojlistview', 
     'ojs/ojjsontreedatasource'
     ],
-        function (ko, $, dfumodel, oj, nls, typeaheadsearch, mbu) {
+        function (ko, $, dfumodel, oj, nls, typeaheadsearch, mbu, prefUtilModel) {
             function WidgetSelectorPopupViewModel(params) {
                 var self = this;
                 new typeaheadsearch(); //Initialize typeahead search
@@ -56,8 +57,10 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                 self.widgetGroupFilterVisible = ko.observable(widgetProviderName && widgetProviderVersion ? false : true);
                 self.searchText = ko.observable("");
                 self.clearButtonVisible = ko.computed(function(){return self.searchText() && '' !== self.searchText() ? true : false;});
+                self.builderInFederationMode = params.builderFederationMode && params.builderFederationMode === true;
 
                 var dfu = new dfumodel(self.userName, self.tenantName);
+                var prefUtil = new prefUtilModel(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
                 //Append uifwk css file into document head
                 dfu.loadUifwkCss();
 
@@ -112,7 +115,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                         }
                     });
                 };
-                self.DEFAULT_WIDGET_INIT_AMOUNT = 40;
+                self.DEFAULT_WIDGET_INIT_AMOUNT = 30;
                 self.DEFAULT_WIDGET_INCREMENT_AMOUNT = 20; 
                 self.MAX_LOAD_WIDGET_WINDOW_SIZE = 100; 
                 self.widgetsData = [];
@@ -139,7 +142,8 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                     }
                     var sizeToLoad = Math.min(amount, self.widgetsData.length - self.loadedWidgetEndIndex - 1);  
                     console.debug("Current loadedEndIndex (before loading) is:"+self.loadedWidgetEndIndex+" and all widgets size is:"+self.widgetsData.length+", size to load is:"+sizeToLoad);
-                    for (var i = self.loadedWidgetEndIndex + 1; i < self.loadedWidgetEndIndex + 1 + sizeToLoad; i++) {  
+                    for (var i = self.loadedWidgetEndIndex + 1; i < self.loadedWidgetEndIndex + 1 + sizeToLoad; i++) { 
+                        loadWidgetScreenshot(self.widgetsData[i]);
                         self.widgetList.push(self.widgetsData[i]);
                     }
                     self.loadedWidgetEndIndex += sizeToLoad;
@@ -363,13 +367,25 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                 function getWidgets() {
                     var widgetsBaseUrl = '/sso.static/savedsearch.widgets';
                     var widgetsUrl = widgetsBaseUrl;
+                    var noFirstUrlParam = true;
                     if (dfu.isDevMode()){
                         widgetsBaseUrl = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
                         widgetsUrl = widgetsBaseUrl;
                         if (includeDashboardIneligible) {
                             widgetsUrl = widgetsBaseUrl + "?includeDashboardIneligible=true";
+                            noFirstUrlParam = false;
                         }
                     }
+                    if (self.builderInFederationMode) { // currently running in federation mode in builder page
+                        widgetsUrl = widgetsUrl + (noFirstUrlParam ? '?' : '&') + 'federationEnabled=true';
+                        noFirstUrlParam = false;
+                    }
+                    var showFederationInHM = prefUtil.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
+                    showFederationInHM.done(function(showInUI) {
+                        if (showInUI && showInUI.toUpperCase() === "TRUE") {
+                            widgetsUrl = widgetsUrl + (noFirstUrlParam ? '?' : '&') + "federationFeatureShowInUi=true";
+                        }
+                    });
  
                         return dfu.ajaxWithRetry({
                             url: widgetsUrl,
@@ -478,7 +494,6 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                                 widget.isScreenShotPageDisplayed = ko.observable(true);
                                 widget.isScreenshotLoaded = false;
                                 widget.modificationDateString = getLastModificationTimeString(widget.WIDGET_CREATION_TIME);
-                                loadWidgetScreenshot(widget);
                                 widgetArray.push(widget);
                                 widgetIndex++;
                             }
@@ -496,6 +511,7 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                 };
 
                 function loadWidgetScreenshot(widget) {
+                    if( widget.WIDGET_VISUAL && widget.WIDGET_VISUAL() && widget.WIDGET_VISUAL() !== '') return;
                     var url = widget.WIDGET_SCREENSHOT_HREF;
                     if (!url) { // backward compility if SSF doesn't support .png screenshot. to be removed once SSF changes are merged
                         loadWidgetBase64Screenshot(widget);

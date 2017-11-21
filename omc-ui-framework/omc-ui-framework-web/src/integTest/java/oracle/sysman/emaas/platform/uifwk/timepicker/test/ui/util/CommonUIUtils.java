@@ -26,9 +26,6 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 /**
@@ -50,8 +47,7 @@ public class CommonUIUtils
 		Validator.equalOrLargerThan("index", index, 1);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		String strTimePickerText = driver.getWebDriver().findElements(By.cssSelector(UIControls.TIMERANGEBTN_CSS)).get(index - 1)
-				.getText();
+		String strTimePickerText = driver.getText("xpath=(" + UIControls.TIMERANGEBTN_XPATH + ")[" + index + "]");
 
 		driver.getLogger().info("TimePickerLabel: " + strTimePickerText);
 		Assert.assertEquals(strTimePickerText, TimeSelectorUtil.getTimeRangeLabel_V2(driver, index));
@@ -187,8 +183,7 @@ public class CommonUIUtils
 		Validator.equalOrLargerThan("index", index, 1);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		String strTimePickerText = driver.getWebDriver().findElements(By.cssSelector(UIControls.TIMERANGEBTN_CSS)).get(index - 1)
-				.getText();
+		String strTimePickerText = driver.getText("xpath=(" + UIControls.TIMERANGEBTN_XPATH + ")[" + index + "]");
 
 		driver.getLogger().info("TimePickerLabel: " + strTimePickerText);
 		Assert.assertEquals(strTimePickerText, TimeSelectorUtil.getTimeRangeLabel_V2(driver, index));
@@ -398,11 +393,9 @@ public class CommonUIUtils
 		
 		try {
 			//click the datetimepicker component
-			webd.waitForElementPresent("css=" + TimeSelectorUIControls.sTimeRangeBtn);
-			webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(index - 1).click();
-
-			webd.takeScreenShot();
-			webd.savePageToFile();
+			webd.waitForElementPresent("xpath=" + TimeSelectorUIControls.sTimeRangeBtn_XPATH);
+//			webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(index - 1).click();
+			webd.click("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + index + "]");
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -441,7 +434,6 @@ public class CommonUIUtils
 		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sRangeRadio);
 		webd.click("css=" + TimeSelectorUIControls.sRangeRadio);
 
-
 		//set start date time and end date time
 		webd.getLogger().info("Verify if custom panpel displayed...");
 		webd.waitForElementVisible("css=" + TimeSelectorUIControls.sPickPanel);
@@ -474,8 +466,7 @@ public class CommonUIUtils
 			webd.sendKeys("css=" + TimeSelectorUIControls.sEndTimeInput, endTime);
 			webd.click("css=" + TimeSelectorUIControls.sEndTimeInput);
 		}
-		webd.takeScreenShot();
-		
+				
 		webd.isElementPresent("css=" + TimeSelectorUIControls.sApplyBtn);
 		if (webd.isDisplayed("css=" + TimeSelectorUIControls.sErrorMsg) || webd.isDisplayed("css=" + TimeSelectorUIControls.sJetErrorMsg)) {			
 			Assert.assertTrue("true".equals(webd.getAttribute("css=" + TimeSelectorUIControls.sApplyBtn + "@disabled")));
@@ -526,10 +517,8 @@ public class CommonUIUtils
 	public static void clickTimePicker(WebDriver webd, int Index)
 	{
 		//click the datetimepicker component
-		webd.waitForElementPresent("css=" + UIControls.TIMERANGEBTN_CSS);
-		webd.getWebDriver().findElements(By.cssSelector(UIControls.TIMERANGEBTN_CSS)).get(Index - 1).click();
-
-		webd.takeScreenShot();
+		webd.waitForElementPresent("xpath=" + UIControls.TIMERANGEBTN_XPATH);
+		webd.click("xpath=(" + UIControls.TIMERANGEBTN_XPATH + ")[" + Index + "]");
 	}
 	
 	public void getCurrentDate()
