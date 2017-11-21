@@ -28,6 +28,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
             PREFERENCES_REST_URL = dfu.getPreferencesUrl(),
             SUBSCIBED_APPS_REST_URL = dfu.getSubscribedappsUrl();
     var cxtUtil = new cxtModel();
+    var extPrefUtil = new pfu(PREFERENCES_REST_URL, dfu.getDashboardsRequestHeader());
 
     function createDashboardDialogModel() {
         var self = this;
@@ -189,7 +190,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         });
 
         //welcome
-        self.prefUtil = new pfu(PREFERENCES_REST_URL, dfu.getDashboardsRequestHeader());
+        self.prefUtil = extPrefUtil;
         self.welcomeDialogModel = new welcomeDialogModel(self.prefUtil, showWelcome);
 
         //dashboards
@@ -286,7 +287,14 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
            filterString = filterString === null ? defaultFilters.join(",") : filterString +","+ defaultFilters.join(",");
         }
 
-        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), filterString);
+        var showFederationInHM = extPrefUtil.getHMItemShowPreferenceSync("uifwk.hm.federation.show");
+        var federationFeatureShowInUi = false;
+        showFederationInHM.done(function(showInUI) {
+            if (showInUI && showInUI.toUpperCase() === "TRUE") {
+                federationFeatureShowInUi=true;
+            }
+        });
+        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), filterString, federationFeatureShowInUi);
         self.datasourceCallback = function (_event) {
                     var _i = 0, _rawdbs = [];
                     if (_event['data'])
@@ -447,13 +455,16 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
             if ( !self.selectedDashboard() || self.selectedDashboard() === null ) {
                 return;
             }
-
+            var conformButton = $("button[name*='dbs_cfmDialog_delete']");
+            conformButton.attr('disabled','disabled'); 
             self.datasource['pagingDS'].remove(self.selectedDashboard().dashboardModel,
                    {
                         success: function () {
+                            conformButton.removeAttr('disabled');
                             self.confirmDialogModel.close();
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
+                            conformButton.removeAttr('disabled');
                             var _m = "";
                             if (jqXHR && jqXHR[0] && jqXHR[0].responseJSON && jqXHR[0].responseJSON.errorMessage)
                             {
@@ -516,7 +527,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                             "showInHome":self.createDashboardModel.underSet ? false : true,
                             "description": self.createDashboardModel.description(),
                             "enableTimeRange": self.createDashboardModel.isEnableTimeRange() ? "TRUE" : "FALSE",
-                            "enableRefresh": self.createDashboardModel.isEnableTimeRange()};
+                            "enableRefresh": self.createDashboardModel.isEnableTimeRange(),
+                            "federationSupported": "NON_FEDERATION_ONLY"};
             if (!_addeddb['name'] || _addeddb['name'] === "" || _addeddb['name'].length > 64)
             {
                 self.createMessages.push(new oj.Message(getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')));
@@ -912,7 +924,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         }
 
         self.loadAll = function() {
-            return $.when(self.loadPreferences(), self.loadSubscribedApplications());
+            return $.when(extPrefUtil.getHMItemShowPreferenceSync("uifwk.hm.federation.show"),self.loadPreferences(), self.loadSubscribedApplications());
         };
     }
 

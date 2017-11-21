@@ -35,7 +35,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * ENABLE_DESCRIPTION
  * EXTENDED_OPTIONS
  * SHOW_INHOME
- *
+ * FEDERATION_SUPPORTED
  *
  */
 public class DashboardRowEntity implements RowEntity
@@ -99,6 +99,9 @@ public class DashboardRowEntity implements RowEntity
 	
 	@JsonProperty("SHOW_INHOME")
 	private Integer showInHome;
+
+	@JsonProperty("FEDERATION_SUPPORTED")
+	private Integer federationSupported;
 
 	public DashboardRowEntity()
 	{
@@ -256,7 +259,13 @@ public class DashboardRowEntity implements RowEntity
 		return type;
 	}
 
-	
+	/**
+	 *
+	 * @return the federationSupported
+	 */
+	public Integer getFederationSupported() {
+		return federationSupported;
+	}
 
 	/**
 	 * @param applicationType
@@ -439,6 +448,10 @@ public class DashboardRowEntity implements RowEntity
 		this.showInHome = showInHome;
 	}
 
+	public void setFederationSupported(Integer federationSupported) {
+		this.federationSupported = federationSupported;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -451,7 +464,7 @@ public class DashboardRowEntity implements RowEntity
 				+ applicationType + ", enableTimeRange=" + enableTimeRange + ", screenShot=" + screenShot + ", deleted=" + deleted
 				+ ", tenantId=" + tenantId + ", enableRefresh=" + enableRefresh + ", sharePublic=" + sharePublic
 				+ ", enableEntityFilter=" + enableEntityFilter + ", enableDescription=" + enableDescription + ", extendedOptions="
-				+ extendedOptions + "]";
+				+ extendedOptions + ", showInHome=" + showInHome + ", federationSupported=" + federationSupported + "]";
 	}
 
 	@Override
@@ -500,6 +513,7 @@ public class DashboardRowEntity implements RowEntity
 		result = prime * result
 				+ ((tenantId == null) ? 0 : tenantId.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((federationSupported == null) ? 0 : federationSupported.hashCode());
 		return result;
 	}
 
@@ -634,6 +648,12 @@ public class DashboardRowEntity implements RowEntity
 			if (other.type != null)
 				return false;
 		} else if (!type.equals(other.type))
+			return false;
+
+		if (federationSupported == null) {
+			if (other.federationSupported != null)
+				return false;
+		} else if (!federationSupported.equals(other.federationSupported))
 			return false;
 
 		return true;

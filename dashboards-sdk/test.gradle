@@ -21,26 +21,21 @@ task integTestJar (type:Jar) {
     appendix = 'integ-tests'
 }
 dependencies {
-//    testConfig project(':dashboards-entities')
     testConfig getProjectArtifact('ojdbc6')
     testConfig getProjectArtifact('javax.persistence')
     testConfig getProjectArtifact('eclipselink')
     testConfig getProjectArtifact('javax.transaction-api')
+    testConfig getProjectArtifact('jackson-annotations')
     testConfig getProjectArtifact('jackson-core-asl')
     testConfig getProjectArtifact('jackson-mapper-asl')
     testConfig getProjectArtifact('jackson-xc')
     testConfig getProjectArtifact('jmockit')
-
     testConfig getProjectArtifact('log4j-core')
     testConfig getProjectArtifact('log4j-api')
     testConfig getProjectArtifact('registry-lookup-client')
     testConfig getProjectArtifact('registry-client')
-    testConfig(group: 'org.codehaus.jackson', name: 'jackson-jaxrs', version: '1.9.2')
-    def securityClientVer=getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
-        compile (
-            group: 'com.oracle.emaas.emcpsf.sdk', name: 'security-client', version: securityClientVer )
+    testConfig getProjectArtifact('security-client')
     testConfig getProjectArtifact('emaas-platform-tenant-sdk')
-
     
 }
 build.dependsOn integTestJar

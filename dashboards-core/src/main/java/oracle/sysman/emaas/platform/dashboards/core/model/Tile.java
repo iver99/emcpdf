@@ -21,12 +21,16 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 public class Tile
 {
+	private static final Logger LOGGER = LogManager.getLogger(Tile.class);
+
 	public static final Integer TILE_TYPE_CODE_DEFAULT = 0;
 	public static final Integer TILE_TYPE_CODE_TEXT_WIDGET = 1;
 	public static final String TILE_TYPE_DEFAULT = "DEFAULT";
@@ -94,6 +98,15 @@ public class Tile
 		tile.setWidgetSupportTimeControl(DataFormatUtils.integer2Boolean(edt.getWidgetSupportTimeControl()));
 		tile.setWidgetLinkedDashboard(edt.getWidgetLinkedDashboard());
 		tile.setWidth(edt.getWidth());
+		FederationSupportedType fst = FederationSupportedType.NON_FEDERATION_ONLY;
+		if (edt.getFederationSupported() != null) {
+			try {
+				fst = FederationSupportedType.fromValue(edt.getFederationSupported());
+			} catch (IllegalArgumentException e) {
+				LOGGER.error("Error to parse federatedSupported value. Default value used.", e);
+			}
+		}
+		tile.setFederationSupported(fst);
 		
         // translate OOB data
         if(TEXT_WIDGET_OWNER.equalsIgnoreCase(tile.getWidgetOwner())) {
@@ -227,6 +240,8 @@ public class Tile
 	private Boolean widgetDeleted;
 
 	private Date widgetDeletionDate;
+
+	private FederationSupportedType federationSupported;
 
 	@JsonIgnore
 	private Dashboard dashboard;
@@ -491,10 +506,14 @@ public class Tile
 		return width;
 	}
 
+	public FederationSupportedType getFederationSupported() {
+		return federationSupported;
+	}
+
 	/**
 	 * Removes a tile parameter specified by the name
 	 *
-	 * @param index
+	 * @param name
 	 * @return
 	 */
 	public TileParam removeParameter(String name)
@@ -715,11 +734,16 @@ public class Tile
 		this.width = width;
 	}
 
+	public void setFederationSupported(FederationSupportedType federationSupported) {
+		this.federationSupported = federationSupported;
+	}
+
 	private EmsDashboardTile getDefaultTilePersistenceEntity(EmsDashboardTile to) throws DashboardException
 	{
 		Integer intIsMaximized = DataFormatUtils.boolean2Integer(isMaximized);
 		Integer intWidgetSupportTimeControl = DataFormatUtils.boolean2Integer(widgetSupportTimeControl);
 		Integer intWidgetDeleted = DataFormatUtils.boolean2Integer(widgetDeleted);
+		Integer intFedSupported = federationSupported == null ? FederationSupportedType.NON_FEDERATION_ONLY.getValue() : federationSupported.getValue();
 
 		if (title == null || "".equals(title)) {
 			throw new CommonFunctionalException(
@@ -807,7 +831,7 @@ public class Tile
 					lastModifiedBy, owner, providerAssetRoot, providerName, providerVersion, tileId, encodedTitle,
 					widgetCreationTime, widgetDescription, widgetGroupName, widgetHistogram, widgetIcon, widgetKocName,
 					widgetName, widgetOwner, widgetSource, widgetTemplate, widgetUniqueId, widgetViewmode,
-					intWidgetSupportTimeControl, width, widgetLinkedDashboard, intWidgetDeleted, widgetDeletionDate);
+					intWidgetSupportTimeControl, width, widgetLinkedDashboard, intWidgetDeleted, widgetDeletionDate, intFedSupported);
 			if (parameters != null) {
 				for (TileParam param : parameters) {
 					EmsDashboardTileParams edtp = param.getPersistentEntity(to, null);
@@ -845,6 +869,7 @@ public class Tile
 			to.setWidgetSupportTimeControl(intWidgetSupportTimeControl);
 			to.setWidgetLinkedDashboard(widgetLinkedDashboard);
 			to.setWidth(width);
+			to.setFederationSupported(intFedSupported);
 			updateEmsDashboardTileParams(parameters, to);
 		}
 		updateSpecificType(to);
@@ -860,6 +885,7 @@ public class Tile
 		//width = 8;
 		//height = 1;
 		Integer tileType = DataFormatUtils.tileTypeString2Integer(type);
+		Integer fedSupported = FederationSupportedType.FEDERATION_AND_NON_FEDERATION.getValue();// text widget supports both modes by default
 		// text tile does not support time control
 		Integer supportTimeControl = 0;
 		// whatever the input title is, text tile use the default title
@@ -870,7 +896,7 @@ public class Tile
 					widgetGroupName, widgetHistogram, widgetIcon, widgetKocName, widgetName, widgetOwner, widgetSource,
 					widgetTemplate, widgetUniqueId, widgetViewmode, supportTimeControl, width, widgetLinkedDashboard,
 					// text tile actually doesn't exist any more
-					0, widgetDeletionDate);
+					0, widgetDeletionDate, fedSupported);
 			if (parameters != null) {
 				for (TileParam param : parameters) {
 					EmsDashboardTileParams edtp = param.getPersistentEntity(to, null);
@@ -905,6 +931,7 @@ public class Tile
 			to.setWidgetViewmode(widgetViewmode);
 			to.setWidgetSupportTimeControl(supportTimeControl);
 			to.setWidth(width);
+			to.setFederationSupported(fedSupported);
 			updateEmsDashboardTileParams(parameters, to);
 		}
 		updateSpecificType(to);

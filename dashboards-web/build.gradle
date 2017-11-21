@@ -8,10 +8,6 @@ apply from: 'test.gradle'
 ext.restDocRootDir = "${buildDir}/restdoc" 
 ext.restDocOutputDir = "${restDocRootDir}"
 
-//Security client version
-//ext.emaasSecurityClientVersion = getDependentSdkVersion('com.oracle.emaas.emcpsf.sdk', 'security-client', '1.+')
-
-
 tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked"
     }
@@ -38,10 +34,6 @@ war {
         }
 
 }
-
-
-
-
 
 
 publishing.publications {
@@ -112,6 +104,8 @@ dependencies {
     providedCompile project(':dashboards-core')  
     providedCompile project(':dashboards-webutils')
     providedCompile project(':dashboards-sdk')
+    providedCompile getProjectArtifact('log4j-core')
+    providedCompile getProjectArtifact('log4j-api')
     providedCompile getProjectArtifact('servlet-api')   
     providedCompile getProjectArtifact('jersey-client')   
     providedCompile getProjectArtifact('jersey-core')   

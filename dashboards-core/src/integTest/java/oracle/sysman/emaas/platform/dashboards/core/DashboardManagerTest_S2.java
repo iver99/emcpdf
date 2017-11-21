@@ -1298,8 +1298,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 	@Test(groups = {"s2"})
 	public void testGetDashboardIdsByNames(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
 											 @Mocked final EntityManager anyEntityManager, @Mocked final EntityTransaction andEntityTransaction,
-											 @Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber)
-	{
+											 @Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber) throws DashboardNotFoundException {
 		DashboardManager dm = DashboardManager.getInstance();
 		dm.getDashboardIdsByNames(new ArrayList<>(Arrays.asList("Test","Testing")),1L);
 	}
@@ -1311,7 +1310,7 @@ public class DashboardManagerTest_S2 extends BaseTest
 											@Mocked final EmsDashboard emsDashboard) throws Exception
 	{
 		DashboardManager dm = DashboardManager.getInstance();
-		new Expectations(){
+		/*new Expectations(){
 			{
 //				anyDashboardServiceFacade.getEmsDashboardById(BigInteger.valueOf(1L));
 //				result = emsDashboard;
@@ -1319,13 +1318,40 @@ public class DashboardManagerTest_S2 extends BaseTest
 //				result = BigInteger.ZERO;
 //				emsDashboard.getSharePublic().intValue();
 //				result = 1;
-				anyDashboardServiceFacade.getDashboardNameWithMaxSuffixNumber("name",1L);
+				anyDashboardServiceFacade.getDashboardNameWithMaxSuffixNumber("name",1L, anyString);
 				result = "For Testing";
 				result = "For Testing _123";
 
 			}
-		};
-		Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"name");
-		Deencapsulation.invoke(dm,"generateNewName",anyDashboardServiceFacade,1L,"name");
+		};*/
+		Deencapsulation.invoke(dm,"generateNewName","name", "name");
+		Deencapsulation.invoke(dm,"generateNewName","name", "name");
+	}
+
+	@Test(groups = {"s2"})
+	public void testGenerateNewName(@Mocked final DashboardServiceFacade anyDashboardServiceFacade) throws Exception{
+		DashboardManager dm = DashboardManager.getInstance();
+		String newName = null;
+		newName = Deencapsulation.invoke(dm,"generateNewName","testName","testName");
+		Assert.assertEquals(newName, "testName_1");
+
+		newName = Deencapsulation.invoke(dm,"generateNewName","testName","testName_1");
+		Assert.assertEquals(newName, "testName_2");
+
+		newName = Deencapsulation.invoke(dm,"generateNewName","testName","testName_8");
+		Assert.assertEquals(newName, "testName_9");
+
+		newName = Deencapsulation.invoke(dm,"generateNewName","testName","testName_9");
+		Assert.assertEquals(newName, "testName_10");
+
+		newName = Deencapsulation.invoke(dm,"generateNewName","testName","testName_99");
+		Assert.assertEquals(newName, "testName_100");
+
+		newName = Deencapsulation.invoke(dm,"generateNewName","testName","testName_100");
+		Assert.assertEquals(newName, "testName_101");
+
+		newName = Deencapsulation.invoke(dm,"generateNewName","testName_100","testName_100_2");
+		Assert.assertEquals(newName, "testName_100_3");
+
 	}
 }

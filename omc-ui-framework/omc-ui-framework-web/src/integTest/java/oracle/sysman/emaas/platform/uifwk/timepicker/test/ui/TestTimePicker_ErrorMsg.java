@@ -40,6 +40,7 @@ public class TestTimePicker_ErrorMsg extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName, url);
 		CommonUIUtils.loadWebDriver(webd);
+		CommonUIUtils.checkCrossDay();
 	}
 	
 	@Test(alwaysRun = true)

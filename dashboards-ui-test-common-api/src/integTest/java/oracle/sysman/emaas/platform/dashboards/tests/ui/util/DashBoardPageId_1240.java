@@ -28,6 +28,11 @@ public class DashBoardPageId_1240
 	public static final String SORT_LASTACCESS_ASC = "sortby_accessasc";
 	public static final String SORT_LASTACCESS_DSC = "sortby_accessdsc";
 
+	//Add button for dialog widgetSelector
+        public static final String WIDGETSELECTOR_ADDBUTTONIDFORDIALOG = "add-widget-button";
+        //Add button for popup widgetSelector
+        public static final String WIDGETSELECTOR_ADDBUTTONIDFORPOPUP = "add-widget-button2";
+
 	private DashBoardPageId_1240()
 	{
 	}

@@ -43,6 +43,7 @@ public class DashboardTest {
             from.setType(2);
             from.setExtendedOptions("exOptions");
             from.setApplicationType(1);
+            from.setFederationSupported(1);
             List<EmsSubDashboard> emsSubDashboards = new ArrayList<>();
             final List<EmsDashboard> emsDashboards = new ArrayList<>();
             from.setSubDashboardList(emsSubDashboards);
