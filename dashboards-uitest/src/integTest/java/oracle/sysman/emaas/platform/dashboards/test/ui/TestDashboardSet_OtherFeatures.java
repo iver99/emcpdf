@@ -34,6 +34,8 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 	private String dbsetName_LA = "";
 	private String dbset_testMaximizeRestore = "";
 	private String dbName_indbSet = "";
+	private String dbName_ShareStatus = "";
+	private String dbSetName_ShareStatus = "";
 
 	private static String OOBAddToSet = "Database Operations";
 	private static String OOBSetName = "Exadata Health";
@@ -63,6 +65,19 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		//verify the dashboardset
 		webd.getLogger().info("Verify if the dashboard set existed in builder page");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName), "Dashboard set NOT found!");
+
+		//back to home page
+		webd.getLogger().info("Back to home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		dbName_ShareStatus= "test db status - " + DashBoardUtils.generateTimeStamp();
+		//create test dashboard
+		webd.getLogger().info("Create a new dashboard");
+		DashboardHomeUtil.createDashboard(webd, dbName_ShareStatus, "", DashboardHomeUtil.DASHBOARD);
+
+		//verify the dashboardset
+		webd.getLogger().info("Verify if the dashboard existed in builder page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_ShareStatus, "", true), "Dashboard NOT found!");
 
 		LoginAndLogout.logoutMethod();
 	}
@@ -96,6 +111,8 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbsetName_Share);
 		DashBoardUtils.deleteDashboard(webd, dbset_testMaximizeRestore);
 		DashBoardUtils.deleteDashboard(webd, dbName_indbSet);
+		DashBoardUtils.deleteDashboard(webd, dbSetName_ShareStatus);
+		DashBoardUtils.deleteDashboard(webd, dbName_ShareStatus);
 
 		webd.getLogger().info("All test data have been removed");
 
@@ -566,5 +583,83 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		//share the dashboardset
 		webd.getLogger().info("Share the dashboard");
 		Assert.assertFalse(DashboardBuilderUtil.toggleShareDashboardset(webd), "Stop sharing the dashboard set failed!");
+	}
+
+	@Test(alwaysRun = true)
+	public void testCheckShareStatus()
+	{
+		dbSetName_ShareStatus = "DashboardSet-Share-Status-" + DashBoardUtils.generateTimeStamp();
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testCheckShareStatus");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//verify the dashboard is not shared
+		webd.getLogger().info("Verify the dashboard '" + dbName_ShareStatus + "' is not shared");
+		DashboardHomeUtil.selectDashboard(webd, dbName_ShareStatus);
+		Assert.assertFalse(DashBoardUtils.isDashboardShared(webd), "The dashboard has been shared");
+
+		//back to the home page
+		webd.getLogger().info("Back to dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//create dashboardset
+		webd.getLogger().info("Create a new dashboard set");
+		DashboardHomeUtil.createDashboard(webd, dbSetName_ShareStatus, null, DashboardHomeUtil.DASHBOARDSET);
+
+		//verify the dashboardset
+		webd.getLogger().info("Verify if the dashboard set existed in builder page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbSetName_ShareStatus), "Dashboard set NOT found!");
+
+		//add the dashboard into the dashboard set
+		webd.getLogger().info("Add dashboard '" +  dbName_ShareStatus + "' into the set");
+		DashboardBuilderUtil.addNewDashboardToSet(webd, dbName_ShareStatus);
+
+		//share the dashboardset
+		webd.getLogger().info("Share the dashboard");
+		Assert.assertTrue(DashboardBuilderUtil.toggleShareDashboardset(webd), "Share the dashboard set failed!");
+
+		//back to the home page
+		webd.getLogger().info("Back to dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//open the dashboard
+		webd.getLogger().info("Open the dashboard '" +  dbName_ShareStatus+ "'");
+		DashboardHomeUtil.selectDashboard(webd, dbName_ShareStatus);
+
+		//verify the dashboard is shared
+		webd.getLogger().info("Verify the dashboard '" + dbName_ShareStatus + "' is shared");
+		Assert.assertTrue(DashBoardUtils.isDashboardShared(webd), "The dashboard has not been shared");
+
+		//back to the home page
+		webd.getLogger().info("Back to dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//open the dashboard
+		webd.getLogger().info("Open the dashboard set '" +  dbSetName_ShareStatus+ "'");
+		DashboardHomeUtil.selectDashboard(webd, dbSetName_ShareStatus);
+
+		//not share the dashboard set
+		webd.getLogger().info("Unshare the dashboard");
+		Assert.assertFalse(DashboardBuilderUtil.toggleShareDashboardset(webd), "Unshare the dashboard set failed!");
+
+		//back to the home page
+		webd.getLogger().info("Back to dashboard home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		//open the dashboard
+		webd.getLogger().info("Open the dashboard '" +  dbName_ShareStatus+ "'");
+		DashboardHomeUtil.selectDashboard(webd, dbName_ShareStatus);
+
+		//verify the dashboard is shared
+		webd.getLogger().info("Verify the dashboard '" + dbName_ShareStatus + "' is shared");
+		Assert.assertTrue(DashBoardUtils.isDashboardShared(webd), "The dashboard has not been shared");
 	}
 }
