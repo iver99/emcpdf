@@ -94,7 +94,7 @@ public class VerifyWidget extends LoginAndLogout
 	}
 
 	//open a ITA widget in dashboard builder page
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenITAWidget()
 	{
 		//init test
@@ -127,7 +127,7 @@ public class VerifyWidget extends LoginAndLogout
 	}
 
 	//open a LA widget in dashboard builder page
-	@Test
+	@Test(alwaysRun = true)
 	public void testOpenLAWidget()
 	{
 		//init test

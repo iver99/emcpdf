@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import org.openqa.selenium.By;
@@ -54,20 +55,19 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 	 */
 	@Override
 	public int getNumberOfPills(WebDriver driver, Logger logger)
-	{
-		List<WebElement> entSelectorPills = driver.getWebDriver().findElements(By.xpath(DashBoardPageId.EntSelPills));
-		int count = entSelectorPills.size();
+	{		
+		int count = driver.getElementCount(DashBoardPageId.EntSelPills);
 		logger.log(Level.INFO, "{0} pills found", new Object[] { count });
 		return count;
 	}
-        
-        @Override
-        public ArrayList<String> getPillContents(WebDriver driver, Logger logger)
-        {
-                Assert.assertTrue(false, "This method is not available in the current version");
-                logger.info("Method not available in the current version"); 
-                return null;
-        }
+	
+	@Override
+	public ArrayList<String> getPillContents(WebDriver driver, Logger logger)
+	{
+		Assert.assertTrue(false, "This method is not available in the current version");
+		logger.info("Method not available in the current version");
+		return null;
+	}
 
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IEntitySelectorUtil#openEntitySelector(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
@@ -81,11 +81,9 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 
 		//Verify suggestions popup is visible
 		logger.log(Level.INFO, "Verify Entity Selector suggestions are visible");
-		WebDriverWait waitPopup = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
-		waitPopup.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.EntSelSuggestionPopup)));
-		driver.takeScreenShot();
+		driver.waitForElementVisible("xpath=" + DashBoardPageId.EntSelSuggestionPopup);
+		WaitUtil.waitForPageFullyLoaded(driver);
 		logger.log(Level.INFO, "Entity Selector options are displayed");
-
 	}
 
 	/* (non-Javadoc)
@@ -99,10 +97,11 @@ public class EntitySelectorUtil_1140 extends EntitySelectorUtil_Version implemen
 		indexOfPillToRemove++;
 		final int prevPillCount = getNumberOfPills(driver, logger);
 		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), UNTIL_TIMEOUT);
-		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(MessageFormat.format(
-				DashBoardPageId.EntSelPillToRemoveByIndex, indexOfPillToRemove))));
+		driver.waitForElementEnabled("xpath=" + MessageFormat.format(DashBoardPageId.EntSelPillToRemoveByIndex, indexOfPillToRemove));
+//		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(MessageFormat.format(
+//				DashBoardPageId.EntSelPillToRemoveByIndex, indexOfPillToRemove))));
 		logger.log(Level.INFO, "Click button to remove pill from Entity Selector ");
-		element.click();
+		driver.click("xpath=" + MessageFormat.format(DashBoardPageId.EntSelPillToRemoveByIndex, indexOfPillToRemove));
 		//Wait until the pill is removed
 		final WebDriver finalDriver = driver;
                 final Logger finalLogger = logger;

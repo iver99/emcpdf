@@ -69,7 +69,7 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 
 	//This test is to test creating dashboard set
 	//create a dashboard set with name and description in grid view
-	@Test
+	@Test(alwaysRun = true)
 	public void testCreateDashboardSet()
 	{
 		dbsetName_Simple_CRUD = "DashboardSet-WithDesc" + DashBoardUtils.generateTimeStamp();
@@ -99,7 +99,7 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 
 	//This test is to test creating dashboard set
 	//create a dashboard set with name in list view
-	@Test
+	@Test(alwaysRun = true)
 	public void testCreateDashboardWithoutDesc()
 	{
 		dbsetName_Test_NoDesc = "DashboardSet-NoDesc" + DashBoardUtils.generateTimeStamp();
@@ -125,7 +125,7 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_Test_NoDesc), "Dashboard set NOT found!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testDeleteDashboardSetWithOOBDashboard()
 	{
 		dbsetName_withOOB = "DashboardSet With OOB-" + DashBoardUtils.generateTimeStamp();
@@ -202,7 +202,6 @@ public class TestDashboardSet_SimpleCRUD extends LoginAndLogout
 	@Test(dependsOnMethods = { "testCreateDashboardWithoutDesc" })
 	public void testModifyDashboardSet_AddDesc()
 	{
-
 		//init the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test case: testModifyDashboardSet_AddDesc");

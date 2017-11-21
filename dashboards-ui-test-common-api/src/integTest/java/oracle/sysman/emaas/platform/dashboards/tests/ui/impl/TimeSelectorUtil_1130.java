@@ -10,22 +10,17 @@
 
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorUIControls;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 {
+	private static final String Index = null;
+
 	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil#getTimeRangeLabel(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
 	 */
@@ -49,8 +44,7 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sTimeRangeBtn);
 		webd.takeScreenShot();
 		webd.savePageToFile();
-		String str_timerangelable = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
-				.get(index - 1).getText();
+		String str_timerangelable = webd.getText("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + Index + "]");
 
 		return str_timerangelable;
 	}
@@ -67,16 +61,14 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 			start = timeFormatChange(webd, startDateTime, "MM/dd/yy hh:mm a", "MM/dd/yyyy hh:mm a");
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		String end = null;
 		try {
 			end = timeFormatChange(webd, endDateTime, "MM/dd/yy hh:mm a", "MM/dd/yyyy hh:mm a");
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		webd.getLogger().info("the start time in dashboard is:" + start + ",the end time in dashboard is:" + end);
 		webd.getLogger().info("we are going to set the custom time in dashboard page");
@@ -85,8 +77,7 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 			clickTimePicker(webd, index);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 		webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
@@ -116,11 +107,8 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 		}
 
 		//set start date time and end date time
-		webd.getLogger().info("Verify if custom panpel displayed...");
-		//		WebDriverWait wdwait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		//		wdwait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(TimeSelectorUIControls.sPickPanel)));
+		webd.getLogger().info("Verify if custom panpel displayed...");		
 		webd.waitForElementVisible("css=" + TimeSelectorUIControls.sPickPanel);
-		//webd.isDisplayed(TimeSelectorUIControls.sPickPanel);
 		webd.takeScreenShot();
 		webd.savePageToFile();
 		webd.getLogger().info("Input the start date time and end date time...");
@@ -139,29 +127,14 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 		webd.takeScreenShot();
 		webd.savePageToFile();
 
-		//		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-		//			try {
-		//				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
-		//			}
-		//			catch (Exception e) {
-		//				// TODO Auto-generated catch block
-		//				e.printStackTrace();
-		//			}
-		//			return null;
-		//		}
-		//		else {
 		try {
 			clickApplyButton(webd);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
-		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
-				.get(index - 1).getText();
-		return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a", index);
-		//		}
-
+		String returnTimeRange = webd.getText("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + index + "]");
+		return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a", index);		
 	}
 
 	/* (non-Javadoc)
@@ -182,15 +155,13 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 			startDate = timeFormatChange(webd, startDate, "MM/dd/yy", "MM/dd/yyyy");
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		try {
 			endDate = timeFormatChange(webd, endDate, "MM/dd/yy", "MM/dd/yyyy");
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		webd.getLogger().info("the start date in dashboard is:" + startDate + ",the end date in dashboard is:" + endDate);
 		webd.getLogger().info("we are going to set the custom time in dashboard page");
@@ -199,20 +170,19 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 			clickTimePicker(webd, index);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
 		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 		webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 
-		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sRangeRadio);
+		webd.waitForElementVisible("css=" + TimeSelectorUIControls.sRangeRadio); 
+		//webd.waitForElementPresent("css=" + TimeSelectorUIControls.sRangeRadio);   
 		webd.click("css=" + TimeSelectorUIControls.sRangeRadio);
-
+		
 		//set start date time and end date time
 		webd.getLogger().info("Verify if custom panpel displayed...");
-		WebDriverWait wdwait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wdwait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(TimeSelectorUIControls.sPickPanel)));
-		//webd.isDisplayed(TimeSelectorUIControls.sPickPanel);
+		webd.waitForElementVisible("css=" + TimeSelectorUIControls.sPickPanel);
+
 		webd.takeScreenShot();
 		webd.savePageToFile();
 		webd.getLogger().info("Input the start date and end date...");
@@ -224,28 +194,14 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 		webd.sendKeys("css=" + TimeSelectorUIControls.sEndDateInput, endDate);
 		webd.click("css=" + TimeSelectorUIControls.sEndDateInput);
 
-		//		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-		//			try {
-		//				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
-		//			}
-		//			catch (Exception e) {
-		//				// TODO Auto-generated catch block
-		//				e.printStackTrace();
-		//			}
-		//			return null;
-		//		}
-		//		else {
 		try {
 			clickApplyButton(webd);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
-		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
-				.get(index - 1).getText();
+		String returnTimeRange = webd.getText("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + index + "]");
 		return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy", "MMM d, yyyy", index);
-		//		}
 	}
 
 	@Override
@@ -276,51 +232,36 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 		driver.click("css=" + TimeSelectorUIControls.sFlexRelTimeOpt);
 		String optionLocator = getOptionsLocator(driver, relTimeUnit.getTimeUnit());
 		driver.click("css=" + optionLocator);
-
-		//		if (driver.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-		//			try {
-		//				throw new Exception(driver.getText(TimeSelectorUIControls.sErrorMsg));
-		//			}
-		//			catch (Exception e) {
-		//				// TODO Auto-generated catch block
-		//				e.printStackTrace();
-		//			}
-		//			return null;
-		//		}
-		//		else {
+		
 		try {
 			clickApplyButton(driver);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			driver.getLogger().info(e.getLocalizedMessage());
 		}
-		String returnTimeRange = driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
-				.get(index - 1).getText();
+		String returnTimeRange = driver.getText("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + index + "]");
 
 		if (returnTimeRange.startsWith("Last") && returnTimeRange.indexOf(":") > -1) {
 			return dateConvert(driver, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a", index);
 		}
 		else {
-			String returnStartDate = driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartDateInput))
-					.get(index - 1).getAttribute("value")
+			String returnStartDate = driver.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" 
+					+ TimeSelectorUIControls.sStartDateInput_XPATH + "@value")
 					+ " "
-					+ driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).get(index - 1)
-							.getAttribute("value");
-			String returnEndDate = driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndDateInput))
-					.get(index - 1).getAttribute("value")
+					+ driver.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" 
+					+ TimeSelectorUIControls.sStartTimeInput_XPATH + "@value");
+			String returnEndDate = driver.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" 
+					+ TimeSelectorUIControls.sEndDateInput_XPATH + "@value")
 					+ " "
-					+ driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(index - 1)
-							.getAttribute("value");
-
+					+ driver.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" 
+					+ TimeSelectorUIControls.sEndTimeInput_XPATH + "@value");
 			returnStartDate = timeFormatChange(driver, returnStartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 			returnEndDate = timeFormatChange(driver, returnEndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 
 			String returnDate = returnTimeRange + ": " + returnStartDate + " - " + returnEndDate;
 
 			return dateConvert(driver, returnDate, TimeRange.Custom, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a", index);
-		}
-		//		}
+		}	
 	}
 
 	@Override
@@ -355,43 +296,29 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 		webd.click("css=" + TimeSelectorUIControls.sFlexRelTimeOpt);
 		String optionLocator = getOptionsLocator(webd, relTimeUnit.getTimeUnit());
 		webd.click("css=" + optionLocator);
-
-		//		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
-		//			try {
-		//				throw new Exception(webd.getText(TimeSelectorUIControls.sErrorMsg));
-		//			}
-		//			catch (Exception e) {
-		//				// TODO Auto-generated catch block
-		//				e.printStackTrace();
-		//			}
-		//			return null;
-		//		}
-		//		else {
+		
 		try {
 			clickApplyButton(webd);
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			webd.getLogger().info(e.getLocalizedMessage());
 		}
-		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
-				.get(index - 1).getText();
+		String returnTimeRange = webd.getText("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + index + "]");
 
 		if (returnTimeRange.startsWith("Last") && returnTimeRange.indexOf(":") > -1) {
 			return dateConvert(webd, returnTimeRange, TimeRange.Custom, "MM/dd/yyyy", "MMM d, yyyy", index);
 		}
 		else {
-			String returnStartDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartDateInput))
-					.get(index - 1).getAttribute("value")
+			String returnStartDate = webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" 
+					+ TimeSelectorUIControls.sStartDateInput_XPATH + "@value")
 					+ " "
-					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).get(index - 1)
-							.getAttribute("value");
-			String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndDateInput))
-					.get(index - 1).getAttribute("value")
+					+ webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" 
+					+ TimeSelectorUIControls.sStartTimeInput_XPATH + "@value");
+			String returnEndDate = webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" 
+					+ TimeSelectorUIControls.sEndDateInput_XPATH + "@value")
 					+ " "
-					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(index - 1)
-							.getAttribute("value");
-
+					+ webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + index + "]" 
+					+ TimeSelectorUIControls.sEndTimeInput_XPATH + "@value");
 			returnStartDate = timeFormatChange(webd, returnStartDate, "MM/dd/yyyy", "MMM d, yyyy");
 			returnEndDate = timeFormatChange(webd, returnEndDate, "MM/dd/yyyy", "MMM d, yyyy");
 
@@ -399,7 +326,6 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 
 			return dateConvert(webd, returnDate, TimeRange.Custom, "MM/dd/yyyy", "MMM d, yyyy", index);
 		}
-		//		}
 	}
 
 	@Override
@@ -477,37 +403,34 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Latest);
 				webd.click("css=" + TimeSelectorUIControls.sTimeRange_Latest);
 
-				return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1)
-						.getText();
+				return webd.getText("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + Index + "]");
 			case Custom:
 				try {
 					throw new Exception("Please use setCustomTime API to set Custom Range");
 				}
 				catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					webd.getLogger().info(e.getLocalizedMessage());
 				}
 			default:
 				break;
 
 		}
-		String returnTimeRange = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn))
-				.get(Index - 1).getText();
+		String returnTimeRange = webd.getText("xpath=(" + TimeSelectorUIControls.sTimeRangeBtn_XPATH + ")[" + Index + "]");
 
 		if (returnTimeRange.startsWith(rangeoption.getRangeOption() + ":")) {
 			return dateConvert(webd, returnTimeRange, rangeoption, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a", Index);
 		}
 		else {
-			String returnStartDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartDateInput))
-					.get(Index - 1).getAttribute("value")
+			String returnStartDate = webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + Index + "]" 
+					+ TimeSelectorUIControls.sStartDateInput_XPATH + "@value")
 					+ " "
-					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sStartTimeInput)).get(Index - 1)
-					.getAttribute("value");
-			String returnEndDate = webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndDateInput))
-					.get(Index - 1).getAttribute("value")
+					+ webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + Index + "]" 
+					+ TimeSelectorUIControls.sStartTimeInput_XPATH + "@value");
+			String returnEndDate = webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + Index + "]" 
+					+ TimeSelectorUIControls.sEndDateInput_XPATH + "@value")
 					+ " "
-					+ webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sEndTimeInput)).get(Index - 1)
-					.getAttribute("value");
+					+ webd.getAttribute("xpath=(" + TimeSelectorUIControls.sDateTimePick_XPATH + ")[" + Index + "]" 
+					+ TimeSelectorUIControls.sEndTimeInput_XPATH + "@value");
 
 			returnStartDate = timeFormatChange(webd, returnStartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 			returnEndDate = timeFormatChange(webd, returnEndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
@@ -526,14 +449,14 @@ public class TimeSelectorUtil_1130 extends TimeSelectorUtil_175
 	{
 		return setTimeRange(webd, 1, rangeoption);
 	}
-
-	private String getOptionsLocator(WebDriver driver, String option)
-	{
-		String optionLocator = TimeSelectorUIControls.sFlexRelTimeOptList + "[value='" + option + "']";
-		WebElement li = driver.getWebDriver().findElement(By.cssSelector(optionLocator));
-		List<WebElement> list = driver.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sFlexRelTimeOptList));
-		int index = list.indexOf(li);
-
-		return TimeSelectorUIControls.sFlexRelTimeOptStart + (index + 1) + TimeSelectorUIControls.sFlexRelTimeOptEnd;
+	
+	protected String getOptionsLocator(WebDriver driver, String option)
+	{		
+		int i=1;
+		int listCount = driver.getElementCount("css=" + TimeSelectorUIControls.sFlexRelTimeOptList);
+		for(i=1; i<=listCount; i++) {
+			if(option.equals(driver.getAttribute("xpath=("+ TimeSelectorUIControls.sFlexRelTimeOptList_XPATH + ")[" + i + "]@value").trim())) break;
+		}
+		return TimeSelectorUIControls.sFlexRelTimeOptStart + (i) + TimeSelectorUIControls.sFlexRelTimeOptEnd;
 	}
 }

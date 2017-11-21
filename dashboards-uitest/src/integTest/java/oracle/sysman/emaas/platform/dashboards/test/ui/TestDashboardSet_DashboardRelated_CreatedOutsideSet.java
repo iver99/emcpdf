@@ -102,7 +102,7 @@ public class TestDashboardSet_DashboardRelated_CreatedOutsideSet extends LoginAn
 		LoginAndLogout.logoutMethod();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testAddDashboardInGridView()
 	{
 		//init the test

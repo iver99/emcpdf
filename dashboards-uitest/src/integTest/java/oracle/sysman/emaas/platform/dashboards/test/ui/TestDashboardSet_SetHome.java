@@ -82,7 +82,7 @@ public class TestDashboardSet_SetHome extends LoginAndLogout
 				"It is NOT the home page!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testSetHome()
 	{
 		dbsetName_setHome = "DashboardSet_TestSetHome-" + DashBoardUtils.generateTimeStamp();

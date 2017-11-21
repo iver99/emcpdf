@@ -6,10 +6,6 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 /**
  * Created by xiadai on 2016/10/12.
  */
@@ -23,14 +19,12 @@ public class DashboardBuilderUtil_1120 extends DashboardBuilderUtil_1100
 						+ "\", showTimeSelector=\"" + showTimeSelector + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
 
-		driver.waitForElementPresent(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
-		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR)));
+		driver.waitForElementVisible(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
 		WaitUtil.waitForPageFullyLoaded(driver);
 
 		driver.waitForElementPresent(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
 		driver.click(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR);
-		String realName = driver.getElement(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR).getAttribute("title");
+		String realName = driver.getAttribute(DashBoardPageId_190.BUILDERNAMETEXTLOCATOR + "@title");
 		if (!dashboardName.equals(realName)) {
 			driver.getLogger().info(
 					"DashboardBuilderUtil.verifyDashboard compelted and returns false. Expected dashboard name is "
@@ -38,8 +32,8 @@ public class DashboardBuilderUtil_1120 extends DashboardBuilderUtil_1100
 			return false;
 		}
 
-		driver.waitForElementPresent(DashBoardPageId_1120.BUILDERDESCRIPTIONTEXTLOCATOR);
-		String realDesc = driver.getElement(DashBoardPageId_1120.BUILDERDESCRIPTIONTEXTLOCATOR).getAttribute("title");
+		driver.waitForElementPresent(DashBoardPageId_1120.BUILDERDESCRIPTIONTEXTLOCATOR);		
+		String realDesc = driver.getAttribute(DashBoardPageId_1120.BUILDERDESCRIPTIONTEXTLOCATOR + "@title");
 		if (description == null || "".equals(description)) {
 			if (realDesc != null && !"".equals(realDesc.trim())) {
 				driver.getLogger().info(
