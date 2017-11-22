@@ -180,13 +180,25 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "DOMPurify", "ojs/ojtabs"
                     TimeFn = setTimeout(function() {
                         //If user clicks on hyperlink or image, open them instead of switching to edit mode
                         if(event.target && event.target.tagName === "A" && event.target.href) {
-                            window.open(event.target.href);
-                            return false;
+                            //Open link in new tab. Open email in current tab
+                            if(event.target.href.startsWith("mailto:")) {
+                                window.open(event.target.href, "_self");
+                                return false;
+                            }else {
+                                window.open(event.target.href);
+                                return false;
+                            }
                         }else if(event.target && event.target.tagName === "IMG" && event.target.src) {
-                            window.open(event.target.src);
-                            return false;
+                            var parentA = $(event.target).closest("a", $("#textContentWrapper_" + self.textWidgetId));
+                            //If image is wrapped by <a>, open the link. Otherwise, open the image
+                            if(parentA && parentA.attr("href")) {
+                                window.open(parentA.attr("href"));
+                                return false;
+                            }else {
+                                window.open(event.target.src);
+                                return false;
+                            }
                         }
-                        return true;
                     }, 300);
                     
                 }
