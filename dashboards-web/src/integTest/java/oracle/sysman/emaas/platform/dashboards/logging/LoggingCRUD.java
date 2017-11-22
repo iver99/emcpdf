@@ -24,8 +24,6 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 
-import oracle.sysman.qatool.uifwk.webdriver.logging.EMTestLogger;
-
 /**
  * @author shangwan
  */
@@ -36,7 +34,6 @@ public class LoggingCRUD
 	 * executing test cases
 	 */
 	private static final Logger LOGGER = LogManager.getLogger(LoggingCRUD.class);
-	java.util.logging.Logger TestLog = EMTestLogger.getLogger("LoggingCRUD");
 	static String HOSTNAME;
 	static String portno;
 	static String serveruri;
@@ -117,7 +114,7 @@ public class LoggingCRUD
 	{
 		try
 		{
-			String jsonString1 = "{ \"tenantName\":\"tenantName\",\"userName\":\"userName\",\"logArray\":[\"type\":\"DBD\",\"logMsg\":\"Exadata Health\"},{\"type\":\"HBGMENU\",\"logMsg\":\"APM->Pages\"}]}";
+			String jsonString1 = "{ \"tenantName\":\"tenantName\",\"userName\":\"userName\",\"logArray\":[{\"type\":\"DBD\",\"logMsg\":\"Exadata Health\"},{\"type\":\"HBGMENU\",\"logMsg\":\"APM->Pages\"}]}";
 			Response res1 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -125,64 +122,41 @@ public class LoggingCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).body(jsonString1).when().post("/logging/feature/logs");
-			TestLog.info("status code:" + res1.getStatusCode());
-			//LOGGER.info("msg:" + res1.jsonPath().get("msg"));
 			Assert.assertTrue(res1.getStatusCode() == 200);
 			Assert.assertEquals(res1.jsonPath().get("msg").toString().trim(), "Save feature log successfully");
 
-			String jsonString2 = "{ \"tenantName\":\"tenantName\"," +
-					"    \"userName\":\"userName\"," +
-					"    \"logArray\":[" +
-					"    ]}";
+			String jsonString2 = "{ \"tenantName\":\"tenantName\",\"userName\":\"userName\",\"logArray\":[]}";
 			Response res2 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).body(jsonString1).when().post("/logging/feature/logs");
+							"Authorization", authToken).body(jsonString2).when().post("/logging/feature/logs");
 			Assert.assertTrue(res2.getStatusCode() == 200);
-			Assert.assertEquals(res1.jsonPath().get("msg").toString().trim(), "Log arrays are null or empty");
+			Assert.assertEquals(res2.jsonPath().get("msg").toString().trim(), "Log arrays are null or empty");
 
-			String jsonString3 = "{ \"userName\":\"userName\"," +
-					"    \"logArray\":[" +
-					"            \"type\":\"DBD\"," +
-					"            \"logMsg\":\"Exadata Health\"" +
-					"        }," +
-					"        {" +
-					"            \"type\":\"HBGMENU\"," +
-					"            \"logMsg\":\"APM->Pages\"" +
-					"        }" +
-					"    ]}";
+			String jsonString3 = "{ \"userName\":\"userName\",\"logArray\":[{\"type\":\"DBD\",\"logMsg\":\"Exadata Health\"},{\"type\":\"HBGMENU\",\"logMsg\":\"APM->Pages\"}]}";
 			Response res3 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).body(jsonString1).when().post("/logging/feature/logs");
+							"Authorization", authToken).body(jsonString3).when().post("/logging/feature/logs");
 			Assert.assertTrue(res3.getStatusCode() == 500);
-			Assert.assertEquals(res1.jsonPath().get("msg").toString().trim(), "Error occurred when save feature log");
+			Assert.assertEquals(res3.jsonPath().get("msg").toString().trim(), "Error occurred when save feature log");
 
-			String jsonString4 = "{ \"tenantName\":\"tenantName\"," +
-					"    \"logArray\":[" +
-					"            \"type\":\"DBD\"," +
-					"            \"logMsg\":\"Exadata Health\"" +
-					"        }," +
-					"        {" +
-					"            \"type\":\"HBGMENU\"," +
-					"            \"logMsg\":\"APM->Pages\"" +
-					"        }" +
-					"    ]}";
+			String jsonString4 = "{ \"tenantName\":\"tenantName\",\"logArray\":[{\"type\":\"DBD\",\"logMsg\":\"Exadata Health\"},{\"type\":\"HBGMENU\",\"logMsg\":\"APM->Pages\"}]}";
 			Response res4 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).body(jsonString1).when().post("/logging/feature/logs");
+							"Authorization", authToken).body(jsonString4).when().post("/logging/feature/logs");
 			Assert.assertTrue(res4.getStatusCode() == 500);
-			Assert.assertEquals(res1.jsonPath().get("msg").toString().trim(), "Error occurred when save feature log");
+			Assert.assertEquals(res4.jsonPath().get("msg").toString().trim(), "Error occurred when save feature log");
 
 		}
 		catch (Exception e) {
