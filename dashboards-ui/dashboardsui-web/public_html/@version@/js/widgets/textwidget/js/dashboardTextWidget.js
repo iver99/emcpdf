@@ -3,6 +3,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "DOMPurify", "ojs/ojtabs"
             function textWidgetViewModel(params) {
                 var self = this;
                 self.isEditing = ko.observable(false);
+                self.disabledTabs = ko.observableArray([1]);
                 if(!params.tile.content) {
                     params.tile.content = ko.observable();
                 }
@@ -68,6 +69,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "DOMPurify", "ojs/ojtabs"
                     editor = CKEDITOR.replace("textEditor_" + self.textWidgetId, configOptions);
                         
                     editor.on("instanceReady", function () {
+                        self.disabledTabs([]);
                         self.setTextEditorContentHeight();
                         this.setData(self.content());
                     });
@@ -115,6 +117,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "DOMPurify", "ojs/ojtabs"
                     //When setting isEditing to false, editor in html will be removed
                     //Next time when entering editing mode, need to initiaize ckeditor self.loadTextEditor
                     self.isCKEditorInited = false;
+                    self.disabledTabs([1]);
                 };
                 
                 self.showHtmlEditor = function() {

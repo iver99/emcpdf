@@ -13,7 +13,7 @@
 
         <!-- ko if: isEditing() -->
         <div style="width: 100%; height: 100%;">
-            <div data-bind="ojComponent: {component: 'ojTabs', optionChange: editModeChangehandler, rootAttributes: {style: 'width: 100%; height: 100%;'}}">
+            <div data-bind="ojComponent: {component: 'ojTabs', optionChange: editModeChangehandler, rootAttributes: {style: 'width: 100%; height: 100%;'}, disabledTabs: disabledTabs}">
                 <ul>
                     <li id="textMode">
                         <span data-bind="text: getNlsString('DBS_BUILDER_TEXT_WIDGET_VISUAL_TAB')"></span>
