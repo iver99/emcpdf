@@ -20,7 +20,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import oracle.sysman.qatool.uifwk.utils.Utils;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;

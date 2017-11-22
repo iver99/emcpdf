@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.TimeUtil;
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
@@ -34,7 +35,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupC
 import oracle.sysman.emaas.platform.dashboards.comparator.exception.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTException;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.CountsEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.DashboardRowsComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstanceData;
