@@ -104,6 +104,15 @@ define([
                         typeof(retryOptions.retryDelayTime) === 'number' ? retryOptions.retryDelayTime : 500;
                 var messageId = null;
                 var messageObj = null;
+                var headers = retryOptions.headers;
+                if(!(window.DEV_MODE !== null && typeof window.DEV_MODE === "object")) {
+                    if(headers && (typeof(headers) === "object")) {
+                        retryOptions.headers["X-OMC-UI-REQUEST"] = true;
+                    }else {
+                        retryOptions.headers = {"X-OMC-UI-REQUEST": true};
+                    }
+                }
+                
                 var errorCallBack = retryOptions.error;
                 retryOptions.error = null;
                 var beforeSendCallback = retryOptions.beforeSend;
@@ -119,6 +128,9 @@ define([
                         if (beforeSendInAjaxSetup && $.isFunction(beforeSendInAjaxSetup)){
                             beforeSendInAjaxSetup(jqXHR, settings);
                         }
+                    }
+                    if(!(window.DEV_MODE !== null && typeof window.DEV_MODE === "object")) {
+                        jqXHR.setRequestHeader("X-OMC-UI-REQUEST", true);
                     }
                 };
 

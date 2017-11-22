@@ -246,6 +246,8 @@ require(['knockout',
         window.dfBootstrapDataReceived.done(function () {
             ko.mapping = km;
             var dsbId = dfu.getUrlParam("dashboardId");
+            // check federation modes support
+            var federationEnabled = Builder.isRunningInFederationMode();
             var dashboard = null;
             var mode = null, normalMode = null, tabletMode = null;
             var timeSelectorModel = null;
@@ -273,6 +275,15 @@ require(['knockout',
                 Builder.initializeFromCookie();
                 new Builder.DashboardDataSource().loadDashboardData(dsbId, function (kodb) {
                     dashboard = kodb;
+
+                    if (federationEnabled && dashboard.federationSupported && dashboard.federationSupported() == 'NON_FEDERATION_ONLY' ||
+                            !federationEnabled && dashboard.federationSupported && dashboard.federationSupported() == 'FEDERATION_ONLY') {
+                        oj.Logger.error("The running mode is not supported by the current dashboard. " +
+                                    "Running mode is federationEnabled=" + federationEnabled, true);
+                        location.href = "./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG&invalidUrl=" + encodeURIComponent(location.href);
+                        return;
+                    }
+
                     var isUnderSet = ko.unwrap(dashboard.type) === "SET" ? true : false;;
                     normalMode = new Builder.NormalEditorMode();
                     tabletMode = new Builder.TabletEditorMode();
@@ -354,6 +365,12 @@ require(['knockout',
 
 			    function DashboardsetHeaderViewModel() {
 			        var self = this;
+                                var omcCurrentMenuId = menuUtil.OMCMenuConstants.GLOBAL_DASHBOARDS;
+                                if(federationEnabled === true) {
+//                                    omcCurrentMenuId = menuUtil.OMCMenuConstants.GLOBAL_FEDERATEDVIEW;
+                                    //Select federated dashboard in HM
+                                    omcCurrentMenuId = "omc_federatedview_grp_" + ko.unwrap(dashboard.id);
+                                }
 			        self.userName = dfu.getUserName();
 			        self.tenantName = dfu.getTenantName();
 			        self.appId = "Dashboard";
@@ -364,7 +381,7 @@ require(['knockout',
 				    isAdmin:true,
 				    showGlobalContextBanner: ko.observable(false),
                                     omcHamburgerMenuOptIn: true,
-                                    omcCurrentMenuId: menuUtil.OMCMenuConstants.GLOBAL_DASHBOARDS,
+                                    omcCurrentMenuId: omcCurrentMenuId,
                                     showTimeSelector: ko.observable(false),
 				    timeSelectorParams: {
 				        startDateTime: ko.observable(null),
@@ -378,7 +395,8 @@ require(['knockout',
 				    showEntitySelector: ko.observable(false),
 				    entityContextParams: {
 				        readOnly: false
-				    }
+				    },
+                                    updateGlobalContextByTopologySelection: true
 			        };
 
                                 function onElementHeightChange($node, callback){

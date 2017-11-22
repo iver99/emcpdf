@@ -25,6 +25,8 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -33,6 +35,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 public class Dashboard
 {
+	private static final Logger LOGGER = LogManager.getLogger(Dashboard.class);
+
 	public static enum EnableDescriptionState
 	{
 		FALSE("FALSE", 0), TRUE("TRUE", 1), AUTO("AUTO", 2);
@@ -258,6 +262,15 @@ public class Dashboard
 		to.setType(DataFormatUtils.dashboardTypeInteger2String(from.getType()));
 		to.setExtendedOptions(from.getExtendedOptions());
 		to.setApplicationType(from.getApplicationType());
+		FederationSupportedType fst = FederationSupportedType.NON_FEDERATION_ONLY;
+		if (from.getFederationSupported() != null) {
+			try {
+				fst = FederationSupportedType.fromValue(from.getFederationSupported());
+			} catch (IllegalArgumentException e) {
+				LOGGER.error("Error to parse federatedSupported value. Default value used.", e);
+			}
+		}
+		to.setFederationSupported(fst);
 		
 		// translate OOB data
 		if(to.isSystem) {
@@ -360,6 +373,8 @@ public class Dashboard
 
 	private String type;
 
+	private FederationSupportedType federationSupported;
+
 	private DashboardApplicationType appicationType;
 	
 	private String extendedOptions;
@@ -402,6 +417,7 @@ public class Dashboard
 		isSystem = Boolean.FALSE;
 		sharePublic = Boolean.FALSE;
 		showInHome=Boolean.TRUE;
+		federationSupported = FederationSupportedType.NON_FEDERATION_ONLY;
 	}
 
 	public Tile addTile(Tile tile)
@@ -561,6 +577,7 @@ public class Dashboard
 		Integer isShowInHome=DataFormatUtils.boolean2Integer(showInHome);
 		Integer dashboardType = DataFormatUtils.dashboardTypeString2Integer(type);
 		Integer appType = appicationType == null ? null : appicationType.getValue();
+		Integer fedSupported = federationSupported == null ? null : federationSupported.getValue();
 		//TODO Integer appType = applicationType;
 		String htmlEcodedName = StringEscapeUtils.escapeHtml4(name);
 		String htmlEcodedDesc = description == null ? null : StringEscapeUtils.escapeHtml4(description);
@@ -568,7 +585,7 @@ public class Dashboard
 		if (ed == null) {
 			ed = new EmsDashboard(creationDate, dashboardId, BigInteger.ZERO, htmlEcodedDesc, isEnableTimeRange, isEnableRefresh,
 					isEnableDescription, isEnableEntityFilter, isIsSystem, isShare, lastModificationDate, lastModifiedBy,
-					htmlEcodedName, owner, screenShot, dashboardType, appType, isShowInHome, extendedOptions);
+					htmlEcodedName, owner, screenShot, dashboardType, appType, isShowInHome, extendedOptions, fedSupported);
 
 			if (type.equals(Dashboard.DASHBOARD_TYPE_SET)) {
 				// support create subDashboards
@@ -609,6 +626,7 @@ public class Dashboard
 			ed.setApplicationType(appType);
 			ed.setSharePublic(isShare);
 			ed.setExtendedOptions(extendedOptions);
+			ed.setFederationSupported(fedSupported);
 			if (ed.getType() != null && dashboardType != null && !dashboardType.equals(ed.getType())) {
 				throw new CommonResourceException(
 						MessageUtils.getDefaultBundleString(CommonResourceException.NOT_SUPPORT_UPDATE_TYPE_FIELD));
@@ -657,6 +675,10 @@ public class Dashboard
 	public String getType()
 	{
 		return type;
+	}
+
+	public FederationSupportedType getFederationSupported() {
+		return federationSupported;
 	}
 
 	public Tile removeTile(Tile tile)
@@ -792,6 +814,10 @@ public class Dashboard
 	public void setType(String type)
 	{
 		this.type = type;
+	}
+
+	public void setFederationSupported(FederationSupportedType federationSupported) {
+		this.federationSupported = federationSupported;
 	}
 	
 	private static void getSubDashboardIds(List<EmsSubDashboard> subDashboards,
