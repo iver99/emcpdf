@@ -498,6 +498,47 @@ public class DashboardAPI extends APIBase
 		}
 	}
 
+
+	@GET
+	@Path("query")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response queryDashboardsByName(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+									   @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+									   @DefaultValue("") @QueryParam("name") String name)
+	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/query?name={}", name);
+		DashboardManager dm = DashboardManager.getInstance();
+		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [GET] /v1/dashboards/query?name={}: database is down", name);
+				throw new DatabaseDependencyUnavailableException();
+			}
+			logkeyHeaders("queryDashboardsByName()", userTenant, tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+			List<Dashboard> dbList = dm.getDashboardsByName(name,tenantId);
+			if(dbList == null)
+				throw new DashboardNotFoundException();
+			return Response.ok(getJsonUtil().toJson(dbList)).build();
+		}
+		catch(DashboardNotFoundException e){
+			//suppress error information in log file
+			LOGGER.warn("Specific dashboard not found for name {}", name);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
+		}
+	}
+
 	@GET
 	@Path("{id: [1-9][0-9]*}")
 	//@Produces(MediaType.APPLICATION_JSON)

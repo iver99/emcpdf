@@ -318,7 +318,22 @@ public class DashboardAPITest
 		};
 		assertQueryDashboardById();
 	}
-	
+
+	@Test
+    public void testQueryDashboardsByName(@Mocked final DependencyStatus anyDependencyStatus) throws Exception{
+        final List<Dashboard> list = new ArrayList<>();
+        list.add(new Dashboard());
+	    new Expectations() {
+            {
+                anyDependencyStatus.isDatabaseUp();
+                result = true;
+                mockedDashboardManager.getDashboardsByName(anyString,anyLong);
+                result = list;
+            }
+        };
+        assertQueryDashboardsByName();
+    }
+
 	@Test
 	public void testExportDashboard(@Mocked final DependencyStatus anyDependencyStatus, 
 			@Mocked final CombinedDashboard combinedDashboard,
@@ -427,6 +442,20 @@ public class DashboardAPITest
 	}
 
 	@Test
+    public void testQueryQueryDashboardsByNameWithBasicServiceMalfunctionException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
+    {
+        new Expectations() {
+            {
+                anyDependencyStatus.isDatabaseUp();
+                result = true;
+                mockedAPIBase.getTenantId(anyString);
+                result = new BasicServiceMalfunctionException("Test BasicServiceMalfunctionException", "emaas-platform");
+            }
+        };
+        assertQueryDashboardsByName();
+    }
+
+	@Test
 	public void testQueryDashboardByIdWithDashboardException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
 	{
 		new Expectations() {
@@ -439,6 +468,45 @@ public class DashboardAPITest
 		};
 		assertQueryDashboardById();
 	}
+
+    @Test
+    public void testQueryDashboardsByNameWithDashboardException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
+    {
+        new Expectations() {
+            {
+                anyDependencyStatus.isDatabaseUp();
+                result = true;
+                mockedAPIBase.getTenantId(anyString);
+                result = new CommonSecurityException("Test Security Error");
+            }
+        };
+        assertQueryDashboardsByName();
+    }
+
+    @Test
+    public void testQueryDashboardsByNameWithDashboardNotFoundException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
+    {
+        new Expectations() {
+            {
+                anyDependencyStatus.isDatabaseUp();
+                result = true;
+                mockedDashboardManager.getDashboardsByName(anyString,anyLong);
+                result = null;
+            }
+        };
+        assertQueryDashboardsByName();
+    }
+
+    public void testQueryDashboardsByNameWithDatabaseDependencyUnavailableException(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
+    {
+        new Expectations() {
+            {
+                anyDependencyStatus.isDatabaseUp();
+                result = false;
+            }
+        };
+        assertQueryDashboardsByName();
+    }
 
 	@Test
 	public void testQueryDashboards(@Mocked final DependencyStatus anyDependencyStatus) throws Exception
@@ -735,6 +803,11 @@ public class DashboardAPITest
 				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101/options",
 				BigInteger.valueOf(123L)));
 	}
+
+	private void assertQueryDashboardsByName(){
+        Assert.assertNotNull(dashboardAPI.queryDashboardsByName("tenant01", "tenant01.emcsadmin",
+                "https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", "Test"));
+    }
 
 	private void assertQueryDashboardById()
 	{
