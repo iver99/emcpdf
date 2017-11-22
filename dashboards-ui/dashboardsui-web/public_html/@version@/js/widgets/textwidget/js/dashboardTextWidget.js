@@ -26,6 +26,19 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "DOMPurify", "ojs/ojtabs"
                 }catch(err) {
                     lang = $("html").attr("lang") ? $("html").attr("lang") : window.navigator.language;
                 }
+                
+                var config = {
+                    ALLOWED_TAGS: ['a','abbr','acronym','address','area','article','aside','b','bdi','bdo','big','blockquote','br','br','caption','center','cite','code','col','colgroup','dd','del','del','dfn','dir','div','dl','dt','em','figcaption','figure','font','footer','h1','h2','h3','h4','h5','h6','header','hgroup','hr','i','img','ins','kbd','label','li','map','map','mark','menu','nav','ol','p','pre','q','rp','rt','ruby','s','samp','section','small','span','strike','strong','sub','sup','table','tbody','td','tfoot','th','thead','time','tr','tt','u','ul','var','wbr'],
+                    ALLOWED_ATTR: ['abbr','align','alt','axis','bgcolor','border','cellpadding','cellspacing','class','clear','color','cols','colspan','compact','coords','dir','face','headers','height','hreflang','hspace','ismap','lang','language','nohref','nowrap','rel','rev','rows','rowspan','rules','scope','scrolling','shape','size','span','start','summary','tabindex','target','title','type','valign','value','vspace','width','background','cite','href','src','style'],
+                    ALLOW_DATA_ATTR: false
+                };
+                
+                var allowedContent = "";
+                var allowedAttrs = config.ALLOWED_ATTR.join();
+                var allowedTags = config.ALLOWED_TAGS.join(" ");
+                //Below allowed content rules allows: all tags in ALLOWED_TAGS, with attirbues in ALLOWED_ATTR, with all styles.
+                allowedContent = allowedTags + "; *[" + allowedAttrs + "]{*}";
+                
                 var configOptions = {
                     language: lang,
                     toolbar: [
@@ -42,7 +55,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "DOMPurify", "ojs/ojtabs"
                     uiColor: "#FFFFFF",
                     linkShowAdvancedTab: false,
                     linkShowTargetTab: false,
-                    enterMode: CKEDITOR.ENTER_BR
+                    enterMode: CKEDITOR.ENTER_BR,
+                    allowedContent: allowedContent
                 };
 
                 var editor;
@@ -110,11 +124,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "DOMPurify", "ojs/ojtabs"
                     }, 0);
                 };
 
-                var config = {
-                    ALLOWED_TAGS: ['a','abbr','acronym','address','area','article','aside','b','bdi','bdo','big','blockquote','br','br','caption','center','cite','code','col','colgroup','dd','del','del','dfn','dir','div','dl','dt','em','figcaption','figure','font','footer','h1','h2','h3','h4','h5','h6','header','hgroup','hr','i','img','ins','kbd','label','li','map','map','mark','menu','nav','ol','p','pre','q','rp','rt','ruby','s','samp','section','small','span','strike','strong','sub','sup','table','tbody','td','tfoot','th','thead','time','tr','tt','u','ul','var','wbr'],
-                    ALLOWED_ATTR: ['abbr','align','alt','axis','bgcolor','border','cellpadding','cellspacing','class','clear','color','cols','colspan','compact','coords','dir','face','headers','height','hreflang','hspace','ismap','lang','language','nohref','nowrap','rel','rev','rows','rowspan','rules','scope','scrolling','shape','size','span','start','summary','tabindex','target','title','type','valign','value','vspace','width','background','cite','href','src','style'],
-                    ALLOW_DATA_ATTR: false
-                };
                 $("#htmlEditor").attr("id", "htmlEditor_" + self.textWidgetId);
                 $("#htmlEditor_" + self.textWidgetId).attr("contenteditable", "true");
                 self.previewHTMLData = function(){
