@@ -239,7 +239,7 @@ public class TestBrandingBar_BasicTest extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the url of opened page
-		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ocs");
+		DashBoardUtils.verifyURL_WithPara(webd, "cosUi/wfDashboard.html");
 	}
 
 	@Test(alwaysRun = true)

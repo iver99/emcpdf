@@ -8,12 +8,14 @@ define(['knockout',
         'ojs/ojcore',
         'dfutil',
         'uifwk/js/util/screenshot-util',
-        'uifwk/js/sdk/context-util'
+        'uifwk/js/sdk/context-util',
+        'uifwk/js/sdk/menu-util'
     ],
-    function(ko, $, oj, dfu, ssu, contextModel) {
+    function(ko, $, oj, dfu, ssu, contextModel, menuModel) {
         function DuplicateDashboardModel($b) {
             var self = this;
             var ctxUtil = new contextModel();
+            var menuUtil = new menuModel();
             self.tilesViewModel = $b.getDashboardTilesViewModel();
             self.tracker = ko.observable();
             self.errorMessages = ko.observableArray([]);
@@ -76,17 +78,27 @@ define(['knockout',
                 newDashboard.id = undefined;
                 newDashboard.name = self.name();
                 newDashboard.description = self.description();
+                var federationEnabled = Builder.isRunningInFederationMode();
+                if (federationEnabled) {
+                    newDashboard.federationSupported = "FEDERATION_ONLY";
+                } else {
+                    newDashboard.federationSupported = "NON_FEDERATION_ONLY";
+                }
                 var enableRefresh = $.isFunction(origDashboard.enableRefresh) ? origDashboard.enableRefresh() : origDashboard.enableRefresh;
                 var systemDashboard = $.isFunction(origDashboard.systemDashboard) ? origDashboard.systemDashboard() : origDashboard.systemDashboard;
                 newDashboard.enableRefresh = (enableRefresh === true || enableRefresh === "TRUE" || enableRefresh === "true") ? "true" : "false";
                 newDashboard.systemDashboard = "false";
                 newDashboard.showInHome=false;
+                //If dup a dashboard in federated mode, the new dashboard can only run in federated mode. In this mode, entity selector should be disabled.
+                if(Builder.isRunningInFederationMode()) {
+                    newDashboard.enableEntityFilter = "FALSE";
+                }
                 if (!selectedDashboardInst().toolBarModel.duplicateInSet()) {
                     newDashboard.showInHome = true;
                 }
                 if (systemDashboard === true) {
                     newDashboard.dupDashboardId = ko.unwrap(origDashboard.id);
-                    self.saveDuplicatedDashboardToServer(newDashboard);
+                    self.saveDuplicatedDashboardToServer(newDashboard, federationEnabled);
                 }
                 else {
                     if (newDashboard.tiles() && newDashboard.tiles().length > 0) {
@@ -95,17 +107,17 @@ define(['knockout',
                         ssu.getBase64ScreenShot(clone, 314, 165, 0.8, function(data) {
                             newDashboard.screenShot = data;
                             Builder.removeScreenshotElementClone(clone);
-                            self.saveDuplicatedDashboardToServer(newDashboard);
+                            self.saveDuplicatedDashboardToServer(newDashboard, federationEnabled);
                         });
                     }
                     else {
                         newDashboard.screenShot = null;
-                        self.saveDuplicatedDashboardToServer(newDashboard);
+                        self.saveDuplicatedDashboardToServer(newDashboard, federationEnabled);
                     }
                 }
             };
 
-            self.saveDuplicatedDashboardToServer = function(newDashboard) {
+            self.saveDuplicatedDashboardToServer = function(newDashboard, federationEnabled) {
                 var succCallback = function (data) {
                     if (selectedDashboardInst().toolBarModel.duplicateInSet()) {
                         selectedDashboardInst().dashboardsetToolBar.toolbarDuplcateInSet(data);
@@ -113,7 +125,13 @@ define(['knockout',
                         selectedDashboardInst().toolBarModel.duplicateInSet(false);
                         $('#duplicateDsbDialog').ojDialog('close');
                         if (data && data.id()) {
-                            window.location.href = ctxUtil.appendOMCContext("/emsaasui/emcpdfui/builder.html?dashboardId=" + data.id(), true, true, true);
+                            var url = "/emsaasui/emcpdfui/builder.html?dashboardId=" + data.id();
+                            console.log("As currently it's running in " + (federationEnabled?'federation ':'non-federation ') + 'mode, duplication operation is navigating to the same mode' );
+                            if (federationEnabled) {
+                                url = url + "&federationEnabled=true";
+                                menuUtil.fireFederatedDsbChangedEvent();
+                            }
+                            window.location.href = ctxUtil.appendOMCContext(url, true, true, true);
                         }
                     }
                 };

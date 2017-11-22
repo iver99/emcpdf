@@ -19,6 +19,7 @@ define([
             var omcContext = null;
             self.tilesViewModel = $b.getDashboardTilesViewModel ? $b.getDashboardTilesViewModel() : null;
             self.isDashboardSet = isDashboardSet;
+            self.isRunningInFederationMode = Builder.isRunningInFederationMode();
             
             
             self.getFilterEnabledState = function (enableFilterValue) {

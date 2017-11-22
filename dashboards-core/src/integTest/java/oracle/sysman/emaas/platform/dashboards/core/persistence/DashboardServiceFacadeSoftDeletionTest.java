@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
+import oracle.sysman.emaas.platform.dashboards.core.model.FederationSupportedType;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -286,6 +287,7 @@ public class DashboardServiceFacadeSoftDeletionTest
 		tile.setWidgetHistogram("widgetHistogram");
 		tile.setWidgetSupportTimeControl(1);
 		tile.setWidgetLinkedDashboard(BigInteger.valueOf(1L));
+		tile.setFederationSupported(FederationSupportedType.NON_FEDERATION_ONLY.getValue());
 		return tile;
 	}
 
