@@ -7,6 +7,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
+import com.sun.jersey.api.json.JSONConfiguration;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
 import oracle.sysman.emaas.platform.uifwk.util.LogUtil;
 import org.apache.logging.log4j.LogManager;
@@ -32,8 +33,12 @@ public class RestClient {
     public static final String SESSION_EXP = "SESSION_EXP";
     public static final String X_OMC_SERVICE_TRACE = "X-OMC-SERVICE-TRACE";
     public static final String ACCEPT_LANGUAGE = "Accept-Language";
+    private static final Integer NO_CONTENT = 204;
 
 	private static ClientConfig cc = new DefaultClientConfig();
+    static{
+        cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+    }
 	private static Client client = Client.create(cc);
 
     //timeout milli-seconds
@@ -69,14 +74,20 @@ public class RestClient {
         try {
             return innerGet(url, tenant, auth);
         }catch(UniformInterfaceException e){
-            LOGGER.error("HTTP Response code is {}", e.getResponse().getStatus());
-            LOGGER.error("RestClient: Error occurred for [GET] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
-            LOGGER.error(e);
-            itrLogger.error("RestClient: Error occurred for [GET] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+            LOGGER.warn("HTTP Response code is {}", e.getResponse().getStatus());
+            //            Sometimes Jersey considers 204 an error because non-empty response content is expected:
+            if(e.getResponse().getStatus() == NO_CONTENT){
+                LOGGER.info("204 response found in UniformInterfaceException exception, ignore.");
+                return "HTTP Response:204";
+            }else{
+                LOGGER.error("RestClient: Error occurred for [GET] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+                itrLogger.error("RestClient: Error occurred for [GET] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+                LOGGER.error(e);
+            }
         }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
             LOGGER.error("RestClient: Error occurred for [GET] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
-            LOGGER.error(e);
             itrLogger.error("RestClient: Error occurred for [GET] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
+            LOGGER.error(e);
 
         }catch (Exception e) {
             LOGGER.error("RestClient: Exception when RestClient trying to get response from specified service. Message:", e);
@@ -132,14 +143,20 @@ public class RestClient {
             builder = preRequest(url, builder, "PUT");
             return builder.put(requestEntity.getClass(), requestEntity).toString();
         }catch(UniformInterfaceException e){
-            LOGGER.error("HTTP Response code is {}", e.getResponse().getStatus());
-            LOGGER.error("RestClient: Error occurred for [PUT] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
-            LOGGER.error(e);
-            itrLogger.error("RestClient: Error occurred for [PUT] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+            LOGGER.warn("HTTP Response code is {}", e.getResponse().getStatus());
+//           Sometimes Jersey considers 204 an error because non-empty response content is expected:
+            if(e.getResponse().getStatus() == NO_CONTENT){
+                LOGGER.info("204 response found in UniformInterfaceException exception, ignore.");
+                return "HTTP Response:204";
+            }else{
+                LOGGER.error("RestClient: Error occurred for [PUT] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+                itrLogger.error("RestClient: Error occurred for [PUT] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+                LOGGER.error(e);
+            }
         }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
             LOGGER.error("RestClient: Error occurred for [PUT] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
-            LOGGER.error(e);
             itrLogger.error("RestClient: Error occurred for [PUT] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
+            LOGGER.error(e);
         }
         return null;
     }
@@ -154,11 +171,6 @@ public class RestClient {
             LOGGER.error("Unable to post to an empty URL for requestEntity: \"{}\", tenant: \"{}\"", requestEntity, tenant);
             return null;
         }
-        /*if (requestEntity == null || "".equals(requestEntity)) {
-            LOGGER.error("Unable to post an empty request entity");
-            return null;
-        }*/
-
         if (StringUtil.isEmpty(auth)) {
             LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
             itrLogger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
@@ -184,17 +196,23 @@ public class RestClient {
                 return builder.post(requestEntity.getClass(), requestEntity);
             }
         }catch(UniformInterfaceException e){
-            LOGGER.error("HTTP Response code is {}", e.getResponse().getStatus());
-            LOGGER.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
-            itrLogger.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
-            LOGGER.error(e);
+            LOGGER.warn("HTTP Response code is {}", e.getResponse().getStatus());
+            //           Sometimes Jersey considers 204 an error because non-empty response content is expected:
+            if(e.getResponse().getStatus() == NO_CONTENT){
+                LOGGER.info("204 response found in UniformInterfaceException exception, ignore.");
+                return "HTTP Response:204";
+            }else{
+                LOGGER.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+                itrLogger.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+                LOGGER.error(e);
+                throw e;
+            }
         }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
             LOGGER.error("Error occurred for [POST] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
             itrLogger.error("Error occurred for [POST] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
             LOGGER.error(e);
+            throw e;
         }
-
-        return null;
     }
 
     public void setHeader(String header, Object value) {
