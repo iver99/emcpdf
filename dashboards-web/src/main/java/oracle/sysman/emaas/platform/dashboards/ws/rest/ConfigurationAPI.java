@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import oracle.sysman.emaas.platform.dashboards.core.PreferenceManager;
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Preference;

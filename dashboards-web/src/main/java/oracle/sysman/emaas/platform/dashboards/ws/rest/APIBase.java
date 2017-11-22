@@ -22,7 +22,6 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
-import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.LogUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.LogUtil.InteractionLogContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.LogUtil.InteractionLogDirection;
@@ -34,6 +33,7 @@ import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencySta
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

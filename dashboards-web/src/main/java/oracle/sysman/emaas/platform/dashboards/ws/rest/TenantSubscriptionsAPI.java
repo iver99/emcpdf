@@ -24,12 +24,9 @@ import javax.ws.rs.core.Response;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.TenantWithoutSubscriptionException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
-import oracle.sysman.emaas.platform.dashboards.core.util.*;
-import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.TenantEditionEntity;
-import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
 
 import oracle.sysman.emaas.platform.emcpdf.tenant.SubscriptionAppsUtil;
 import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;

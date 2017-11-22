@@ -14,8 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
-import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
