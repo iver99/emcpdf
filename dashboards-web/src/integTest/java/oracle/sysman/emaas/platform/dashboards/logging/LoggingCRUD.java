@@ -24,6 +24,8 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 
+import oracle.sysman.qatool.uifwk.webdriver.logging.EMTestLogger;
+
 /**
  * @author shangwan
  */
@@ -34,6 +36,7 @@ public class LoggingCRUD
 	 * executing test cases
 	 */
 	private static final Logger LOGGER = LogManager.getLogger(LoggingCRUD.class);
+	java.util.logging.Logger TestLog = EMTestLogger.getLogger("LoggingCRUD");
 	static String HOSTNAME;
 	static String portno;
 	static String serveruri;
@@ -114,15 +117,7 @@ public class LoggingCRUD
 	{
 		try
 		{
-			String jsonString1 = "{ \"tenantName\":\"tenantName\"," +
-					"    \"userName\":\"userName\"," +
-					"    \"logArray\":[" +
-					"            \"type\":\"DBD\"," +
-					"            \"logMsg\":\"Exadata Health\"" +
-					"        }," +
-					"        {\"type\":\"HBGMENU\"," +
-					"            \"logMsg\":\"APM->Pages\"" +
-					"        }]}";
+			String jsonString1 = "{ \"tenantName\":\"tenantName\",\"userName\":\"userName\",\"logArray\":[\"type\":\"DBD\",\"logMsg\":\"Exadata Health\"},{\"type\":\"HBGMENU\",\"logMsg\":\"APM->Pages\"}]}";
 			Response res1 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -130,7 +125,7 @@ public class LoggingCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).body(jsonString1).when().post("/logging/feature/logs");
-			LOGGER.info("status code:" + res1.getStatusCode());
+			TestLog.info("status code:" + res1.getStatusCode());
 			//LOGGER.info("msg:" + res1.jsonPath().get("msg"));
 			Assert.assertTrue(res1.getStatusCode() == 200);
 			Assert.assertEquals(res1.jsonPath().get("msg").toString().trim(), "Save feature log successfully");
