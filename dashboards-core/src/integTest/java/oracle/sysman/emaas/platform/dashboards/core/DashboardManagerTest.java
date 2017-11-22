@@ -677,11 +677,11 @@ public class DashboardManagerTest extends BaseTest
 		dbd3 = dm.saveNewDashboard(dbd3, tenant1);
 		pd = dm.listDashboards(null, null, tenant1, false);
 		long allSize = pd.getTotalResults();
-		Assert.assertEquals(allSize, originSize + 3);
+		Assert.assertEquals(allSize, originSize + 2);
 		// query by key word, case sensitive
 		pd = dm.listDashboards("key", null, null, tenant1, false);
 		long caseSensitiveSize = pd.getTotalResults();
-		Assert.assertEquals(caseSensitiveSize, caseSensitiveOriginSize + 3);
+		Assert.assertEquals(caseSensitiveSize, caseSensitiveOriginSize + 2);
 
 		Dashboard dbd4 = new Dashboard();
 		dbd4.setName("KEY1" + System.currentTimeMillis());
@@ -734,7 +734,6 @@ public class DashboardManagerTest extends BaseTest
 		dbd11.setIsSystem(true);
 		dbd11.setAppicationType(DashboardApplicationType.APM);
 		dbd11.setType(Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
-		dbd11.setType(Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
 		Tile tile1 = createTileForDashboard(dbd11);
 		tile1.setRow(0);
 		tile1.setColumn(0);
@@ -768,7 +767,7 @@ public class DashboardManagerTest extends BaseTest
 		// query by key word, case in-sensitive
 		pd = dm.listDashboards("key", null, null, tenant1, true);
 		long icSize = pd.getTotalResults();
-		Assert.assertEquals(icSize, 8); // dbd6/dbd9/10/12/13 not in the returned list
+		Assert.assertEquals(icSize, 4); // dbd6/dbd9/10/12/13 not in the returned list
 		for (Dashboard dbd : pd.getDashboards()) {
 			if (dbd.getName().equals(dbd6.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned: owned by others");
@@ -790,15 +789,16 @@ public class DashboardManagerTest extends BaseTest
 
 		pd = dm.listDashboards(null, null, tenant1, true);
 		allSize = pd.getTotalResults();
-		Assert.assertEquals(allSize, originSize + 8);
+		Assert.assertEquals(allSize, originSize + 4);
 
 		// query by page size/offset. ===Need to consider that last accessed one comes first===
 		pd = dm.listDashboards("key", 0, 3, tenant1, true);
-		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd11.getDashboardId());
+		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd5.getDashboardId());
 		// check that tiles are retrieved successfully for single page dashboard
 		//		Assert.assertNotNull(pd.getDashboards().get(0).getTileList().get(0));
-		Tile dbd11tile1 = pd.getDashboards().get(0).getTileList().get(0);
-		Assert.assertEquals(dbd11.getTileList().get(0).getTileId(), dbd11tile1.getTileId());
+//		Tile dbd11tile1 = pd.getDashboards().get(0).getTileList().get(0);
+//		Assert.assertEquals(dbd11.getTileList().get(0).getTileId(), dbd11tile1.getTileId());
+		Assert.assertNull(pd.getDashboards().get(0).getTileList());
 		Assert.assertEquals(3, pd.getDashboards().size());
 		Assert.assertEquals(3, pd.getLimit().intValue());
 		Assert.assertEquals(3, pd.getCount());
@@ -806,16 +806,17 @@ public class DashboardManagerTest extends BaseTest
 		Assert.assertEquals(allSize, pd.getTotalResults() + originSize);
 
 		// query by page size/offset
-		DashboardsFilter filter = new DashboardsFilter();
-		filter.setIncludedTypesFromString(Dashboard.DASHBOARD_TYPE_NORMAL + "," + Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
-		filter.setIncludedOwnersFromString("Oracle,Others");
-		pd = dm.listDashboards("key", 2, 2, tenant1, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
-		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd7.getDashboardId());
-		Assert.assertEquals(2, pd.getDashboards().size());
-		Assert.assertEquals(2, pd.getLimit().intValue());
-		Assert.assertEquals(2, pd.getCount());
-		Assert.assertEquals(2, pd.getOffset());
-		Assert.assertEquals(allSize, pd.getTotalResults() + originSize);
+		//After service filter is removed, we don't support multi filters any more
+//		DashboardsFilter filter = new DashboardsFilter();
+//		filter.setIncludedTypesFromString(Dashboard.DASHBOARD_TYPE_NORMAL + "," + Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
+//		filter.setIncludedOwnersFromString("Oracle,Others");
+//		pd = dm.listDashboards("key", 2, 2, tenant1, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
+//		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd7.getDashboardId());
+//		Assert.assertEquals(2, pd.getDashboards().size());
+//		Assert.assertEquals(2, pd.getLimit().intValue());
+//		Assert.assertEquals(2, pd.getCount());
+//		Assert.assertEquals(2, pd.getOffset());
+//		Assert.assertEquals(allSize, pd.getTotalResults() + originSize);
 
 		// query by page size/offset
 		pd = dm.listDashboards("key", Integer.MAX_VALUE, 2, tenant1, true);

@@ -634,6 +634,7 @@ public class DashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when().get("/dashboards?offset=0&limit=240&orderBy=default");
+
 			Assert.assertTrue(res2.getStatusCode() == 200);
 			Assert.assertEquals(res2.jsonPath().get("dashboards.name[0]"), "Test_Default_Order");
 			//access an existed dashboard

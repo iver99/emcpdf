@@ -221,7 +221,16 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                 }
                 return false;
             };
-
+            self.userHasGrants = function(privilege){
+                self.getUserGrants(function(data){
+                    self.userGrants = data;
+                }, false);
+                if(!self.userGrants || self.userGrants.indexOf(privilege)<0){
+                   return false;
+                }else{
+                    return true;
+                }
+            };
             /**
              * Get user granted privileges
              *
@@ -231,7 +240,7 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
              * 
              * @returns
              */
-            self.getUserGrants = function(callback) {
+            self.getUserGrants = function(callback, sendAsync) {
                 var serviceUrl = '/sso.static/dashboards.configurations/userInfo';
                 if (self.devMode) {
                     serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, 'configurations/userInfo');
@@ -292,7 +301,7 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                         else {
                             ajaxUtil.ajaxWithRetry({
                                 url: serviceUrl,
-                                async: true,
+                                async: sendAsync === false? false:true,
                                 headers: dfu.getDefaultHeader()
                             })
                             .done(function(data) {

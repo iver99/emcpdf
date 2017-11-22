@@ -30,8 +30,6 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 	private String dbsetName = "";
 	private String dbsetName_Favorite = "";
 	private String dbsetName_Share = "";
-	private String dbsetName_ITA = "";
-	private String dbsetName_LA = "";
 	private String dbset_testMaximizeRestore = "";
 	private String dbName_indbSet = "";
 	private String dbName_ShareStatus = "";
@@ -106,8 +104,6 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		//remove the test data
 		DashBoardUtils.deleteDashboard(webd, dbsetName_Favorite);
 		DashBoardUtils.deleteDashboard(webd, dbsetName);
-		DashBoardUtils.deleteDashboard(webd, dbsetName_ITA);
-		DashBoardUtils.deleteDashboard(webd, dbsetName_LA);
 		DashBoardUtils.deleteDashboard(webd, dbsetName_Share);
 		DashBoardUtils.deleteDashboard(webd, dbset_testMaximizeRestore);
 		DashBoardUtils.deleteDashboard(webd, dbName_indbSet);
@@ -219,95 +215,6 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 
 		webd.getLogger().info("Verfiy the dashboard is not favorite");
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, OOBSetName),"The dashboard is still my favorite dashboard");
-	}
-
-	@Test(groups = "first run")
-	public void testFilterITADashboardSet()
-	{
-		dbsetName_ITA = "DashboardSet-ITA-" + DashBoardUtils.generateTimeStamp();
-
-		//init the test
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testFilterITADashboardSet");
-
-		//reset the home page
-		webd.getLogger().info("Reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//switch to grid view
-		webd.getLogger().info("Switch to the grid view");
-		DashboardHomeUtil.gridView(webd);
-
-		//create dashboardset
-		webd.getLogger().info("Create a new dashboard set");
-		DashboardHomeUtil.createDashboard(webd, dbsetName_ITA, null, DashboardHomeUtil.DASHBOARDSET);
-
-		//verify the dashboardset
-		webd.getLogger().info("Verify if the dashboard set existed in builder page");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_ITA), "Dashboard set NOT found!");
-
-		//add the ITA dashboard into the dashboard set
-		webd.getLogger().info("Add a ITA oob dashboard into the set");
-		DashboardBuilderUtil.addNewDashboardToSet(webd, "Categorical - Basic");
-
-		//back to the home page
-		webd.getLogger().info("Back to dashboard home page");
-		BrandingBarUtil.visitDashboardHome(webd);
-
-		//set filter option, cloud services="IT Analytics" created by ME
-		webd.getLogger().info("set filter option, cloud services='IT Analytics' and Created by ME");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-		DashboardHomeUtil.filterOptions(webd, "me");
-		webd.getLogger().info("Verify the created dashboard exists");
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbsetName_ITA), "The dashboard NOT exists");
-
-		//reset filter options
-		webd.getLogger().info("Reset filter options");
-
-	}
-
-	@Test(groups = "first run")
-	public void testFilterLADashboardSet()
-	{
-		dbsetName_LA = "DashboardSet-LA-" + DashBoardUtils.generateTimeStamp();
-
-		//init the test
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testFilterLADashboardSet");
-
-		//reset the home page
-		webd.getLogger().info("Reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//switch to grid view
-		webd.getLogger().info("Switch to the grid view");
-		DashboardHomeUtil.gridView(webd);
-
-		//create dashboardset
-		webd.getLogger().info("Create a new dashboard set");
-		DashboardHomeUtil.createDashboard(webd, dbsetName_LA, null, DashboardHomeUtil.DASHBOARDSET);
-
-		//verify the dashboardset
-		webd.getLogger().info("Verify if the dashboard set existed in builder page");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbsetName_LA), "Dashboard set NOT found!");
-
-		//add the ITA dashboard into the dashboard set
-		webd.getLogger().info("Add a ITA oob dashboard into the set");
-		DashboardBuilderUtil.addNewDashboardToSet(webd, "Database Operations");
-
-		//back to the home page
-		webd.getLogger().info("Back to dashboard home page");
-		BrandingBarUtil.visitDashboardHome(webd);
-
-		//set filter option, cloud services="IT Analytics" created by ME
-		webd.getLogger().info("set filter option, cloud services='Log Analytics' and Created by ME");
-		DashboardHomeUtil.filterOptions(webd, "la");
-		DashboardHomeUtil.filterOptions(webd, "me");
-		webd.getLogger().info("Verify the created dashboard exists");
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbsetName_LA), "The dashboard NOT exists");
-
-		//reset filter options
-		webd.getLogger().info("Reset filter options");
 	}
 
 	//test maxmize/restore widget in OOB Dashboard Set
