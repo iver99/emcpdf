@@ -123,6 +123,7 @@
         <url-pattern>/home.html</url-pattern>
         <url-pattern>/error.html</url-pattern>
         <url-pattern>/builder.html</url-pattern>
+		<url-pattern>/testDashboard.html</url-pattern>
     </filter-mapping>
     <!--<filter>
       <filter-name>nls.filter</filter-name>

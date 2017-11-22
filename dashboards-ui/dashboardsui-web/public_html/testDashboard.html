@@ -12,23 +12,6 @@
         <script type="text/javascript">
             ////ADDITIONALDATA////
         </script>
-        <script>
-            window.DEV_MODE = {
-                "tenant": "emaastesttenant1",
-                "user": "emcsadmin",
-                //emaastesttenant1_ita_admin1 //				"wlsAuth": "weblogic:welcome1",
-                "wlsAuth": "EM01_EMCS_GLOBAL_INTER_SERVICE_APPID:Czs0pwad3vk_uh",
-                "registryUrl": "http://den02dtf.us.oracle.com:7004/registry/servicemanager/registry/v1/instances",
-                "dfRestApiEndPoint": "http://den02dtf.us.oracle.com:7019/emcpdf/api/v1",
-                //required by DF now, no bad impact to you, will change to dashboardFrameworkAPIEndPoint in next merge
-                "ssfRestApiEndPoint": "http://den02dtf.us.oracle.com:7019/savedsearch/v1",
-                //required by DF now, no bad impact to you, will change to dashboardFrameworkAPIEndPoint in next merge
-                "dashboardFrameworkAPIEndPoint": "http://den02dtf.us.oracle.com:7019/emcpdf/api/v1/",
-                //required by DF in the future, you can use it now
-                "savedSearchEndPoint": "http://den02dtf.us.oracle.com:7019/savedsearch/v1/search"
-                        //required by DF in the future, you can use it now
-            };
-        </script>
         <!-- RequireJS bootstrap file -->
         <script data-main="@version@/js/testDashboardMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
     </head>
@@ -53,11 +36,13 @@
                                 </div>
                             </header>
                              <!--/ko--> 
-                            <div class="main-content-area main-content-area-sm main-content-area-md main-content-area-lg main-content-area-xsl main-content-area-xl">
-                                <!-- ko stopBinding -->
-                                <div id='test-html-widget-container' class='oj-panel oj-margin demo-panel-customizations' data-bind="component:{name: 'EMCPDF_HTMLWIDGET_V1', params: {source: htmlWdgtTestSrc }}" style="width: 300px; height: 200px;"></div>
-                                <!-- /ko -->
+                            <!-- ko stopBinding -->
+                            <div id='test-html-widget-container' class="main-content-area main-content-area-sm main-content-area-md main-content-area-lg main-content-area-xsl main-content-area-xl oj-flex">
+                                <div id='test-html-widget-container1' class='oj-panel oj-margin demo-panel-customizations' data-bind="component:{name: 'EMCPDF_HTMLWIDGET_V1', params: {source: htmlWdgtTestSrc1 }}" style="display: inline-block; width: 300px; height: 400px;"></div>
+                                <div id='test-html-widget-container2' class='oj-panel oj-margin demo-panel-customizations' data-bind="component:{name: 'EMCPDF_HTMLWIDGET_V1', params: {source: htmlWdgtTestSrc2 }}" style="display: inline-block; width: 300px; height: 200px;"></div>
+                                <div id='test-html-widget-container3' class='oj-panel oj-margin demo-panel-customizations' data-bind="component:{name: 'EMCPDF_HTMLWIDGET_V1', params: {source: htmlWdgtTestSrc3 }}" style="display: inline-block; width: 300px; height: 200px;"></div>
                             </div>
+                            <!-- /ko -->
                         </div>
                     </div>
                 </div>            

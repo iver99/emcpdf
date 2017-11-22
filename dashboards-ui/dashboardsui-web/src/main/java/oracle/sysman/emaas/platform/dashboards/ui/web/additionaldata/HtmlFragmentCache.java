@@ -44,6 +44,7 @@ public class HtmlFragmentCache {
     private CachedHtml homePageCache = null;
     private CachedHtml builderPageCache = null;
     private CachedHtml errorPageCache = null;
+    private CachedHtml testPageCache = null;
     private Map<String, CachedHtml> urlToCacheMap = null;
 
     private static final HtmlFragmentCache instance = new HtmlFragmentCache();
@@ -53,11 +54,13 @@ public class HtmlFragmentCache {
         homePageCache = new CachedHtml();
         builderPageCache = new CachedHtml();
         errorPageCache = new CachedHtml();
+        testPageCache = new CachedHtml();
         urlToCacheMap = new ConcurrentHashMap<String, CachedHtml>();
         urlToCacheMap.put(AdditionalDataFilter.HOME_URI, homePageCache);
         urlToCacheMap.put(AdditionalDataFilter.WELCOME_URI, welcomePageCache);
         urlToCacheMap.put(AdditionalDataFilter.BUILDER_URI, builderPageCache);
         urlToCacheMap.put(AdditionalDataFilter.ERROR_URI, errorPageCache);
+        urlToCacheMap.put(AdditionalDataFilter.TEST_URI, testPageCache);
         LOGGER.info("URL for dashboard page fragment caching is initialized");
     }
 
