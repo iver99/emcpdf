@@ -37,6 +37,7 @@ public class DashboardSyncCompareTest
 	static String authToken;
 	static String tenantid;
 	static String remoteuser;
+	static String apigw_sr;
 
 	@BeforeClass
 	public static void setUp()
@@ -48,15 +49,34 @@ public class DashboardSyncCompareTest
 		authToken = ct.getAuthToken();
 		tenantid = ct.getTenantid();
 		remoteuser = ct.getRemoteUser();
+		apigw_sr = ct.getApigw_SR();
 	}
 
+	private String generateComparatorServiceURL()
+	{
+		RestAssured.baseURI = apigw_sr.substring(0,apigw_sr.indexOf("/registry/servicemanager/registry/v1"));
+		RestAssured.basePath = "/registry/servicemanager/registry/v1";
+		Response res = RestAssured
+				.given()
+				.log()
+				.everything()
+				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "OAM_REMOTE_USER", tenantid + "." + remoteuser,
+				"Authorization", authToken).when().get("/instances?serviceName=DashboardService-comparator");
+
+		String comparatorURL = res.jsonPath().get("items.links.href");
+
+		int i = comparatorURL.indexOf("/emcpdfcomparator/api/v1/");
+
+		return comparatorURL.substring(0,i);
+
+	}
 	@Test
 	public void testFullCompare() throws SQLException
 	{
 		DatabaseUtil.Cloud1InsertData();
 		
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8025";
+			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
@@ -82,7 +102,7 @@ public class DashboardSyncCompareTest
 	public void testFullCompareStatus()
 	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8025";
+			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
@@ -106,7 +126,7 @@ public class DashboardSyncCompareTest
 	public void testFullSync()
 	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8025";
+			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
@@ -130,7 +150,7 @@ public class DashboardSyncCompareTest
 	public void testFullSyncStatus()
 	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8025";
+			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
@@ -159,7 +179,7 @@ public class DashboardSyncCompareTest
 			DatabaseUtil.Cloud1DeleteData();
 			DatabaseUtil.Cloud2DeleteData();
 			DatabaseUtil.Cloud2InsertData();
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8025";
+			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
@@ -186,7 +206,7 @@ public class DashboardSyncCompareTest
 	public void testIncrementalCompareStatus()
 	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8025";
+			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
@@ -210,7 +230,7 @@ public class DashboardSyncCompareTest
 	public void testIncrementalSync()
 	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8025";
+			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
@@ -234,7 +254,7 @@ public class DashboardSyncCompareTest
 	public void testIncrementalSyncStatus()
 	{
 		try {
-			RestAssured.baseURI = "http://" + HOSTNAME + ":" + "8025";
+			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
 			Response res = RestAssured
 					.given()
