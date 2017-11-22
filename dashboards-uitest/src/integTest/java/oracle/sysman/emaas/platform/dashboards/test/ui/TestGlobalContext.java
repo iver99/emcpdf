@@ -28,7 +28,6 @@ import org.testng.annotations.Test;
  */
 public class TestGlobalContext extends LoginAndLogout
 {
-
 	public static final String GLBCTXTID = "emaas-appheader-globalcxt";
 	public static final String GLBCTXTFILTERPILL = "globalBar_pillWrapper";
 	public static final String GLBCTXTBUTTON = "buttonShowTopology";
@@ -49,7 +48,6 @@ public class TestGlobalContext extends LoginAndLogout
 	{
 		login(this.getClass().getName() + "." + testName);
 		DashBoardUtils.loadWebDriver(webd);
-
 	}
 
 	@AfterClass
@@ -77,10 +75,9 @@ public class TestGlobalContext extends LoginAndLogout
 		LoginAndLogout.logoutMethod();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testGlobalContextCreateDashboard()
 	{
-
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test case: testGlobalContextCreateDashboard");
@@ -97,7 +94,6 @@ public class TestGlobalContext extends LoginAndLogout
 	@Test
 	public void testGlobalContextCreateDashboardSet()
 	{
-
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test case: testGlobalContextCreateDashboardSet");
@@ -111,7 +107,7 @@ public class TestGlobalContext extends LoginAndLogout
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testGlobalContextDashboardHome()
 	{
 
@@ -169,7 +165,7 @@ public class TestGlobalContext extends LoginAndLogout
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testGlobalContextLA()
 	{
 
@@ -198,23 +194,7 @@ public class TestGlobalContext extends LoginAndLogout
 		//	Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
-	@Test
-	public void testGlobalContextOOBAPMDashboard()
-	{
-
-		//Initialize the test
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start the test case: testGlobalContextOOBAPMDashboard");
-
-		//visit home page
-		BrandingBarUtil.visitDashboardHome(webd);
-		DashboardHomeUtil.gridView(webd);
-		DashboardHomeUtil.selectOOB(webd, "Application Performance Monitoring");
-		//Assert.assertTrue(GlobalContextUtil.isGlobalContextExisted(webd), "The global context doesn't exist in APM");
-		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
-	}
-
-	@Test
+	@Test(alwaysRun = true)
 	public void testGlobalContextOOBDashboard()
 	{
 
@@ -231,7 +211,7 @@ public class TestGlobalContext extends LoginAndLogout
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testGlobalContextOOBDashboardSet()
 	{
 
@@ -248,7 +228,7 @@ public class TestGlobalContext extends LoginAndLogout
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testGlobalContextUDE()
 	{
 
@@ -262,7 +242,7 @@ public class TestGlobalContext extends LoginAndLogout
 		//Assert.assertEquals(GlobalContextUtil.getGlobalContextName(webd),"/SOA1213_base_domain/base_domain/soa_server1/soa-infra_System");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testGlobalContextWelcomePage()
 	{
 
@@ -401,7 +381,7 @@ public class TestGlobalContext extends LoginAndLogout
 		Assert.assertTrue(url2.contains("omcCtx="), "The global context infomation in URL is lost in OOB dashboard page");		
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void tesTGlobalContext_SwitchEntity()
 	{
 		dbName_tailsTest = "selfDb-" + DashBoardUtils.generateTimeStamp();
@@ -454,5 +434,5 @@ public class TestGlobalContext extends LoginAndLogout
 		
 		Assert.assertFalse(GlobalContextUtil.isGlobalContextExisted(webd),"The global context isn't exists when select disable entities filter");
 		Assert.assertFalse(webd.isElementPresent(PageId.ENTITYBUTTON), "All Entities button is present on the top-left cornor, when select disable entities fileter");
-	}	
+	}
 }

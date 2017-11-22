@@ -28,40 +28,9 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 {
 	public void initTest(String testName)
 	{
-
 		loginV4(this.getClass().getName() + "." + testName, "home");
 		DashBoardUtils.loadWebDriver(webd);
 	}
-
-	@Test(alwaysRun = true)
-	public void testExploreData_LALink()
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testExploreData_LALink");
-
-		DashboardHomeUtil.gotoDataExplorer(webd, DashboardHomeUtil.EXPLOREDATA_MENU_LOG);
-		WaitUtil.waitForPageFullyLoaded(webd);
-
-		//verify the url of opened page
-		DashBoardUtils.verifyURL(webd, "emlacore/html/log-analytics-search.html");
-	}
-
-	@Test(alwaysRun = true)
-	public void testExploreData_SearchLink()
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testExploreData_SearchLink");
-
-		DashboardHomeUtil.gotoDataExplorer(webd, DashboardHomeUtil.EXPLOREDATA_MENU_SEARCH);
-		WaitUtil.waitForPageFullyLoaded(webd);
-
-		//verify the url of opened page
-		DashBoardUtils.verifyURL(webd, "emcta/ta/analytics.html");
-	}
-
-	/**
-	 * @param string
-	 */
 
 	@Test(alwaysRun = true)
 	public void testOpenAPMPage()
@@ -288,7 +257,7 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		webd.getLogger().info("Test opening ITA: Application Server Analytics in welcome page finished!!!");
 	}
 
-	@Test(alwaysRun = true)
+	//@Test(alwaysRun = true)
 	public void testOpenITAPage()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -298,13 +267,10 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		WelcomeUtil.visitITA(webd, "default");
 
 		//verify the url of opened page
-		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ita");
-				
-		Assert.assertTrue(webd.isSelected("id=" + PageId.ITA_BOXID));
-		DashBoardUtils.itaOobExist(webd);
-		DashBoardUtils.outDateOob(webd);
-		DashBoardUtils.laOobNotExist(webd);
-		DashBoardUtils.apmOobNotExist(webd);
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/welcome.html");
+
+		Assert.assertTrue("IT Analytics".equals(BrandingBarUtil.getCurrentMenuHeader(webd).trim()));
+
 		webd.getLogger().info("Test open ITA in welcome page finished!!!");
 	}
 
@@ -397,12 +363,17 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		DashboardHomeUtil.gridView(webd);
 
 		//verify all the oob display
-		DashBoardUtils.apmOobExist(webd);
-		DashBoardUtils.itaOobExist(webd);
 		DashBoardUtils.laOobExist(webd);
+		DashBoardUtils.udeOobExist(webd);
 		DashBoardUtils.orchestrationOobExist(webd);
 		DashBoardUtils.securityOobExist(webd);
+
+		//verify below oob dashboards not displayed in the home page
 		DashBoardUtils.outDateOob(webd);
+
+		//verify below oob dashboards not displayed in the home page, due to EMCPDF-4327
+		DashBoardUtils.apmOobNotExist(webd);
+		DashBoardUtils.itaOobNotExist_v2v3(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -417,64 +388,17 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		DashboardHomeUtil.listView(webd);
 
 		//verify all the oob display
-		DashBoardUtils.apmOobExist(webd);
-		DashBoardUtils.itaOobExist(webd);
 		DashBoardUtils.laOobExist(webd);
+		DashBoardUtils.udeOobExist(webd);
 		DashBoardUtils.orchestrationOobExist(webd);
 		DashBoardUtils.securityOobExist(webd);
+
+		//verify below oob dashboards not displayed in the home page
 		DashBoardUtils.outDateOob(webd);
-	}
 
-	@Test(alwaysRun = true)
-	public void verify_APMOOB_GridView()
-	{
-		//login the dashboard
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verify_APMOOB_GridView");
-
-		//select Cloud Services as APM
-		webd.getLogger().info("select Cloud Services as APM");
-		DashboardHomeUtil.filterOptions(webd, "apm");
-
-		//click Grid View icon
-		webd.getLogger().info("click Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//verify APM oob display
-		DashBoardUtils.apmOobExist(webd);
-		DashBoardUtils.itaOobNotExistV4(webd);
-		DashBoardUtils.laOobNotExist(webd);
-		DashBoardUtils.orchestrationOobNotExist(webd);
-		DashBoardUtils.securityOobNotExist(webd);
-		DashBoardUtils.udeOobExistV4(webd);
-		//reset cloud services checkbox
-		DashboardHomeUtil.resetFilterOptions(webd);
-	}
-
-	@Test(alwaysRun = true)
-	public void verify_APMOOB_ListView()
-	{
-		//login the dashboard
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verify_APMOOB_ListView");
-
-		//select Cloud Services as APM
-		webd.getLogger().info("select Cloud Services as APM");
-		DashboardHomeUtil.filterOptions(webd, "apm");
-
-		//click Grid View icon
-		webd.getLogger().info("click List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//verify APM oob display
-		DashBoardUtils.apmOobExist(webd);
-		DashBoardUtils.itaOobNotExistV4(webd);
-		DashBoardUtils.laOobNotExist(webd);
-		DashBoardUtils.orchestrationOobNotExist(webd);
-		DashBoardUtils.securityOobNotExist(webd);
-		DashBoardUtils.udeOobExistV4(webd);
-		//reset cloud services checkbox
-		DashboardHomeUtil.resetFilterOptions(webd);
+		//verify below oob dashboards not displayed in the home page, due to EMCPDF-4327
+		DashBoardUtils.apmOobNotExist(webd);
+		DashBoardUtils.itaOobNotExist_v2v3(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -537,12 +461,17 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//verify all the oob display
-		DashBoardUtils.apmOobExist(webd);
-		DashBoardUtils.itaOobExist(webd);
 		DashBoardUtils.laOobExist(webd);
+		DashBoardUtils.udeOobExist(webd);
 		DashBoardUtils.orchestrationOobExist(webd);
 		DashBoardUtils.securityOobExist(webd);
+
+		//verify below oob dashboards not displayed in the home page
 		DashBoardUtils.outDateOob(webd);
+
+		//verify below oob dashboards not displayed in the home page, due to EMCPDF-4327
+		DashBoardUtils.apmOobNotExist(webd);
+		DashBoardUtils.itaOobNotExist_v2v3(webd);
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -564,233 +493,19 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		DashboardHomeUtil.filterOptions(webd, "oracle");
 
 		//verify all the oob display
-		DashBoardUtils.apmOobExist(webd);
-		DashBoardUtils.itaOobExist(webd);
 		DashBoardUtils.laOobExist(webd);
+		DashBoardUtils.udeOobExist(webd);
 		DashBoardUtils.orchestrationOobExist(webd);
 		DashBoardUtils.securityOobExist(webd);
+
+		//verify below oob dashboards not displayed in the home page
 		DashBoardUtils.outDateOob(webd);
 
-		//reset cloud services checkbox
-		DashboardHomeUtil.resetFilterOptions(webd);
-	}
-
-	@Test(alwaysRun = true)
-	public void verify_ITAOOB_GridView()
-	{
-		//login the dashboard
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verify_ITAOOB_GridView");
-
-		//select Cloud Services as IT Analytics
-		webd.getLogger().info("select Cloud Services as IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click Grid View icon
-		webd.getLogger().info("click Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//verify ITA oob display
-		DashBoardUtils.itaOobExist(webd);
+		//verify below oob dashboards not displayed in the home page, due to EMCPDF-4327
 		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.laOobNotExist(webd);
-		DashBoardUtils.orchestrationOobNotExist(webd);
-		DashBoardUtils.securityOobNotExist(webd);
-		DashBoardUtils.outDateOob(webd);
-		DashBoardUtils.udeOobExistV4(webd);
-		//reset cloud services checkbox
-		DashboardHomeUtil.resetFilterOptions(webd);
-	}
-
-	@Test(alwaysRun = true)
-	public void verify_ITAOOB_ListView()
-	{
-		//login the dashboard
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verify_ITAOOB_GridView");
-
-		//select Cloud Services as IT Analytics
-		webd.getLogger().info("select Cloud Services as IT Analytics");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//click Grid View icon
-		webd.getLogger().info("click List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//verify ITA oob display
-		DashBoardUtils.itaOobExist(webd);
-		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.laOobNotExist(webd);
-		DashBoardUtils.orchestrationOobNotExist(webd);
-		DashBoardUtils.securityOobNotExist(webd);
-		DashBoardUtils.outDateOob(webd);
-		DashBoardUtils.udeOobExistV4(webd);
-		//reset cloud services checkbox
-		DashboardHomeUtil.resetFilterOptions(webd);
-	}
-
-	@Test(alwaysRun = true)
-	public void verify_LAOOB_GridView()
-	{
-		//login the dashboard
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verify_LAOOB_GridView");
-
-		//select Cloud Services as Log Analytics
-		webd.getLogger().info("select Cloud Services as Log Analytics");
-		DashboardHomeUtil.filterOptions(webd, "la");
-
-		//click Grid View icon
-		webd.getLogger().info("click Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//verify LA oob display
-		DashBoardUtils.laOobExist(webd);
-		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExistV4(webd);
-		DashBoardUtils.orchestrationOobNotExist(webd);
-		DashBoardUtils.securityOobNotExist(webd);
-		DashBoardUtils.outDateOob(webd);
-		DashBoardUtils.udeOobExistV4(webd);
-		//reset cloud services checkbox
-		DashboardHomeUtil.resetFilterOptions(webd);
-	}
-
-	@Test(alwaysRun = true)
-	public void verify_LAOOB_ListView()
-	{
-		//login the dashboard
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verify_LAOOB_GridView");
-
-		//select Cloud Services as Log Analytics
-		webd.getLogger().info("select Cloud Services as Log Analytics");
-		DashboardHomeUtil.filterOptions(webd, "la");
-
-		//click Grid View icon
-		webd.getLogger().info("click List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//verify LA oob display
-		DashBoardUtils.laOobExist(webd);
-		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExistV4(webd);
-		DashBoardUtils.orchestrationOobNotExist(webd);
-		DashBoardUtils.securityOobNotExist(webd);
-		DashBoardUtils.outDateOob(webd);
-		DashBoardUtils.udeOobExistV4(webd);
-		//reset cloud services checkbox
-		DashboardHomeUtil.resetFilterOptions(webd);
-	}
-
-	@Test(alwaysRun = true)
-	public void verify_OrchestrationOOB_GridView()
-	{
-		//login the dashboard
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verify_OrchestrationOOB_GridView");
-
-		//select Cloud Services as APM
-		webd.getLogger().info("select Cloud Services as Orchestration");
-		DashboardHomeUtil.filterOptions(webd, "orchestration");
-
-		//click Grid View icon
-		webd.getLogger().info("click Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//verify Orchestration oob display
-		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExistV4(webd);
-		DashBoardUtils.laOobNotExist(webd);
-		DashBoardUtils.securityOobNotExist(webd);
-		DashBoardUtils.orchestrationOobExist(webd);
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, "Exadata Health"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, "Enterprise Health"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, "UI Gallery"));
+		DashBoardUtils.itaOobNotExist_v2v3(webd);
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
 	}
-
-	@Test(alwaysRun = true)
-	public void verify_OrchestrationOOB_ListView()
-	{
-		//login the dashboard
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verify_OrchestrationOOB_ListView");
-
-		//select Cloud Services as APM
-		webd.getLogger().info("select Cloud Services as Orchestration");
-		DashboardHomeUtil.filterOptions(webd, "orchestration");
-
-		//click Grid View icon
-		webd.getLogger().info("click List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//verify Orchestration oob display
-		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExistV4(webd);
-		DashBoardUtils.laOobNotExist(webd);
-		DashBoardUtils.securityOobNotExist(webd);
-		DashBoardUtils.orchestrationOobExist(webd);
-		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, "Exadata Health"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, "Enterprise Health"));
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, "UI Gallery"));
-		//reset cloud services checkbox
-		DashboardHomeUtil.resetFilterOptions(webd);
-	}
-
-	@Test(alwaysRun = true)
-	public void verify_SecurityOOB_GridView()
-	{
-		//login the dashboard
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verify_SecurityOOB_GridView");
-
-		//select Cloud Services as APM
-		webd.getLogger().info("select Cloud Services as Security");
-		DashboardHomeUtil.filterOptions(webd, "security");
-
-		//click Grid View icon
-		webd.getLogger().info("click Grid View icon");
-		DashboardHomeUtil.gridView(webd);
-
-		//verify security oob display
-		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExistV4(webd);
-		DashBoardUtils.laOobNotExist(webd);
-		DashBoardUtils.orchestrationOobNotExist(webd);
-		DashBoardUtils.securityOobExist(webd);
-		DashBoardUtils.udeOobExistV4(webd);
-		//reset cloud services checkbox
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-	}
-
-	@Test(alwaysRun = true)
-	public void verify_SecurityOOB_ListView()
-	{
-		//login the dashboard
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in verify_SecurityOOB_ListView");
-
-		//select Cloud Services as APM
-		webd.getLogger().info("select Cloud Services as Security");
-		DashboardHomeUtil.filterOptions(webd, "security");
-
-		//click Grid View icon
-		webd.getLogger().info("click List View icon");
-		DashboardHomeUtil.listView(webd);
-
-		//verify APM oob display
-		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExistV4(webd);
-		DashBoardUtils.laOobNotExist(webd);
-		DashBoardUtils.orchestrationOobNotExist(webd);
-		DashBoardUtils.securityOobExist(webd);
-		DashBoardUtils.udeOobExistV4(webd);
-		//reset cloud services checkbox
-		DashboardHomeUtil.resetFilterOptions(webd);
-	}
-
 }

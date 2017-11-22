@@ -156,6 +156,11 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         };
 
     }
+    
+    function getUrlParam(name) {
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(window.location.search);
+        return results === null ? "" : results[1];
+    };
 
     function ViewModel(predata, parentElementId, defaultFilters, dashboardSetItem, isSet) {
 
@@ -195,6 +200,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         self.currentDashboardSetItem=dashboardSetItem;
         self.dashboardInTabs=ko.observable(false);
 
+        var filterSelection;
+        
         if (predata !== null)
         {
             self.filter = predata.getDashboardsFilter({'prefUtil' : self.prefUtil,
@@ -207,12 +214,18 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                     }
                 }
             });
+            
+            if(self.filter.filter) {
+                filterSelection = self.filter.filter;
+            }else {
+                filterSelection = "allnofilter";
+            }
         }
         else
         {
             self.filter = null;
-        }        
-        
+        }
+                                
         if (localStorage.deleteHomeDbd ==='true') {
             dfu.showMessage({
                 type: 'info',
@@ -237,6 +250,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
+        self.filterById = self.parentElementId+'filtercb';
+        self.filterBy = ko.observable(filterSelection);
         self.sortById = self.parentElementId+'sortcb';
         self.sortBy = ko.observable(['default']);
         self.createDashboardModel = new createDashboardDialogModel();
@@ -616,6 +631,25 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                 self.sortBy([_option]);
             }
         };
+        
+        self.handleFilterByChanged = function(context, valueParam) {
+            var _value = valueParam.value;
+            if(valueParam.option === "value") {
+                var filterByValue = _value[0];
+                if(filterByValue === "allnofilter") {
+                    self.filter.creatorFilter([]);
+                    self.filter.favoritesFilter([]);
+                }else if(filterByValue === "favorites") {
+                    self.filter.creatorFilter([]);
+                    self.filter.favoritesFilter(["favorites"]);
+                }else {
+                    self.filter.creatorFilter([filterByValue]);
+                    self.filter.favoritesFilter([]);
+                }
+                self.filter.saveFilter();
+                self.filter.handleFilterChange({filterType: 'serviceFilter', newValue: filterByValue});
+            }
+        };
 
         self.handleSortByChanged = function (context, valueParam) {
             var _preValue = valueParam.previousValue, _value = valueParam.value, _ts = self.dashboardsTS();
@@ -797,12 +831,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         var self = this;
         self.preferences = undefined;
         self.sApplications = undefined;
-
-        var getUrlParam = function(name) {
-            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(window.location.search);
-            return results === null ? "" : results[1];
-        };
-
+        
         self.getDashboardsFilter = function (options) {
             var _options = options || {}, _filterPref = self.getDashboardsFilterPref(), _filterUrlParam=getUrlParam("filter");
             if (_filterUrlParam && _filterUrlParam.trim().length > 0)
@@ -813,6 +842,17 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
             else
             {
                 _options['saveFilterPref'] = true;
+                //Use saved filters if it is only 1 filter
+                var _serviceFilters = ["apm", "la", "ita", "ocs", "sec"];
+                if(_filterPref) {
+                    if(_filterPref.split(",").length > 1) {
+                        _filterPref = null;
+                    }else if(_filterPref.split(",").length === 1) {
+                        if(_serviceFilters.indexOf(_filterPref) !== -1) {
+                            _filterPref = null;
+                        }
+                    }
+                }
             }
             if (_filterPref && _filterPref.trim().slice(0, 1) === '{')
             {
