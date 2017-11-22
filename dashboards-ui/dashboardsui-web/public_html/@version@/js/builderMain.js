@@ -154,6 +154,7 @@ requirejs.config({
             'uifwk/js/util/ajax-util',
             'uifwk/js/util/df-util',
             'uifwk/js/util/logging-util',
+            'uifwk/js/sdk/logging-feature-usage-util',
             'uifwk/js/util/message-util',
             'uifwk/js/util/mobile-util',
             'uifwk/js/util/preference-util',
@@ -221,6 +222,7 @@ require(['knockout',
     'knockout.mapping',
     'uifwk/js/util/df-util',
     'uifwk/js/util/logging-util',
+    'uifwk/js/sdk/logging-feature-usage-util',
     'ojs/ojcore',
     /*'ojs/ojcomponentcore',
     'ojs/ojchart',
@@ -294,6 +296,7 @@ require(['knockout',
 
                     require(['uifwk/js/util/df-util',
                         'uifwk/js/util/logging-util',
+                        'uifwk/js/sdk/logging-feature-usage-util',
                         'uifwk/js/sdk/menu-util',
 //                        'dashboards/dashboardhome-impl',
                         'jqueryui',
@@ -304,7 +307,7 @@ require(['knockout',
                         'builder/dashboardset.panels.model',
                         'builder/dashboardDataSource/dashboard.datasource'
                     ],
-                        function(dfumodel, _emJETCustomLogger, menuModel/*, dashboardhome_impl*/) // this callback gets executed when all required modules are loaded
+                        function(dfumodel, _emJETCustomLogger, _emJETFeatureUsageLogger, menuModel/*, dashboardhome_impl*/) // this callback gets executed when all required modules are loaded
                         {
                             var logger = new _emJETCustomLogger();
                             var menuUtil = new menuModel();
@@ -312,6 +315,7 @@ require(['knockout',
                             //require(['emsaasui/emcta/ta/js/sdk/tgtsel/api/TargetSelectorUtils'], function(TargetSelectorUtils) {
                             //TargetSelectorUtils.registerComponents();
                             logger.initialize(logReceiver, 300000, 20000, 80, dfu.getUserTenant().tenantUser);
+                            _emJETFeatureUsageLogger.initialize(dfu.getFeatureUsageLogUrl(), 300000, 20000, 10, dfu.getUserTenant().tenantUser);
                             // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                             // If you comment the line below, our current log calls will not be output!
                             logger.setLogLevel(oj.Logger.LEVEL_WARN);
@@ -474,6 +478,7 @@ require(['knockout',
                                         var dashboardTitleModel = new DashboardTitleModel(dashboard);
                                         ko.applyBindings(dashboardTitleModel, $("title")[0]);
                                         var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
+                                        _emJETFeatureUsageLogger.metricFeatureUsage({type: (dashboard.systemDashboard && dashboard.systemDashboard())? _emJETFeatureUsageLogger.featureUsageLogType.OOB_DASHBOARD : _emJETFeatureUsageLogger.featureUsageLogType.CUSTOM_DASHBOARD , msg: dashboard.name()});
                                         var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
                                         ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
                                         dashboardsetToolBarModel.initializeDashboardset();
