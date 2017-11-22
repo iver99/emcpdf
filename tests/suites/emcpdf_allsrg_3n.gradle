@@ -57,52 +57,6 @@ dependencies{
    // testConfig(group: 'com.oracle.omc.omctf.testsdk', name: 'omctf_omcsetup', version: omctfSetupTestSDKVer)
 }
 
-/*
-<<<<<<< HEAD
-=======
-// depends on OMCTF-977
-// onboard v2 & v3 tenants
-//def testTenants_v2 = [:]
-//testTenants_v2["df_omc_trial"]= [ "OMC" : [ "Trial"]]
-//testTenants_v2["df_omc_standard"]= [ "OMC" : [ "Standard"] ]
-//testTenants_v2["df_omc_ee"]= [ "OMC" : [ "Enterprise"] ]
-//testTenants_v2["df_omc_log"]= [ "OMC" : [ "Log"] ]
-//testTenants_v2["df_osmacc_trial"]= [ "OSMACC" : [ "Trail"] ]
-//testTenants_v2["df_osmacc_compliance"]= [ "OSMACC" : [ "Compliance"] ]
-//testTenants_v2["df_osmacc_security"]= [ "OSMACC" : [ "Security"] ]
-
-def testTenants_v3 = [:]
-testTenants_v3["df_omcse"]= [ "OMCSE" : [ "Standard"] ]
-testTenants_v3["df_omcee"]= [ "OMCEE" : [ "Enterprise"] ]
-testTenants_v3["df_omclog"]= [ "OMCLOG" : [ "Standard"] ]
-testTenants_v3["df_secse"]= [ "SECSE" : [ "Standard"] ]
-testTenants_v3["df_secsma"]= [ "SECSMA" : [ "Standard"] ]
-
-task onboardAllTenants(dependsOn:[omcOnboardTenants(testTenants_v3)]){
-}
-
-task suiteLicensingTest(type: EMTest, dependsOn:[onboardAllTenants]){
-options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
-	environment "VNC_SIZE", "1600x1200"
- //    	environment "WEBDRIVER_WAIT_TIMEOUT", "300000"   
-	test('name': 'suiteLicensingTest') {
-	    classes([:]) {
-//		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMC')
-//		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OSMACC')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMCEE')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMCSE')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_OMCLOG')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_SECSE')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestSuiteLicensing_SECSMA')
-	    }
-	}
-    }
-    useWebdriver = true
-    useRestAssured = true
-}
-
->>>>>>> 1013bbcb94005ec16651cb2bc228cc68db3713c1
-*/
 //Setup gradle to onboard a new tenant
 apply from: 'onboard_tenant.gradle'
 
