@@ -130,11 +130,26 @@ require(['ojs/ojcore',
             }
 
             if (!ko.components.isRegistered('EMCPDF_HTMLWIDGET_V1')) {
+                var versionedTopoViewModel = window.getSDKVersionFile ?
+                        window.getSDKVersionFile('emsaasui/emcpdfui/js/widgets/htmlwidget/js/htmlwidget.js') : null;
+                var topoViewModel = versionedTopoViewModel ? (versionedTopoViewModel.lastIndexOf('.js') === versionedTopoViewModel.length - 3 ?
+                        versionedTopoViewModel.substring(0, versionedTopoViewModel.length - 3) : versionedTopoViewModel) :
+                        'emsaasui/emcpdfui/js/widgets/htmlwidget/js/htmlwidget';
+                var versionedTopoTemplate = window.getSDKVersionFile ?
+                        window.getSDKVersionFile('emsaasui/emcpdfui/js/widgets/htmlwidget/htmlwidget.html') : null;
+                var topoTemplate = versionedTopoTemplate ? versionedTopoTemplate :
+                        'emsaasui/emcpdfui/js/widgets/htmlwidget/htmlwidget.html';
                 ko.components.register('EMCPDF_HTMLWIDGET_V1', {
-                    viewModel: {require: './widgets/htmlwidget/js/htmlwidget'},
-                    template: {require: 'text!widgets/htmlwidget/htmlwidget.html'}
+                    viewModel: {require: topoViewModel},
+                    template: {require: 'text!' + topoTemplate}
                 });
             }
+//            if (!ko.components.isRegistered('EMCPDF_HTMLWIDGET_V1')) {
+//                ko.components.register('EMCPDF_HTMLWIDGET_V1', {
+//                    viewModel: {require: './widgets/htmlwidget/js/htmlwidget'},
+//                    template: {require: 'text!widgets/htmlwidget/htmlwidget.html'}
+//                });
+//            }
 
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             var menuUtil = new menuModel();
@@ -171,7 +186,10 @@ require(['ojs/ojcore',
             function TestHTMLWidgetModel(){
                 var self = this;
                 
-                self.htmlWdgtTestSrc = '<DIV>哈哈哈哈</div>';
+                self.htmlWdgtTestSrc1 = '<p>This dashboar<span style="color:#FF0000">d is int</span><span style="color:#FFA500">ende</span><span style="color:#FFFF00">d to pr</span><span style="color:#00FF00">ovide a</span>n overview of WLS errors in SaaS - Fusion Apps.</p><p>By default th<span style="font-size:18px">e time picker</span> to the right of this panel is set to one year and accor<strong>dingly all the char</strong>ts in this dashboards are displaying one year stats.<em> <strong>Such time spa</strong></em><strong>n</strong> can be manipulated using the timepicker and the charts will be adjusted automatically.<p><br/><br/><p>Use the links at the top of panel below to navigate to the details of a specific domain<p>';
+                self.htmlWdgtTestSrc2 = '<img style="padding-top:52px" height="92" src="https://www.google.co.jp/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" width="272" alt="Google" id="hplogo" title="Google" onload="typeof google===\'object\'&amp;&amp;google.aft&amp;&amp;google.aft(this)">';
+                self.htmlWdgtTestSrc3 = '<div data-bind="attr: {id: WIDGET_UNIQUE_ID}, event:{keydown: $parent.widgetBoxClicked, mousedown: $parent.widgetBoxClicked}" id="2017" role="treeitem" class="oj-listview-focused-element oj-listview-item-element oj-listview-item" aria-selected="false" style="border-top: 0;"><div class="oj-flex widget-selector-list-grid ui-draggable ui-draggable-handle" style="flex-wrap: nowrap; overflow: hidden;"><span class="oj-flex-item-0 widget-selector-screenshot-border"><img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL}" class="widget-selector-screenshot" alt="Access Log Error Status Codes" src="https://slc10uan.us.oracle.com:4443/sso.static/savedsearch.widgets/2017/screenshot/1.25.0-171120.134712/images/1450146663057_2017.png" style="padding-top: 4px;vertical-align: middle;text-align: center;margin-left: auto;margin-right: auto;width: 90px !important;height: auto;"></span><div class="oj-flex-item" style="vertical-align: middle; overflow: hidden;"><p><span data-bind="html: highlightedName" class="oj-label widget-selector-widget-name">Access Log Error Status Codes</span><span class="oj-text-sm widget-selector-description" data-bind="html: highlightedDescription?highlightedDescription:$parent.widgetNoDescription, css:{\'font-style-italic\':!WIDGET_DESCRIPTION||WIDGET_DESCRIPTION === $parent.widgetNoDescription}">Top 4xx and 5xx errors codes in HTTP Access Logs. </span></p><span class="oj-text-sm widget-selector-text-secondary-color" data-bind="html: highlightedSource">Source: Log Analytics</span><br><span class="oj-text-sm widget-selector-text-secondary-color" data-bind="html: highlightedOwner">Created by: ORACLE</span><br></div></div></div>';
+                self.htmlWdgtTestSrc4 = '<li class="box-list-li box-list-a"><a id="APM_wrapper" data-bind="attr: {href: \'javascript: this.click()\'}, click: openAPM" href="javascript: this.click()"><div class="service-box-wrapper"><div class="landing-home-box-img APM-box"><div class="landing-home-box-img-inner-container"><!--AppPerfMonitoring_w_92px--><img src="@version@/images/welcomeSprite.png" width="92" style="background: url(\'1.25.0-171121.171127/images/welcomeSprite.png\') no-repeat 0px -220px;" data-bind="attr: {alt: APM}" alt="Application Performance Monitoring"></div></div><div class="landing-home-box-content"><div class="landing-home-box-content-head" data-bind="text: APM">Application Performance Monitoring</div><div class="landing-home-box-content-desc" data-bind="text: APMDesc">Rapidly identify, response, and resolve your software roadblocks</div></div></div></a></li>';
             }
 
             $(document).ready(function () {
