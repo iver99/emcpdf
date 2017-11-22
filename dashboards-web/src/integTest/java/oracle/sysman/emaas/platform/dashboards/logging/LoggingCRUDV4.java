@@ -101,4 +101,93 @@ public class LoggingCRUDV4
 		}
 
 	}
+
+	@Test
+	public void loggingFeatures()
+	{
+		try
+		{
+			String jsonString1 = "{ \"tenantName\":\"tenantName\"," +
+					"    \"userName\":\"userName\"," +
+					"    \"logArray\":[" +
+					"            \"type\":\"DBD\"," +
+					"            \"logMsg\":\"Exadata Health\"" +
+					"        }," +
+					"        {" +
+					"            \"type\":\"HBGMENU\"," +
+					"            \"logMsg\":\"APM->Pages\"" +
+					"        }" +
+					"    ]}";
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString1).when().post("/logging/feature/logs");
+			LOGGER.info("status code:" + res1.getStatusCode());
+			LOGGER.info("msg:" + res1.jsonPath().get("msg"));
+			Assert.assertTrue(res1.getStatusCode() == 200);
+			Assert.assertEquals(res1.jsonPath().get("msg").toString().trim(), "Save feature log successfully");
+
+			String jsonString2 = "{ \"tenantName\":\"tenantName\"," +
+					"    \"userName\":\"userName\"," +
+					"    \"logArray\":[" +
+					"    ]}";
+			Response res2 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString1).when().post("/logging/feature/logs");
+			Assert.assertTrue(res2.getStatusCode() == 200);
+			Assert.assertEquals(res1.jsonPath().get("msg").toString().trim(), "Log arrays are null or empty");
+
+			String jsonString3 = "{ \"userName\":\"userName\"," +
+					"    \"logArray\":[" +
+					"            \"type\":\"DBD\"," +
+					"            \"logMsg\":\"Exadata Health\"" +
+					"        }," +
+					"        {" +
+					"            \"type\":\"HBGMENU\"," +
+					"            \"logMsg\":\"APM->Pages\"" +
+					"        }" +
+					"    ]}";
+			Response res3 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString1).when().post("/logging/feature/logs");
+			Assert.assertTrue(res3.getStatusCode() == 500);
+			Assert.assertEquals(res1.jsonPath().get("msg").toString().trim(), "Error occurred when save feature log");
+
+			String jsonString4 = "{ \"tenantName\":\"tenantName\"," +
+					"    \"logArray\":[" +
+					"            \"type\":\"DBD\"," +
+					"            \"logMsg\":\"Exadata Health\"" +
+					"        }," +
+					"        {" +
+					"            \"type\":\"HBGMENU\"," +
+					"            \"logMsg\":\"APM->Pages\"" +
+					"        }" +
+					"    ]}";
+			Response res4 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString1).when().post("/logging/feature/logs");
+			Assert.assertTrue(res4.getStatusCode() == 500);
+			Assert.assertEquals(res1.jsonPath().get("msg").toString().trim(), "Error occurred when save feature log");
+
+		}
+		catch (Exception e) {
+			LOGGER.info("Context", e);
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
 }
