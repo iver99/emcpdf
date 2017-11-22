@@ -120,11 +120,9 @@ public class LoggingCRUD
 					"            \"type\":\"DBD\"," +
 					"            \"logMsg\":\"Exadata Health\"" +
 					"        }," +
-					"        {" +
-					"            \"type\":\"HBGMENU\"," +
+					"        {\"type\":\"HBGMENU\"," +
 					"            \"logMsg\":\"APM->Pages\"" +
-					"        }" +
-					"    ]}";
+					"        }]}";
 			Response res1 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -133,7 +131,7 @@ public class LoggingCRUD
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).body(jsonString1).when().post("/logging/feature/logs");
 			LOGGER.info("status code:" + res1.getStatusCode());
-			LOGGER.info("msg:" + res1.jsonPath().get("msg"));
+			//LOGGER.info("msg:" + res1.jsonPath().get("msg"));
 			Assert.assertTrue(res1.getStatusCode() == 200);
 			Assert.assertEquals(res1.jsonPath().get("msg").toString().trim(), "Save feature log successfully");
 
