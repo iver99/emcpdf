@@ -37,8 +37,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "DOMPurify", "ojs/ojtabs"
                 var allowedContent = "";
                 var allowedAttrs = config.ALLOWED_ATTR.join();
                 var allowedTags = config.ALLOWED_TAGS.join(" ");
-                //Below allowed content rules allows: all tags in ALLOWED_TAGS, with attirbues in ALLOWED_ATTR, with all styles.
-                allowedContent = allowedTags + "; *[" + allowedAttrs + "]{*}";
+                //Below allowed content rules allows: all tags in ALLOWED_TAGS, with attirbues in ALLOWED_ATTR, with all styles and classes.
+                allowedContent = allowedTags + "; *[" + allowedAttrs + "]{*}(*)";
                 
                 var configOptions = {
                     language: lang,
