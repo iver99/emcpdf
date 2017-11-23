@@ -20,7 +20,7 @@ public class DashBoardPageId_1180
 	public static final String HAMBURGERMENU_MENUITEM_LABEL_XPATH = "//span[@class='oj-navigationlist-item-label']";
 	public static final String HAMBURGERMENU_MENUITEM_XPATH = "//li[contains(@class, 'oj-navigationlist-item-element')]//a[contains(@class, 'oj-navigationlist-item-content')]";
 	public static final String HAMBURGERMENU_EXPAND_SUBMENU_ICON_CSS = "a.oj-navigationlist-collapse-icon";
-	public static final String HAMBURGERMENU_EXPAND_SUBMENU_ICON_XPATH = "(//li[contains(@class, 'oj-navigationlist-item-element')])[_index_]/div/a[contains(@class, 'oj-navigationlist-collapse-icon')]";
+	public static final String HAMBURGERMENU_EXPAND_SUBMENU_ICON_XPATH = "//li[contains(@class, 'oj-navigationlist-item-element')][_index_]/div/a[contains(@class, 'oj-navigationlist-collapse-icon')]";
 
 	public static final String ORACLE_LOGO_IMG_CSS = ".emaas-appheader-logo-img";
 
