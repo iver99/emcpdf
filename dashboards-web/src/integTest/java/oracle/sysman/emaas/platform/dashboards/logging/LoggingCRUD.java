@@ -10,7 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.logging;
 
-import antlr.Lookahead;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
