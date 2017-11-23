@@ -22,7 +22,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
         self.rightPanelIcon = ko.observable(self.$b().getToolBarModel && self.$b().getToolBarModel() && $b.getDashboardTilesViewModel().isEmpty() ? "wrench" : "none");
         self.completelyHidden = ko.observable(false);
         self.editPanelContent = ko.observable("settings");
-        self.scrollbarWidth = uiutil.getScrollbarWidth();
+        self.scrollbarWidth = ko.observable(uiutil.hasVerticalScrollBar('.tiles-col-container')?uiutil.getScrollbarWidth():0);
         self.lastHighlightWigetIndex=null;
 
         self.expandDBEditor = function (target, isToExpand) {
@@ -106,17 +106,18 @@ function (ko, $, oj, dfu, mbu, uiutil) {
         };
 
         self.toggleLeftPanel = function () {
+            self.scrollbarWidth(uiutil.hasVerticalScrollBar('.tiles-col-container')?uiutil.getScrollbarWidth():0);
             if (!self.showRightPanel()) {
-                $(".dbd-left-panel").animate({width: "320px"}, "normal");
-                $(".right-panel-toggler").animate({right: (323 + self.scrollbarWidth) + 'px'}, 'normal', function () {
+                $(".dbd-left-panel").animate({width: "320px",right: self.scrollbarWidth() + 'px'}, "normal");
+                $(".right-panel-toggler").animate({right: (323 + self.scrollbarWidth()) + 'px'}, 'normal', function () {
                     self.showRightPanel(true);
                     self.initializeRightPanel(true);
                     $(".dashboard-picker-container:visible").addClass("df-collaps");
                     self.$b().triggerBuilderResizeEvent('show right panel');
                 });
             } else {
-                $(".dbd-left-panel").animate({width: 0});
-                $(".right-panel-toggler").animate({right: self.scrollbarWidth + 3 + 'px'}, 'normal', function () {
+                $(".dbd-left-panel").animate({width: 0, right: self.scrollbarWidth() + 'px'});
+                $(".right-panel-toggler").animate({right: self.scrollbarWidth() + 3 + 'px'}, 'normal', function () {
                     self.expandDBEditor(true);
                     self.showRightPanel(false);
                     self.initDraggable();
@@ -125,6 +126,15 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                 });
             }
         };
+        
+        self.recalRightPanelPosition = function(){
+            self.scrollbarWidth(uiutil.hasVerticalScrollBar('.tiles-col-container')?uiutil.getScrollbarWidth():0);
+            $(".dbd-left-panel").animate({right: self.scrollbarWidth() + 'px'}, "normal");
+            var rightPanelWidth = self.showRightPanel()?323:0;
+            $(".right-panel-toggler").animate({right: (rightPanelWidth + self.scrollbarWidth()) + 'px'}, 'normal');
+        };
+        $b.addBuilderResizeListener(self.recalRightPanelPosition);
+        $b.addEventListener($b.EVENT_RECALCULATE_RIGHT_PANEL_POSITION, self.recalRightPanelPosition);
 
         self.switchEditPanelContent = function (data, event) {
             var koData = ko.dataFor(event.currentTarget);
