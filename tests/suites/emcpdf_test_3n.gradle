@@ -170,7 +170,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
     packages([:]) {
                 'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.dashboard')
                 'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.common')
-                'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.logging')
+                'package'('name': 'oracle.sysman.emaas.platform.dashboards.logging')
                 'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.Configuration')
                 'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.RegistryLookup')
                 'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.preference')
