@@ -1394,13 +1394,47 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                 };
                 
+                function expandSpecificMenu(menuId) {
+                    var itemTrack;
+                    for(var i=0; i<self.serviceMenuData.length; i++) {
+                        itemTrack = findItemTrack(self.serviceMenuData[i], menuId);
+                        if(itemTrack.length > 0) {
+                            break;
+                        }else {
+                            itemTrack = null;
+                        }
+                    }
+                    
+                    if(itemTrack) {
+                        var expandedIdList = $("#omcMenuNavList").ojNavigationList("getExpanded");
+                        var trackIdList = [];
+                        while(itemTrack.length > 0) {
+                            trackIdList.push(itemTrack.shift().id);
+                        }
+                        while(expandedIdList.length>0){
+                            var parentItemId = expandedIdList.pop();
+                            $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("collapse",parentItemId, true);
+                        }
+                        setTimeout(function(){
+                            while(trackIdList.length>0){
+                                var parentItemId = trackIdList.shift();
+                                $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand",parentItemId, true);
+                            }
+                        });
+                    }
+                }
+                
                 //Event handler before a menu item is collapsed
                 self.beforeCollapse = function(event, ui) {
                     if (ui.key === rootCompositeMenuid) {
 //                        currentCompositeParentId && self.selectedItem(currentCompositeParentId);
+                        var _currentCompositeParentId = currentCompositeParentId;
                         clearCompositeMenuItems();
                         self.expanded([]);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                        
+                        expandSpecificMenu(_currentCompositeParentId);
+
                         window._uifwk.isCompositeMenuShown = false;
                         //$("#omcMenuNavList").ojNavigationList("refresh");
                         if (window._uifwk.compositeMenuCollapseCallback) {
