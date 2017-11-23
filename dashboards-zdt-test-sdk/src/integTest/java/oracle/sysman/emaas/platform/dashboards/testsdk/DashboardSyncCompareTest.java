@@ -63,7 +63,7 @@ public class DashboardSyncCompareTest
 				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "OAM_REMOTE_USER", tenantid + "." + remoteuser,
 				"Authorization", authToken).when().get("/instances?serviceName=DashboardService-comparator");
 
-		String comparatorURL = res.jsonPath().get("items.links.href");
+		String comparatorURL = res.jsonPath().get("items.links.href").toString();
 
 		int i = comparatorURL.indexOf("/emcpdfcomparator/api/v1/");
 
