@@ -221,7 +221,16 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                 }
                 return false;
             };
-
+            self.userHasGrants = function(privilege){
+                self.getUserGrants(function(data){
+                    self.userGrants = data;
+                }, false);
+                if(!self.userGrants || self.userGrants.indexOf(privilege)<0){
+                   return false;
+                }else{
+                    return true;
+                }
+            };
             /**
              * Get user granted privileges
              *
@@ -231,7 +240,7 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
              * 
              * @returns
              */
-            self.getUserGrants = function(callback) {
+            self.getUserGrants = function(callback, sendAsync) {
                 var serviceUrl = '/sso.static/dashboards.configurations/userInfo';
                 if (self.devMode) {
                     serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, 'configurations/userInfo');
@@ -239,6 +248,7 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                 
                 if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.userGrants &&
                         ($.isFunction(window._uifwk.cachedData.userGrants) ? window._uifwk.cachedData.userGrants() : true)) {
+                    console.info("Getting userGrants from window._uifwk.cachedData.userGrants. It is function: " + $.isFunction(window._uifwk.cachedData.userGrants));
                     callback($.isFunction(window._uifwk.cachedData.userGrants) ? window._uifwk.cachedData.userGrants() :
                             window._uifwk.cachedData.userGrants);
                 } else {
@@ -248,10 +258,12 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                     if (!window._uifwk.cachedData) {
                         window._uifwk.cachedData = {};
                     }
+                    console.info("Getting userGrants by sending request. window._uifwk.cachedData.isFetchingUserGrants is " + window._uifwk.cachedData.isFetchingUserGrants);
                     if (!window._uifwk.cachedData.isFetchingUserGrants) {
                         window._uifwk.cachedData.isFetchingUserGrants = true;
                         if (!window._uifwk.cachedData.userGrants) {
-                            window._uifwk.cachedData.userGrants = ko.observable();
+                            console.info("initialize window.userGrantsFromRequest to ko observable");
+                            window.userGrantsFromRequest = ko.observable();
                         }
                         if (!window._uifwk.cachedData.errGetUserGrants) {
                             window._uifwk.cachedData.errGetUserGrants = ko.observable(false);
@@ -268,7 +280,14 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                                 window._uifwk.cachedData.roles = data["userRoles"];
                             }
                             if(data && data["userGrants"]){
-                                window._uifwk.cachedData.userGrants(data["userGrants"]);
+                                if(window.userGrantsFromRequest && $.isFunction(window.userGrantsFromRequest)) {
+                                    console.info("window.userGrantsFromRequest is ko observable");
+                                    window.userGrantsFromRequest(data["userGrants"]);
+                                }else {
+                                    console.info("window.userGrantsFromRequest is not ko observable");
+                                    window.userGrantsFromRequest = ko.observable(data["userGrants"]);
+                                }
+                                window._uifwk.cachedData.userGrants = data["userGrants"];
                                 callback(data["userGrants"]);
                             }
                             else {
@@ -282,7 +301,7 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                         else {
                             ajaxUtil.ajaxWithRetry({
                                 url: serviceUrl,
-                                async: true,
+                                async: sendAsync === false? false:true,
                                 headers: dfu.getDefaultHeader()
                             })
                             .done(function(data) {
@@ -298,7 +317,8 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                         }
                     } 
                     else {
-                        window._uifwk.cachedData.userGrants.subscribe(function(data) {
+                        window.userGrantsFromRequest.subscribe(function(data) {
+                            console.info("window.userGrantsFromRequest is fetched from back end");
                             callback(data);
                         });
                         window._uifwk.cachedData.errGetUserGrants.subscribe(function(hitErr) {

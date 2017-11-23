@@ -288,6 +288,49 @@ require(['knockout',
                 self.openWidgetSelectorList = function() {
                     widgetSelectorPopupUtil.widgetSelector('open', '#add-widget-button2');
                 };
+                
+                self.confirmBtnTitle = 'Show Confirm Message';
+                self.warnBtnTitle = 'Show Warning Message';
+                self.errorBtnTitle = 'Show Error Message';
+                self.showConfirmMsg = function(){
+                    var msgObj = {
+                        type: 'confirm',
+                        summary: 'Confirm.',
+                        detail: 'Confirm message shown.',
+                        link: {
+                            text: 'Show Detail for Confirm Msg..',
+                            href: '/emsaasui/emcpdfui/welcome.html'
+                        },
+                        removeDelayTime: 5000
+                    };
+                    msgUtil.showMessage(msgObj);
+                };
+                self.showWarnMsg = function(){
+                    var msgObj = {
+                        type: 'warn',
+                        summary: 'Warning.',
+                        detail: 'Warning message shown.',
+                        link: {
+                            text: 'Show Detail for Warning Msg..',
+                            href: '/emsaasui/emcpdfui/home.html'
+                        },
+                        removeDelayTime: 5000
+                    };
+                    msgUtil.showMessage(msgObj);
+                };
+                self.showErrorMsg = function(){
+                    var msgObj = {
+                        type: 'error',
+                        summary: 'Error.',
+                        detail: 'Error message shown.',
+                        link: {
+                            text: 'Show Detail for Error Msg..',
+                            href: '/emsaasui/uifwk/testHamburgerMenu.html'
+                        },
+                        removeDelayTime: 5000
+                    };
+                    msgUtil.showMessage(msgObj);
+                };
             }
 
             $(document).ready(function() {

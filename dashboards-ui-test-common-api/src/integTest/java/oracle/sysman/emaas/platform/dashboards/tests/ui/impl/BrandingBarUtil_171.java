@@ -14,22 +14,12 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.IBrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBrandingBarUtil
-{
-
-	private static final Logger LOGGER = LogManager.getLogger(BrandingBarUtil_171.class);
+{	
 	static final String BRANDINGBARSERVICENAMEXPATH = "//div[@id='emaas-appheader-bar']/div[@class='emaas-appheader-logo']/div[@class='emaas-appheader-appname emaas-appheader-appname-twoline']/span";
 
 	/* (non-Javadoc)
@@ -465,27 +455,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 				break;
 		}
 		return parentId;
-	}
-
-	/**
-	 * Check if a element is stale or not
-	 *
-	 * @param element
-	 *            WebElement instance
-	 * @return
-	 */
-	private boolean isElementStale(WebElement element)
-	{
-		try {
-			element.getText();
-			return false;
-		}
-		catch (StaleElementReferenceException e) {
-
-			LOGGER.info("context", e);
-			return true;
-		}
-	}
+	}	
 
 	/**
 	 * Check if the navigation bar is displayed or not
@@ -585,28 +555,7 @@ public class BrandingBarUtil_171 extends BrandingBarUtil_Version implements IBra
 		//Wait until the links menu is displayed
 		checkLinksMenuVisibility(driver, true);
 		driver.waitForElementPresent(locator);
-		//Add try catch to handle StaleElementReferenceException
-		try {
-			driver.click(locator);
-		}
-		catch (StaleElementReferenceException e) {
-			LOGGER.info("context", e);
-			driver.getLogger().info("StaleElementReferenceException thrown, wait for element becoming not stale");
-			// wait until element is not stale
-			new WebDriverWait(driver.getWebDriver(), WaitUtil.WAIT_TIMEOUT).until(new ExpectedCondition<Boolean>() {
-				@Override
-				public Boolean apply(org.openqa.selenium.WebDriver d)
-				{
-					WebElement element = d.findElement(By.xpath(locator));
-					Boolean isStale = isElementStale(element);
-					return !isStale;
-				}
-			});
-			driver.click(locator);
-		}
-
-		driver.takeScreenShot();
-		driver.savePageToFile();
+		driver.click(locator);
 	}
 
 	/**

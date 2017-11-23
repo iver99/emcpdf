@@ -16,11 +16,11 @@ import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdPro
 import oracle.sysman.emaas.platform.dashboards.core.PreferenceManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Preference;
-import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;

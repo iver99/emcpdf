@@ -3,13 +3,16 @@ package oracle.sysman.emaas.platform.dashboards.test.ui;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.PageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.*;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
+
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.testng.Assert;
@@ -116,7 +119,7 @@ public class BugVerification extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testEMCPDF_2425()
 	{
 		//login the dashboard with user emaastesttenant1_la_admin1
@@ -155,7 +158,6 @@ public class BugVerification extends LoginAndLogout
 		webd.getLogger().info("Verify the dashboard set");
 		DashboardBuilderUtil.verifyDashboardSet(webd, "DashboardSet_2425");
 		DashboardBuilderUtil.verifyDashboardInsideSet(webd, "Databases");
-
 	}
 
 	/*@Test
@@ -196,7 +198,7 @@ public class BugVerification extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testEMCPDF_2856()
 	{
 		//Initialize the test
@@ -226,9 +228,12 @@ public class BugVerification extends LoginAndLogout
 				"It is NOT the home page!");
 
 		//logout and login
-		LoginAndLogout.logoutMethod();
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Logout and login");
+		//signout menu
+		webd.click(PageId.MENUBTNID);
+		webd.click(PageId.SIGNOUTID);
+
+		//login again
+		login(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName(),"welcome");
 
 		//visit welcome page
 		webd.getLogger().info("Visit Welcome Page");
@@ -272,42 +277,6 @@ public class BugVerification extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void testEMPCDF_812_1()
-	{
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testEMPCDF_812");
-
-		//reset all filter options
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//check ita box
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//check la box
-		DashboardHomeUtil.filterOptions(webd, "la");
-
-		//signout menu
-		webd.click(PageId.MENUBTNID);
-		webd.click(PageId.SIGNOUTID);
-
-		login(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testEMPCDF_812");
-
-		//check ita box
-		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "ita"));
-
-		//check la box
-		Assert.assertTrue(DashboardHomeUtil.isFilterOptionSelected(webd, "la"));
-
-		//check ita box
-		DashboardHomeUtil.filterOptions(webd, "ita");
-
-		//check la box
-		DashboardHomeUtil.filterOptions(webd, "la");
-
-	}
-
-	@Test(alwaysRun = true)
 	public void testEMPCDF_832_1()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -318,11 +287,10 @@ public class BugVerification extends LoginAndLogout
 
 		webd.open(url.substring(0, url.indexOf("emsaasui")) + "emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
 		webd.waitForElementPresent("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
-
 		webd.click("css=" + PageId.ERRORPAGESINGOUTBTNCSS);
-		webd.getLogger().info("Sing out button is clicked");		
+		webd.getLogger().info("Sing out button is clicked");
 
-		//initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		//login to welcome page
 		login(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName(), "welcome");
 		webd.getLogger().info("welcome page is being loaded, going to to verify...");
 
@@ -409,6 +377,7 @@ public class BugVerification extends LoginAndLogout
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, "Dashboard_3660");
 		WaitUtil.waitForPageFullyLoaded(webd);
 		Assert.assertNotNull(TimeSelectorUtil.setCustomTime(webd, newdsb_idx, "05/08/2016 12:00 AM", "05/15/2016 13:30 PM"), "The return date time is null");
+
 		Assert.assertEquals(TimeSelectorUtil.getTimeRangeLabel_V2(webd, newdsb_idx).contains("Custom"), true);
 
 	}
@@ -446,13 +415,9 @@ public class BugVerification extends LoginAndLogout
     		currenMenuHeader = BrandingBarUtil.getCurrentMenuHeader(webd);
     		Assert.assertEquals(currenMenuHeader.trim(), BrandingBarUtil.ROOT_MENU_TITLE);
     			
-    		//back to the dashboard home page
+    		//go to the APM home page
     		webd.getLogger().info("Navigate to Dashboard Home page");
-    		BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.ROOT_MENU_DASHBOARDS);
-    			
-    		//open APM oob dashboard
-    		webd.getLogger().info("Open APM oob dashboard");
-    		DashboardHomeUtil.selectDashboard(webd, "Application Performance Monitoring");
+    		BrandingBarUtil.clickMenuItem(webd, BrandingBarUtil.ROOT_MENU_APM);
 
 			if(DashBoardUtils.isHamburgerMenuEnabled(webd))
 			{
@@ -582,15 +547,15 @@ public class BugVerification extends LoginAndLogout
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test case: testEMCPDF_1094");
-	
+
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);
-	
+
 		//switch to Grid View
 		webd.getLogger().info("Switch to grid view");
 		DashboardHomeUtil.gridView(webd);
-	
+
 		//create dashboard
 		webd.getLogger().info("Create a dashboard: with description, with time refresh");
 		DashboardHomeUtil.createDashboard(webd, dbname, dbdesc, DashboardHomeUtil.DASHBOARD);
@@ -606,7 +571,7 @@ public class BugVerification extends LoginAndLogout
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("Start the test case: testEMCPDF_2975");
-	
+
 		//reset the home page
 		webd.getLogger().info("Reset all filter options in the home page");
 		DashboardHomeUtil.resetFilterOptions(webd);

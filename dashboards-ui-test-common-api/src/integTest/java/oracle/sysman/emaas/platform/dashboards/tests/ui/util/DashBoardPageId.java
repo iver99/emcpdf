@@ -10,7 +10,8 @@ public class DashBoardPageId
 	 *
 	 * */
 	public static final String CREATEDSBUTTONID = "cbtn";
-	public static final String BUILDERTILEMAXMINLOCATOR = "following-sibling::*//button[contains(@class, 'dbd-tile-maxmin')]";
+//	public static final String BUILDERTILEMAXMINLOCATOR = "following-sibling::*//button[contains(@class, 'dbd-tile-maxmin')]";
+	public static final String BUILDERTILEMAXMINLOCATOR = "//button[contains(@class, 'dbd-tile-maxmin')]";
 	public static final String CREATEDSOFDIALOGID = "createDsb";
 	public static final String DASHBOARDNAMEBOXID = "dbsHNameIn";
 	public static final String DASHBOARDDESCBOXID = "dbsHDpIn";
@@ -111,6 +112,8 @@ public class DashBoardPageId
 	public static final String LISTVIEWTABLECREATEDBYHEADERLOCATOR = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'oj-table-column-header-cell') and @abbr='Created By']";
 	public static final String LISTVIEWTABLELASTMODIFIEDHEADERLOCATOR = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'oj-table-column-header-cell') and @abbr='Last Modified']";
 	public static final String LISTVIEWSORTLOCATORCSS = "a.oj-table-column-header-asc-link";
+	public static final String LISTVIEWSORTLOCATORXPATH = "//a[contains(@class, 'oj-table-column-header-asc-link')]";
+	public static final String LISTVIEWTABLELOCATORCSS = "table.oj-table-element";
 	//Dashboard
 	public static final String DASHBOARDNAMELOCATOR = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-dsbnameele') and (@aria-label = '_name_' or text() = '_name_')]";//[contains(@class, 'dbs-dsbnameele')]//text()[. = '_name_']";//*[contains(@class, 'icon-listview-16')]";
 
@@ -217,8 +220,9 @@ public class DashBoardPageId
 
 	//dashboard builder tile edit area
 	public static final String BUILDERTILESEDITAREA = "//div[contains(@class, 'tiles-wrapper')]";
-
+	public static final String BUILDERTILELOCATOR = "//div[contains(@class,'dbd-tile-header')]/h2";
 	public static final String BUILDERTILETITLELOCATOR = "//h2[contains(@class, 'dbd-tile-title') and @data-tile-title='%s']";
+	public static final String BUILDERTILEHEADERLOCATOR = "//div[contains(@class,'dbd-tile-header')]";
 	public static final String BUILDERTILECONFIGLOCATOR = "following-sibling::*//button[contains(@class, 'dbd-tile-action')]";
 	public static final String BUILDERTILEDATAEXPLORELOCATOR = "following-sibling::*//button[contains(@class, 'dbd-data-explore')]";
 	public static final String BUILDERTILESHOWLOCATOR = "//ul[not(contains(@style,'display:none'))]/li[@data-option='showhide-title']/a[@data-show-hide-title='show']";
@@ -258,6 +262,7 @@ public class DashBoardPageId
 	//dashboard set options
 	public static final String DASHBOARDSETNAVSCONTAINERCSS = "#dbd-set-tabs";
 	public static final String DASHBOARDSETNAVSCSS = ".dbd-tabs-nav .oj-tabs-tab";
+	public static final String DASHBOARDSETNAVSXPATH = "//li[contains(@id, 'dashboardTab-')]";
 	public static final String DASHBOARDSETNAVREMOVEBTNCSS = ".oj-tabs-close-icon";
 	public static final String DASHBOARDSETNAVADDBTNCSS = "#add-nav";
 	public static final String DASHBOARDSETOPTIONBTN = "//button[contains(@id, 'tabs-caret')]";
@@ -334,6 +339,8 @@ public class DashBoardPageId
 	public static final String TEXTWIDGETCONTENTCSS = "div[id^='textContentWrapper_']";
 	public static final String TEXTWIDGETEDITORCSS = "div[id^='textEditorWrapper_'] .cke_editable";
 	public static final String TEXTCONTENTCSS = "div[data-bind=\"html: content()\"]";
+	public static final String TEXTWIDGETCONTENTXPATH = "//div[contains(@id, 'textContentWrapper_')]";
+	public static final String TEXTWIDGETEDITORXPATH = "//div[contains(@class, 'cke_editable')]";
 
 	public static final String TEXTCONTENT1 = "//div[contains(@id, 'textContentWrapper_')]/div/a[1]";
 	public static final String TEXTCONTENT2 = "//div[contains(@id, 'textContentWrapper_')]/div/a[2]";
@@ -365,7 +372,9 @@ public class DashBoardPageId
 	public static final String IMAGESCSS = "[id^='textContentWrapper_']>div>img";
 	
 	public static final String TILETITLECSS = "h2.dbd-tile-title";
+	public static final String TILETITLEXPATH = "//*[@class='dbd-tile-title']";
 	public static final String CONFIGTILECSS = "button[id^=actionButton]";
+	public static final String CONFIGTILEXPATH = "//button[contains(@id, 'actionButton')]";
 	public static final String WIDERTILECSS = "li[data-option=wider]";
 	public static final String NARROWERTILECSS = "li[data-option=narrower]";
 	public static final String SHORTERTILECSS = "li[data-option=shorter]";
@@ -374,6 +383,7 @@ public class DashBoardPageId
 	public static final String DELETETILE = "//ul[@title='Content Settings']/li/a/span[text()='Delete']";
 	public static final String TILESLISTCSS = "div[id^=tile]";
 	public static final String TEXTWIDGETCSS = "div[data-tile-name='Text Widget']";
+	public static final String TEXTWIDGETXPATH = "//div[@data-tile-name='Text Widget']";
 	
 	//right drawer css locators
 	public static final String RIGHTDRAWERTOGGLEBTNCSS = ".right-panel-toggler button.toggle-right-panel-btn";
@@ -504,6 +514,7 @@ public class DashBoardPageId
 	public static final String USERMENUPOPUPID = "emaasAppheaderGlobalNavMenuId";
 	// Dashboard Home
 	public static final String DASHBOARD_GRID_TABLE_CSS = ".dbs-summaries-container";
+	public static final String DASHBOARD_IN_GRID_TABLE_XPATH = "//div[@class='dbs-summaries-container']/a/div";
 
 	public static final String DASHBOARD_LIST_TABLE = "table[aria-label='Dashboards Table']";
 	public static final String DASHBOARD_HOME_DELETE_BUTTON = "dsbinfopop_delete";
@@ -527,8 +538,8 @@ public class DashBoardPageId
 	//To get Composite results, substract all the 'Entities' category results from the entire list since there's no other way to determine if a result belongs to a certain category
 	public static final String EntSelSuggestionByCompositeCategory = "((//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[contains(@class,''oj-listbox-result-selectable'') and not(preceding-sibling::li[not(contains(@class,''oj-listbox-result-selectable''))]//span[text()=''Entities''])])/div[span[2]/descendant-or-self::span[normalize-space()=''{0}'']])";
 	public static final String EntSelSuggestionByEntitiesCategory = "((//div[@id=''emcta-ctxtSel_suggestPopup'']//ul//li[contains(@class,''oj-listbox-result-selectable'') and preceding-sibling::li[not(contains(@class,''oj-listbox-result-selectable''))]//span[text()=''Entities'']])/div[span[2]/descendant-or-self::span[normalize-space()=''{0}'']])";
-        public static final String EntSelTypeAheadNoResults = "//div[contains(@id, 'suggestPopup')]//div[contains(@id, 'suggestNoResults')]";
-        public static final String EntSelTypeAheadNoResultsText = "//span[contains(text(),''{0}'')]";
+    public static final String EntSelTypeAheadNoResults = "//div[contains(@id, 'suggestPopup')]//div[contains(@id, 'suggestNoResults')]";
+    public static final String EntSelTypeAheadNoResultsText = "//span[contains(text(),''{0}'')]";
 	public static final String EntSelPillToRemoveByIndex = "(//div[@id=''emaas-appheader-globalcxt'']//a[contains(@id,''_remove'')])[{0}]";
 	public static final String EntSelPillLinkToReplaceByIndex = "//div[@id=\"emaas-appheader-globalcxt\"]//pill[{0}]//a[@class=\"pillLink\"]";
 	public static final String EntSelEditedPillByText = "//div[@id=\"emaas-appheader-globalcxt\"]//pill//a[@class=\"pillLink\"]//span[contains(text(),\"{0}\")]";

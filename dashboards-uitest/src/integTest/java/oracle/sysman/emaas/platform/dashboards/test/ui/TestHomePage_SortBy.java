@@ -13,7 +13,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import sun.font.TrueTypeFont;
 
 public class TestHomePage_SortBy extends LoginAndLogout
 {
@@ -71,7 +70,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void TestSortBy_createdBy_ListView()
+	public void testSortBy_createdBy_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with created by in list view");
@@ -85,7 +84,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by created by Ascending");
-		DashboardHomeUtil.sortListViewByCreateBy(webd);
+		DashboardHomeUtil.sortListViewByCreateBy(webd, "asc");
 
 		//WaitUtil.waitForPageFullyLoaded(webd);
 
@@ -100,7 +99,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//sort the dashboard by name Descending
 		webd.getLogger().info("Sort the dashboard by created by Descending");
-		DashboardHomeUtil.sortListViewByCreateBy(webd);
+		DashboardHomeUtil.sortListViewByCreateBy(webd, "dsc");
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Descending");
@@ -162,7 +161,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 	public void testSortBy_creationDateAscending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test sort by dashboards with creation date by ascendingt");
+		webd.getLogger().info("start to test sort by dashboards with creation date by ascending");
 
 		//switch to list view
 		webd.getLogger().info("Switch to List View");
@@ -174,9 +173,9 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.waitForDashboardPresent(webd, "Performance Analytics: Database");
+		DashboardHomeUtil.waitForDashboardPresent(webd, "Database Operations");
 		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
-		Assert.assertEquals(names.get(0), "Performance Analytics: Database");
+		Assert.assertEquals(names.get(0), "Database Operations");
 		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(0));
 	}
 
@@ -192,9 +191,9 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.waitForDashboardPresent(webd, "Performance Analytics: Database");
+		DashboardHomeUtil.waitForDashboardPresent(webd, "Database Operations");
 		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
-		Assert.assertEquals(names.get(names.size() - 1), "Performance Analytics: Database");
+		Assert.assertEquals(names.get(names.size() - 1), "Database Operations");
 		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(names.size() - 1));
 	}
 
@@ -375,7 +374,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void TestSortBy_LastModified_ListView()
+	public void testSortBy_LastModified_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with last modified in list view");
@@ -408,7 +407,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by last modified Ascending");
-		DashboardHomeUtil.sortListViewByLastModified(webd);
+		DashboardHomeUtil.sortListViewByLastModified(webd, "asc");
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Ascending");
@@ -420,7 +419,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//sort the dashboard by name Descending
 		webd.getLogger().info("Sort the dashboard by last modifiedi Descending");
-		DashboardHomeUtil.sortListViewByLastModified(webd);
+		DashboardHomeUtil.sortListViewByLastModified(webd, "dsc");
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Descending");
@@ -515,7 +514,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void TestSortBy_Name_ListView()
+	public void testSortBy_Name_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with name in list view");
@@ -529,7 +528,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//sort the dashboard by name Ascending
 		webd.getLogger().info("Sort the dashboard by name Ascending");
-		DashboardHomeUtil.sortListViewByName(webd);
+		DashboardHomeUtil.sortListViewByName(webd, "asc");
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Ascending");
@@ -541,7 +540,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//sort the dashboard by name Descending
 		webd.getLogger().info("Sort the dashboard by name Descending");
-		DashboardHomeUtil.sortListViewByName(webd);
+		DashboardHomeUtil.sortListViewByName(webd, "dsc");
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result -- Descending");

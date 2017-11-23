@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-public class offboardTenant 
+public class OffboardTenant
 {
 	/**
 	 * Calling CommonTest.java to Set up RESTAssured defaults & Reading the inputs from the testenv.properties file before
@@ -138,7 +138,7 @@ public class offboardTenant
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).body(jsonString3).when().post("/dashboards");
 			
-			Assert.assertTrue(res3.getStatusCode() == 400);
+			Assert.assertTrue(res3.getStatusCode() == 200);
 			Assert.assertEquals(res3.jsonPath().getString("errorCode"), "10001");
 			Assert.assertEquals(res3.jsonPath().getString("errorMessage"), "Dashboard with the same name exists already");
 			

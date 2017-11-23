@@ -63,6 +63,7 @@ define('uifwk/@version@/js/util/zdt-util-impl', ['knockout',
                 
                 if (!doNotUseCache && window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.isPlannedDowntime && 
                         ($.isFunction(window._uifwk.cachedData.isPlannedDowntime) && window._uifwk.cachedData.isPlannedDowntime()!== undefined)) {
+                    console.info("Getting isPlannedDowntime from window._uifwk.cachedData.isPlannedDowntime. It is function: " + $.isFunction(window._uifwk.cachedData.isPlannedDowntime));
                     callback(window._uifwk.cachedData.isPlannedDowntime());
                 }else{
                     if(!window._uifwk){
@@ -72,15 +73,28 @@ define('uifwk/@version@/js/util/zdt-util-impl', ['knockout',
                         window._uifwk.cachedData = {};
                     }
                     
+                    console.info("Getting isPlannedDowntime by sending request. window._uifwk.cachedData.isFetchingOMCStatus is " + window._uifwk.cachedData.isFetchingOMCStatus);
                     if (!window._uifwk.cachedData.isFetchingOMCStatus) {
                         window._uifwk.cachedData.isFetchingOMCStatus = true;
                         if (!window._uifwk.cachedData.isPlannedDowntime) {
-                            window._uifwk.cachedData.isPlannedDowntime = ko.observable();
+                            console.info("initialize window.isPlannedDowntimeFromRequest to ko observable");
+                            window.isPlannedDowntimeFromRequest = ko.observable();
                         }
 
                         if (dfu.isDevMode()){
                             downtimeDetectUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"omcstatus");
                         }
+                        
+                        function doneCallback(data) {
+                            if(window.isPlannedDowntimeFromRequest && $.isFunction(window.isPlannedDowntimeFromRequest)) {
+                                console.info("window.isPlannedDowntimeFromRequest is ko observable");
+                                window.isPlannedDowntimeFromRequest(data);
+                            }else {
+                                console.info("window.isPlannedDowntimeFromRequest is not ko observable");
+                                window.isPlannedDowntimeFromRequest = ko.observable(data);
+                            }
+                        }
+                        
                         ajaxUtil.ajaxWithRetry({
                             type: "POST",
                             url: downtimeDetectUrl,
@@ -88,14 +102,16 @@ define('uifwk/@version@/js/util/zdt-util-impl', ['knockout',
                             headers: dfu.getDefaultHeader()
                         })
                         .done(function() {
-                            window._uifwk.cachedData.isPlannedDowntime(false);
+                            doneCallback(false);
+                            window._uifwk.cachedData.isPlannedDowntime = false;
                             window._uifwk.cachedData.isFetchingOMCStatus = false;
                             messageUtil.removeMessageByCategory("omc_planned_downtime");
                             callback(false);
                         })
                         .fail(function(jqXHR, textStatus, errorThrown) {
                             if (jqXHR.status === 401) {
-                                window._uifwk.cachedData.isPlannedDowntime(false);
+                                doneCallback(false);
+                                window._uifwk.cachedData.isPlannedDowntime = false;
                                 window._uifwk.cachedData.isFetchingOMCStatus = false;
                                 window._uifwk.hideHamburgerMenuOnPage = true;
                                 oj.Logger.error("Failed to detect OMC planned downtime due to 401 error. Redirect to error page", true);
@@ -107,19 +123,22 @@ define('uifwk/@version@/js/util/zdt-util-impl', ['knockout',
                             }
                             var apigwHeaders = ajaxUtil.getAPIGWHeaderValues(jqXHR, 'X-ORCL-OMC-APIGW-RETRYAFTER');
                             if (jqXHR.status === 503 && apigwHeaders && apigwHeaders['msg'].toLowerCase() === 'planned downtime') {
-                                window._uifwk.cachedData.isPlannedDowntime(true);
+                                doneCallback(true);
+                                window._uifwk.cachedData.isPlannedDowntime = true;
                                 window._uifwk.cachedData.isFetchingOMCStatus = false;
                                 callback(true);
                             }
                             else {
-                                window._uifwk.cachedData.isPlannedDowntime(false);
+                                doneCallback(false);
+                                window._uifwk.cachedData.isPlannedDowntime = false;
                                 window._uifwk.cachedData.isFetchingOMCStatus = false;
                                 messageUtil.removeMessageByCategory("omc_planned_downtime");
                                 callback(false);
                             }
                         });
                     } else {
-                        window._uifwk.cachedData.isPlannedDowntime.subscribe(function (data) {
+                        window.isPlannedDowntimeFromRequest.subscribe(function (data) {
+                            console.info("window.isPlannedDowntimeFromRequest is fetched from back end");
                             if (data) {
                                 callback(data);
                             }

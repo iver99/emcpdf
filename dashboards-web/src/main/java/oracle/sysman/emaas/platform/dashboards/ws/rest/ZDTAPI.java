@@ -27,10 +27,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.HalfSyncException;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.NoComparedResultException;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.SyncException;
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;

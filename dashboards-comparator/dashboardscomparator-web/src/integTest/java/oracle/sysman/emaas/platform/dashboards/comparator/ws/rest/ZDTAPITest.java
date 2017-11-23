@@ -2,12 +2,8 @@ package oracle.sysman.emaas.platform.dashboards.comparator.ws.rest;
 
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.CountsEntity;
@@ -16,15 +12,12 @@ import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.row
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardRowEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.TableRowsEntity;
 import oracle.sysman.emaas.platform.emcpdf.rc.RestClient;
-import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -55,7 +48,7 @@ public class ZDTAPITest {
 	LookupManager lookupManager;
 
     @Test
-    public void testSyncOnDF(@Mocked final JsonUtil jsonUtil, @Mocked final LookupClient client1, @Mocked final LookupClient client2) throws IOException{
+    public void testSyncOnDF(@Mocked final LookupClient client1, @Mocked final LookupClient client2) throws IOException{
     	final TableRowsEntity tableRow1 = new TableRowsEntity();
     	tableRow1.setEmsDashboard(new ArrayList<DashboardRowEntity>());
     	 

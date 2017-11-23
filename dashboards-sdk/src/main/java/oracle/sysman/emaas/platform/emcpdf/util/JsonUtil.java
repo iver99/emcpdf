@@ -127,7 +127,7 @@ public class JsonUtil
         return (List<T>) this.fromJson(jsonString, constructParametricType(List.class, classMeta));
     }
 
-    /*@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public <T> List<T> fromJsonToList(String jsonString, Class<T> classMeta,String field) throws IOException
     {
 
@@ -140,7 +140,7 @@ public class JsonUtil
             return Collections.emptyList();
         }
         return (List<T>) this.fromJson(result, constructParametricType(List.class, classMeta));
-    }*/
+    }
 
 
 
