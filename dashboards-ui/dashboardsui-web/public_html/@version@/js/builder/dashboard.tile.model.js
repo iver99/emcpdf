@@ -528,6 +528,7 @@ define(['knockout',
                         $(this).css('cursor', 'default');
                         $('#globalBody').removeClass('none-user-select');       
                         self.tilesView.enableDraggable();                 
+                        $b.triggerEvent($b.EVENT_RECALCULATE_RIGHT_PANEL_POSITION);
                     });
                 }
             };
