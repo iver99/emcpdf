@@ -12,8 +12,6 @@ package oracle.sysman.emaas.platform.dashboards.testsdk;
 
 import java.sql.SQLException;
 
-
-
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -74,7 +72,7 @@ public class DashboardSyncCompareTest
 	public void testFullCompare() throws SQLException
 	{
 		DatabaseUtil.Cloud1InsertData();
-		
+
 		try {
 			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
@@ -136,8 +134,8 @@ public class DashboardSyncCompareTest
 							"Authorization", authToken).when().get("comparator/sync");
 			System.out.println("The response is" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
-//			Assert.assertEquals(res.jsonPath().get("omc1"), "Sync is successful!");
-//			Assert.assertEquals(res.jsonPath().get("omc2"), "Sync is successful!");
+			//			Assert.assertEquals(res.jsonPath().get("omc1"), "Sync is successful!");
+			//			Assert.assertEquals(res.jsonPath().get("omc2"), "Sync is successful!");
 
 		}
 		catch (Exception e) {
@@ -179,6 +177,7 @@ public class DashboardSyncCompareTest
 			DatabaseUtil.Cloud1DeleteData();
 			DatabaseUtil.Cloud2DeleteData();
 			DatabaseUtil.Cloud2InsertData();
+
 			RestAssured.baseURI = generateComparatorServiceURL();
 			RestAssured.basePath = "/emcpdfcomparator/api/v1/";
 			Response res = RestAssured
@@ -240,8 +239,8 @@ public class DashboardSyncCompareTest
 							"Authorization", authToken).when().get("comparator/sync");
 			System.out.println("The response is" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
-//			Assert.assertEquals(res.jsonPath().get("omc1"), "Sync is successful!");
-//			Assert.assertEquals(res.jsonPath().get("omc2"), "Sync is successful!");
+			//			Assert.assertEquals(res.jsonPath().get("omc1"), "Sync is successful!");
+			//			Assert.assertEquals(res.jsonPath().get("omc2"), "Sync is successful!");
 
 		}
 		catch (Exception e) {
