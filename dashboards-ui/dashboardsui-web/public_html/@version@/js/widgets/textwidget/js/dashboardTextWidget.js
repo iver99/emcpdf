@@ -171,8 +171,10 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "DOMPurify", "ojs/ojtabs"
                 
                 var TimeFn = null;
                 self.textWidgetDblClickHandler = function() {
-                    clearTimeout(TimeFn);
-                    self.showTextEditor();
+                    if(!params.tile.editDisabled()) {
+                        clearTimeout(TimeFn);
+                        self.showTextEditor();
+                    }
                 };
                 
                 self.textWidgetClickHandler = function(data, event) {

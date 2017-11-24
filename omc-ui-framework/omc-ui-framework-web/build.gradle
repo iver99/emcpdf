@@ -18,7 +18,6 @@ def File sourceWebappDir = new File(project.projectDir, 'public_html')
 
 // source directories where jet files are copied
 def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclejet')
-def File sourceCKeditorDesDir = new File(sourceWebappDir, 'libs/@version@/js/ckeditor')
 def File sourceJsCanvgDestDir = new File(sourceWebappDir, 'libs/@version@/js/canvg')
 def File sourceJsCanvasDesDir = new File(sourceWebappDir, 'libs/@version@/js/html2canvas')
 def File sourceQunitDestDir = new File(sourceWebappDir, 'libs/@version@/js/qunit')
@@ -44,18 +43,17 @@ configurations{
 def jscc = "1".equals(System.getenv()['ENABLE_CC_JS'])
 
 dependencies {
-    compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '2.0.2-26417', ext: 'war'){ transitive = false }	
-    compile(group: 'files', name: 'canvg', version: '1.3', ext: 'zip'){ transitive = false }
-    compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
-    compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
-    compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
-    compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
-	compile getProjectArtifact('qunit')
-    compile getProjectArtifact('ckeditor')
-    providedCompile (project(':dashboards-ui-test-common-api')) //  { transitive = false }
-    providedCompile (project(':omc-ui-framework:omc-ui-framework-webutils')) //  { transitive = false }
-    compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')
-    jscover (group:'com.github.tntim96', name:'JSCover-all', version:'1.0.19')
+    compile getProjectArtifact('canvg')	
+    compile getProjectArtifact('font-awesome')
+    compile getProjectArtifact('html2canvas')
+    compile getProjectArtifact('log4j-api')
+    compile getProjectArtifact('log4j-core')
+    compile getProjectArtifact('oraclejet')
+    compile getProjectArtifact('qunit')
+    providedCompile (project(':dashboards-ui-test-common-api'))
+    providedCompile (project(':omc-ui-framework:omc-ui-framework-webutils'))
+    compass getProjectArtifact('jruby-complete')   
+    jscover getProjectArtifact('JSCover-all')   
 }
 
 task cleanJs(type:Delete) {
@@ -134,11 +132,9 @@ project.task("unpackJETFromArtifactory") << {
 project.task("unpackJSLibFromArtifactory") << {
     def File buildJsCanvgUnzipDir = new File(buildDir.absolutePath, 'canvg')
     def File buildJsCanvasUnzipDir = new File(buildDir.absolutePath, 'html2canvas')
-    def File buildCKeditorUnzipDir = new File(buildDir.absolutePath, 'ckeditor')
     //first time or if custom cleans removes it
     sourceJsCanvgDestDir.mkdirs()
     sourceJsCanvasDesDir.mkdirs()
-    sourceCKeditorDesDir.mkdirs()
 
     configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
         if (artifact.name.equals('canvg') && files(sourceJsCanvgDestDir.listFiles()).isEmpty()) {
@@ -185,29 +181,6 @@ project.task("unpackJSLibFromArtifactory") << {
 		    }	
             project.delete(buildJsCanvasUnzipDir)
         }
-        if (artifact.name.equals('ckeditor_full') && files(sourceCKeditorDesDir.listFiles()).isEmpty()) {
-            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-            buildCKeditorUnzipDir.mkdirs()
-
-            project.copy {
-                from project.zipTree(artifact.file.absolutePath)
-                into buildCKeditorUnzipDir.absolutePath
-            }
-            project.copy {
-                from buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
-                into sourceCKeditorDesDir.absolutePath
-            }
-
-            if(!project.hasProperty("devMode")){
-                def outputDir = file(stagingDir+"/libs/"+versionPathElement+"/js/ckeditor");
-                outputs.dir outputDir
-                project.copy {
-                    from buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
-                    into outputDir
-                }
-            }
-            project.delete(buildCKeditorUnzipDir)
-        }
     }
 }
 
@@ -219,8 +192,7 @@ project.task("cleanJet") << {
     sourceJsCanvgDestDir.deleteDir()
     println 'JS lib html2canvas dir : ' + sourceJsCanvasDesDir.absolutePath
     sourceJsCanvasDesDir.deleteDir()
-    println 'JS lib ckeditor dir : ' + sourceCKeditorDesDir.absolutePath
-    sourceCKeditorDesDir.deleteDir()
+
 }
 
 project.task("unpackFontFromArtifactory") << {    

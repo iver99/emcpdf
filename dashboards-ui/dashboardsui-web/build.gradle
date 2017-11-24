@@ -43,7 +43,6 @@ configurations {
 }
 
 dependencies {
-        //compile(group: 'com.oracle.emaas.emcpdf.common.tools', name: 'dashboards-common-tools', version: '1.0.0+')
         compile project(':dashboards-sdk')
         providedCompile project(':dashboards-ui:dashboardsui-webutils') 
         compile getProjectArtifact('log4j-core')   

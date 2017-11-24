@@ -352,6 +352,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			final String textWidgetTemplateImplUrl = NAV_BASE + "/" + buildId + "/js/widgets/textwidget/dashboardTextWidget.html";
 			final String textWidgetVMRel = "versionLookupSDK/emsaasui/emcpdfui/js/widgets/textwidget/js/dashboardTextWidget.js";
 			final String textWidgetVMImplUrl = NAV_BASE + "/" + buildId + "/js/widgets/textwidget/js/dashboardTextWidget.js";
+			final String defTestWidgetTemplateRel = "versionLookupSDK/emsaasui/emcpdfui/js/widgets/federation/testwidget.html";
+			final String defTestWidgetTemplateImplUrl = NAV_BASE + "/" + buildId + "/js/widgets/federation/testwidget.html";
+			final String defTestWidgetVMRel = "versionLookupSDK/emsaasui/emcpdfui/js/widgets/federation/js/testwidget.js";
+			final String defTestWidgetVMImplUrl = NAV_BASE + "/" + buildId + "/js/widgets/federation/js/testwidget.js";
 			final String htmlWidgetTemplateRel = "versionLookupSDK/emsaasui/emcpdfui/js/widgets/htmlwidget/htmlwidget.html";
 			final String htmlWidgetTemplateImplUrl = NAV_BASE + "/" + buildId + "/js/widgets/htmlwidget/htmlwidget.html";
 			final String htmlWidgetVMRel = "versionLookupSDK/emsaasui/emcpdfui/js/widgets/htmlwidget/js/htmlwidget.js";
@@ -371,6 +375,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("assetRoot").withHref(applicationUrlHttp + NAV_BASE));
 				links.add(new Link().withRel(textWidgetTemplateRel).withHref(applicationUrlHttp + textWidgetTemplateImplUrl));
 				links.add(new Link().withRel(textWidgetVMRel).withHref(applicationUrlHttp + textWidgetVMImplUrl));
+				links.add(new Link().withRel(defTestWidgetTemplateRel).withHref(applicationUrlHttp + defTestWidgetTemplateImplUrl));
+				links.add(new Link().withRel(defTestWidgetVMRel).withHref(applicationUrlHttp + defTestWidgetVMImplUrl));
 				links.add(new Link().withRel(htmlWidgetTemplateRel).withHref(applicationUrlHttp + htmlWidgetTemplateImplUrl));
 				links.add(new Link().withRel(htmlWidgetVMRel).withHref(applicationUrlHttp + htmlWidgetVMImplUrl));
 				//				links.add(new Link().withRel("static/dashboardsui.configurations").withHref(applicationUrlHttp + NAV_STATIC_CONF));
@@ -383,6 +389,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("assetRoot").withHref(applicationUrlHttps + NAV_BASE));
 				links.add(new Link().withRel(textWidgetTemplateRel).withHref(applicationUrlHttps + textWidgetTemplateImplUrl));
 				links.add(new Link().withRel(textWidgetVMRel).withHref(applicationUrlHttps + textWidgetVMImplUrl));
+				links.add(new Link().withRel(defTestWidgetTemplateRel).withHref(applicationUrlHttps + defTestWidgetTemplateImplUrl));
+				links.add(new Link().withRel(defTestWidgetVMRel).withHref(applicationUrlHttps + defTestWidgetVMImplUrl));
 				links.add(new Link().withRel(htmlWidgetTemplateRel).withHref(applicationUrlHttps + htmlWidgetTemplateImplUrl));
 				links.add(new Link().withRel(htmlWidgetVMRel).withHref(applicationUrlHttps + htmlWidgetVMImplUrl));
 				//				links.add(new Link().withRel("static/dashboardsui.configurations")

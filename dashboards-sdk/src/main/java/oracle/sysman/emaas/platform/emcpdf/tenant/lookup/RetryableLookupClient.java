@@ -1,17 +1,18 @@
 package oracle.sysman.emaas.platform.emcpdf.tenant.lookup;
 
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
+
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 /**
  * Created by guochen on 3/8/17.
@@ -50,7 +51,7 @@ public class RetryableLookupClient<T> {
 //        LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
         RegistryLookupUtil.VersionedLink lk = null;
 
-        Random delayRand = new Random(System.currentTimeMillis());
+        SecureRandom delayRand = new SecureRandom();
         while ((retry++) < MAX_TOTAL_RETRY /*&& (retry_on_same < MAX_RETRY_ON_SAME_INSTANCE)*/) {
             if(retry == 1){
                 LOGGER.debug("First time to request.");

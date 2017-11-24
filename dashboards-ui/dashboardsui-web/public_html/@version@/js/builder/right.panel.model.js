@@ -195,13 +195,6 @@ define(['knockout',
 
                     self.initEventHandlers();
                     
-                    if(self.rightPanelControl.completelyHidden() === false && self.rightPanelWidget.isWidgetLoaded()===false) {
-                        //load widgets only when right panel is editable and have not loaded widget before
-                        self.rightPanelWidget.loadWidgets(null,function successCallback(){
-                            initRightPanelDragAndTile();
-                        });
-                    }
-
                     self.rightPanelControl.initializeRightPanel.subscribe(function (newValue) {
                         newValue && self.rightPanelControl.initializeCollapsible();
                         newValue && initRightPanelDragAndTile();
