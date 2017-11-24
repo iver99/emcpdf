@@ -646,7 +646,9 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                     self.filter.creatorFilter([filterByValue]);
                     self.filter.favoritesFilter([]);
                 }
-                self.filter.saveFilter();
+                if(!self.zdtStatus()){
+                    self.filter.saveFilter();
+                }
                 self.filter.handleFilterChange({filterType: 'serviceFilter', newValue: filterByValue});
             }
         };
