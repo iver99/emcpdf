@@ -173,7 +173,7 @@ public class ConfigurationAPI extends APIBase
 
 			if(pd != null){
 				sb.append("window._uifwk.cachedData.favDashboards=");
-				sb.append(JsonUtil.buildNormalMapper().toJson(pd));
+				sb.append(JsonUtil.buildNonNullMapper().toJson(pd));
 				sb.append(";");
 			}
 
@@ -268,37 +268,25 @@ public class ConfigurationAPI extends APIBase
 			Future<Map<String, String>> futureBaseVanityUrls =null;
 			Future<PaginatedDashboards> futureFavDashboard =null;
             ExecutorService pool = ParallelThreadPool.getThreadPool();
+			final long TIMEOUT=30000;
 
             final String curTenant = TenantContext.getCurrentTenant();
             final String curUser = UserContext.getCurrentUser();
-			//retrieve favorite dashboard
-			futureFavDashboard = pool.submit(new Callable<PaginatedDashboards>() {
-				@Override
-				public PaginatedDashboards call() throws Exception {
-					try{
-						long start = System.currentTimeMillis();
-						_LOGGER.info("Parallel request to get favorite dashboards...");
-						initializeUserContext(tenantIdParam, userTenant);
-						String filterString = "favorites";
-						boolean federationMode = false;//FIXME
-						boolean boolFederationFeatureShowInUi = false;//FIXME
-						DashboardManager manager = DashboardManager.getInstance();
-						DashboardsFilter filter = new DashboardsFilter();
-						filter.initializeFilters(filterString);
-						Long tenantId = getTenantId(tenantIdParam);
-						PaginatedDashboards pd = manager.listDashboards(null, 0, 120, tenantId, true, "default", filter, federationMode, boolFederationFeatureShowInUi);
-						if (pd != null && pd.getDashboards() != null) {
-							for (Dashboard d : pd.getDashboards()) {
-								new DashboardAPI().updateDashboardAllHref(d, tenantIdParam);
-							}
-						}
-						_LOGGER.info("Retrieved get favorite dashboard is {}", pd);
 
-						long end = System.currentTimeMillis();
-						_LOGGER.info("Time to get favorite dashboard took: {}ms", (end - start));
-						return pd;
-					}catch(Exception e){
-						_LOGGER.error("Error occurred when get favorite dashboard using parallel request!", e);
+			featurePreferences = pool.submit(new Callable<List<Preference>>() {
+				@Override
+				public List<Preference> call() throws Exception {
+					try {
+						_LOGGER.info("Parallel request to get preference settings for features...");
+						long startPrefs = System.currentTimeMillis();
+						Long internalTenantId = ConfigurationAPI.this.getTenantId(tenantIdParam);
+						UserContext.setCurrentUser(curUser);
+						List<Preference> prefs = FeatureShowPreferences.getFeatureShowPreferences(internalTenantId);
+						long endPrefs = System.currentTimeMillis();
+						_LOGGER.info("Time to get features preferences: {}ms. Retrieved data is: {}", (endPrefs - startPrefs), prefs);
+						return prefs;
+					} catch (Exception e) {
+						_LOGGER.error("Error occurred when retrieving feature preferences settings using parallel request!", e);
 						throw e;
 					}
 				}
@@ -380,26 +368,71 @@ public class ConfigurationAPI extends APIBase
                 }
             });
 
-			featurePreferences = pool.submit(new Callable<List<Preference>>() {
+			List<PreferenceEntity> prefs = new ArrayList<PreferenceEntity>();
+			// by Default FederationFeatureShowInUiPref is false.
+			boolean FederationFeatureShowInUiPref = false;
+			try {
+				if(featurePreferences!=null){
+					List<Preference> prefList = featurePreferences.get(TIMEOUT, TimeUnit.MILLISECONDS);
+
+					_LOGGER.debug("Preference settings data is {}", prefList);
+					if (prefList != null) {
+						for (Preference pref : prefList) {
+							prefs.add(new PreferenceEntity(pref));
+							//check uifwk.hm.federation.show value
+							if("uifwk.hm.federation.show".equals(pref.getKey()) && Boolean.TRUE.equals(pref.getValue())){
+								_LOGGER.info("Preference entry 'uifwk.hm.federation.show' is found, value is {}", pref.getValue());
+								FederationFeatureShowInUiPref = true;
+							}
+						}
+					}
+
+				}
+			} catch (InterruptedException e) {
+				_LOGGER.error(e);
+			} catch (ExecutionException e) {
+				_LOGGER.error(e.getCause() == null ? e : e.getCause());
+			}catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				featurePreferences.cancel(true);
+				_LOGGER.error(e);
+			}
+
+			final boolean boolFederationFeatureShowInUi = FederationFeatureShowInUiPref;
+			//retrieve favorite dashboard
+			futureFavDashboard = pool.submit(new Callable<PaginatedDashboards>() {
 				@Override
-				public List<Preference> call() throws Exception {
-					try {
-						_LOGGER.info("Parallel request to get preference settings for features...");
-						long startPrefs = System.currentTimeMillis();
-						Long internalTenantId = ConfigurationAPI.this.getTenantId(tenantIdParam);
-						UserContext.setCurrentUser(curUser);
-						List<Preference> prefs = FeatureShowPreferences.getFeatureShowPreferences(internalTenantId);
-						long endPrefs = System.currentTimeMillis();
-						_LOGGER.info("Time to get features preferences: {}ms. Retrieved data is: {}", (endPrefs - startPrefs), prefs);
-						return prefs;
-					} catch (Exception e) {
-						_LOGGER.error("Error occurred when retrieving feature preferences settings using parallel request!", e);
+				public PaginatedDashboards call() throws Exception {
+					try{
+						long start = System.currentTimeMillis();
+						_LOGGER.info("Parallel request to get favorite dashboards...");
+						initializeUserContext(tenantIdParam, userTenant);
+						String filterString = "favorites";
+						//federation dashboards doesn't support favorite, so set federationMode=false
+						boolean federationMode = false;
+						DashboardManager manager = DashboardManager.getInstance();
+						DashboardsFilter filter = new DashboardsFilter();
+						filter.initializeFilters(filterString);
+						Long tenantId = getTenantId(tenantIdParam);
+						PaginatedDashboards pd = manager.listDashboards(null, 0, 120, tenantId, true, "default", filter, federationMode, boolFederationFeatureShowInUi);
+						if (pd != null && pd.getDashboards() != null) {
+							for (Dashboard d : pd.getDashboards()) {
+								new DashboardAPI().updateDashboardAllHref(d, tenantIdParam);
+							}
+						}
+						_LOGGER.info("Retrieved get favorite dashboard is {}", pd);
+
+						long end = System.currentTimeMillis();
+						_LOGGER.info("Time to get favorite dashboard took: {}ms", (end - start));
+						return pd;
+					}catch(Exception e){
+						_LOGGER.error("Error occurred when get favorite dashboard using parallel request!", e);
 						throw e;
 					}
 				}
 			});
 
-            final long TIMEOUT=30000;
+
             //get subscribed apps data
             List<String> subApps = null;
             try {
@@ -483,26 +516,6 @@ public class ConfigurationAPI extends APIBase
 				_LOGGER.error(e);
 			}
 
-			List<PreferenceEntity> prefs = new ArrayList<PreferenceEntity>();
-			try {
-				if(featurePreferences!=null){
-					List<Preference> prefList = featurePreferences.get(TIMEOUT, TimeUnit.MILLISECONDS);
-					if (prefList != null) {
-						for (Preference pref : prefList) {
-							prefs.add(new PreferenceEntity(pref));
-						}
-					}
-					_LOGGER.debug("Preference settings data is {}", prefList);
-				}
-			} catch (InterruptedException e) {
-				_LOGGER.error(e);
-			} catch (ExecutionException e) {
-				_LOGGER.error(e.getCause() == null ? e : e.getCause());
-			}catch(TimeoutException e){
-				//if timeout, and the task is still running, attempt to stop the task
-				featurePreferences.cancel(true);
-				_LOGGER.error(e);
-			}
 
 			SubscribedAppsEntity sae = subApps == null ? null : new SubscribedAppsEntity(subApps);
 			RegistrationEntity re = new RegistrationEntity(sessionExpiryTime, userRoles);

@@ -561,16 +561,33 @@ public class DashboardAPI extends APIBase
 				public PaginatedDashboards call() throws Exception {
 					try{
 						long start = System.currentTimeMillis();
+						boolean FederationFeatureShowInUiPref = false;
 						LOGGER.info("Parallel request to get favorite dashboards...");
 						initializeUserContext(tenantIdParam, userTenant);
+						//first retrieve Preference data 'uifwk.hm.federation.show'
+						Long internalTenantId = getTenantId(tenantIdParam);
+						UserContext.setCurrentUser(curUser);
+						List<Preference> prefs = FeatureShowPreferences.getFeatureShowPreferences(internalTenantId);
+						if (prefs != null) {
+							for (Preference pref : prefs) {
+//								prefs.add(new PreferenceEntity(pref));
+								//check uifwk.hm.federation.show value
+								if("uifwk.hm.federation.show".equals(pref.getKey()) && Boolean.TRUE.equals(pref.getValue())){
+									LOGGER.info("Preference entry 'uifwk.hm.federation.show' is found, value is {}", pref.getValue());
+									FederationFeatureShowInUiPref = true;
+								}
+							}
+						}
+						long endPrefs = System.currentTimeMillis();
+						LOGGER.info("Time to get features preferences: {}ms. Retrieved data is: {}", (endPrefs - start), prefs);
 						String filterString = "favorites";
-						boolean federationMode = false;//FIXME
-						boolean boolFederationFeatureShowInUi = false;//FIXME
+						//federation dashboards doesn't support favorite, so set federationMode=false
+						boolean federationMode = false;
 						DashboardManager manager = DashboardManager.getInstance();
 						DashboardsFilter filter = new DashboardsFilter();
 						filter.initializeFilters(filterString);
 						Long tenantId = getTenantId(tenantIdParam);
-						PaginatedDashboards pd = manager.listDashboards(null, 0, 120, tenantId, true, "default", filter, federationMode, boolFederationFeatureShowInUi);
+						PaginatedDashboards pd = manager.listDashboards(null, 0, 120, tenantId, true, "default", filter, federationMode, FederationFeatureShowInUiPref);
 						if (pd != null && pd.getDashboards() != null) {
 							for (Dashboard d : pd.getDashboards()) {
 								new DashboardAPI().updateDashboardAllHref(d, tenantIdParam);
