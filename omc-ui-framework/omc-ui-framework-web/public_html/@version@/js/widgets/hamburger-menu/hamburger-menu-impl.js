@@ -309,7 +309,17 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 
                 //Get favorite dashboards
                 function getFavoriteDsb(forceRefresh) {
+                    function fillFavoriteDsbData(data){
+                        $.each(data.dashboards, function (idx, dsb) {
+                            self.favoriteDsb.push({name: dsb.name, href: "/emsaasui/emcpdfui/builder.html?dashboardId=" + dsb.id});
+                        });
+                    }
                     var dfdGetFavoriteDsb = $.Deferred();
+                    if(window._uifwk.cachedData.favDashboards && window._uifwk.cachedData.favDashboards.totalResults > 0){
+                        self.favoriteDsb = [];
+                        fillFavoriteDsbData(window._uifwk.cachedData.favDashboards);
+                        delete window._uifwk.cachedData.favDashboards;
+                    }
                     if(!forceRefresh && self.favoriteDsb){
                         dfdGetFavoriteDsb.resolve();//use the cached data
                         return dfdGetFavoriteDsb;
@@ -324,9 +334,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         contentType: "application/json",
                         headers: header,
                         success: function (data) {
-                            $.each(data.dashboards, function (idx, dsb) {
-                                self.favoriteDsb.push({name: dsb.name, href: "/emsaasui/emcpdfui/builder.html?dashboardId="+dsb.id});
-                            });
+                            fillFavoriteDsbData(data);
                             dfdGetFavoriteDsb.resolve();
                         },
                         error: function (xhr, textStatus, errorThrown) {
