@@ -135,8 +135,9 @@ public class DashboardServiceFacade
 		}
 
 		String sql = "select dashboard_id from ems_dashboard t where t.name in (" + parameters.toString() + ")"
-		+ " and ( t.tenant_id = " + tenantId + " or t.tenant_id =" + NON_TENANT_ID +  " ) and t.deleted = 0";
+		+ " and ( t.tenant_id = ? or t.tenant_id = -11 or share_public = 1) and t.deleted = 0";
 		Query query = em.createNativeQuery(sql);
+		query.setParameter(1, tenantId);
 		List<Object> result = query.getResultList();
 		if (result != null && !result.isEmpty()) {
 			for (Object obj : result) {
