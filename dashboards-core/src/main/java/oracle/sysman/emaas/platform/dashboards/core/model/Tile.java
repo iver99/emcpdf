@@ -974,6 +974,7 @@ public class Tile
 		//width = 8;
 		//height = 1;
 		Integer tileType = DataFormatUtils.tileTypeString2Integer(type);
+		Integer fedSupported = FederationSupportedType.FEDERATION_AND_NON_FEDERATION.getValue();
 		// html tile does not support time control
 		Integer supportTimeControl = 0;
 		// whatever the input title is, html tile use the default title
@@ -984,7 +985,7 @@ public class Tile
 					widgetGroupName, widgetHistogram, widgetIcon, widgetKocName, widgetName, widgetOwner, widgetSource,
 					widgetTemplate, widgetUniqueId, widgetViewmode, supportTimeControl, width, widgetLinkedDashboard,
 					// html tile actually doesn't exist any more
-					0, widgetDeletionDate);
+					0, widgetDeletionDate, fedSupported);
 			if (parameters != null) {
 				for (TileParam param : parameters) {
 					EmsDashboardTileParams edtp = param.getPersistentEntity(to, null);
