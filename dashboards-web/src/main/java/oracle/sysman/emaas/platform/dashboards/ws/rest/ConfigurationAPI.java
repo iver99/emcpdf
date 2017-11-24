@@ -380,7 +380,7 @@ public class ConfigurationAPI extends APIBase
 						for (Preference pref : prefList) {
 							prefs.add(new PreferenceEntity(pref));
 							//check uifwk.hm.federation.show value
-							if("uifwk.hm.federation.show".equals(pref.getKey()) && Boolean.TRUE.equals(pref.getValue())){
+							if("uifwk.hm.federation.show".equals(pref.getKey()) && "true".equalsIgnoreCase(pref.getValue())){
 								_LOGGER.info("Preference entry 'uifwk.hm.federation.show' is found, value is {}", pref.getValue());
 								FederationFeatureShowInUiPref = true;
 							}
