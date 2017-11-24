@@ -13,10 +13,7 @@ import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashboard;
-import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.SessionInfoUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.entity.EmBaseEntity;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardPK;
@@ -135,9 +132,12 @@ public class DashboardServiceFacade
 		}
 
 		String sql = "select dashboard_id from ems_dashboard t where t.name in (" + parameters.toString() + ")"
-		+ " and ( t.tenant_id = ? or t.tenant_id = -11 or share_public = 1) and t.deleted = 0";
+		+ " and ( t.tenant_id = ? or t.tenant_id = -11) and (t.owner = ? or t.share_public = 1) and t.deleted = 0";
 		Query query = em.createNativeQuery(sql);
+		String currentUser = UserContext.getCurrentUser();
+		LOGGER.info("Current user for exporting dashboard is {}", currentUser);
 		query.setParameter(1, tenantId);
+		query.setParameter(2, currentUser);
 		List<Object> result = query.getResultList();
 		if (result != null && !result.isEmpty()) {
 			for (Object obj : result) {
