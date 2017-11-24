@@ -196,8 +196,8 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 					driver.getLogger().info("Start to find the expand sub menu icon of the " + menuitem);
 					try {
 						indicator = DashBoardPageId_1180.HAMBURGERMENU_EXPAND_SUBMENU_ICON_XPATH.replace("_index_", Integer.toString(i));
-						driver.getElement(indicator);
-						isExisted = true;
+						driver.getElement("xpath=" + indicator);						
+						isExisted = true;						
 						driver.getLogger().info("'" + menuitem + "' has sub menu icon");
 						return isExisted;
 					}
