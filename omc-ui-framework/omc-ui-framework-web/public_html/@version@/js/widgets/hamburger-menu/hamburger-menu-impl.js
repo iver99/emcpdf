@@ -315,7 +315,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         });
                     }
                     var dfdGetFavoriteDsb = $.Deferred();
-                    if(window._uifwk.cachedData.favDashboards && window._uifwk.cachedData.favDashboards.totalResults > 0){
+                    if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.favDashboards && window._uifwk.cachedData.favDashboards.totalResults > 0){
                         self.favoriteDsb = [];
                         fillFavoriteDsbData(window._uifwk.cachedData.favDashboards);
                         delete window._uifwk.cachedData.favDashboards;
