@@ -554,6 +554,40 @@ public class DashboardAPI extends APIBase
 			StringBuilder sb=new StringBuilder();
 			ExecutorService pool = ParallelThreadPool.getThreadPool();
 
+
+			//retrieve favorite dashboard
+			Future<PaginatedDashboards> futureFavDashboard = pool.submit(new Callable<PaginatedDashboards>() {
+				@Override
+				public PaginatedDashboards call() throws Exception {
+					try{
+						long start = System.currentTimeMillis();
+						LOGGER.info("Parallel request to get favorite dashboards...");
+						initializeUserContext(tenantIdParam, userTenant);
+						String filterString = "favorites";
+						boolean federationMode = false;//FIXME
+						boolean boolFederationFeatureShowInUi = false;//FIXME
+						DashboardManager manager = DashboardManager.getInstance();
+						DashboardsFilter filter = new DashboardsFilter();
+						filter.initializeFilters(filterString);
+						Long tenantId = getTenantId(tenantIdParam);
+						PaginatedDashboards pd = manager.listDashboards(null, 0, 120, tenantId, true, "default", filter, federationMode, boolFederationFeatureShowInUi);
+						if (pd != null && pd.getDashboards() != null) {
+							for (Dashboard d : pd.getDashboards()) {
+								new DashboardAPI().updateDashboardAllHref(d, tenantIdParam);
+							}
+						}
+						LOGGER.info("Retrieved get favorite dashboard is {}", pd);
+
+						long end = System.currentTimeMillis();
+						LOGGER.info("Time to get favorite dashboard took: {}ms", (end - start));
+						return pd;
+					}catch(Exception e){
+						LOGGER.error("Error occurred when get favorite dashboard using parallel request!", e);
+						throw e;
+					}
+				}
+			});
+
 			//retrieve user info
 			List<String> userInfo = null;
 			final Future<List<String>> futureUserInfo = pool.submit(new Callable<List<String>>() {
@@ -790,6 +824,22 @@ public class DashboardAPI extends APIBase
 				LOGGER.error(e);
 			}
 
+			PaginatedDashboards pd = null;
+			try{
+				if(futureFavDashboard != null){
+					pd = futureFavDashboard.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					LOGGER.debug("Favorite dashboard is  {}", JsonUtil.buildNormalMapper().toJson(pd));
+				}
+			}catch (InterruptedException e) {
+				LOGGER.error(e);
+			} catch (ExecutionException e) {
+				LOGGER.error(e.getCause() == null ? e : e.getCause());
+			}catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureFavDashboard.cancel(true);
+				LOGGER.error(e);
+			}
+
 			sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
 			if (userInfo != null || userGrants != null) {
 				String userInfoRes = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity(userInfo, userGrants));
@@ -838,6 +888,12 @@ public class DashboardAPI extends APIBase
 			if (prefs != null) {
 				sb.append("window._uifwk.cachedData.preferences=");
 				sb.append(JsonUtil.buildNormalMapper().toJson(prefs));
+				sb.append(";");
+			}
+
+			if(pd != null){
+				sb.append("window._uifwk.cachedData.favDashboards=");
+				sb.append(JsonUtil.buildNormalMapper().toJson(pd));
 				sb.append(";");
 			}
 
