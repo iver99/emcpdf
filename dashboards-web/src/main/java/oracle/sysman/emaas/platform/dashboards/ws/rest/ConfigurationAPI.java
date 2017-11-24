@@ -380,7 +380,7 @@ public class ConfigurationAPI extends APIBase
 						for (Preference pref : prefList) {
 							prefs.add(new PreferenceEntity(pref));
 							//check uifwk.hm.federation.show value
-							if("uifwk.hm.federation.show".equals(pref.getKey()) && "true".equalsIgnoreCase(pref.getValue())){
+							if(Preference.PREF_KEY_HM_FEDERATION_SHOW.equals(pref.getKey()) && "true".equalsIgnoreCase(pref.getValue())){
 								_LOGGER.info("Preference entry 'uifwk.hm.federation.show' is found, value is {}", pref.getValue());
 								FederationFeatureShowInUiPref = true;
 							}
@@ -399,6 +399,7 @@ public class ConfigurationAPI extends APIBase
 			}
 
 			final boolean boolFederationFeatureShowInUi = FederationFeatureShowInUiPref;
+			_LOGGER.info("boolFederationFeatureShowInUi value is {}", boolFederationFeatureShowInUi);
 			//retrieve favorite dashboard
 			futureFavDashboard = pool.submit(new Callable<PaginatedDashboards>() {
 				@Override
@@ -420,7 +421,7 @@ public class ConfigurationAPI extends APIBase
 								new DashboardAPI().updateDashboardAllHref(d, tenantIdParam);
 							}
 						}
-						_LOGGER.info("Retrieved get favorite dashboard is {}", pd);
+						_LOGGER.info("Retrieved get favorite dashboard is {}", JsonUtil.buildNormalMapper().toJson(pd));
 
 						long end = System.currentTimeMillis();
 						_LOGGER.info("Time to get favorite dashboard took: {}ms", (end - start));
