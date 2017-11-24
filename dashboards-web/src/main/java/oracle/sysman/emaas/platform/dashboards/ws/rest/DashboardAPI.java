@@ -893,7 +893,7 @@ public class DashboardAPI extends APIBase
 
 			if(pd != null){
 				sb.append("window._uifwk.cachedData.favDashboards=");
-				sb.append(JsonUtil.buildNormalMapper().toJson(pd));
+				sb.append(JsonUtil.buildNonNullMapper().toJson(pd));
 				sb.append(";");
 			}
 
