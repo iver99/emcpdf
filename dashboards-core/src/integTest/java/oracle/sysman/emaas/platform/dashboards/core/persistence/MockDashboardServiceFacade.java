@@ -259,6 +259,22 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	}
 
 	@Mock
+	public List<EmsPreference> getEmsPreferencesByKeys(String userName, List<String> keys)
+	{
+		if (keys == null) {
+			return null;
+		}
+		List<EmsPreference> prefs = new ArrayList<EmsPreference>();
+		for (String prefKey : keys) {
+			List<EmsPreference> ps = this.localFind(EmsPreference.class, new EmsPreferenceSelector(userName, prefKey));
+			if (ps != null) {
+				prefs.addAll(ps);
+			}
+		}
+		return prefs.isEmpty() ? null : prefs;
+	}
+
+	@Mock
 	public List<EmsPreference> getEmsPreferenceFindAll(String username)
 	{
 		return this.localFind(EmsPreference.class, new EmsPreferenceSelector(username));
@@ -413,7 +429,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	}
 
 	@Mock
-	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(String name, String owner, String description){
+	public EmsDashboard getEmsDashboardByNameAndDescriptionAndOwner(String name, String owner, String description, boolean sys){
 		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(null, name, owner, true));
 		return ps.isEmpty() ? null : ps.get(0);
 	}

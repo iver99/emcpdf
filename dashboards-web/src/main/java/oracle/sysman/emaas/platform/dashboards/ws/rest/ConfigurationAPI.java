@@ -11,7 +11,7 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 
 import javax.ws.rs.GET;
@@ -22,15 +22,19 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import oracle.sysman.emaas.platform.dashboards.core.PreferenceManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
+import oracle.sysman.emaas.platform.dashboards.core.model.Preference;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
 import oracle.sysman.emaas.platform.dashboards.webutils.dependency.DependencyStatus;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.model.PreferenceEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.TenantSubscriptionsAPI.SubscribedAppsEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.preferences.FeatureShowPreferences;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
 import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.TenantSubscriptionInfo;
@@ -47,18 +51,21 @@ public class ConfigurationAPI extends APIBase
 	private static final Logger _LOGGER = LogManager.getLogger(ConfigurationAPI.class);
 
 	private static class CombinedBrandingBarData {
-		public CombinedBrandingBarData(UserInfoEntity userInfo, RegistrationEntity registration, SubscribedAppsEntity subscribedApps,String subscribedApps2) {
+		public CombinedBrandingBarData(UserInfoEntity userInfo, RegistrationEntity registration,
+									   SubscribedAppsEntity subscribedApps,String subscribedApps2,
+									   List<PreferenceEntity> preferences) {
 			this.userInfo = userInfo;
 			this.registration = registration;
 			this.subscribedApps = subscribedApps;
             this.subscribedApps2 = subscribedApps2;
-
+			this.preferences = preferences;
 		}
 
 		private UserInfoEntity userInfo;
 		private RegistrationEntity registration;
 		private String subscribedApps2;
         private SubscribedAppsEntity subscribedApps;
+		private List<PreferenceEntity> preferences;
 
         public String getSubscribedApps2() {
             return subscribedApps2;
@@ -92,6 +99,14 @@ public class ConfigurationAPI extends APIBase
 			this.registration = registration;
 		}
 
+		public List<PreferenceEntity> getPreferences() {
+			return preferences;
+		}
+
+		public void setPreferences(List<PreferenceEntity> preferences) {
+			this.preferences = preferences;
+		}
+
 		public String getBrandingbarInjectedJS() {
 			StringBuilder sb = new StringBuilder();
 			if (userInfo != null) {
@@ -117,6 +132,12 @@ public class ConfigurationAPI extends APIBase
                 sb.append(subscribedApps2);
                 sb.append(";");
             }
+
+			if (preferences != null) {
+				sb.append("window._uifwk.cachedData.preferences=");
+				sb.append(JsonUtil.buildNormalMapper().toJson(preferences));
+				sb.append(";");
+			}
 			return sb.toString();
 		}
 	}
@@ -203,6 +224,7 @@ public class ConfigurationAPI extends APIBase
             Future<List<String>> futureUserRoles =null;
             Future<String> futureUserGrants =null;
             Future<List<String>> futureSubscribedApps =null;
+			Future<List<Preference>> featurePreferences = null;
             ExecutorService pool = ParallelThreadPool.getThreadPool();
 
             final String curTenant = TenantContext.getCurrentTenant();
@@ -262,6 +284,25 @@ public class ConfigurationAPI extends APIBase
                 }
             });
 
+			featurePreferences = pool.submit(new Callable<List<Preference>>() {
+				@Override
+				public List<Preference> call() throws Exception {
+					try {
+						_LOGGER.info("Parallel request to get preference settings for features...");
+						long startPrefs = System.currentTimeMillis();
+						Long internalTenantId = ConfigurationAPI.this.getTenantId(tenantIdParam);
+						UserContext.setCurrentUser(curUser);
+						List<Preference> prefs = FeatureShowPreferences.getFeatureShowPreferences(internalTenantId);
+						long endPrefs = System.currentTimeMillis();
+						_LOGGER.info("Time to get features preferences: {}ms. Retrieved data is: {}", (endPrefs - startPrefs), prefs);
+						return prefs;
+					} catch (Exception e) {
+						_LOGGER.error("Error occurred when retrieving feature preferences settings using parallel request!", e);
+						throw e;
+					}
+				}
+			});
+
             final long TIMEOUT=30000;
             //get subscribed apps data
             List<String> subApps = null;
@@ -314,9 +355,30 @@ public class ConfigurationAPI extends APIBase
                 _LOGGER.error(e);
             }
 
+			List<PreferenceEntity> prefs = new ArrayList<PreferenceEntity>();
+			try {
+				if(featurePreferences!=null){
+					List<Preference> prefList = featurePreferences.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					if (prefList != null) {
+						for (Preference pref : prefList) {
+							prefs.add(new PreferenceEntity(pref));
+						}
+					}
+					_LOGGER.debug("Preference settings data is {}", prefList);
+				}
+			} catch (InterruptedException e) {
+				_LOGGER.error(e);
+			} catch (ExecutionException e) {
+				_LOGGER.error(e.getCause() == null ? e : e.getCause());
+			}catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				featurePreferences.cancel(true);
+				_LOGGER.error(e);
+			}
+
 			SubscribedAppsEntity sae = subApps == null ? null : new SubscribedAppsEntity(subApps);
 			RegistrationEntity re = new RegistrationEntity(sessionExpiryTime, userRoles);
-			CombinedBrandingBarData cbbd = new CombinedBrandingBarData(new UserInfoEntity(userRoles, userGrants), re, sae,subApps2);
+			CombinedBrandingBarData cbbd = new CombinedBrandingBarData(new UserInfoEntity(userRoles, userGrants), re, sae,subApps2, prefs);
 			String brandingBarData = cbbd.getBrandingbarInjectedJS();
             long end = System.currentTimeMillis();
 			_LOGGER.info("Response for [GET] /v1/configurations/brandingbardata is \"{}\". It takes {}ms for this API", brandingBarData, (end - start));

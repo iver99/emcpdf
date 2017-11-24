@@ -15,6 +15,7 @@ define(['knockout',
         'builder/editor/editor.tiles'
     ],
     function(ko, $, oj, dfu,userTenantUtilModel, cxtModel/*, TargetSelectorUtils*/) {
+        var cxtUtil = new cxtModel();
         function Cell(row, column) {
             var self = this;
 
@@ -236,12 +237,12 @@ define(['knockout',
             tile.linkedDashboard = ko.computed(function() {
                 if (tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()) {
                     var link = '/emsaasui/emcpdfui/builder.html?dashboardId=' + tile.WIDGET_LINKED_DASHBOARD();
-                    if((dashboard.enableTimeRange()==="TRUE" || Builder.isTimeRangeAvailInUrl()===true)&& timeSelectorModel && timeSelectorModel.viewStart()){
-                        link += '&startTime='+timeSelectorModel.viewStart().getTime()+'&endTime='+timeSelectorModel.viewEnd().getTime();
+                    
+                    if(Builder.isRunningInFederationMode()){
+                        link += "&federationEnabled=true";
                     }
-                    if(targets && targets()){
-                        link += "&targets="+encodeURI(JSON.stringify(targets()));
-                    }
+                    
+                    link = cxtUtil.appendOMCContext(link, true, true, true);
                     return link;
                 } else
                     return "#";
@@ -256,6 +257,38 @@ define(['knockout',
              * Integrator will get a parameter: params by which integrator can access tile related properties/method/function
              */
             tile.onDashboardItemChangeEvent = null;
+            
+            /**
+             * Integrator needs to override below FUNCTION to return entity context
+             * e.g.
+             * params.tile.getWidgetEntityContext = function() {
+             *  //widgets' code to return widgets' definition entity context in below format
+             *  
+             *  return {
+             *      compositeMEID: <compositeMEID>,
+             *      entityMEIDs: <array of entity MEIDs>
+             *  }
+             * }
+             * 
+             */
+            tile.getWidgetEntityContext = null;
+            
+            /**
+             * Integrator needs to override below FUNCTION to return time context
+             * e.g.
+             * params.tile.getWidgetTimeContext = function() {
+             *  //widgets' code to return widgets' definition time context in below format
+             *  //If "timePeriod" is a relative time like "LAST_x_UNIT" or "LATEST", "startTime" and "endTime" can be null.
+             *  //If "timePeriod" is an absolute time like "CUSTOM", "startTime" and "endTime" can't be null.
+             *  return {
+             *      timePeriod: <LAST_x_UNIT/LATEST/CUSOM>
+             *      startTime: <start time timestamp>
+             *      endTime: <end time timestamp>
+             *  }
+             * }
+             * 
+             */
+            tile.getWidgetTimeContext = null;
 
             /**
              * Get value of tile Custom Parameter according to given name. This function only retrieves Custom Parameters.
@@ -367,6 +400,10 @@ define(['knockout',
                     tile.isOpenInExplorerShown(false);
                     return;
                 }
+                if (tile.federationSupported && tile.federationSupported() !== 'NON_FEDERATION_ONLY') {
+                    tile.isOpenInExplorerShown(false);
+                    return;
+                }
                 if (tile.PROVIDER_NAME() === 'TargetAnalytics') {
                     dfu.getSubscribedApps2WithEdition(
                         //successCallback
@@ -398,7 +435,6 @@ define(['knockout',
                 }
             }
             
-            var cxtUtil = new cxtModel();
             if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
 //                var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
                 var url = dfu.getVisualAnalyzerUrl(tile.PROVIDER_NAME());//Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), versionPlus);
@@ -406,7 +442,56 @@ define(['knockout',
                     tile.configure = function(){
                         var widgetUrl = url;
                         widgetUrl += "?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboardInst.id()+"&dashboardName="+encodeURI(dashboardInst.name()).replace(/\//g,'%2F');
-                        window.location = cxtUtil.appendOMCContext(widgetUrl, getRespectOMCContextFlag(dashboard.enableEntityFilter()), getRespectOMCContextFlag(dashboard.enableEntityFilter()), getRespectOMCContextFlag(dashboard.enableTimeRange()));
+//                        window.location = cxtUtil.appendOMCContext(widgetUrl, getRespectOMCContextFlag(dashboard.enableEntityFilter()), getRespectOMCContextFlag(dashboard.enableEntityFilter()), getRespectOMCContextFlag(dashboard.enableTimeRange()));
+                        var _context = cxtUtil.getOMCContext(getRespectOMCContextFlag(dashboard.enableEntityFilter()), getRespectOMCContextFlag(dashboard.enableEntityFilter()), getRespectOMCContextFlag(dashboard.enableTimeRange()));
+                        if(!_context["composite"]) {
+                            _context["composite"] = {};
+                        }
+                        if(!_context["entity"]) {
+                            _context["entity"] = {};
+                        }
+                        if(!_context["time"]) {
+                            _context["time"] = {};
+                        }
+                        
+                        if(dashboard.enableEntityFilter() === "FALSE" && $.isFunction(tile.getWidgetEntityContext)) {
+                            //Get widget's definition entity context and update _context
+                            console.log("Get widget entity context, result is ");
+                            var _entityCtx = tile.getWidgetEntityContext();
+                            console.log(_entityCtx);
+                            if(_entityCtx) {
+                                if(_entityCtx.compositeMEID) {
+                                    _context["composite"]["compositeMEID"] = _entityCtx.compositeMEID;
+                                }
+                                if(_entityCtx.entityMEIDs && $.isArray(_entityCtx.entityMEIDs) && _entityCtx.entityMEIDs.length > 0) {
+                                    _context["entity"]["entityMEIDs"] = _entityCtx.entityMEIDs;
+                                }
+                            }
+                            
+                        }
+                        
+                        if(dashboard.enableTimeRange() === "FALSE" && $.isFunction(tile.getWidgetTimeContext)) {
+                            //Get widget's definition time context and update _context
+                            console.log("Get widget time context, result is ");
+                            var _timeCtx = tile.getWidgetTimeContext();
+                            console.log(_timeCtx);
+                            if(_timeCtx) {
+                                if(_timeCtx.timePeriod === "LATEST" || cxtUtil.isValidTimePeriod(_timeCtx.timePeriod)) {
+                                    _context["time"]["timePeriod"] = _timeCtx.timePeriod;
+                                    _context["time"]["startTime"] = null;
+                                    _context["time"]["endTime"] = null;
+                                }else if(_timeCtx.timePeriod === "CUSTOM") {
+                                    _context["time"]["timePeriod"] = _timeCtx.timePeriod;
+                                    _context["time"]["startTime"] = _timeCtx.startTime;
+                                    _context["time"]["endTime"] = _timeCtx.endTime;
+                                }else {
+                                    console.error("Widget returned invalid time period: " + _timeCtx.timePeriod);
+                                    oj.Logger.error("Widget returned invalid time period: " + _timeCtx.timePeriod);
+                                }
+                            }
+                        }
+                        
+                        window.location = cxtUtil.generateUrlWithContext(widgetUrl, _context);
                     };
                 }
             }

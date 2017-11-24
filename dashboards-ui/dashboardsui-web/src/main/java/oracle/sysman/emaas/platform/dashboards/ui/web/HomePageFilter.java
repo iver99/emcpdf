@@ -243,6 +243,7 @@ public class HomePageFilter implements Filter
 			CloseableHttpResponse response = null;
 			try {
 				response = client.execute(get);
+				LOGGER.info("Response code for home dashboard is {}",response.getStatusLine().getStatusCode());
 				if (200 == response.getStatusLine().getStatusCode()) {
 					isExisted = true;
 				}
