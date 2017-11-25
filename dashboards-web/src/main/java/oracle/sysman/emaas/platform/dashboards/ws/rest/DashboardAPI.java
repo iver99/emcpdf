@@ -709,6 +709,58 @@ public class DashboardAPI extends APIBase
 			StringBuilder sb=new StringBuilder();
 			ExecutorService pool = ParallelThreadPool.getThreadPool();
 
+
+			//retrieve favorite dashboard
+			Future<PaginatedDashboards> futureFavDashboard = pool.submit(new Callable<PaginatedDashboards>() {
+				@Override
+				public PaginatedDashboards call() throws Exception {
+					try{
+						long start = System.currentTimeMillis();
+						boolean FederationFeatureShowInUiPref = false;
+						LOGGER.info("Parallel request to get favorite dashboards...");
+						initializeUserContext(tenantIdParam, userTenant);
+						//first retrieve Preference data 'uifwk.hm.federation.show'
+						Long internalTenantId = getTenantId(tenantIdParam);
+						UserContext.setCurrentUser(curUser);
+						List<Preference> prefs = FeatureShowPreferences.getFeatureShowPreferences(internalTenantId);
+						if (prefs != null) {
+							for (Preference pref : prefs) {
+//								prefs.add(new PreferenceEntity(pref));
+								//check uifwk.hm.federation.show value
+								if("uifwk.hm.federation.show".equals(pref.getKey()) && "true".equalsIgnoreCase(pref.getValue())){
+									LOGGER.info("Preference entry 'uifwk.hm.federation.show' is found, value is {}", pref.getValue());
+									FederationFeatureShowInUiPref = true;
+								}
+							}
+						}
+						long endPrefs = System.currentTimeMillis();
+						LOGGER.info("Time to get features preferences: {}ms. Retrieved data is: {}", (endPrefs - start), prefs);
+						String filterString = "favorites";
+						//federation dashboards doesn't support favorite, so set federationMode=false
+						boolean federationMode = false;
+						DashboardManager manager = DashboardManager.getInstance();
+						DashboardsFilter filter = new DashboardsFilter();
+						filter.initializeFilters(filterString);
+						Long tenantId = getTenantId(tenantIdParam);
+						LOGGER.info("FederationFeatureShowInUiPref value is {}", FederationFeatureShowInUiPref);
+						PaginatedDashboards pd = manager.listDashboards(null, 0, 120, tenantId, true, "default", filter, federationMode, FederationFeatureShowInUiPref);
+						if (pd != null && pd.getDashboards() != null) {
+							for (Dashboard d : pd.getDashboards()) {
+								new DashboardAPI().updateDashboardAllHref(d, tenantIdParam);
+							}
+						}
+						LOGGER.info("Retrieved get favorite dashboard is {}", JsonUtil.buildNormalMapper().toJson(pd));
+
+						long end = System.currentTimeMillis();
+						LOGGER.info("Time to get favorite dashboard took: {}ms", (end - start));
+						return pd;
+					}catch(Exception e){
+						LOGGER.error("Error occurred when get favorite dashboard using parallel request!", e);
+						throw e;
+					}
+				}
+			});
+
 			//retrieve user info
 			List<String> userInfo = null;
 			final Future<List<String>> futureUserInfo = pool.submit(new Callable<List<String>>() {
@@ -945,6 +997,22 @@ public class DashboardAPI extends APIBase
 				LOGGER.error(e);
 			}
 
+			PaginatedDashboards pd = null;
+			try{
+				if(futureFavDashboard != null){
+					pd = futureFavDashboard.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					LOGGER.debug("Favorite dashboard is  {}", JsonUtil.buildNormalMapper().toJson(pd));
+				}
+			}catch (InterruptedException e) {
+				LOGGER.error(e);
+			} catch (ExecutionException e) {
+				LOGGER.error(e.getCause() == null ? e : e.getCause());
+			}catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureFavDashboard.cancel(true);
+				LOGGER.error(e);
+			}
+
 			sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
 			if (userInfo != null || userGrants != null) {
 				String userInfoRes = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity(userInfo, userGrants));
@@ -993,6 +1061,12 @@ public class DashboardAPI extends APIBase
 			if (prefs != null) {
 				sb.append("window._uifwk.cachedData.preferences=");
 				sb.append(JsonUtil.buildNormalMapper().toJson(prefs));
+				sb.append(";");
+			}
+
+			if(pd != null){
+				sb.append("window._uifwk.cachedData.favDashboards=");
+				sb.append(JsonUtil.buildNonNullMapper().toJson(pd));
 				sb.append(";");
 			}
 
@@ -1657,7 +1731,7 @@ public class DashboardAPI extends APIBase
 	/*
 	 * Updates the specified dashboard by generating all href fields
 	 */
-	private Dashboard updateDashboardAllHref(Dashboard dbd, String tenantName)
+	protected Dashboard updateDashboardAllHref(Dashboard dbd, String tenantName)
 	{
 		updateDashboardHref(dbd, tenantName);
 		updateDashboardScreenshotHref(dbd, tenantName);
