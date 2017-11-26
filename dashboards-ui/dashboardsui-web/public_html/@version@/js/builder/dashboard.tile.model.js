@@ -416,6 +416,7 @@ define(['knockout',
                 }
                 var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd(), self.timeSelectorModel.viewTimePeriod()), self.targets, null,tChange, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
                 Builder.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent);
+                $b.triggerBuilderResizeEvent('resize builder after tile change to reclaculate position of right panel');
             };
 
             self.refreshThisWidget = function(tile) {
@@ -528,7 +529,7 @@ define(['knockout',
                         $(this).css('cursor', 'default');
                         $('#globalBody').removeClass('none-user-select');       
                         self.tilesView.enableDraggable();                 
-                        $b.triggerEvent($b.EVENT_RECALCULATE_RIGHT_PANEL_POSITION);
+                        $b.triggerBuilderResizeEvent('resize builder after tile change to reclaculate position of right panel');
                     });
                 }
             };

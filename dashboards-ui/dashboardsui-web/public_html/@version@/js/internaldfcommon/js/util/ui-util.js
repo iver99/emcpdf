@@ -7,8 +7,8 @@ define(['jquery'], function ($) {
         return (100 - widthWithScroll);
     }
     
-    function hasVerticalScrollBar(selector){
-        var elm = $(selector);
+    function hasVerticalScrollBar(selector){    //judge whether a visible element has scroll bar
+        var elm = $(selector+':visible');
         return (elm.css('overflow-y') === 'scroll' || elm.prop('scrollHeight') > elm.prop('clientHeight'));
     }
 

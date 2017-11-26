@@ -105,7 +105,9 @@ function (ko, $, oj, dfu, mbu, uiutil) {
             $b.triggerBuilderResizeEvent('show right panel');
         };
 
+        var isCalculatingRightPanelPosition = false;    //prevent recalRightPanelPosition() from triggered on right panel toggled
         self.toggleLeftPanel = function () {
+            isCalculatingRightPanelPosition = true;
             self.scrollbarWidth(uiutil.hasVerticalScrollBar('.tiles-col-container')?uiutil.getScrollbarWidth():0);
             if (!self.showRightPanel()) {
                 $(".dbd-left-panel").animate({width: "320px",right: self.scrollbarWidth() + 'px'}, "normal");
@@ -114,6 +116,7 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                     self.initializeRightPanel(true);
                     $(".dashboard-picker-container:visible").addClass("df-collaps");
                     self.$b().triggerBuilderResizeEvent('show right panel');
+                    isCalculatingRightPanelPosition = false;
                 });
             } else {
                 $(".dbd-left-panel").animate({width: 0, right: self.scrollbarWidth() + 'px'});
@@ -123,15 +126,17 @@ function (ko, $, oj, dfu, mbu, uiutil) {
                     self.initDraggable();
                     $(".dashboard-picker-container:visible").removeClass("df-collaps");
                     self.$b().triggerBuilderResizeEvent('hide right panel');
+                    isCalculatingRightPanelPosition = false;
                 });
             }
         };
         
         self.recalRightPanelPosition = function(){
+            if(isCalculatingRightPanelPosition === true) return;
             self.scrollbarWidth(uiutil.hasVerticalScrollBar('.tiles-col-container')?uiutil.getScrollbarWidth():0);
-            $(".dbd-left-panel").animate({right: self.scrollbarWidth() + 'px'}, "normal");
+            $(".dbd-left-panel:visible").animate({right: self.scrollbarWidth() + 'px'}, "normal");
             var rightPanelWidth = self.showRightPanel()?323:0;
-            $(".right-panel-toggler").animate({right: (rightPanelWidth + self.scrollbarWidth()) + 'px'}, 'normal');
+            $(".right-panel-toggler:visible").animate({right: (rightPanelWidth + self.scrollbarWidth()) + 'px'}, 'normal');
         };
         $b.addBuilderResizeListener(self.recalRightPanelPosition);
         $b.addEventListener($b.EVENT_RECALCULATE_RIGHT_PANEL_POSITION, self.recalRightPanelPosition);
