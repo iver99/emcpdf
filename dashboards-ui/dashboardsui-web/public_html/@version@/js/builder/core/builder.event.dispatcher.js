@@ -25,10 +25,13 @@ define(['jquery'], function($) {
 
         self.delayResizeListenerQueue = [];
         self.firstResize = false;
+        self.rightPanelPositionFirstResize = false;
+        self.rightPanelPositionRecalculationTimer = null;
         self.lastBuilderResizeExecTimestamp = null;
         
         self.initFirstResize = function() {
             self.firstResize = false;
+            self.rightPanelPositionFirstResize = false;
         };
         
         self.triggerEvent = function(event, p1, p2, p3, p4) {
@@ -53,6 +56,19 @@ define(['jquery'], function($) {
                         self.executeDelayedEvent();
                     }, 500); // builder resize event will be handled after delay time, and might be ignored if there're repeated event later
                 }
+            }else if (event === 'EVENT_RECALCULATE_RIGHT_PANEL_POSITION') {
+                if (!self.rightPanelPositionFirstResize && $('.right-panel-toggler').is(':visible')) {
+                    console.debug("calculate right panel position for the 1st time");
+                    self.executeListenersImmediately(event, p1, p2, p3, p4);
+                }
+                else {
+                    self.rightPanelPositionRecalculationTimer && clearTimeout(self.rightPanelPositionRecalculationTimer);
+                    self.rightPanelPositionRecalculationTimer = setTimeout(function() {
+                        console.info('Execute delayed event for right panel position recalculate');
+                        self.executeListenersImmediately(event, p1, p2, p3, p4);
+                    }, 500);
+                }
+                self.rightPanelPositionFirstResize = true;
             }
             else
                 self.executeListenersImmediately(event, p1, p2, p3, p4);
