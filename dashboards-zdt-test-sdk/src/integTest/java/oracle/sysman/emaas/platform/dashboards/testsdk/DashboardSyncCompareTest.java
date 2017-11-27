@@ -65,7 +65,7 @@ public class DashboardSyncCompareTest
 
 		int i = comparatorURL.indexOf("/emcpdfcomparator/api/v1/");
 
-		return comparatorURL.substring(0,i);
+		return comparatorURL.substring(2,i);
 
 	}
 	@Test
