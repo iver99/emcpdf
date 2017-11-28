@@ -265,7 +265,9 @@ public class EntitySelectorUtil_1160 extends EntitySelectorUtil_1150
                 driver.click(inputXpath);
                 //Wait until suggestions are displayed before typing the text to avoid timing issues
                 wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DashBoardPageId.EntSelSuggestionPopup)));
+                logger.log(Level.INFO, "Clear Entity Selector's current text");
 		driver.clear(inputXpath);
+                logger.log(Level.INFO, "Write text ''{0}'' in Entity Selector's input field", entityName);
                 //metric with parenthesis in name loses the left parenthesis when added to data palette search box
                 //see Selenium Issue 1723 - Firefox Driver send_keys won't send left parenthesis
                 //Using workaround suggested in issue
