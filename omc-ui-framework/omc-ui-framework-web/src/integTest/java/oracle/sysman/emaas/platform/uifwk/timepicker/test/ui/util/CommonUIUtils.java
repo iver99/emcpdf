@@ -511,10 +511,10 @@ public class CommonUIUtils
 		Calendar now = Calendar.getInstance();
 		int minute = now.get(Calendar.MINUTE);
 		int hour =now.get(Calendar.HOUR_OF_DAY);
-		if(minute>=50&&hour==23)
+		if(minute>50&&hour==23)
 		{
 			try {
-				Thread.sleep(300000);
+				Thread.sleep(600000);
 			}
 			catch (InterruptedException e) {
 				// TODO Auto-generated catch block
