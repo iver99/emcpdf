@@ -367,6 +367,12 @@ public class DashboardBuilderUtil
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		return dbu.toggleShareDashboardset(driver);
 	}
+	
+	public static void toggleHTMLWidget(WebDriver driver)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		
+	}
 
 	public static boolean verifyDashboard(WebDriver driver, String dashboardName, String description, boolean showTimeSelector)
 	{

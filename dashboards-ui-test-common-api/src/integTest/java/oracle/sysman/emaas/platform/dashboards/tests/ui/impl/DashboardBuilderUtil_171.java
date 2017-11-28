@@ -1567,4 +1567,14 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		Assert.assertTrue(false, "This method is not available in the current version");
 		driver.getLogger().info("Method not available in the current version");		
 	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#toggleHTMLWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver)
+	 */
+	@Override
+	public void toggleHTMLWidget(WebDriver driver)
+	{
+		// TODO Auto-generated method stub
+		driver.getLogger().info("Method not available in the current version");		
+	}
 }

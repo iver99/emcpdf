@@ -58,6 +58,8 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public Boolean favoriteOption(WebDriver driver);
 
 	public Boolean favoriteOptionDashboardSet(WebDriver driver);
+	
+	public void toggleHTMLWidget(WebDriver driver);
 
 	public void gridView(WebDriver driver);
 
