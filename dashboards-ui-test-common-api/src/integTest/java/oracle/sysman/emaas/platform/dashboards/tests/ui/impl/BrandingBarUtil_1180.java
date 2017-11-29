@@ -9,8 +9,6 @@
  */
 package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
-import java.util.List;
-
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
@@ -19,9 +17,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 
 public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
@@ -48,18 +44,17 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 
 		driver.getLogger().info("Start to click menu itme in clickHierarchicalMenu");
 
-		List<WebElement> webd_menuitem = driver.getWebDriver().findElements(
-				By.cssSelector(DashBoardPageId_1180.HAMBURGERMENU_HIERARCHICALMENUITEM_CSS));
-		if (webd_menuitem == null || webd_menuitem.isEmpty()) {
+		int menuitemCount = driver.getElementCount("xpath=" + DashBoardPageId_1180.HAMBURGERMENU_HIERARCHICALMENUITEM_XPATH);
+		if (menuitemCount <= 0) {
 			throw new NoSuchElementException("clickHierarchicalMenu: the Hierarchical menuitem is not found");
 		}
-		for (WebElement nav : webd_menuitem) {
-			if (nav.getText().trim().equals(menuitem) && nav.isEnabled()) {
+		
+		for (int i=1; i<=menuitemCount; i++) {
+			if (menuitem.equals(driver.getText("xpath=(" + DashBoardPageId_1180.HAMBURGERMENU_HIERARCHICALMENUITEM_XPATH + ")[" + i +"]").trim()) &&
+			    driver.isDisplayed("xpath=(" + DashBoardPageId_1180.HAMBURGERMENU_HIERARCHICALMENUITEM_XPATH + ")[" + i +"]")) {
 				isExisted = true;
-				nav.click();
+				driver.click("xpath=(" + DashBoardPageId_1180.HAMBURGERMENU_HIERARCHICALMENUITEM_XPATH + ")[" + i +"]");
 				WaitUtil.waitForPageFullyLoaded(driver);
-				driver.takeScreenShot();
-				driver.savePageToFile();
 				driver.getLogger().info("clickHierarchicalMenu has click on the given menu item: " + menuitem);
 				break;
 			}
@@ -67,7 +62,6 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		if (!isExisted) {
 			throw new NoSuchElementException("clickHierarchicalMenu: the Hierarchical menuitem '" + menuitem + "'is not found");
 		}
-
 	}
 
 	@Override
@@ -81,30 +75,32 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			driver.getLogger().info("Not displayed hamburger menu, need to show it");
 			clickHamburgerMenuIcon(driver);
 		}
-
-		List<WebElement> webd_menuitem = driver.getWebDriver().findElements(
-				By.cssSelector(DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_CSS));
-		if (webd_menuitem == null || webd_menuitem.isEmpty()) {
+		
+		int menuitemCount = driver.getElementCount("xpath=" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_XPATH);
+		if (menuitemCount <= 0) {
 			throw new NoSuchElementException("clickMenuItem: the menuitem element is not found");
 		}
-		for (WebElement nav : webd_menuitem) {
-			if (nav.getText().trim().equals(menuitem) && nav.isDisplayed() && isElementEnabled(driver, nav)) {
-				isExisted = true;
-				boolean viewportScreenshot = false;
-				try {
-					nav.click();
-				}
-				catch (Exception e) {
-					viewportScreenshot = true;
-					throw e;
-				}
-				finally {
-					driver.capturePageState(viewportScreenshot);
-				}
+		
+		for (int i=1; i<=menuitemCount; i++) {
+			if (menuitem.equals(driver.getText("xpath=(" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_XPATH + ")[" + i +"]").trim()) &&
+			    driver.isDisplayed("xpath=(" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_XPATH + ")[" + i +"]") &&
+			    isElementEnabled(driver, i)) {
+			    	isExisted = true;
+					boolean viewportScreenshot = false;
+					try {
+						driver.click("xpath=(" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_XPATH + ")[" + i +"]");
+					}
+					catch (Exception e) {
+						viewportScreenshot = true;
+						throw e;
+					}
+					finally {
+						driver.capturePageState(viewportScreenshot);
+					}
 
-				WaitUtil.waitForPageFullyLoaded(driver);
-				driver.getLogger().info("clickMenuItem has click on the given menu item: " + menuitem);
-				break;
+					WaitUtil.waitForPageFullyLoaded(driver);
+					driver.getLogger().info("clickMenuItem has click on the given menu item: " + menuitem);
+					break;
 			}
 		}
 		if (!isExisted) {
@@ -124,19 +120,22 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			clickHamburgerMenuIcon(driver);
 		}
 
-		List<WebElement> webd_menuitem = driver.getWebDriver().findElements(
-				By.cssSelector(DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_CSS));
-		if (webd_menuitem == null || webd_menuitem.isEmpty()) {
-			throw new NoSuchElementException("clickMenuItem: the menuitem element is not found");
+		int menuitemCount = driver.getElementCount("xpath=" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_XPATH);
+		if (menuitemCount <= 0) {
+			throw new NoSuchElementException("expandSubMenu: the menuitem element is not found");
 		}
-		for (WebElement nav : webd_menuitem) {
-			if (nav.getText().trim().equals(menuitem) && nav.isDisplayed() && isElementEnabled(driver, nav)) {
-				isExisted = true;
-				driver.getLogger().info("Find the expand sub menu icon of the " + menuitem);
-				WebElement expandSubMenuIcon = nav.findElement(By.xpath("../..")).findElement(
-						By.cssSelector(DashBoardPageId_1180.HAMBURGERMENU_EXPAND_SUBMENU_ICON_CSS));
-				expandSubMenuIcon.click();
-				break;
+		
+		String indicator = null;
+		
+		for (int i=1; i<=menuitemCount; i++) {
+			if (menuitem.equals(driver.getText("xpath=(" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_XPATH + ")[" + i +"]").trim()) &&
+			    driver.isDisplayed("xpath=(" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_XPATH + ")[" + i +"]") &&
+			    isElementEnabled(driver, i)) {
+					isExisted = true;
+					driver.getLogger().info("Find the expand sub menu icon of the " + menuitem);
+					indicator = DashBoardPageId_1180.HAMBURGERMENU_EXPAND_SUBMENU_ICON_XPATH.replace("_index_", Integer.toString(i));
+					driver.click("xpath=" + indicator);
+					break;
 			}
 		}
 		if (!isExisted) {
@@ -183,25 +182,29 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			clickHamburgerMenuIcon(driver);
 		}
 
-		List<WebElement> webd_menuitem = driver.getWebDriver().findElements(
-				By.cssSelector(DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_CSS));
-		if (webd_menuitem == null || webd_menuitem.isEmpty()) {
-			throw new NoSuchElementException("clickMenuItem: the menuitem element is not found");
+		int menuitemCount = driver.getElementCount("xpath=" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_XPATH);
+		if (menuitemCount <= 0) {
+			throw new NoSuchElementException("hasSubMenu: the menuitem element is not found");
 		}
-		for (WebElement nav : webd_menuitem) {
-			if (nav.getText().trim().equals(menuitem) && nav.isDisplayed() && isElementEnabled(driver, nav)) {
-				driver.getLogger().info("Start to find the expand sub menu icon of the " + menuitem);
-				try {
-					nav.findElement(By.xpath("../..")).findElement(
-							By.cssSelector(DashBoardPageId_1180.HAMBURGERMENU_EXPAND_SUBMENU_ICON_CSS));
-					isExisted = true;
-					driver.getLogger().info("'" + menuitem + "' has sub menu icon");
-					return isExisted;
-				}
-				catch (NoSuchElementException ex) {
-					driver.getLogger().info("'" + menuitem + "' doesn't have sub menu icon");
-					return isExisted;
-				}
+		
+		String indicator = null;
+		
+		for (int i=1; i<=menuitemCount; i++) {
+			if (menuitem.equals(driver.getText("xpath=(" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_XPATH + ")[" + i +"]").trim()) &&
+			    driver.isDisplayed("xpath=(" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_XPATH + ")[" + i +"]") &&
+			    isElementEnabled(driver, i)) {
+					driver.getLogger().info("Start to find the expand sub menu icon of the " + menuitem);
+					try {
+						indicator = DashBoardPageId_1180.HAMBURGERMENU_EXPAND_SUBMENU_ICON_XPATH.replace("_index_", Integer.toString(i));
+						driver.getElement("xpath=" + indicator);						
+						isExisted = true;						
+						driver.getLogger().info("'" + menuitem + "' has sub menu icon");
+						return isExisted;
+					}
+					catch (NoSuchElementException ex) {
+						driver.getLogger().info("'" + menuitem + "' doesn't have sub menu icon");
+						return isExisted;
+					}
 			}
 		}
 		driver.getLogger().info("'" + menuitem + "' not existed or disabled");
@@ -364,17 +367,18 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			clickHamburgerMenuIcon(driver);
 		}
 
-		List<WebElement> webd_menuitem = driver.getWebDriver().findElements(
-				By.cssSelector(DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_CSS));
-		if (webd_menuitem == null || webd_menuitem.isEmpty()) {
+		int menuitemCount = driver.getElementCount("xpath=" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_XPATH);
+		if (menuitemCount <= 0) {
 			throw new NoSuchElementException("isMenuItemEnabled: the menuitem element is not found");
 		}
-		driver.getLogger().info("Start to check if menu item is enabled in hamburger menu. Menu name: " + menuitem);
-		for (WebElement nav : webd_menuitem) {
-			if (nav.getText().trim().equals(menuitem) && nav.isDisplayed() && isElementEnabled(driver, nav)) {
-				driver.getLogger().info("isMenuItemEnabled has found the given menu item: " + menuitem);
-				isEnabled = true;
-				break;
+		
+		for (int i=1; i<=menuitemCount; i++) {
+			if (menuitem.equals(driver.getText("xpath=(" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_XPATH + ")[" + i +"]").trim()) &&
+			    driver.isDisplayed("xpath=(" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_XPATH + ")[" + i +"]") &&
+			    isElementEnabled(driver, i)) {
+					driver.getLogger().info("isMenuItemEnabled has found the given menu item: " + menuitem);
+					isEnabled = true;
+					break;
 			}
 		}
 		driver.getLogger().info("Eanble check for menu item s completed. Result: " + isEnabled);
@@ -392,18 +396,19 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			driver.getLogger().info("Not displayed hamburger menu, need to show it");
 			clickHamburgerMenuIcon(driver);
 		}
-
-		List<WebElement> webd_menuitem = driver.getWebDriver().findElements(
-				By.cssSelector(DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_CSS));
-		if (webd_menuitem == null || webd_menuitem.isEmpty()) {
+		
+		int menuitemCount = driver.getElementCount("xpath=" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_XPATH);
+		if (menuitemCount <= 0) {
 			throw new NoSuchElementException("isMenuItemExisted: the menuitem element is not found");
 		}
 		driver.getLogger().info("Start to check if menu item is existed in hamburger menu. Menu name: " + menuitem);
-		for (WebElement nav : webd_menuitem) {
-			if (nav.getText().trim().equals(menuitem) && nav.isDisplayed()) {
-				driver.getLogger().info("isMenuItemExisted has found the given menu item: " + menuitem);
-				isExisted = true;
-				break;
+		
+		for(int i=1; i<=menuitemCount; i++) {
+			if (menuitem.equals(driver.getText("xpath=(" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_XPATH + ")[" + i +"]").trim()) &&
+				driver.isDisplayed("xpath=(" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_LABEL_XPATH + ")[" + i +"]")) {
+					driver.getLogger().info("isMenuItemExisted has found the given menu item: " + menuitem);
+					isExisted = true;
+					break;
 			}
 		}
 		driver.getLogger().info("Existence check for menu item s completed. Result: " + isExisted);
@@ -525,9 +530,6 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		driver.getLogger().info("toggleHamBurerMenu started");
 		WaitUtil.waitForPageFullyLoaded(driver);
 
-		driver.takeScreenShot();
-		driver.savePageToFile();
-
 		//check if the hamburger menu container displayed
 		//if hamburger menu container displayed, return true, else return false
 		driver.waitForElementPresent("css=" + DashBoardPageId_1180.HAMBURGERMENU_CONTAINER_CSS);
@@ -563,10 +565,6 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		driver.getLogger().info("Click branding bar user menu button.");
 		driver.click(DashBoardPageId.BRAND_BAR_USER_MENU);
 
-		//		WebDriverWait wait = new WebDriverWait(driver.getWebDriver(), 900L);
-		//		By locator = By.id(DashBoardPageId.USERMENUPOPUPID);
-		//		wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-
 		Assert.assertTrue(driver.isDisplayed("id=" + DashBoardPageId.USERMENUPOPUPID));
 		driver.getLogger().info("User menu popup is displayed.");
 
@@ -588,7 +586,6 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 			default:
 				break;
 		}
-
 	}
 
 	@Override
@@ -855,10 +852,10 @@ public class BrandingBarUtil_1180 extends BrandingBarUtil_1170
 		return menuItemName;
 	}
 
-	protected boolean isElementEnabled(WebDriver driver, WebElement nav)
+	protected boolean isElementEnabled(WebDriver driver, int index)
 	{
 		String existed = "";
-		existed = nav.findElement(By.xpath("..")).getAttribute("aria-disabled");
+		existed = driver.getAttribute("xpath=(" + DashBoardPageId_1180.HAMBURGERMENU_MENUITEM_XPATH +")[" + index + "]@aria-disabled");
 
 		driver.getLogger().info("Existed: " + existed);
 		if (existed == null) {

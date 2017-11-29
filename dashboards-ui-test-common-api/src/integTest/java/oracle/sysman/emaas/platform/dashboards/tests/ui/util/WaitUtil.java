@@ -19,9 +19,9 @@ public class WaitUtil
 
 	public static void waitForPageFullyLoaded(final oracle.sysman.qatool.uifwk.webdriver.WebDriver webd)
 	{
+		webd.getLogger().info("Start waitForServer and Capture the screenshots and page status");
 		webd.waitForServer();
-		webd.getLogger().info("remove waitforserver explicite call");
-
+		webd.capturePageState(true);
+		webd.getLogger().info("WaitForServer ends...");
 	}
-
 }

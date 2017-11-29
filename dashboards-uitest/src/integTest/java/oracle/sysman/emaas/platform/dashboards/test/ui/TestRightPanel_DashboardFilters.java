@@ -66,7 +66,7 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 		LoginAndLogout.logoutMethod();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testRespectGCEntities()
 	{
 		dbRespectGCEntityName = "respectGC Entity-" + DashBoardUtils.generateTimeStamp();
@@ -99,7 +99,7 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 		Assert.assertFalse(EntitySelectorUtil.validateReadOnlyMode(webd, Logger), "Entity not in GC bar");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testRespectGCTimeRange_LAWidget() throws InterruptedException
 	{
 		dbRespectGCTimeRangeName_LA = "respectGC TimeRange LAWidget-" + DashBoardUtils.generateTimeStamp();
@@ -166,7 +166,7 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 		Assert.assertEquals(timerange, "LAST_90_DAY");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testRespectGCTimeRange_UDEWidget() throws InterruptedException
 	{
 		dbRespectGCTimeRangeName_UDE = "respectGC TimeRange UDEWidget-" + DashBoardUtils.generateTimeStamp();
@@ -227,7 +227,7 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 	}
 
 	//case to verify jira EMCPDF-3338
-	@Test
+	@Test(alwaysRun = true)
 	public void testShowTimeRange_LAWidget()
 	{
 		dbName_LAWidget = "TimeRange LAWidget-" + DashBoardUtils.generateTimeStamp();
@@ -293,7 +293,7 @@ public class TestRightPanel_DashboardFilters extends LoginAndLogout
 	}
 
 	//case to verify jira EMCPDF-3338
-	@Test
+	@Test(alwaysRun = true)
 	public void testShowTimeRange_UDEWidget()
 	{
 		dbName_UDEWidget = "TimeRange UDEWidget-" + DashBoardUtils.generateTimeStamp();

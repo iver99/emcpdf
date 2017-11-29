@@ -117,7 +117,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 		LoginAndLogout.logoutMethod();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testDuplicateDashboardAddToSet()
 	{
 		dbName_InSet = "DashboardInSet-" + DashBoardUtils.generateTimeStamp();
@@ -181,7 +181,7 @@ public class TestDashboardSet_DuplicateDashboard extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testDuplicateDashboardInOOBDashboardSet()
 	{
 		dbName_Duplicate = OOBDashboard + "-duplicate-" + DashBoardUtils.generateTimeStamp();
