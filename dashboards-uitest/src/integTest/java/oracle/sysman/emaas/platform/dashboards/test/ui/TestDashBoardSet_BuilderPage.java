@@ -310,8 +310,7 @@ public class TestDashBoardSet_BuilderPage extends LoginAndLogout
 		String InfoBtn_xpath = "//div[contains(@aria-label, 'DashboardInSet')]//button";
 		webd.getLogger().info("Verfiy the current dashboard can not be deleted");
 		webd.click(InfoBtn_xpath);
-		WebElement removeButton = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RMBTNID));
-		Assert.assertFalse(removeButton.isEnabled(), "delete is enabled for current dashboard");
+		Assert.assertFalse(webd.isEnabled("css=" + DashBoardPageId.RMBTNID), "delete is enabled for current dashboard");
 	}
 	
 	@Test(groups = "first run")

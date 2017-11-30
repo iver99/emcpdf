@@ -10,14 +10,8 @@
  
 package oracle.sysman.emaas.platform.dashboards.test.ui;
 
-import java.util.List;
-
-import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -141,7 +135,7 @@ public class TestDashBoard_WidgetLink extends LoginAndLogout
 		LoginAndLogout.logoutMethod();
 	}
 	
-	@Test
+	@Test(alwaysRun = true)
 	public void testAddWidgetLink()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -188,72 +182,53 @@ public class TestDashBoard_WidgetLink extends LoginAndLogout
 		
 		//edit the link in the widget
 		webd.getLogger().info("Add Widget Link");
-//		DashboardBuilderUtil.addLinkToWidgetTitle(webd, widgetName, dbName2_Test);
+
 //		add test case	for EMCPDF-4723
 		webd.click("css=" + DashBoardPageId_190.RIGHTDRAWERTOGGLEPENCILBTNCSS);
 		String XPATH = ".//*[@id='dbd-edit-settings-container']/span[text()='"+widgetName+"']";
 		webd.click("xpath=" + XPATH);
-		
-		WebDriverWait wait = new WebDriverWait(webd.getWebDriver(), WaitUtil.WAIT_TIMEOUT);
+				
 		webd.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTAREACSSLOCATOR);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTAREACSSLOCATOR)));
-
+		webd.waitForElementVisible("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTAREACSSLOCATOR);
+		
 		//remove link if widget title is linked
 		if(webd.isElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTREMOVELINKCSSLOCATOR)){
 			webd.click("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTREMOVELINKCSSLOCATOR);
 			webd.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
 		}
 
-		if(dbName2_Test != null && !dbName2_Test.isEmpty()){
-			WebElement searchInput = webd.getElement("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
-			// focus on search input box
-			wait.until(ExpectedConditions.elementToBeClickable(searchInput));
+		if(dbName2_Test != null && !dbName2_Test.isEmpty()){		
+			webd.waitForElementEnabled("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
+			webd.clear("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
 
-			Actions actions = new Actions(webd.getWebDriver());
-			actions.moveToElement(searchInput).build().perform();
-			searchInput.clear();
 			WaitUtil.waitForPageFullyLoaded(webd);
-			actions.moveToElement(searchInput).build().perform();
+			webd.moveToElement("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
 			webd.click("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR)));
-			searchInput.sendKeys(dbName2_Test);
-			webd.waitForServer();
-			webd.takeScreenShot();
+			
+			webd.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR);
+			webd.sendKeys("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR, dbName2_Test);
 			//verify input box value
-			Assert.assertEquals(searchInput.getAttribute("value"), dbName2_Test);
-
-			WebElement searchButton = webd.getElement("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBTNCSSLOCATOR);
+			Assert.assertEquals(webd.getAttribute("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR + "@value"), dbName2_Test);
 			webd.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBTNCSSLOCATOR);
-			searchButton.click();
+			webd.click("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBTNCSSLOCATOR);
+
 			//wait for ajax resolved
 			WaitUtil.waitForPageFullyLoaded(webd);
-			webd.takeScreenShot();
-
+			
 			webd.getLogger().info("[DashboardHomeUtil] start to add link");
-			List<WebElement> matchingWidgets = webd.getWebDriver().findElements(
-					By.cssSelector(DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR));
-			if (matchingWidgets == null || matchingWidgets.isEmpty()) {
+			int matchingWidgetsCount = webd.getElementCount("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR);
+			if (matchingWidgetsCount <= 0) {
 				throw new NoSuchElementException("Right drawer content for search string =" + dbName2_Test + " is not found");
 			}
 			WaitUtil.waitForPageFullyLoaded(webd);
 
-			Actions builder = new Actions(webd.getWebDriver());
-			try {
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR)));
-				webd.click("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR);
-
-				webd.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTADDBTNCSSLOCATOR);
-				webd.click("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTADDBTNCSSLOCATOR);
-
-				webd.getLogger().info("Content added");			
-			}
-			catch (IllegalArgumentException e) {
-				throw new NoSuchElementException("Content for " + dbName2_Test + " is not found");
-			}
+			webd.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR);
+			webd.click("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR);
+			webd.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTADDBTNCSSLOCATOR);
+			webd.click("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTADDBTNCSSLOCATOR);
+			webd.getLogger().info("Content added");		
+						
 		}
-		
-		
-		
 		
 		//click the widget link
 		webd.getLogger().info("Click the link added to the widget");

@@ -83,7 +83,7 @@ public class TestDashBoard_SimpleCRUD extends LoginAndLogout
 	@Test(groups = "Group1")
 	public void testCreateDashboad_noDesc_GridView()
 	{
-		dbName_noDesc = "NoDesc-" + generateTimeStamp();
+		dbName_noDesc = "NoDesc-" + DashBoardUtils.generateTimeStamp();
 
 		//Initialize the test
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -135,7 +135,7 @@ public class TestDashBoard_SimpleCRUD extends LoginAndLogout
 	@Test(groups = "Group4", dependsOnGroups = { "Group3" })
 	public void testCreateDashboad_noWidget_GridView()
 	{
-		dbName_noWidgetGrid = "NoWidgetGridView-" + generateTimeStamp();
+		dbName_noWidgetGrid = "NoWidgetGridView-" + DashBoardUtils.generateTimeStamp();
 		String dbDesc = "Test Dashboard no Widget description";
 
 		//Initialize the test
@@ -161,7 +161,7 @@ public class TestDashBoard_SimpleCRUD extends LoginAndLogout
 	@Test(groups = "Group2", dependsOnGroups = { "Group1" })
 	public void testCreateDashboard_noWidget_ListView()
 	{
-		dbName_noWidgetList = "noWidgetListView-" + generateTimeStamp();
+		dbName_noWidgetList = "noWidgetListView-" + DashBoardUtils.generateTimeStamp();
 		String dbDesc = "Test Dashboard no Widget description";
 
 		//Initialize the test
@@ -188,7 +188,7 @@ public class TestDashBoard_SimpleCRUD extends LoginAndLogout
 	@Test(groups = "Group3", dependsOnGroups = { "Group2" })
 	public void testCreateDashboard_withWidget_GridView()
 	{
-		dbName_withWidgetGrid = "withWidget-" + generateTimeStamp();
+		dbName_withWidgetGrid = "withWidget-" + DashBoardUtils.generateTimeStamp();
 		String dbDesc = "AAA_testDashBoard desc";
 
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -419,10 +419,4 @@ public class TestDashBoard_SimpleCRUD extends LoginAndLogout
 	//    Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, WidgetName_1), "Widget '" + WidgetName_1 + "' not found");
 	//	Assert.assertFalse(DashboardBuilderUtil.verifyWidget(webd, WidgetName_2), "Widget '" + WidgetName_2 + "' found");
 	}
-
-	private String generateTimeStamp()
-	{
-		return String.valueOf(System.currentTimeMillis());
-	}
-
 }
