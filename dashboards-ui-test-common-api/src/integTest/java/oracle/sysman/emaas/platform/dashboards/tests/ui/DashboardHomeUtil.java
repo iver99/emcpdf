@@ -244,32 +244,35 @@ public class DashboardHomeUtil
 
 	/**
 	 * @param driver
-	 *            @
+	 * @param sortBy
+	 * 			  Create By - asc, dsc	 *            
 	 */
-	public static void sortListViewByCreateBy(WebDriver driver)
+	public static void sortListViewByCreateBy(WebDriver driver, String sortBy)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
-		dhu.sortListViewByCreateBy(driver);
+		dhu.sortListViewByCreateBy(driver, sortBy);
 	}
 
 	/**
 	 * @param driver
-	 *            @
+	 * @param sortBy
+	 * 			  Last Modified By - asc, dsc
 	 */
-	public static void sortListViewByLastModified(WebDriver driver)
+	public static void sortListViewByLastModified(WebDriver driver, String sortBy)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
-		dhu.sortListViewByLastModified(driver);
+		dhu.sortListViewByLastModified(driver, sortBy);
 	}
 
 	/**
 	 * @param driver
-	 *            @
+	 * @param sortBy
+	 * 			  By Name - asc, dsc
 	 */
-	public static void sortListViewByName(WebDriver driver)
+	public static void sortListViewByName(WebDriver driver, String sortBy)
 	{
 		IDashboardHomeUtil dhu = new UtilLoader<IDashboardHomeUtil>().loadUtil(driver, IDashboardHomeUtil.class);
-		dhu.sortListViewByName(driver);
+		dhu.sortListViewByName(driver, sortBy);
 	}
 
 	/**

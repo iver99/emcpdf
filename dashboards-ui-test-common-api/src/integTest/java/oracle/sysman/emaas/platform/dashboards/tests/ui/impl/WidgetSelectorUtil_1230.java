@@ -12,11 +12,6 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.impl;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.*;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-
-import java.util.List;
 
 public class WidgetSelectorUtil_1230 extends WidgetSelectorUtil_175
 {
