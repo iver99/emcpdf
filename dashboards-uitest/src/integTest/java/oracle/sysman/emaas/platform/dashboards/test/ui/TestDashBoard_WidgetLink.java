@@ -201,27 +201,17 @@ public class TestDashBoard_WidgetLink extends LoginAndLogout
 			webd.waitForElementEnabled("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
 			webd.clear("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
 
-//			Actions actions = new Actions(webd.getWebDriver());
-//			actions.moveToElement(searchInput).build().perform();
-//			searchInput.clear();
 			WaitUtil.waitForPageFullyLoaded(webd);
 			webd.moveToElement("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
-//			actions.moveToElement(searchInput).build().perform();
 			webd.click("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR);
 			
 			webd.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR);
-//			wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHGETCSSLOCATOR)));
 			webd.sendKeys("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR, dbName2_Test);
-//			searchInput.sendKeys(dbName2_Test);
-//			webd.waitForServer();
-//			webd.takeScreenShot();
 			//verify input box value
 			Assert.assertEquals(webd.getAttribute("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBOXCSSLOCATOR + "@value"), dbName2_Test);
-
-//			WebElement searchButton = webd.getElement("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBTNCSSLOCATOR);
 			webd.waitForElementPresent("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBTNCSSLOCATOR);
 			webd.click("css=" + DashBoardPageId_1200.BUILDERRIGHTPANELEDITCONTENTSEARCHBTNCSSLOCATOR);
-//			searchButton.click();
+
 			//wait for ajax resolved
 			WaitUtil.waitForPageFullyLoaded(webd);
 			
