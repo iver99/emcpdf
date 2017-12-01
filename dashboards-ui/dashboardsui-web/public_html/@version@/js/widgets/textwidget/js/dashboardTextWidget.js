@@ -75,6 +75,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "DOMPurify", "ojs/ojtabs"
                     });
 
                     editor.on("blur", function () {
+			return;
                         self.content(this.getData());
                         if(self.switchToHtmlMode) {
                             self.switchToHtmlMode = false;
