@@ -15,8 +15,6 @@ import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.Common
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.UIControls;
 
-import org.openqa.selenium.By;
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

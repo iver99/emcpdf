@@ -19,7 +19,6 @@ import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.LoginAndLogout
 import oracle.sysman.emaas.platform.uifwk.timepicker.test.ui.util.UIControls;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
-import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -51,7 +50,7 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 
 		//set time range
 		webd.getLogger().info("set timerange as Last 7 days");
-		String returnDate = TimeSelectorUtil.setTimeRange(webd, 2, TimeRange.Last7Days);
+		TimeSelectorUtil.setTimeRange(webd, 2, TimeRange.Last7Days);
 
 		webd.getLogger().info("Verify that the newly selected time range has been added into Recent Use");
 
@@ -62,8 +61,7 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 		Assert.assertTrue(verifyRecentUseExist(webd, 1), "Recent Use Option should be displayed");
 		String[] context = verifyRecentUseContent(webd, 1);
 		Assert.assertEquals(context[0], "Last week");
-		;
-
+		
 		//add more time range to the Recent Use and verify them
 		CommonUIUtils.clickTimePicker(webd, 2);
 		webd.getLogger().info("set timerange as Last 2 hours");
@@ -76,7 +74,6 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 		Assert.assertEquals(context[0], "Last 2 hours");
 
 		webd.shutdownBrowser(true);
-
 	}
 
 	@Test(alwaysRun = true)
@@ -95,7 +92,7 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 
 		//set time range
 		webd.getLogger().info("set timerange as Last 14 days");
-		String returnDate = TimeSelectorUtil.setTimeRangeWithDateOnly(webd, 3, TimeRange.Last1Year);
+		TimeSelectorUtil.setTimeRangeWithDateOnly(webd, 3, TimeRange.Last1Year);
 
 		webd.getLogger().info("Verify that the newly selected time range has been added into Recent Use");
 
@@ -119,7 +116,6 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 		Assert.assertEquals(context[0], "Last 30 days");
 
 		webd.shutdownBrowser(true);
-
 	}
 
 	@Test(alwaysRun = true)
@@ -138,7 +134,7 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 
 		//set time range
 		webd.getLogger().info("set timerange as Last 14 days");
-		String returnDate = TimeSelectorUtil.setTimeRange(webd, TimeRange.Last14Days);
+		TimeSelectorUtil.setTimeRange(webd, TimeRange.Last14Days);
 
 		webd.getLogger().info("Verify that the newly selected time range has been added into Recent Use");
 
@@ -162,30 +158,18 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 		Assert.assertEquals(context[0], "Last 15 mins");
 
 		webd.shutdownBrowser(true);
-	}
-
-	private void clickTimePicker(WebDriver webd, int Index)
-	{
-		//click the datetimepicker component
-		webd.waitForElementPresent("css=" + UIControls.TIMERANGEBTN_CSS);
-		webd.getWebDriver().findElements(By.cssSelector(UIControls.TIMERANGEBTN_CSS)).get(Index - 1).click();
-
-		webd.takeScreenShot();
-		webd.savePageToFile();
-	}
+	}	
 
 	private String[] verifyRecentUseContent(WebDriver webd, int Index)
 	{
 		//click Recent Use option
 		webd.getLogger().info("Click Recent Use Option");
-		webd.getWebDriver().findElements(By.cssSelector(UIControls.RECENTUSE_CSS)).get(Index - 1).click();
-		webd.takeScreenShot();
-		webd.savePageToFile();
+		webd.click("xpath=(" + UIControls.RECENTUSE_XPATH + ")[" + Index + "]");
 
 		//check the expand options
 		webd.getLogger().info("Get the context");
 		webd.waitForElementPresent("css=" + UIControls.RECENTUSECONTEXT_CSS);
-		String context1 = webd.getElement("css=" + UIControls.RECENTUSECONTEXT_CSS).getText();
+		String context1 = webd.getText("css=" + UIControls.RECENTUSECONTEXT_CSS);
 
 		context1 = context1.replaceAll("[\\r\\n]", ";");
 
@@ -197,13 +181,12 @@ public class TestTimePicker_RecentUseOption extends LoginAndLogout
 			String[] tmp_context1 = { context1 };
 			return tmp_context1;
 		}
-
 	}
 
 	private boolean verifyRecentUseExist(WebDriver webd, int Index)
 	{
 		//verify Recent Use option is displayed or not
-		return webd.getWebDriver().findElements(By.cssSelector(UIControls.RECENTUSE_CSS)).get(Index - 1).isDisplayed();
+		return webd.isDisplayed("xpath=(" + UIControls.RECENTUSE_XPATH + ")[" + Index + "]");
 	}
 
 }

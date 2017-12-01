@@ -48,13 +48,15 @@ public class UIControls
 	public static final String SSTARTTEXT_DATEONLY3 = "//*[@id='start3']";
 	public static final String SENDTEXT_DATEONLY3 = "//*[@id='end3']";
 
-	public static final String TIMERANGEBTN_CSS = ".oj-select-choice[id^='dropDown']";
-	public static final String RECENTUSE_CSS = "a[data-bind*=timePeriodRecent]";
+	public static final String TIMERANGEBTN_XPATH = "//*[contains(@id,'dropDown')]";
+	
+	public static final String RECENTUSE_XPATH = "//a[contains(@data-bind, 'timePeriodRecent')]";
 	public static final String RECENTUSECONTEXT_CSS = "[id^=\"recentPanel_\"] .oj-popup-content";
 
 	public static final String CHANGEOPT_BTN1_CSS = "#changeOption1";
 	public static final String CHANGEOPT_BTN2_CSS = "#changeOption2";
 
-	public static final String DISABLE_OPT_CSS = ".drawer.drawerNotChosen.drawerDisabled";
-	public static final String ENABLE_OPT_CSS = ".drawer.drawerNotChosen";
+	public static final String DISABLE_OPT_XPATH = "//a[@class='drawer drawerDisabled']";
+	public static final String ENABLE_OPT_XPATH = "//a[@class='drawer']";
+	
 }

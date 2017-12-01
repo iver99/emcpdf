@@ -11,7 +11,6 @@
 package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.WidgetSelectorUtil;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_1240;
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.CommonUIUtils;
 import oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui.util.LoginAndLogout;
