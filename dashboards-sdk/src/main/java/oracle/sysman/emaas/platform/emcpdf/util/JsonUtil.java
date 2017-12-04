@@ -1,6 +1,13 @@
 package oracle.sysman.emaas.platform.emcpdf.util;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+
 import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
+
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.DeserializationConfig;
@@ -10,13 +17,6 @@ import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.type.JavaType;
 import org.codehaus.jettison.json.JSONObject;
-
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by chehao on 2017/4/18 10:30.
@@ -116,7 +116,7 @@ public class JsonUtil
         if (StringUtil.isEmpty(jsonString)) {
             return null;
         }
-        jsonString = URLDecoder.decode(jsonString, "UTF-8");
+//        jsonString = URLDecoder.decode(jsonString, "UTF-8");
         return (T) mapper.readValue(jsonString, javaType);
     }
 
