@@ -8,6 +8,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -79,6 +80,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 		
 		String dbDesc = "Add text widget into dashboard";
 		String content = "This is the dashboard which is used to test the new feature of adding text widget";
+		String sourcecontent="<p>This dashboar<span style='color:#FF0000'>d is int</span><span style='color:#FFA500'>ende</span><span style='color:#FFFF00'>d to pr</span><span style='color:#00FF00'>ovide a</span>n overview of WLS errors in SaaS - Fusion Apps.</p><p>By default th<span style='font-size:18px'>e time picker</span> to the right of this panel is set to one year and accor<strong>dingly all the char</strong>ts in this dashboards are displaying one year stats.<em> <strong>Such time spa</strong></em><strong>n</strong> can be manipulated using the timepicker and the charts will be adjusted automatically.<p><br/><br/><p>Use the links at the top of panel below to navigate to the details of a specific domain<p>'";
 		//String content_Hyperlink = "";
 		
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -94,8 +96,11 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 		
 		DashboardBuilderUtil.addTextWidgetToDashboard(webd);
 		
+		
+		
 		//Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, widgetName), "text widget isn't added into the dashboard successfully");
 		DashboardBuilderUtil.editTextWidgetAddContent(webd, 1, content);
+		
 		
 		DashboardBuilderUtil.saveDashboard(webd);
 		
@@ -103,6 +108,12 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 		webd.getLogger().info("Verify the content is added successfully");
 				
 		Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTCONTENTCSS), content);
+		
+		DashboardBuilderUtil.editHTMLWidgetSourceContent(webd,  sourcecontent);
+		DashboardBuilderUtil.saveDashboard(webd);
+		DashboardBuilderUtil.toggleHTMLWidget(webd);
+		Assert.assertEquals(webd.getText(DashBoardPageId_190.HTMLSOURCECONTENT),sourcecontent);
+		
 	}
 	
 	 @Test(alwaysRun = true)

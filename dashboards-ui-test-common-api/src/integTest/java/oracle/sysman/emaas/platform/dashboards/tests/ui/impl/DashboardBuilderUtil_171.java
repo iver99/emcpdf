@@ -1450,4 +1450,133 @@ public class DashboardBuilderUtil_171 extends DashboardBuilderUtil_Version imple
 		// TODO Auto-generated method stub
 		driver.getLogger().info("Method not available in the current version");		
 	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#editHTMLWidgetAlign(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int, java.lang.String)
+	 */
+	@Override
+	public void editHTMLWidgetAlign(WebDriver driver, int index, String align)
+	{
+		// TODO Auto-generated method stub
+		driver.getLogger().info("Method not available in the current version");	
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#editHTMLWidgetAlign(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
+	 */
+	@Override
+	public void editHTMLWidgetAlign(WebDriver driver, String align)
+	{
+		// TODO Auto-generated method stub
+		driver.getLogger().info("Method not available in the current version");
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#editHTMLWidgetFont(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int, java.lang.String)
+	 */
+	@Override
+	public void editHTMLWidgetFont(WebDriver driver, int index, String fontname)
+	{
+		// TODO Auto-generated method stub
+		driver.getLogger().info("Method not available in the current version");	
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#editHTMLWidgetFont(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
+	 */
+	@Override
+	public void editHTMLWidgetFont(WebDriver driver, String fontname)
+	{
+		// TODO Auto-generated method stub
+		driver.getLogger().info("Method not available in the current version");	
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#editHTMLWidgetFontSize(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int)
+	 */
+	@Override
+	public void editHTMLWidgetFontSize(WebDriver driver, int fontsize)
+	{
+		// TODO Auto-generated method stub
+		driver.getLogger().info("Method not available in the current version");	
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#editHTMLWidgetFontSize(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int, int)
+	 */
+	@Override
+	public void editHTMLWidgetFontSize(WebDriver driver, int index, int fontsize)
+	{
+		// TODO Auto-generated method stub
+		driver.getLogger().info("Method not available in the current version");	
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#editHTMLWidgetFontBold(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int, java.lang.Boolean)
+	 */
+	@Override
+	public void editHTMLWidgetFontBold(WebDriver driver, int index, Boolean bold)
+	{
+		// TODO Auto-generated method stub
+		driver.getLogger().info("Method not available in the current version");	
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#editHTMLWidgetFontBold(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.Boolean)
+	 */
+	@Override
+	public void editHTMLWidgetFontBold(WebDriver driver, Boolean bold)
+	{
+		// TODO Auto-generated method stub
+		driver.getLogger().info("Method not available in the current version");	
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#editHTMLWidgetFontItalic(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.Boolean)
+	 */
+	@Override
+	public void editHTMLWidgetFontItalic(WebDriver driver, Boolean bold)
+	{
+		// TODO Auto-generated method stub
+		driver.getLogger().info("Method not available in the current version");	
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#toggleHTMLWidget(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int)
+	 */
+	@Override
+	public void toggleHTMLWidget(WebDriver driver,int index)
+	{
+		// TODO Auto-generated method stub
+		driver.getLogger().info("Method not available in the current version");		
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#editHTMLWidgetSourceContent(oracle.sysman.qatool.uifwk.webdriver.WebDriver, int, java.lang.String)
+	 */
+	@Override
+	public void editHTMLWidgetSourceContent(WebDriver driver, int index, String content)
+	{
+		// TODO Auto-generated method stub
+		driver.getLogger().info("Method not available in the current version");	
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.tests.ui.util.IDashboardBuilderUtil#editHTMLWidgetSourceContent(oracle.sysman.qatool.uifwk.webdriver.WebDriver, java.lang.String)
+	 */
+	@Override
+	public void editHTMLWidgetSourceContent(WebDriver driver, String content)
+	{
+		// TODO Auto-generated method stub
+		driver.getLogger().info("Method not available in the current version");
+	}
+
 }
