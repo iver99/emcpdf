@@ -170,7 +170,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
     packages([:]) {
                 'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.dashboard')
                 'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.common')
-                'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.logging')
+                'package'('name': 'oracle.sysman.emaas.platform.dashboards.logging')
                 'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.Configuration')
                 'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.RegistryLookup')
                 'package'('name': 'oracle.sysman.emaas.platform.dashboards.test.preference')
@@ -217,6 +217,7 @@ task QATest1(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]){
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FixDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FlexibleDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_RecentUseOption.class"
+	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_DisableQuickPick.class"
 //	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_MillionSeconds.class"
 //	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_DateOnly.class"
 //	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_ErrorMsg.class"

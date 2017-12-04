@@ -116,7 +116,7 @@ public class BugVerification extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testEMCPDF_2425()
 	{
 		//login the dashboard with user emaastesttenant1_la_admin1

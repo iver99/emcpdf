@@ -1,5 +1,5 @@
-define(['ojs/ojcore', 'jquery', 'knockout'],
-       function(oj, $, ko)
+define(['ojs/ojcore', 'jquery', 'knockout','uifwk/js/util/zdt-util'],
+       function(oj, $, ko, zdtUtilModel)
 {
 
 /**
@@ -12,6 +12,11 @@ var DASHBOARDS_FILTER_CHANGE_EVENT = "DASHBOARDS_FILTER_CHANGE_EVENT";
 var DashboardsFilter = function(filter, sApplications ,options)
 {
     var self = this;
+    var zdtUtil = new zdtUtilModel();
+    self.zdtStatus = ko.observable(false);
+    zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
+        self.zdtStatus(isUnderPlannedDowntime);
+    });
     this.filter = filter;
     this.sApplications = sApplications;
 
@@ -53,15 +58,21 @@ DashboardsFilter.prototype.initFilterListeners = function()
 {
     var self = this;
     self.serviceFilter.subscribe(function(newValue) {
-        self.saveFilter();
+        if(!self.zdtStatus()){
+            self.saveFilter();
+        }
         self.handleFilterChange({filterType: 'serviceFilter', newValue: newValue});
     });
     self.creatorFilter.subscribe(function(newValue) {
-        self.saveFilter();
+        if(!self.zdtStatus()){
+            self.saveFilter();
+        }
         self.handleFilterChange({filterType: 'serviceFilter', newValue: newValue});
     });
     self.favoritesFilter.subscribe(function(newValue) {
-        self.saveFilter();
+        if(!self.zdtStatus()){
+            self.saveFilter();
+        }
         self.handleFilterChange({filterType: 'serviceFilter', newValue: newValue});
     });
 };
