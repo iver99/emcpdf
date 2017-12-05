@@ -246,11 +246,10 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                     serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, 'configurations/userInfo');
                 }
                 
-                if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.userGrants &&
-                        ($.isFunction(window._uifwk.cachedData.userGrants) ? window._uifwk.cachedData.userGrants() : true)) {
-                    console.info("Getting userGrants from window._uifwk.cachedData.userGrants. It is function: " + $.isFunction(window._uifwk.cachedData.userGrants));
-                    callback($.isFunction(window._uifwk.cachedData.userGrants) ? window._uifwk.cachedData.userGrants() :
-                            window._uifwk.cachedData.userGrants);
+                    // window._uifwk.cachedData.userGrants is changed from ko object to normal js object, and won't be a func any more
+                    if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.userGrants !== undefined) {
+                    console.info("Getting userGrants from window._uifwk.cachedData.userGrants. Value is: " + window._uifwk.cachedData.userGrants);
+                    callback(window._uifwk.cachedData.userGrants);
                 } else {
                     if (!window._uifwk) {
                         window._uifwk = {};
@@ -261,7 +260,7 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'uifwk/@version@/js/util/ajax-util-i
                     console.info("Getting userGrants by sending request. window._uifwk.cachedData.isFetchingUserGrants is " + window._uifwk.cachedData.isFetchingUserGrants);
                     if (!window._uifwk.cachedData.isFetchingUserGrants) {
                         window._uifwk.cachedData.isFetchingUserGrants = true;
-                        if (!window._uifwk.cachedData.userGrants) {
+                        if (!window.userGrantsFromRequest) {
                             console.info("initialize window.userGrantsFromRequest to ko observable");
                             window.userGrantsFromRequest = ko.observable();
                         }

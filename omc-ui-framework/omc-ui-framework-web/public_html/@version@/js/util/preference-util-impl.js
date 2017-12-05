@@ -36,11 +36,13 @@ function(ko, $, ajaxUtilModel)
     PreferenceUtility.prototype.getHMItemShowPreference = function(key, successCallback, errorCallback) {
         var self = this;
         if(key) {
-            if(window._uifwk && window._uifwk.cachedData && ko.unwrap(window._uifwk.cachedData.preferences)) {
-                var preferences = ko.unwrap(window._uifwk.cachedData.preferences);
+            // window._uifwk.cachedData.baseVanityUrls is changed from ko object to normal js object, 
+            // and won't be a func any more. Don't need to use unnecessary ko.unwrap although it won't bring trouble
+            if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.preferences !== undefined) {
+                var preferences = window._uifwk.cachedData.preferences;
                 for(var i in preferences) {
                     if(preferences[i].key === key) {
-                        console.info("Getting getHMItemShowPreference from window._uifwk.cachedData.preferences. It is function: " + $.isFunction(window._uifwk.cachedData.preferences));
+                        console.info("Getting getHMItemShowPreference from window._uifwk.cachedData.preferences. Value is: " + window._uifwk.cachedData.preferences);
                         successCallback(preferences[i].value);
                         return;
                     }
@@ -57,7 +59,7 @@ function(ko, $, ajaxUtilModel)
             console.info("Getting preference by sending request. window._uifwk.cachedData.isFetchingPrefernce is " + window._uifwk.cachedData["isFetching"+key+"Preference"]);
             if (!window._uifwk.cachedData["isFetching"+key+"Preference"]) {
                 window._uifwk.cachedData["isFetching"+key+"Preference"] = true;
-                if (!window._uifwk.cachedData.preferences) {
+                if (!window.preferenceFromRequest) {
                     console.info("initialize window.preferenceFromRequest to ko observable");
                     window.preferenceFromRequest = ko.observable();
                 }

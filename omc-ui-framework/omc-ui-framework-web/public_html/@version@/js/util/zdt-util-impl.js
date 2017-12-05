@@ -61,10 +61,10 @@ define('uifwk/@version@/js/util/zdt-util-impl', ['knockout',
                     return;
                 }
                 
-                if (!doNotUseCache && window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.isPlannedDowntime && 
-                        ($.isFunction(window._uifwk.cachedData.isPlannedDowntime) && window._uifwk.cachedData.isPlannedDowntime()!== undefined)) {
-                    console.info("Getting isPlannedDowntime from window._uifwk.cachedData.isPlannedDowntime. It is function: " + $.isFunction(window._uifwk.cachedData.isPlannedDowntime));
-                    callback(window._uifwk.cachedData.isPlannedDowntime());
+                // window._uifwk.cachedData.isPlannedDowntime is changed from ko object to normal js object, and won't be a func any more
+                if (!doNotUseCache && window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.isPlannedDowntime !== undefined) {
+                    console.info("Getting isPlannedDowntime from window._uifwk.cachedData.isPlannedDowntime. Value is: " + window._uifwk.cachedData.isPlannedDowntime);
+                    callback(window._uifwk.cachedData.isPlannedDowntime);
                 }else{
                     if(!window._uifwk){
                         window._uifwk = {};
@@ -76,7 +76,7 @@ define('uifwk/@version@/js/util/zdt-util-impl', ['knockout',
                     console.info("Getting isPlannedDowntime by sending request. window._uifwk.cachedData.isFetchingOMCStatus is " + window._uifwk.cachedData.isFetchingOMCStatus);
                     if (!window._uifwk.cachedData.isFetchingOMCStatus) {
                         window._uifwk.cachedData.isFetchingOMCStatus = true;
-                        if (!window._uifwk.cachedData.isPlannedDowntime) {
+                        if (!window.isPlannedDowntimeFromRequest) {
                             console.info("initialize window.isPlannedDowntimeFromRequest to ko observable");
                             window.isPlannedDowntimeFromRequest = ko.observable();
                         }

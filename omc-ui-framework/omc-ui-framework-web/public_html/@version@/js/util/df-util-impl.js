@@ -973,12 +973,10 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                 if(cachedData && cachedData[subscribedApps2CacheDataKey]) {
                     console.log("******get subscribed apps from session storage cache, result is " + JSON.stringify(cachedData[subscribedApps2CacheDataKey]));
                     successCallback(cachedData[subscribedApps2CacheDataKey]);
-                }else if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.subscribedapps2 &&
-                        ($.isFunction(window._uifwk.cachedData.subscribedapps2) ? window._uifwk.cachedData.subscribedapps2() : true)) {
-                    var subscribedApps2 = $.isFunction(window._uifwk.cachedData.subscribedapps2) ? window._uifwk.cachedData.subscribedapps2() :
-                            window._uifwk.cachedData.subscribedapps2;
-                    console.info("Getting subscribedapps2 from window._uifwk.cachedData.subscribedapps2. It is function: " + $.isFunction(window._uifwk.cachedData.subscribedapps2));
-                    console.log("******get subscribed apps2 from window._uifwk cache, result is " + JSON.stringify(subscribedApps2));
+                }else if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.subscribedapps2 !== undefined) {
+                    // window._uifwk.cachedData.baseVanityUrls is changed from ko object to normal js object, and won't be a func any more
+                    var subscribedApps2 = window._uifwk.cachedData.subscribedapps2;
+                    console.info("Getting subscribedapps2 from window._uifwk.cachedData.subscribedapps2. Value is: " + window._uifwk.cachedData.subscribedapps2);
                     subscribedApps2Cache.updateCacheData(subscribedApps2CacheName, subscribedApps2CacheDataKey, subscribedApps2);
                     successCallback(subscribedApps2);
                 } else {
@@ -991,7 +989,7 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                     console.info("Getting subscribedapps2 by sending request. window._uifwk.cachedData.isFetchingSubscribedApps2 is " + window._uifwk.cachedData.isFetchingSubscribedApps2);
                     if (!window._uifwk.cachedData.isFetchingSubscribedApps2) {
                         window._uifwk.cachedData.isFetchingSubscribedApps2 = true;
-                        if (!window._uifwk.cachedData.subscribedapps2) {
+                        if (!window.subscribedapps2FromRequest) {
                             console.info("initialize window.subscribedapps2FromRequest to ko observable");
                             window.subscribedapps2FromRequest = ko.observable();
                         }
