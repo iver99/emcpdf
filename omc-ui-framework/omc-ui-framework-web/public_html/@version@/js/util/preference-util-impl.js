@@ -36,7 +36,7 @@ function(ko, $, ajaxUtilModel)
     PreferenceUtility.prototype.getHMItemShowPreference = function(key, successCallback, errorCallback) {
         var self = this;
         if(key) {
-            // window._uifwk.cachedData.baseVanityUrls is changed from ko object to normal js object, 
+            // window._uifwk.cachedData.preferences is changed from ko object to normal js object, 
             // and won't be a func any more. Don't need to use unnecessary ko.unwrap although it won't bring trouble
             if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.preferences !== undefined) {
                 var preferences = window._uifwk.cachedData.preferences;

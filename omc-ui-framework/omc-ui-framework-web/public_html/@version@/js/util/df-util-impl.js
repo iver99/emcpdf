@@ -974,7 +974,7 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                     console.log("******get subscribed apps from session storage cache, result is " + JSON.stringify(cachedData[subscribedApps2CacheDataKey]));
                     successCallback(cachedData[subscribedApps2CacheDataKey]);
                 }else if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.subscribedapps2 !== undefined) {
-                    // window._uifwk.cachedData.baseVanityUrls is changed from ko object to normal js object, and won't be a func any more
+                    // window._uifwk.cachedData.subscribedapps2 is changed from ko object to normal js object, and won't be a func any more
                     var subscribedApps2 = window._uifwk.cachedData.subscribedapps2;
                     console.info("Getting subscribedapps2 from window._uifwk.cachedData.subscribedapps2. Value is: " + window._uifwk.cachedData.subscribedapps2);
                     subscribedApps2Cache.updateCacheData(subscribedApps2CacheName, subscribedApps2CacheDataKey, subscribedApps2);
