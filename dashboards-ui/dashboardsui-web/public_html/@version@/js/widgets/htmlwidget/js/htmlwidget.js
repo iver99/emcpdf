@@ -1,4 +1,4 @@
-define(["require", "knockout", "jquery", "ojs/ojcore", '/emsaasui/emcpdfui/libs/@version@/js/DOMPurify/purify.js'],
+define(["require", "knockout", "jquery", "ojs/ojcore", '/emsaasui/emcpdfui/libs/@version@/js/DOMPurify/purify.min.js'],
         function (localrequire, ko, $, oj, DOMPurify) {
             function getGuid() {
                 function securedRandom(){

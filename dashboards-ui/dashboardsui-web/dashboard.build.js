@@ -10,7 +10,7 @@
         },
         {
             name: "builderMain",
-            include: ["dashboards/dashboardhome-impl", 'dashboards/dbsdashboardpanel', 'text!../../@version@/html/dashboardhome.html'],
+            include: ["dashboards/dashboardhome-impl", 'dashboards/dbsdashboardpanel', 'text!../../@version@/html/dashboardhome.html', "DOMPurify"],
             exclude: ["builder/builder.jet.partition"]
         },
         {
@@ -60,6 +60,7 @@
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
         'dbs': '../js',
         'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
+        'DOMPurify': '../../libs/@version@/js/DOMPurify/purify',
         'prefutil':'empty:'
 //	'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
     }
