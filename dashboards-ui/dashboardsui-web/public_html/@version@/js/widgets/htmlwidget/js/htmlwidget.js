@@ -20,6 +20,15 @@ define(["require", "knockout", "jquery", "ojs/ojcore", '/emsaasui/emcpdfui/libs/
                 self.textAreaVal = ko.observable();
                 self.editing = ko.observable(false);
 
+                if(params.openLinkInNewTabAlways){
+                    DOMPurify.addHook('afterSanitizeAttributes', function (node) {
+                        // set all elements owning target to target=_blank
+                        if ('target' in node && node.nodeName && node.nodeName.toLowerCase() === 'a') {
+                            node.setAttribute('target', '_blank');
+                        }
+                    });
+                }
+
                 if(params.tile){
                     // branch for html editing on dashboard builder page with params.tile exists
                     if(!params.tile.content) {
