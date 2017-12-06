@@ -17,5 +17,7 @@ Rem
 
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
+@&EMSAAS_SQL_ROOT/1.26.0/emaas_dashboard_compress_index_low.sql
 @&EMSAAS_SQL_ROOT/1.26.0/emaas_dashboard_rearrange_index.sql
+
 

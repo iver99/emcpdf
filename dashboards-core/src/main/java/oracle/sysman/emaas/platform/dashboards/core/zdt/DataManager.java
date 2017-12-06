@@ -105,6 +105,7 @@ public class DataManager
 			em.createNativeQuery(SQL_INSERT_TO_ZDT_SYNC_TABLE).setParameter(1, syncDate).setParameter(2, nextSyncDate).setParameter(3, SyncType)
 			.setParameter(4, syncResult).setParameter(5, divergencePercentage).setParameter(6, lastComparisonDate).executeUpdate();
 			em.getTransaction().commit();
+			logger.info("[Sync report]: Sync finished with result [{}] at [{}] with sync type [{}]", syncResult, syncDate, SyncType);
 			return 0;
 		} catch (Exception e) {
 			logger.error("errors occurs in saveToComparatorTalbe, ", e.getLocalizedMessage());
@@ -1483,8 +1484,8 @@ public class DataManager
 	}
 
 	public int updateHalfSyncStatus(String syncResult, String type){
-
 		logger.info("Prepare to update half sync status.");
+		logger.info("[Sync report]: Half sync finished with result [{}] and type [{}]", syncResult, type);
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade();
@@ -1497,7 +1498,7 @@ public class DataManager
 			String sql = "update EMS_ZDT_SYNC set SYNC_RESULT= ? where SYNC_TYPE = 'half'";
 			String sql2 = "update EMS_ZDT_SYNC set SYNC_RESULT= ?, SYNC_TYPE=? where SYNC_TYPE = 'half'";
 			if(type !=null){
-				em.createNativeQuery(sql).setParameter(1, syncResult).setParameter(2, type).executeUpdate();
+				em.createNativeQuery(sql2).setParameter(1, syncResult).setParameter(2, type).executeUpdate();
 			}else{
 				em.createNativeQuery(sql).setParameter(1, syncResult).executeUpdate();
 			}
