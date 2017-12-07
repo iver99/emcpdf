@@ -1,7 +1,7 @@
 sourceSets {
 integTest {
         java.srcDir 'src/integTest/java'
-        compileClasspath += configurations.testConfig + configurations.webdriver + configurations.testNG
+        compileClasspath += configurations.testConfig + configurations.webdriver + configurations.testNG + configurations.restAssured
         }
     }
 
@@ -12,7 +12,14 @@ clean{
 dependencies {
 	testConfig project(path:':dashboards-ui-test-common-api', configuration: 'integTestOutput')
 	testConfig getProjectArtifact('log4j-core') 
-	testConfig getProjectArtifact('log4j-api') 
+	testConfig getProjectArtifact('log4j-api')
+    testConfig getProjectArtifact('servlet-api')
+    testConfig getProjectArtifact('jersey-client')
+    testConfig getProjectArtifact('jersey-multipart')
+    testConfig getProjectArtifact('javax.ws.rs-api')
+    testConfig getProjectArtifact('jackson-core-asl')
+    testConfig getProjectArtifact('jackson-mapper-asl')
+    testConfig getProjectArtifact('jackson-xc')
 }
 
 task integTestJar (type:Jar) {
