@@ -1208,6 +1208,49 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                 }
                 return isV1ServiceTypes;
             };
+
+            self.getDatabaseStatus = function (successCallback, errorCallback) {
+                if (window._dashboard && window._dashboard.dbDown) {
+                    successCallback($.isFunction(window._dashboard.dbDown) ? window._dashboard.dbDown() :
+                            window._dashboard.dbDown);
+                } else {
+                    if (!window._dashboard) {
+                        window._dashboard = {};
+                    }
+
+                    if (self.isDevMode()) {
+                        url = self.buildFullUrl(self.getDevData().dfRestApiEndPoint, "dfstatus");
+                    } else {
+                        url = '/sso.static/dfstatus';
+                    }
+                    ajaxUtil.ajaxWithRetry({type: 'GET', contentType: 'application/json', url: url,
+                        dataType: 'json',
+                        headers: this.getDefaultHeader(),
+                        async: true,
+                        success: function (data, textStatus, jqXHR) {
+                            if (data && data.db_status) {
+                                if(data.db_status==='DOWN'){
+                                    window._dashboard.databaseDown = true; 
+                                }else{
+                                    window._dashboard.databaseDown = false; 
+                                }     
+                                successCallback(window._dashboard.databaseDown);
+                            }else{
+                                window._dashboard.databaseDown = false;
+                                successCallback(window._dashboard.databaseDown);
+                            }     
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log('Failed to get database status!');
+                            if (errorCallback) {
+                                errorCallback(jqXHR, textStatus, errorThrown);
+                            }
+                        }
+                    });
+                }
+
+            };
+            
         }
 
         return DashboardFrameworkUtility;

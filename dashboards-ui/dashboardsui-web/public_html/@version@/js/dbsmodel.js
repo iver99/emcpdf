@@ -249,6 +249,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         self.isTilesView = ko.observable(predata === null ? 'gridtview' : predata.getDashboardsViewPref());
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
+        self.createBtnTitle = ko.observable("");
         self.selectedDashboard = ko.observable(null);
         self.filterById = self.parentElementId+'filtercb';
         self.filterBy = ko.observable(filterSelection);
@@ -257,11 +258,26 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel(parentElementId);
 		var zdtUtil = new zdtUtilModel();
-        self.zdtStatus = ko.observable(false);
+        self.zdtStatus = ko.observable(false); 
+        self.dataBaseDown = ko.observable(false); 
         zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
 //            self.zdtStatus(true);
             self.zdtStatus(isUnderPlannedDowntime);
         });
+        
+        dfu.getDatabaseStatus(function (databaseStatus) {
+            self.dataBaseDown(databaseStatus);
+            if(!self.dataBaseDown()){
+                self.createBtnTitle(getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT'));
+            }
+        });
+        
+        self.createBtnPopup = function () {
+            if ($('#cbtn').hasClass("oj-disabled")) {
+                var popup = $('#unableCreate');
+                popup.ojPopup('open', '#create-button-wrapper', {'at': 'center bottom', 'my': 'start top'});
+            }
+        };
 
         self.pageSize = ko.observable(120);
 
