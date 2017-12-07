@@ -12,8 +12,9 @@ public class DashboardDependencyStatus {
     private String entity_naming_status;
 
     public DashboardDependencyStatus() {
+        //default is UP status
         this.db_status = "UP";
-        this.entity_naming_status = "DOWN";
+        this.entity_naming_status = "UP";
     }
 
     public String getDb_status() {
