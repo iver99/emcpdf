@@ -185,9 +185,9 @@ public class ConfigurationAPI extends APIBase
 				//throw new DatabaseDependencyUnavailableException(); // incase db is down, just log error and don't query dashboard data then
 			}
 			if(dbDown){
-				sb.append("window._dashboard.dbstatus={\"dbDown\": true};");
+				sb.append("window._dashboard={\"dbDown\": true};");
 			}else{
-				sb.append("window._dashboard.dbstatus={\"dbDown\": false};");
+				sb.append("window._dashboard={\"dbDown\": false};");
 			}
 
 			return sb.toString();
