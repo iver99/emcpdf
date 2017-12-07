@@ -133,7 +133,7 @@ public class ConfigurationAPI extends APIBase
 			this.preferences = preferences;
 		}
 
-		public String getBrandingbarInjectedJS() {
+		private String getBrandingbarInjectedJS() {
 			StringBuilder sb = new StringBuilder();
 			if (userInfo != null) {
 				sb.append("window._uifwk.cachedData.userInfo=");
@@ -176,7 +176,19 @@ public class ConfigurationAPI extends APIBase
 				sb.append(JsonUtil.buildNonNullMapper().toJson(pd));
 				sb.append(";");
 			}
-
+			//Append db status
+			//default db is not down
+			boolean dbDown = Boolean.FALSE;
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				_LOGGER.error("Error to call [GET] /v1/configurations/brandingbardata: database is down");
+				dbDown = Boolean.TRUE;
+				//throw new DatabaseDependencyUnavailableException(); // incase db is down, just log error and don't query dashboard data then
+			}
+			if(dbDown){
+				sb.append("window._dashboard.dbstatus={\"dbDown\": true};");
+			}else{
+				sb.append("window._dashboard.dbstatus={\"dbDown\": false};");
+			}
 
 			return sb.toString();
 		}
