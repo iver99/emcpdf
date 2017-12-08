@@ -249,7 +249,6 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         self.isTilesView = ko.observable(predata === null ? 'gridtview' : predata.getDashboardsViewPref());
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
-        self.createBtnTitle = ko.observable("");
         self.selectedDashboard = ko.observable(null);
         self.filterById = self.parentElementId+'filtercb';
         self.filterBy = ko.observable(filterSelection);
@@ -260,6 +259,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
 		var zdtUtil = new zdtUtilModel();
         self.zdtStatus = ko.observable(false); 
         self.dataBaseDown = ko.observable(false); 
+        self.createBtnTitle = ko.observable(getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT'));
         zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
 //            self.zdtStatus(true);
             self.zdtStatus(isUnderPlannedDowntime);
@@ -267,9 +267,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         
         dfu.getDatabaseStatus(function (databaseStatus) {
             self.dataBaseDown(databaseStatus);
-            if(!self.dataBaseDown()){
-                self.createBtnTitle(getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT'));
-            }
+            self.dataBaseDown() && self.createBtnTitle("");
         });
         
         self.createBtnPopup = function () {
