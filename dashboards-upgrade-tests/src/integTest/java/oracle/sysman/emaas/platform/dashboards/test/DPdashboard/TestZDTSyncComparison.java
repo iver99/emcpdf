@@ -30,7 +30,7 @@ public class TestZDTSyncComparison {
         try
         {
             //call /zdt/compare/result API to insert data into ems_zdt_comparator table
-            String jsonString = "{\"lastComparisonDateTime\":\"2017-05-12 15:20:21\", \"comparisonType\":\"full\",\"comparisonResult\":\"SUCCESSFUL\",\"divergencePercentage\":0.11,\"nextScheduledComparisonDateTime\":\"2017-05-12 15:20:21\"}";
+            String jsonString = "{\"lastComparisonDateTime\":\"2017-05-12 15:20:21\", \"comparisonType\":\"full\",\"comparisonResult\":\"{}\",\"divergencePercentage\":0.11,\"nextScheduledComparisonDateTime\":\"2017-05-12 15:20:21\"}";
             Response res1 = RestAssured
                     .given()
                     .contentType(ContentType.JSON)
