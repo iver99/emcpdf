@@ -1594,7 +1594,7 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (self.isTopologyCompRegistered()) {
                     var refreshTopology = true;
                     var omcContext = cxtUtil.getOMCContext();
-                    var entityMeIds = cxtUtil.getEntityMeIds() ? cxtUtil.getEntityMeIds().sort().join() : null;
+                    var entityMeIds = cxtUtil.getEntityMeIds() && cxtUtil.getEntityMeIds()[0] ? cxtUtil.getEntityMeIds()[0] : null;
                     var currentCompositeId = cxtUtil.getCompositeMeId() || entityMeIds;
                     console.log("************currentCompositeId" + currentCompositeId);
                     if (currentCompositeId) {
