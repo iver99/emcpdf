@@ -973,11 +973,10 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                 if(cachedData && cachedData[subscribedApps2CacheDataKey]) {
                     console.log("******get subscribed apps from session storage cache, result is " + JSON.stringify(cachedData[subscribedApps2CacheDataKey]));
                     successCallback(cachedData[subscribedApps2CacheDataKey]);
-                }else if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.subscribedapps2 &&
-                        ($.isFunction(window._uifwk.cachedData.subscribedapps2) ? window._uifwk.cachedData.subscribedapps2() : true)) {
-                    var subscribedApps2 = $.isFunction(window._uifwk.cachedData.subscribedapps2) ? window._uifwk.cachedData.subscribedapps2() :
-                            window._uifwk.cachedData.subscribedapps2;
-                    console.log("******get subscribed apps from window._uifwk cache, result is " + JSON.stringify(subscribedApps2));
+                }else if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.subscribedapps2 !== undefined) {
+                    // window._uifwk.cachedData.subscribedapps2 is changed from ko object to normal js object, and won't be a func any more
+                    var subscribedApps2 = window._uifwk.cachedData.subscribedapps2;
+                    console.info("Getting subscribedapps2 from window._uifwk.cachedData.subscribedapps2. Value is: " + window._uifwk.cachedData.subscribedapps2);
                     subscribedApps2Cache.updateCacheData(subscribedApps2CacheName, subscribedApps2CacheDataKey, subscribedApps2);
                     successCallback(subscribedApps2);
                 } else {
@@ -987,16 +986,25 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                     if (!window._uifwk.cachedData) {
                         window._uifwk.cachedData = {};
                     }
+                    console.info("Getting subscribedapps2 by sending request. window._uifwk.cachedData.isFetchingSubscribedApps2 is " + window._uifwk.cachedData.isFetchingSubscribedApps2);
                     if (!window._uifwk.cachedData.isFetchingSubscribedApps2) {
                         window._uifwk.cachedData.isFetchingSubscribedApps2 = true;
-                        if (!window._uifwk.cachedData.subscribedapps2) {
-                            window._uifwk.cachedData.subscribedapps2 = ko.observable();
+                        if (!window.subscribedapps2FromRequest) {
+                            console.info("initialize window.subscribedapps2FromRequest to ko observable");
+                            window.subscribedapps2FromRequest = ko.observable();
                         }
 
                         function doneCallback(data, textStatus, jqXHR) {
+                            if(window.subscribedapps2FromRequest && $.isFunction(window.subscribedapps2FromRequest)) {
+                                console.info("window.subscribedapps2FromRequest is ko observable");
+                                window.subscribedapps2FromRequest(data);
+                            }else {
+                                console.info("window.subscribedapps2FromRequest is not ko observable");
+                                window.subscribedapps2FromRequest = ko.observable(data);
+                            }
                             console.log("******get subscribed apps by sending request, result is " + JSON.stringify(data));
                             subscribedApps2Cache.updateCacheData(subscribedApps2CacheName, subscribedApps2CacheDataKey, data);
-                            window._uifwk.cachedData.subscribedapps2(data);
+                            window._uifwk.cachedData.subscribedapps2 = data;
                             window._uifwk.cachedData.isFetchingSubscribedApps2 = false;
                             successCallback(data, textStatus, jqXHR);
                         }
@@ -1022,7 +1030,8 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                             }
                         });
                     } else {
-                        window._uifwk.cachedData.subscribedapps2.subscribe(function (data) {
+                        window.subscribedapps2FromRequest.subscribe(function (data) {
+                            console.info("window.subscribedapps2FromRequest is fetched from back end");
                             if (data) {
                                 successCallback(data);
                             }
@@ -1034,6 +1043,7 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
             self.getSubscribedAppsWithoutEdition = function(successCallback, errorCallback) {
                 if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.subscribedapps &&
                         ($.isFunction(window._uifwk.cachedData.subscribedapps) ? window._uifwk.cachedData.subscribedapps() : true)) {
+                    console.info("Getting subscribedapps from window._uifwk.cachedData.subscribedapps. It is function: " + $.isFunction(window._uifwk.cachedData.subscribedapps));
                     successCallback($.isFunction(window._uifwk.cachedData.subscribedapps) ? window._uifwk.cachedData.subscribedapps() :
                             window._uifwk.cachedData.subscribedapps);
                 } else {
@@ -1043,14 +1053,23 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                     if (!window._uifwk.cachedData) {
                         window._uifwk.cachedData = {};
                     }
+                    console.info("Getting subscribedapps by sending request. window._uifwk.cachedData.isFetchingSubscribedApps is " + window._uifwk.cachedData.isFetchingSubscribedApps);
                     if (!window._uifwk.cachedData.isFetchingSubscribedApps) {
                         window._uifwk.cachedData.isFetchingSubscribedApps = true;
                         if (!window._uifwk.cachedData.subscribedapps) {
-                            window._uifwk.cachedData.subscribedapps = ko.observable();
+                            console.info("initialize window.subscribedappsFromRequest to ko observable");
+                            window.subscribedappsFromRequest = ko.observable();
                         }
 
                         function doneCallback(data, textStatus, jqXHR) {
-                            window._uifwk.cachedData.subscribedapps(data);
+                            if(window.subscribedappsFromRequest && $.isFunction(window.subscribedappsFromRequest)) {
+                                console.info("window.subscribedappsFromRequest is ko observable");
+                                window.subscribedappsFromRequest(data);
+                            }else {
+                                console.info("window.subscribedappsFromRequest is not ko observable");
+                                window.subscribedappsFromRequest = ko.observable(data);
+                            }
+                            window._uifwk.cachedData.subscribedapps = data;
                             window._uifwk.cachedData.isFetchingSubscribedApps = false;
                             successCallback(data, textStatus, jqXHR);
                         }
@@ -1076,7 +1095,8 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                             }
                         });
                     } else {
-                        window._uifwk.cachedData.subscribedapps.subscribe(function (data) {
+                        window.subscribedappsFromRequest.subscribe(function (data) {
+                            console.info("window.subscribedappsFromRequest is fetched from back end");
                             if (data) {
                                 successCallback(data);
                             }

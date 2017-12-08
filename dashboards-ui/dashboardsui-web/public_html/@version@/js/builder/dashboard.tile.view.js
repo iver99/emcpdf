@@ -20,14 +20,15 @@ define(['knockout',
         function DashboardTilesView($b) {
             var self = this;
             self.dashboard = $b.dashboard;
-            self.scrollbarWidth = uiutil.getScrollbarWidth();
+            self.scrollbarWidth = uiutil.hasVerticalScrollBar('.tiles-col-container')?uiutil.getScrollbarWidth():0;
 
             $b.registerObject(this, 'DashboardTilesView');
 
             self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
                 $b.findEl('.tiles-col-container').width(width);
-                $b.findEl('.df-computed-content-width').width(width - leftWidth - self.scrollbarWidth);
                 $b.findEl('.tiles-col-container').height(height - topHeight);
+                self.scrollbarWidth = uiutil.hasVerticalScrollBar('.tiles-col-container')?uiutil.getScrollbarWidth():0;
+                $b.findEl('.df-computed-content-width').width(width - leftWidth - self.scrollbarWidth);
             };
 
             self.getTileElement = function(tile) {

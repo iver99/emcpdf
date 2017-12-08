@@ -9,11 +9,12 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
     'uifwk/@version@/js/sdk/menu-util-impl',
     'uifwk/@version@/js/sdk/SessionCacheUtil',
     'uifwk/@version@/js/util/usertenant-util-impl',
+    'uifwk/@version@/js/sdk/logging-feature-usage-util-impl',
     'uifwk/@version@/js/util/message-util-impl'
     //'ojs/ojnavigationlist',
     //'ojs/ojjsontreedatasource'
     ],
-        function ($, oj, ko, nls, dfumodel, pfumodel, ctxmodel, menumodel, sessionCacheModel, utModel, msgModel) {
+        function ($, oj, ko, nls, dfumodel, pfumodel, ctxmodel, menumodel, sessionCacheModel, utModel, _emJETFeatureUsageLogger, msgModel) {
             function HamburgerMenuViewModel(params) {
                 var self = this;
                 var userName = params.userName;
@@ -42,6 +43,11 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 var sessionCacheShowFederatedViewKey = "show_federated_view";
                 var sessionCacheFederatedDashboardKey = 'federated_dashboards';
                 var omcMenuSeparatorId = 'omc_service_menu_separator';
+                var featureUsageLogReceiver = "/sso.static/dashboards.logging/feature/logs";
+                if (dfu.isDevMode()){
+                    featureUsageLogReceiver = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"logging/feature/logs");
+                }
+                _emJETFeatureUsageLogger.initialize(featureUsageLogReceiver, 60000, 20000, 10, userTenantUtil.getUserTenant().tenantUser);
                 
                 var userName = params.userName;
                 var tenantName = params.tenantName;
@@ -309,7 +315,17 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                 
                 //Get favorite dashboards
                 function getFavoriteDsb(forceRefresh) {
+                    function fillFavoriteDsbData(data){
+                        $.each(data.dashboards, function (idx, dsb) {
+                            self.favoriteDsb.push({name: dsb.name, href: "/emsaasui/emcpdfui/builder.html?dashboardId=" + dsb.id});
+                        });
+                    }
                     var dfdGetFavoriteDsb = $.Deferred();
+                    if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.favDashboards){
+                        self.favoriteDsb = [];
+                        fillFavoriteDsbData(window._uifwk.cachedData.favDashboards);
+                        delete window._uifwk.cachedData.favDashboards;
+                    }
                     if(!forceRefresh && self.favoriteDsb){
                         dfdGetFavoriteDsb.resolve();//use the cached data
                         return dfdGetFavoriteDsb;
@@ -324,9 +340,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         contentType: "application/json",
                         headers: header,
                         success: function (data) {
-                            $.each(data.dashboards, function (idx, dsb) {
-                                self.favoriteDsb.push({name: dsb.name, href: "/emsaasui/emcpdfui/builder.html?dashboardId="+dsb.id});
-                            });
+                            fillFavoriteDsbData(data);
                             dfdGetFavoriteDsb.resolve();
                         },
                         error: function (xhr, textStatus, errorThrown) {
@@ -1388,13 +1402,47 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                     }
                 };
                 
+                function expandSpecificMenu(menuId) {
+                    var itemTrack;
+                    for(var i=0; i<self.serviceMenuData.length; i++) {
+                        itemTrack = findItemTrack(self.serviceMenuData[i], menuId);
+                        if(itemTrack.length > 0) {
+                            break;
+                        }else {
+                            itemTrack = null;
+                        }
+                    }
+                    
+                    if(itemTrack) {
+                        var expandedIdList = $("#omcMenuNavList").ojNavigationList("getExpanded");
+                        var trackIdList = [];
+                        while(itemTrack.length > 0) {
+                            trackIdList.push(itemTrack.shift().id);
+                        }
+                        while(expandedIdList.length>0){
+                            var parentItemId = expandedIdList.pop();
+                            $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("collapse",parentItemId, true);
+                        }
+                        setTimeout(function(){
+                            while(trackIdList.length>0){
+                                var parentItemId = trackIdList.shift();
+                                $("#hamburgerMenu #navlistcontainer>div").ojNavigationList("expand",parentItemId, true);
+                            }
+                        });
+                    }
+                }
+                
                 //Event handler before a menu item is collapsed
                 self.beforeCollapse = function(event, ui) {
                     if (ui.key === rootCompositeMenuid) {
 //                        currentCompositeParentId && self.selectedItem(currentCompositeParentId);
+                        var _currentCompositeParentId = currentCompositeParentId;
                         clearCompositeMenuItems();
                         self.expanded([]);
                         self.dataSource(new oj.JsonTreeDataSource(omcMenus));
+                        
+                        expandSpecificMenu(_currentCompositeParentId);
+
                         window._uifwk.isCompositeMenuShown = false;
                         //$("#omcMenuNavList").ojNavigationList("refresh");
                         if (window._uifwk.compositeMenuCollapseCallback) {
@@ -1470,6 +1518,22 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                         if (item.selfHandleMenuSelection !== 'true' && item.children && item.children.length > 0) {
                             uifwkControlled = true;
                         }
+
+                        //find track for adding feature log when user click on hamburger menu item
+                        var itemTrack = [];
+                        for (var j = 0; j < self.serviceMenuData.length; j++) {
+                            itemTrack = findItemTrack(self.serviceMenuData[j], data.id);
+                            if (itemTrack.length > 0) {
+                                break;
+                            } else {
+                                itemTrack = [];
+                            }
+                        }
+                        var trackLabelList = [];
+                        itemTrack.forEach(function (item) {
+                            trackLabelList.push(item.label);
+                        });
+
                         if (uifwkControlled) {
                             var linkHref = item.externalUrl;
                             if(self.hrefMap && self.hrefMap[data.id]){
@@ -1478,6 +1542,7 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                                 delete self.hrefMap[data.id];
                             }
                             if (data.id === 'omc_root_home') {
+                                _emJETFeatureUsageLogger.metricFeatureUsage({type: _emJETFeatureUsageLogger.featureUsageLogType.HAMBURGER_MENU, msg: trackLabelList.join('->')});
                                 var dfdHomeSetting = checkDashboardAsHomeSettings();
                                 dfdHomeSetting.done(function(){
                                     linkHref = omcHomeUrl ? omcHomeUrl : '/emsaasui/emcpdfui/welcome.html';
@@ -1494,12 +1559,14 @@ define('uifwk/@version@/js/widgets/hamburger-menu/hamburger-menu-impl', [
                             }
                             else {
                                 if (linkHref && linkHref !== '#' && linkHref !== window.location+'#') {
+                                    _emJETFeatureUsageLogger.metricFeatureUsage({type: _emJETFeatureUsageLogger.featureUsageLogType.HAMBURGER_MENU, msg: trackLabelList.join('->')});
                                     window.location.href = ctxUtil.appendOMCContext(linkHref, true, true, true);
                                     return false;
                                 }
                             }
                         }
                         else {
+                            _emJETFeatureUsageLogger.metricFeatureUsage({type: _emJETFeatureUsageLogger.featureUsageLogType.HAMBURGER_MENU, msg: trackLabelList.join('->')});
                             fireMenuSelectionEvent(item);
                         }
                     }

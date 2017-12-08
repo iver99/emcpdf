@@ -4,7 +4,6 @@ import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
-import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.DataManager;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.HalfSyncException;
 import oracle.sysman.emaas.platform.dashboards.core.zdt.exception.NoComparedResultException;
@@ -18,6 +17,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.DashboardUs
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.PreferenceRowEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.zdt.tablerows.TableRowsEntity;
 
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.annotations.Test;
