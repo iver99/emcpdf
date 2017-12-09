@@ -587,13 +587,14 @@ public class DashboardAPI extends APIBase
 						DashboardsFilter filter = new DashboardsFilter();
 						filter.initializeFilters(filterString);
 						Long tenantId = getTenantId(tenantIdParam);
+						LOGGER.info("FederationFeatureShowInUiPref value is {}", FederationFeatureShowInUiPref);
 						PaginatedDashboards pd = manager.listDashboards(null, 0, 120, tenantId, true, "default", filter, federationMode, FederationFeatureShowInUiPref);
 						if (pd != null && pd.getDashboards() != null) {
 							for (Dashboard d : pd.getDashboards()) {
 								new DashboardAPI().updateDashboardAllHref(d, tenantIdParam);
 							}
 						}
-						LOGGER.info("Retrieved get favorite dashboard is {}", pd);
+						LOGGER.info("Retrieved get favorite dashboard is {}", JsonUtil.buildNormalMapper().toJson(pd));
 
 						long end = System.currentTimeMillis();
 						LOGGER.info("Time to get favorite dashboard took: {}ms", (end - start));
