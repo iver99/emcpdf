@@ -229,6 +229,7 @@ public class DashBoardPageId_190
 
 	// dashboard set name
 	public static final String DASHBOARDSETNAMETEXTLOCATOR = "//div[@id='dbd-set-name']/span";
+	public static final String DASHBOARDSETNAMECSS = "#dbd-set-name";
 	//dashboard set options
 	public static final String DASHBOARDSETNAVSCONTAINERCSS = "#dbd-set-tabs";
 	public static final String DASHBOARDSETNAVSCSS = ".dbd-tabs-nav .oj-tabs-tab";
