@@ -1075,9 +1075,9 @@ public class DashboardAPI extends APIBase
 
 			//Append db status
 			if(dbDown){
-				sb.append("window._dashboard={\"dbDown\": true};");
+				sb.append("if(!window._dashboard){window._dashboard={};}window._dashboard={\"dbDown\": true};");
 			}else{
-				sb.append("window._dashboard={\"dbDown\": false};");
+				sb.append("if(!window._dashboard){window._dashboard={};}window._dashboard={\"dbDown\": false};");
 			}
 
 			LOGGER.info("Retrieving combined data cost {}ms", (System.currentTimeMillis() - begin));
