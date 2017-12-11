@@ -1209,47 +1209,86 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
                 return isV1ServiceTypes;
             };
 
-            self.getDatabaseStatus = function (successCallback, errorCallback) {
-                if (window._dashboard && window._dashboard.dbDown) {
-                    successCallback($.isFunction(window._dashboard.dbDown) ? window._dashboard.dbDown() :
-                            window._dashboard.dbDown);
-                } else {
-                    if (!window._dashboard) {
-                        window._dashboard = {};
-                    }
-
-                    if (self.isDevMode()) {
-                        url = self.buildFullUrl(self.getDevData().dfRestApiEndPoint, "dfstatus");
+                self.getDatabaseStatus = function (successCallback, errorCallback) {
+                    if (window._dashboard && window._dashboard.dbDown) {
+                        successCallback($.isFunction(window._dashboard.dbDown) ? window._dashboard.dbDown() :
+                                window._dashboard.dbDown);
                     } else {
-                        url = '/sso.static/dfstatus';
-                    }
-                    ajaxUtil.ajaxWithRetry({type: 'GET', contentType: 'application/json', url: url,
-                        dataType: 'json',
-                        headers: this.getDefaultHeader(),
-                        async: true,
-                        success: function (data, textStatus, jqXHR) {
-                            if (data && data.db_status) {
-                                if(data.db_status==='DOWN'){
-                                    window._dashboard.databaseDown = true; 
-                                }else{
-                                    window._dashboard.databaseDown = false; 
-                                }     
-                                successCallback(window._dashboard.databaseDown);
-                            }else{
-                                window._dashboard.databaseDown = false;
-                                successCallback(window._dashboard.databaseDown);
-                            }     
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            console.log('Failed to get database status!');
-                            if (errorCallback) {
-                                errorCallback(jqXHR, textStatus, errorThrown);
-                            }
+                        if (!window._dashboard) {
+                            window._dashboard = {};
                         }
-                    });
-                }
 
-            };
+                        if (!window._dashboard.isFetchingDbstatus) {
+                            window._dashboard.isFetchingDbstatus = true;
+                            if (!window.dbstatusFromRequest) {
+                                console.info("initialize window.dbstatusFromRequest to ko observable");
+                                window.dbstatusFromRequest = ko.observable();
+                            }
+
+                            function doneCallback(data, textStatus, jqXHR) {
+                                if (window.dbstatusFromRequest && $.isFunction(window.dbstatusFromRequest)) {
+                                    console.info("window.dbstatusFromRequest is ko observable");
+                                    window.dbstatusFromRequest(data);
+                                } else {
+                                    console.info("window.dbstatusFromRequest is not ko observable");
+                                    window.dbstatusFromRequest = ko.observable(data);
+                                }
+                                console.log("******get database status by sending request, result is " + JSON.stringify(data));
+
+                                window._dashboard.isFetchingDbstatus = false;
+
+                            }
+                            var url = null;
+                            if (self.isDevMode()) {
+                                url = self.buildFullUrl(self.getDevData().dfRestApiEndPoint, "dfstatus");
+                            } else {
+                                url = '/sso.static/dfstatus';
+                            }
+                            ajaxUtil.ajaxWithRetry({type: 'GET', contentType: 'application/json', url: url,
+                                dataType: 'json',
+                                headers: this.getDefaultHeader(),
+                                async: true,
+                                success: function (data, textStatus, jqXHR) {
+                                    doneCallback(data, textStatus, jqXHR);
+                                    if (data && data.db_status) {
+                                        if (data.db_status === 'DOWN') {
+                                            window._dashboard.dbDown = true;
+                                        } else {
+                                            window._dashboard.dbDown = false;
+                                        }
+                                        successCallback(window._dashboard.dbDown);
+                                    } else {
+                                        window._dashboard.dbDown = false;
+                                        successCallback(window._dashboard.dbDown);
+                                    }
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    console.log('Failed to get subscribed app info!');
+                                    window._dashboard.isFetchingDbstatus = false;
+                                    if (errorCallback) {
+                                        errorCallback(jqXHR, textStatus, errorThrown);
+                                    }
+                                }
+                            });
+                        } else {
+                            window.dbstatusFromRequest.subscribe(function (data) {
+                                console.info("window.dbstatusFromRequest is fetched from back end");
+                                if (data && data.db_status) {
+                                    if (data.db_status === 'DOWN') {
+                                        window._dashboard.dbDown = true;
+                                    } else {
+                                        window._dashboard.dbDown = false;
+                                    }
+                                    successCallback(window._dashboard.dbDown);
+                                } else {
+                                    window._dashboard.dbDown = false;
+                                    successCallback(window._dashboard.dbDown);
+                                }
+                            });
+                        }
+                    }
+
+                };
             
         }
 

@@ -6,6 +6,41 @@
         This is where any of your application specific styles should be included
 */
 
+@font-face {
+  font-family: 'FaFont';
+  src: url("../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff2") format("woff2"), url("../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
+.fa-icon-font {
+  font-family: FaFont;
+  font-size: 1.34rem;
+  display: inline-block;
+  font-weight: normal;
+  speak: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  text-align: center;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: inherit !important; }
+
+.fa-icon-font-16 {
+  font-size: 16px !important; }
+
+.fa-icon-font-14 {
+  font-size: 14px !important; }
+
+.fa-icon-font-18 {
+  font-size: 18px !important; }
+
+.fa-triangle-warning:before {
+    content: "\f071";
+}
+
 .dbs-lock-icon-24:before{content:" ";background:url(../images/dfSprite.png) no-repeat 0px -320px;height:16px;padding-left:18px;}//qual_lock_16_full
 
 .dbs-search-icon:before {content:" ";background:url(../images/dfSprite.png) no-repeat 0px -208px;height:16px;padding-left:18px;}//func_search_16_ena

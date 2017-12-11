@@ -148,11 +148,11 @@
 </div>
 <div style="display:none;width:340px" id="unableCreate"
      data-bind="ojComponent:{component: 'ojPopup',tail: 'simple',autoDismiss: 'focusLoss', initialFocus: 'none'}">
-    <span>
-        <img src="@version@/images/alert.png" style="width: 18px;height:18px">
-    <span style="font-weight: bold" data-bind="text:getNlsString('DBS_HOME_DBDOWN_UNABLE_CREATE_TITLE')"></span>
-    </span>
-    <br></br>
+    <div>
+        <div class ="fa-icon-font fa-icon-font-16 fa-triangle-warning" style="color:#F9C000;display: inline-block"></div>
+        <span style="font-weight: bold" data-bind="text:getNlsString('DBS_HOME_DBDOWN_UNABLE_CREATE_TITLE')"></span>
+    </div>
+    <br>
     <span data-bind="text:getNlsString('DBS_HOME_DBDOWN_UNABLE_CREATE_MSG')"></span>
 </div>
 <!-- dashboard info popup end-->
