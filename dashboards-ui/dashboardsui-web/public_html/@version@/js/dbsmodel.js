@@ -257,11 +257,25 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel(parentElementId);
 		var zdtUtil = new zdtUtilModel();
-        self.zdtStatus = ko.observable(false);
+        self.zdtStatus = ko.observable(false); 
+        self.dataBaseDown = ko.observable(false); 
+        self.createBtnTitle = ko.observable(getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT'));
         zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
 //            self.zdtStatus(true);
             self.zdtStatus(isUnderPlannedDowntime);
         });
+        
+        dfu.getDatabaseStatus(function (databaseStatus) {
+            self.dataBaseDown(databaseStatus);
+            self.dataBaseDown() && self.createBtnTitle("");
+        });
+        
+        self.createBtnPopup = function () {
+            if ($('#cbtn').hasClass("oj-disabled")) {
+                var popup = $('#unableCreate');
+                popup.ojPopup('open', '#create-button-wrapper', {'at': 'center bottom', 'my': 'start top'});
+            }
+        };
 
         self.pageSize = ko.observable(120);
 

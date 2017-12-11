@@ -1,7 +1,9 @@
     <!-- Home toolbar start -->
     <div aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 10px" data-testapiversion="1.24.0">
-        <button style=" margin-right: 5px;" id="cbtn" data-bind="visible: (isMobileDevice() !== true), attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, 
-                                         ojComponent: { component:'ojButton', rootAttributes: {'class': 'dbs-home-blue-button'}, label: getNlsString('DBS_HOME_CREATE_BTN_LABEL'),disabled: zdtStatus}"></button>
+        <div id="create-button-wrapper" data-bind="event:{mouseover:createBtnPopup}" style="display:inline-block">
+            <button style=" margin-right: 5px;" id="cbtn" data-bind="visible: (isMobileDevice() !== true), attr: { 'title': createBtnTitle }, click: createDashboardClicked, 
+                                         ojComponent: { component:'ojButton', rootAttributes: {'class': 'dbs-home-blue-button'}, label: getNlsString('DBS_HOME_CREATE_BTN_LABEL'),disabled: zdtStatus()||dataBaseDown()}"></button>
+        </div>
         <span role="separator" class="oj-toolbar-separator" style="margin-bottom: 4px;" data-bind="visible: (isMobileDevice() !== true) && isDashboardSet !== true"></span>
         <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-3 oj-xl-3">
             <input class="dbs-sinput" id="dbs-sinput" type="text" name="searchInput"
@@ -143,6 +145,15 @@
             <!--button class="oj-button-half-chrome oj-sm-float-end" data-bind="ojComponent: {component:'ojButton', label: 'Close'}, click: $component.handleCloseDashboardPop"></button-->
         </div>
     </div>   
+</div>
+<div style="display:none;width:340px" id="unableCreate"
+     data-bind="ojComponent:{component: 'ojPopup',tail: 'simple',autoDismiss: 'focusLoss', initialFocus: 'none'}">
+    <span>
+        <img src="@version@/images/alert.png" style="width: 18px;height:18px">
+    <span style="font-weight: bold" data-bind="text:getNlsString('DBS_HOME_DBDOWN_UNABLE_CREATE_TITLE')"></span>
+    </span>
+    <br></br>
+    <span data-bind="text:getNlsString('DBS_HOME_DBDOWN_UNABLE_CREATE_MSG')"></span>
 </div>
 <!-- dashboard info popup end-->
 
