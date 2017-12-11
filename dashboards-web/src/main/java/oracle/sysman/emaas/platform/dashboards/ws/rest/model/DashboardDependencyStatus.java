@@ -1,7 +1,5 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
-import javax.ws.rs.DefaultValue;
-
 public class DashboardDependencyStatus {
 
     public static final String UP_STATUS = "UP";
@@ -13,8 +11,8 @@ public class DashboardDependencyStatus {
 
     public DashboardDependencyStatus() {
         //default is UP status
-        this.db_status = "UP";
-        this.entity_naming_status = "UP";
+        this.db_status = UP_STATUS;
+        this.entity_naming_status = UP_STATUS;
     }
 
     public String getDb_status() {

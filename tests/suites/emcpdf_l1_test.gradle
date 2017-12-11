@@ -129,6 +129,7 @@ task DEVTest_ws(type:EMTest){
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/DashboardsApplicationTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/DashboardsCORSFilterTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/FavoriteAPITest.class"
+	include "oracle/sysman/emaas/platform/dashboards/ws/rest/DashboardStatusAPITest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/FavoriteEntityTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/InternalToolAPITest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ws/rest/IsFavoriteEntityTest.class"
