@@ -371,7 +371,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 			LOGGER.info("Initializing RegistrationManager");
 			RegistrationManager.getInstance().initComponent(builder.build());
-
+			HashMap<String, String> overriedTypes = new HashMap<String,String>();
+			overriedTypes.put("POST", "WRITE_NO_LOCKS");
 			List<Link> links = new ArrayList<Link>();
 			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("base").withHref(applicationUrlHttp + NAV_API_BASE));
@@ -449,10 +450,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 						applicationUrlHttps + NAV_STATIC_CONFIGURATIONS));
 			}
 			if (applicationUrlHttp != null) {
-				links.add(new Link().withRel("static/dashboards.omcstatus").withHref(applicationUrlHttp + NAV_STATIC_OMCSTATUS));
+				links.add(new Link().withRel("static/dashboards.omcstatus").withHref(applicationUrlHttp + NAV_STATIC_OMCSTATUS).withOverrideTypes(overriedTypes));
 			}
 			if (applicationUrlHttps != null) {
-				links.add(new Link().withRel("static/dashboards.omcstatus").withHref(applicationUrlHttps + NAV_STATIC_OMCSTATUS));
+				links.add(new Link().withRel("static/dashboards.omcstatus").withHref(applicationUrlHttps + NAV_STATIC_OMCSTATUS).withOverrideTypes(overriedTypes));
 			}
 			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("log/configuration").withHref(applicationUrlHttp + NAV_LOGGING_CONFIG));
