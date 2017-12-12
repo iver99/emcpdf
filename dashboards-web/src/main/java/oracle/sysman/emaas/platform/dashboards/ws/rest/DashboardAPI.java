@@ -761,6 +761,27 @@ public class DashboardAPI extends APIBase
 				}
 			});
 
+			//retrieve base vanity urls
+			Future<Map<String, String>> futureBaseVanityUrls = pool.submit(new Callable<Map<String, String>>() {
+				@Override
+				public Map<String, String> call() throws Exception {
+					try{
+						long start = System.currentTimeMillis();
+						LOGGER.info("Parallel request to get user grants...");
+						Map<String, String> baseVanityUrls = RegistryLookupUtil.getVanityBaseURLs(tenantIdParam);
+						LOGGER.info("Retrieved base Vanity Urls are {}", baseVanityUrls);
+						Map<String, String> copyBaseVanityUrls = new HashMap<>();
+						RegistryLookupAPI.handleBaseVanityUrls(tenantIdParam, baseVanityUrls, copyBaseVanityUrls);
+						long end = System.currentTimeMillis();
+						LOGGER.info("Time to get base vanity urls took: {}ms, result is {}", (end - start), copyBaseVanityUrls);
+						return copyBaseVanityUrls;
+					}catch(Exception e){
+						LOGGER.error("Error occurred when get base vanity urls using parallel request!", e);
+						throw e;
+					}
+				}
+			});
+
 			//retrieve user info
 			List<String> userInfo = null;
 			final Future<List<String>> futureUserInfo = pool.submit(new Callable<List<String>>() {
@@ -1000,6 +1021,22 @@ public class DashboardAPI extends APIBase
 				LOGGER.error(e);
 			}
 
+			Map<String, String> baseVanityUrls = null;
+			try{
+				if(futureBaseVanityUrls != null){
+					baseVanityUrls = futureBaseVanityUrls.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					LOGGER.debug("baseVanityUrls {}", baseVanityUrls);
+				}
+			}catch (InterruptedException e) {
+				LOGGER.error(e);
+			} catch (ExecutionException e) {
+				LOGGER.error(e.getCause() == null ? e : e.getCause());
+			}catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureBaseVanityUrls.cancel(true);
+				LOGGER.error(e);
+			}
+
 			PaginatedDashboards pd = null;
 			try{
 				if(futureFavDashboard != null){
@@ -1064,6 +1101,12 @@ public class DashboardAPI extends APIBase
 			if (prefs != null) {
 				sb.append("window._uifwk.cachedData.preferences=");
 				sb.append(JsonUtil.buildNormalMapper().toJson(prefs));
+				sb.append(";");
+			}
+
+			if(baseVanityUrls != null){
+				sb.append("window._uifwk.cachedData.baseVanityUrls=");
+				sb.append(JsonUtil.buildNormalMapper().toJson(baseVanityUrls));
 				sb.append(";");
 			}
 
