@@ -94,6 +94,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         self.EVENT_NEW_WIDGET_DRAGGING = "EVENT_NEW_WIDGET_DRAGGING";
         self.EVENT_NEW_WIDGET_STOP_DRAGGING = "EVENT_NEW_WIDGET_STOP_DRAGGING";
 
+        self.EVENT_RECALCULATE_RIGHT_PANEL_POSITION = 'EVENT_RECALCULATE_RIGHT_PANEL_POSITION';
         self.EVENT_TILE_MAXIMIZED = "EVENT_TILE_MAXIMIZED";
         self.EVENT_TILE_RESTORED = "EVENT_TILE_RESTORED";
 
@@ -182,6 +183,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
 
         function dashboardUpdatedListener(event) {
             self.isDashboardUpdated(true);
+            self.triggerEvent(self.EVENT_RECALCULATE_RIGHT_PANEL_POSITION);
         };
         self.addEventListener(self.EVENT_TILE_ADDED, dashboardUpdatedListener);
         self.addEventListener(self.EVENT_TILE_DELETED, dashboardUpdatedListener);

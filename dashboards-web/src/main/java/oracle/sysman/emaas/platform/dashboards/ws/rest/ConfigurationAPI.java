@@ -11,7 +11,6 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -23,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;

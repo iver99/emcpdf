@@ -13,10 +13,7 @@ import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.combined.CombinedDashboard;
-import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.SessionInfoUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.entity.EmBaseEntity;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardPK;
@@ -108,6 +105,20 @@ public class DashboardServiceFacade
         return null;
 	}
 
+	public List<EmsDashboard> getEmsDashboardsByName(String name){
+		String jpql = "select d from EmsDashboard d where d.name = :name and (d.owner = :owner or d.isSystem = 1 or d.sharePublic = 1) and d.deleted = 0";
+		TypedQuery<EmsDashboard> query = em.createQuery(jpql,EmsDashboard.class);
+		List<EmsDashboard> list = query.setParameter("name",StringEscapeUtils.escapeHtml4(name))
+										.setParameter("owner", UserContext.getCurrentUser()).getResultList();
+		if(list != null && !list.isEmpty()){
+			return list;
+		}
+		return null;
+	}
+
+	/*
+	Warning: The name is no longer the primary key of the Dashboard, be careful to use this api
+	* */
 	@SuppressWarnings("unchecked")
 	public EmsDashboard getEmsDashboardByName(String name)
 	{
@@ -119,6 +130,25 @@ public class DashboardServiceFacade
         }
         return null;
 	}
+
+//	public List<EmsDashboard> getOwnEmsDashboardsByNamePattern(String namePattern){
+//		String jpql = "select d from EmsDashboard d where d.name LIKE :namePattern ESCAPE '\\' and d.owner = :owner and d.isSystem = 0 and d.deleted = 0 ";
+//
+//		namePattern = StringEscapeUtils.escapeHtml4(namePattern);
+//		LOGGER.info("before change the string is " + namePattern);
+//		if(namePattern.contains("%"))
+//			namePattern = namePattern.replaceAll("%","\\\\\\\\%");
+//		LOGGER.info("after change the string is " + namePattern);
+//		List<EmsDashboard> list = em.createQuery(jpql,EmsDashboard.class)
+//				.setParameter("namePattern", "%"+namePattern+"%")
+//				.setParameter("owner", UserContext.getCurrentUser()).getResultList();
+//		if (list != null && !list.isEmpty()) {
+//			return list;
+//		}
+//		return Collections.emptyList();
+//	}
+
+
 
 	public List<BigInteger> getDashboardIdsByNames(List<String> names, Long tenantId) {
 		StringBuilder parameters = new StringBuilder();
@@ -135,8 +165,12 @@ public class DashboardServiceFacade
 		}
 
 		String sql = "select dashboard_id from ems_dashboard t where t.name in (" + parameters.toString() + ")"
-		+ " and ( t.tenant_id = " + tenantId + " or t.tenant_id =" + NON_TENANT_ID +  " ) and t.deleted = 0";
+		+ " and ( t.tenant_id = ? or t.tenant_id =" + NON_TENANT_ID +  " ) and (t.owner = ? or t.share_public = 1) and t.deleted = 0";
 		Query query = em.createNativeQuery(sql);
+		String currentUser = UserContext.getCurrentUser();
+		LOGGER.info("Current user for exporting dashboard is {}", currentUser);
+		query.setParameter(1, tenantId);
+		query.setParameter(2, currentUser);
 		List<Object> result = query.getResultList();
 		if (result != null && !result.isEmpty()) {
 			for (Object obj : result) {

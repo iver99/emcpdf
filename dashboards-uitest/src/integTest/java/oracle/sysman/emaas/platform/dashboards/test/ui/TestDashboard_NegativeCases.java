@@ -96,7 +96,7 @@ public class TestDashboard_NegativeCases extends LoginAndLogout
 		LoginAndLogout.logoutMethod();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testCreateDashboardSetWithSameNameDesc()
 	{
 		//Initialize the test
@@ -128,7 +128,7 @@ public class TestDashboard_NegativeCases extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testCreateDashboardSetWithSameNameDiffDesc()
 	{
 		String dbNewDesc = "dashboard set with different description";
@@ -153,7 +153,7 @@ public class TestDashboard_NegativeCases extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbName), "Not create dashboard successfully!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testCreateDashboardWithSameNameDesc()
 	{
 		//Initialize the test
@@ -185,7 +185,7 @@ public class TestDashboard_NegativeCases extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testCreateDashboardWithSameNameDiffDesc()
 	{
 		//Initialize the test
@@ -211,7 +211,7 @@ public class TestDashboard_NegativeCases extends LoginAndLogout
 				"Not create dashboard successfully!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testModifyDashboardSetWithSameNameDesc()
 	{
 		dbSetName = "Dashboard Set Same Name-" + DashBoardUtils.generateTimeStamp();
@@ -280,7 +280,7 @@ public class TestDashboard_NegativeCases extends LoginAndLogout
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbName), "Dashboard edit failed!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testModifyDashboardWithSameNameDesc() throws InterruptedException
 	{
 		String errormsg="";

@@ -69,7 +69,7 @@ public class TestDashBoard_SetHome extends LoginAndLogout
 		}
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testDeleteHomeDashboard()
 	{
 		String dbHomeDashboard = "HomeDashboard-" + DashBoardUtils.generateTimeStamp();

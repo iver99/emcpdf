@@ -323,10 +323,10 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
              * @returns
              */
             self.getServiceBaseVanityUrls = function(callbackForVanityUrls) {
-                if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.baseVanityUrls && 
-                        ($.isFunction(window._uifwk.cachedData.baseVanityUrls) ? window._uifwk.cachedData.baseVanityUrls() : true)) {
-                    callbackForVanityUrls($.isFunction(window._uifwk.cachedData.baseVanityUrls) ? window._uifwk.cachedData.baseVanityUrls() : 
-                            window._uifwk.cachedData.baseVanityUrls);
+                // window._uifwk.cachedData.baseVanityUrls is changed from ko object to normal js object, and won't be a func any more
+                if (window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.baseVanityUrls !== undefined) {
+                    console.info("Getting baseVanityUrls from window._uifwk.cachedData.baseVanityUrls. Value is: " + window._uifwk.cachedData.baseVanityUrls);
+                    callbackForVanityUrls(window._uifwk.cachedData.baseVanityUrls);
                 } else {
                     if (!window._uifwk) {
                         window._uifwk = {};
@@ -334,14 +334,23 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                     if (!window._uifwk.cachedData) {
                         window._uifwk.cachedData = {};
                     }
+                    console.info("Getting baseVanityUrls by sending request. window._uifwk.cachedData.isFetchingVanityUrls is " + window._uifwk.cachedData.isFetchingVanityUrls);
                     if (!window._uifwk.cachedData.isFetchingVanityUrls) {
                         window._uifwk.cachedData.isFetchingVanityUrls = true;
-                        if (!window._uifwk.cachedData.baseVanityUrls) {
-                            window._uifwk.cachedData.baseVanityUrls = ko.observable();
+                        if (!window.baseVanityUrlsFromRequest) {
+                            console.info("initialize window.baseVanityUrlsFromRequest to ko observable");
+                            window.baseVanityUrlsFromRequest = ko.observable();
                         }
 
                         function doneCallback(data, textStatus, jqXHR) {
-                            window._uifwk.cachedData.baseVanityUrls(data);
+                            if(window.baseVanityUrlsFromRequest && $.isFunction(window.baseVanityUrlsFromRequest)) {
+                                console.info("window.baseVanityUrlsFromRequest is ko observable");
+                                window.baseVanityUrlsFromRequest(data);
+                            }else {
+                                console.info("window.baseVanityUrlsFromRequest is not ko observable");
+                                window.baseVanityUrlsFromRequest = ko.observable(data);
+                            }
+                            window._uifwk.cachedData.baseVanityUrls = data;
                             window._uifwk.cachedData.isFetchingVanityUrls = false;
                             callbackForVanityUrls(data);
                         }
@@ -366,7 +375,8 @@ define('uifwk/@version@/js/sdk/menu-util-impl', [
                             }
                         });
                     } else {
-                        window._uifwk.cachedData.baseVanityUrls.subscribe(function (data) {
+                        window.baseVanityUrlsFromRequest.subscribe(function (data) {
+                            console.info("window.baseVanityUrlsFromRequest is fetched from back end");
                             callbackForVanityUrls(data);
                         });
                     }

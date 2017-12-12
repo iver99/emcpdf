@@ -1,5 +1,5 @@
     <script id="omc-hamburger-menu-template" type="text/html">
-        <div id="omcHamburgerMenu" style="width:250px;max-width: 250px;overflow: auto;" class="oj-contrast-marker oj-web-applayout-offcanvas">
+        <div id="omcHamburgerMenu" style="width:250px;max-width: 250px;overflow: auto;" class="oj-contrast-marker oj-web-applayout-offcanvas no-print">
             <div id="omcHamburgerMenuInnerComp" style="display: none;" data-bind="component: {
                 name: 'omc-uifwk-hamburger-menu',
                 params: menuParams
@@ -262,6 +262,9 @@
                         <span class="emaas-appheader-message emaas-appheader-message-summary" data-bind="text: summary"></span>
                         <!-- ko if: detail && detail !== '' -->
                         <span class="emaas-appheader-message emaas-appheader-message-detail" data-bind="text: detail"></span>
+                        <!-- /ko -->
+                        <!-- ko if: link && link !== '' && link.text && link.href -->
+                        <a class="emaas-appheader-message emaas-appheader-message-link" data-bind="text: link.text, attr: {href: link.href}"></a>
                         <!-- /ko -->
                     </div>
                 </div>

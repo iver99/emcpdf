@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.TimeUtil;
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
@@ -34,7 +35,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupC
 import oracle.sysman.emaas.platform.dashboards.comparator.exception.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.comparator.exception.ZDTException;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.counts.CountsEntity;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.DashboardRowsComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.InstanceData;
@@ -233,25 +233,31 @@ public class ZDTAPI
 						if (count == tenants.size()) {
 							 obj = new JSONObject();
 								obj.put("comparisonDateTime", comparisonDate);
+								logger.info("[Comparator report]: comparisonDateTime is {}", comparisonDate);
 								obj.put("comparisonType", compareType);
+								logger.info("[Comparator report]: comparisonType is {}", compareType);
 								obj.put("differentRowNum", totalDifferentRows);
+								logger.info("[Comparator report]: differentRowNum is {}", totalDifferentRows);
 								obj.put("totalRowNum", totalRow);
-							obj.put("divergencePercentage", percentage * 100 + "%");
+								logger.info("[Comparator report]: totalRowNum is {}", totalRow);
+								obj.put("divergencePercentage", percentage * 100 + "%");
+								logger.info("[Comparator report]: divergencePercentage is {}", (percentage * 100 + "%"));
 							if(isCompared){
 								obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared.");// here we take cloud1's last compared date.
 							}else{
 								obj.put("msg","NOTE: This is the comparison result of all user created data in 2 clouds, but latest 30 mins modified data will not be compared");
 							}
 
-								if (totalDifferentRows > 100) {
+							JSONObject subObj = new JSONObject();
+							//NOTE: This is by design, because the data cloud1 missing is in result2 and the data missing in cloud2 is in result1
+							subObj.put(result.getInstance1().getKey(), result2);
+							subObj.put(result.getInstance2().getKey(), result1);
+							if (totalDifferentRows > 100) {
 									obj.put("divergenceSummary", "The number for different rows is more than 100; There is too much content to display;");
 								} else {
-									//NOTE: This is by design, because the data cloud1 missing is in result2 and the data missing in cloud2 is in result1
-									JSONObject subObj = new JSONObject();
-									subObj.put(result.getInstance1().getKey(), result2);
-									subObj.put(result.getInstance2().getKey(), result1);
 									obj.put("divergenceSummary", subObj);
-								}	
+								}
+							logger.info("[Comparator report]: divergenceSummary is {}", subObj);
 						}
 						//compare work for a single tenant is over, reset the result
 						result = null;
@@ -296,23 +302,29 @@ public class ZDTAPI
 					
 					JSONObject obj = new JSONObject();
 					obj.put("comparisonDateTime", comparisonDate);
+					logger.info("[Comparator report]: comparisonDateTime is {}", comparisonDate);
 					obj.put("comparisonType", compareType);
+					logger.info("[Comparator report]: comparisonType is {}", compareType);
 					obj.put("differentRowNum", totalDifferentRows);
+					logger.info("[Comparator report]: differentRowNum is {}", totalDifferentRows);
 					obj.put("totalRowNum", totalRow);
+					logger.info("[Comparator report]: totalRowNum is {}", totalRow);
 					obj.put("divergencePercentage", percentage * 100 + "%");
+					logger.info("[Comparator report]: divergencePercentage is {}", (percentage * 100 + "%"));
 					if(isCompared){
 						obj.put("msg","NOTE: This is the comparison result since last compared date [" + lastComparedDateC1 + "], but latest 30 mins modified data will not be compared.");// here we take cloud1's last compared date.
 					}else{
 						obj.put("msg","NOTE: This is the comparison result of all user created data in 2 clouds, but latest 30 mins modified data will not be compared");
 					}
+					JSONObject subObj = new JSONObject();
+					subObj.put(result.getInstance1().getKey(), result2);
+					subObj.put(result.getInstance2().getKey(), result1);
 					if (totalDifferentRows > 100) {
 						obj.put("divergenceSummary", "The number for different rows is more than 100; There is too much content to display;");
 					} else {
-						JSONObject subObj = new JSONObject();
-						subObj.put(result.getInstance1().getKey(), result2);
-						subObj.put(result.getInstance2().getKey(), result1);
 						obj.put("divergenceSummary", subObj);
 					}
+					logger.info("[Comparator report]: divergenceSummary is {}", subObj);
 
 					message = obj.toString();					
 				} else {

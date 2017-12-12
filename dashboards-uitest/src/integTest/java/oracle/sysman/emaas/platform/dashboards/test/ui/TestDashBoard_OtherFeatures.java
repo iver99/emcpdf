@@ -33,8 +33,6 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	private String dbName_favorite = "";
 	private String dbName_timepicker = "";
 	private String dbName_columncheck = "";
-	private String dbName_ITADashboard = "";
-	private String dbName_LADashboard = "";
 	private String dbName_testMaximizeRestore = "";
 	private String dbName_CustomWidget = "";
 	private String dbName_Test = "";
@@ -100,8 +98,6 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashBoardUtils.deleteDashboard(webd, dbName_timepicker);
 		DashBoardUtils.deleteDashboard(webd, dbName_saveConfirmation);
 		DashBoardUtils.deleteDashboard(webd, dbName_columncheck);
-		DashBoardUtils.deleteDashboard(webd, dbName_ITADashboard);
-		DashBoardUtils.deleteDashboard(webd, dbName_LADashboard);
 		DashBoardUtils.deleteDashboard(webd, dbName_testMaximizeRestore);
 		DashBoardUtils.deleteDashboard(webd, dbName_CustomWidget);
 		DashBoardUtils.deleteDashboard(webd, dbName_Test);
@@ -114,7 +110,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		LoginAndLogout.logoutMethod();
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testDashboardWith12Columns()
 	{
 		dbName_columncheck = "DashboardWith12Columns-" + DashBoardUtils.generateTimeStamp();
@@ -160,7 +156,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashboardBuilderUtil.saveDashboard(webd);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testDeleteOOB()
 	{
 		//initialize the test
@@ -176,14 +172,12 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 
 		//check OOB delete protection
 		webd.getLogger().info("Verfiy if the OOB dashboard can be deleted");
-		DashboardHomeUtil.search(webd, "Application Performance Monitoring");
+		DashboardHomeUtil.search(webd, "Enterprise Health");
 		webd.click(DashBoardPageId.INFOBTNID);
-		
-		WebElement removeButton = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RMBTNID));
-		Assert.assertFalse(removeButton.isEnabled(), "delete is enabled for OOB dashboard");
+		Assert.assertFalse(webd.isEnabled("css=" + DashBoardPageId.RMBTNID), "delete is enabled for current dashboard");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testDuplicateDashboard()
 	{
 		dbName_duplicate = dbName_Test + "-duplicated";
@@ -224,7 +218,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashboardHomeUtil.isDashboardExisted(webd, dbName_duplicate);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testDuplicateOOBDashboard()
 	{
 		dbName_duplicateOOB = OOBName + "-duplicated-" + DashBoardUtils.generateTimeStamp();
@@ -258,7 +252,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		DashboardHomeUtil.isDashboardExisted(webd, dbName_duplicateOOB);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testFavorite()
 	{
 		dbName_favorite = "favoriteDashboard-" + DashBoardUtils.generateTimeStamp();
@@ -319,10 +313,9 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		
 		//delete the dashboard
 		webd.getLogger().info("start to delete the dashboard");
-		
-		if (webd.isSelected("id=" + DashBoardPageId.FAVORITE_BOXID)) {
-			webd.click("id=" + DashBoardPageId.FAVORITE_BOXID);
-		}
+
+		DashboardHomeUtil.resetFilterOptions(webd);
+
 		DashboardHomeUtil.deleteDashboard(webd, dbName_favorite, DashboardHomeUtil.DASHBOARDS_GRID_VIEW);
 		webd.getLogger().info("the dashboard has been deleted");
 	}
@@ -376,109 +369,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertFalse(DashboardHomeUtil.isDashboardExisted(webd, OOBName),"The dashboard is still my favorite dashboard");
 	}
 
-	@Test
-	public void testFilterITADashboard()
-	{
-		dbName_ITADashboard = "ITADashboard-" + DashBoardUtils.generateTimeStamp();
-		String dbDesc = "test filter ITA works for custom dashboard";
-		//initialize the test
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testFilterITADashboard");
-
-		//reset the home page
-		webd.getLogger().info("Reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//switch to Grid View
-		webd.getLogger().info("Switch to grid view");
-		DashboardHomeUtil.gridView(webd);
-
-		//create dashboard
-		webd.getLogger().info("Create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_ITADashboard, dbDesc, DashboardHomeUtil.DASHBOARD);
-
-		//verify dashboard in builder page
-		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_ITADashboard, dbDesc, true),
-				"Create dashboard failed!");
-
-		//Add the widget to the dashboard
-		webd.getLogger().info("Start to add Widget into the dashboard");
-		DashboardBuilderUtil.addWidgetToDashboard(webd, "Analytics Line - Categorical");
-		webd.getLogger().info("Add widget finished");
-
-		//save dashboard
-		webd.getLogger().info("Save the dashboard");
-		DashboardBuilderUtil.saveDashboard(webd);
-
-		//back to home page
-		webd.getLogger().info("Back to dashboard home page");
-		BrandingBarUtil.visitDashboardHome(webd);
-
-		//set filter option, cloud services="IT Analytics" created by ME
-		webd.getLogger().info("set filter option, cloud services='IT Analytics' and Created by ME");
-		DashboardHomeUtil.filterOptions(webd, "ita");
-		DashboardHomeUtil.filterOptions(webd, "me");
-		webd.getLogger().info("Verify the created dashboard exists");
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_ITADashboard), "The dashboard NOT exists");
-
-		//reset filter options
-		webd.getLogger().info("Reset filter options");
-		DashboardHomeUtil.resetFilterOptions(webd);
-	}
-
-	@Test
-	public void testFilterLADashboard()
-	{
-		dbName_LADashboard = "LADashboard-" + DashBoardUtils.generateTimeStamp();
-		String dbDesc = "test filter LA works for custom dashboard";
-		//initialize the test
-		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("Start to test in testFilterLADashboard");
-
-		//reset the home page
-		webd.getLogger().info("Reset all filter options in the home page");
-		DashboardHomeUtil.resetFilterOptions(webd);
-
-		//switch to Grid View
-		webd.getLogger().info("Switch to grid view");
-		DashboardHomeUtil.gridView(webd);
-
-		//create dashboard
-		webd.getLogger().info("Create a dashboard: with description, time refresh");
-		DashboardHomeUtil.createDashboard(webd, dbName_LADashboard, dbDesc, DashboardHomeUtil.DASHBOARD);
-
-		//verify dashboard in builder page
-		webd.getLogger().info("Verify the dashboard created Successfully");
-		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_LADashboard, dbDesc, true),
-				"Create dashboard failed!");
-
-		//Add the widget to the dashboard
-		webd.getLogger().info("Start to add Widget into the dashboard");
-		DashboardBuilderUtil.addWidgetToDashboard(webd, "Database Errors Trend");
-		webd.getLogger().info("Add widget finished");
-
-		//save dashboard
-		webd.getLogger().info("Save the dashboard");
-		DashboardBuilderUtil.saveDashboard(webd);
-
-		//back to home page
-		webd.getLogger().info("Back to dashboard home page");
-		BrandingBarUtil.visitDashboardHome(webd);
-
-		//set filter option, cloud services="IT Analytics" created by ME
-		webd.getLogger().info("set filter option, cloud services='LT Analytics' and Created by ME");
-		DashboardHomeUtil.filterOptions(webd, "la");
-		DashboardHomeUtil.filterOptions(webd, "me");
-		webd.getLogger().info("Verify the created dashboard exists");
-		Assert.assertTrue(DashboardHomeUtil.isDashboardExisted(webd, dbName_LADashboard), "The dashboard NOT exists");
-
-		//reset filter options
-		webd.getLogger().info("Reset filter options");
-		DashboardHomeUtil.resetFilterOptions(webd);
-	}
-
-	@Test
+	@Test(alwaysRun = true)
 	public void testHideEntityFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -503,7 +394,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertFalse(webd.isDisplayed("css=" + PageId.TARGETSELECTOR_CSS), "The target selector is in the page");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testHideOpenInIconForCustomWidget()
 	{
 		dbName_CustomWidget = "DashboardWithCustomWidget-" + DashBoardUtils.generateTimeStamp();
@@ -544,7 +435,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 				"The 'Open In' icon is displayed for the custom widget");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testHideTimeRangeFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -569,7 +460,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertFalse(webd.isDisplayed("css=" + PageId.DATETIMEPICK_CSS), "The time range filter is in the page");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testMaximizeRestoreWidgetOOBDb()
 	{
 		//initialize the test
@@ -599,7 +490,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 	}
 
 	//test maxmize/restore widget in self created dashboard
-	@Test
+	@Test(alwaysRun = true)
 	public void testMaximizeRestoreWidgetSelfDashboard()
 	{
 		dbName_testMaximizeRestore = "selfDb-" + DashBoardUtils.generateTimeStamp();
@@ -643,7 +534,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertTrue(webd.isDisplayed("//button[@title='Edit Settings']"), "Edit button isn't displayed in system dashboard set");
 	}
 
-	//@Test
+	//@Test(alwaysRun = true)
 	public void testSaveConfirmation()
 	{
 		dbName_saveConfirmation = "TestSaveConfirmation-" + DashBoardUtils.generateTimeStamp();
@@ -684,7 +575,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		webd.waitForElementPresent("css=" + PageId.DASHBOARDDISPLAYPANELCSS);
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testShareDashboard()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -706,7 +597,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testShowEntityFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -731,7 +622,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertTrue(webd.isDisplayed("css=" + PageId.TARGETSELECTOR_CSS), "The target selector is NOT in the page");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testShowTimeRangeFilter()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -787,7 +678,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		Assert.assertFalse(DashboardBuilderUtil.toggleShareDashboard(webd), "Stop sharing the dashboard failed!");
 	}
 
-	@Test
+	@Test(alwaysRun = true)
 	public void testTimePicker()
 	{
 		dbName_timepicker = "TestDashboardTimeselector-" + DashBoardUtils.generateTimeStamp();
@@ -898,7 +789,7 @@ public class TestDashBoard_OtherFeatures extends LoginAndLogout
 		}
 	}
 	
-	@Test
+	@Test(alwaysRun = true)
 	public void testLongName_display()
 	{		
 		String dbDesc = "Test its display when dashboard with long name";

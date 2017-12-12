@@ -98,6 +98,7 @@ test {
 
 dependencies {
     providedCompile project(':dashboards-comparator:dashboardscomparator-webutils') { transitive = false }
+    providedCompile project(':dashboards-sdk')
     providedCompile getProjectArtifact('commons-lang3')
     providedCompile getProjectArtifact('commons-logging')
     providedCompile getProjectArtifact('emaas-platform-tenant-sdk')

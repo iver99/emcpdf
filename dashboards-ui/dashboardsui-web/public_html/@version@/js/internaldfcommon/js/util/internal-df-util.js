@@ -94,6 +94,14 @@ define(['knockout',
                     return '/sso.static/dashboards.logging/logs';
                 }
             };
+            
+            self.getFeatureUsageLogUrl=function(){
+                if (self.isDevMode()){
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"logging/feature/logs");
+                }else{
+                    return '/sso.static/dashboards.logging/feature/logs';
+                }
+            };
 
             self.getDashboardsUrl=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear

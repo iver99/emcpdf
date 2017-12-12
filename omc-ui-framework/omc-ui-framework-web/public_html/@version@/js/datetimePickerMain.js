@@ -49,7 +49,9 @@ requirejs.config({
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../../libs/@version@/js/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
-	'uifwk': '/emsaasui/uifwk'
+	'uifwk': '/emsaasui/uifwk',
+        'emsaasui': '/emsaasui',
+        'emcta': '/emsaasui/emcta/ta/js'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -190,7 +192,7 @@ require(['ojs/ojcore',
                         end: new Date(adjustedEnd)
                     };
                 };
-
+                
                 self.timeParams1 = {
                     startDateTime: /*self.initStart,*/ start,
                     endDateTime: self.initEnd, //end,

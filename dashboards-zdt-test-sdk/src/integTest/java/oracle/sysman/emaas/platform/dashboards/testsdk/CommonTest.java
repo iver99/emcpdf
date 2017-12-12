@@ -20,7 +20,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import oracle.sysman.qatool.uifwk.utils.Utils;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -85,6 +85,7 @@ public class CommonTest
 	private static final String DOMAIN = "www.";
 	private static final String DSB_DEPLOY_URL = "/instances?servicename=Dashboard-API";
 	private static final String AUTHORIZATION = "Authorization";
+	private String apigw_sr;
 
 	private static final String AUTH_STRING = "Basic d2VibG9naWM6d2VsY29tZTE=";
 
@@ -181,6 +182,7 @@ public class CommonTest
 			HOSTNAME1 = Utils.getProperty("EMCS_NODE3_HOSTNAME");
 			//portno = prop.getProperty("port");
 			portno = CommonTest.getPort(url.get(0)) + "";
+			apigw_sr = Utils.getProperty("APIGWAY_SERVICE_URL");
 
 			//	authToken = prop.getProperty("authToken");
 			authToken = Utils.getProperty("SAAS_AUTH_TOKEN");
@@ -285,4 +287,6 @@ public class CommonTest
 	{
 		return tenantid_2;
 	}
+
+	public String getApigw_SR() {return apigw_sr;}
 }

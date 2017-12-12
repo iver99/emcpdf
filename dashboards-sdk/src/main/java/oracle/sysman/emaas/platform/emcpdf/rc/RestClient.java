@@ -7,6 +7,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
+import com.sun.jersey.api.json.JSONConfiguration;
 import oracle.sysman.emaas.platform.emcpdf.cache.util.StringUtil;
 import oracle.sysman.emaas.platform.uifwk.util.LogUtil;
 import org.apache.logging.log4j.LogManager;
@@ -32,8 +33,12 @@ public class RestClient {
     public static final String SESSION_EXP = "SESSION_EXP";
     public static final String X_OMC_SERVICE_TRACE = "X-OMC-SERVICE-TRACE";
     public static final String ACCEPT_LANGUAGE = "Accept-Language";
+    private static final Integer NO_CONTENT = 204;
 
 	private static ClientConfig cc = new DefaultClientConfig();
+    static{
+        cc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+    }
 	private static Client client = Client.create(cc);
 
     //timeout milli-seconds
@@ -69,13 +74,20 @@ public class RestClient {
         try {
             return innerGet(url, tenant, auth);
         }catch(UniformInterfaceException e){
-            LOGGER.error("RestClient: Error occurred for [GET] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
-            LOGGER.error(e);
-            itrLogger.error("RestClient: Error occurred for [GET] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+            LOGGER.warn("HTTP Response code is {}", e.getResponse().getStatus());
+            //            Sometimes Jersey considers 204 an error because non-empty response content is expected:
+            if(e.getResponse().getStatus() == NO_CONTENT){
+                LOGGER.info("204 response found in UniformInterfaceException exception, ignore.");
+                return "HTTP Response:204";
+            }else{
+                LOGGER.error("RestClient: Error occurred for [GET] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+                itrLogger.error("RestClient: Error occurred for [GET] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+                LOGGER.error(e);
+            }
         }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
             LOGGER.error("RestClient: Error occurred for [GET] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
-            LOGGER.error(e);
             itrLogger.error("RestClient: Error occurred for [GET] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
+            LOGGER.error(e);
 
         }catch (Exception e) {
             LOGGER.error("RestClient: Exception when RestClient trying to get response from specified service. Message:", e);
@@ -102,23 +114,8 @@ public class RestClient {
         }
         itrLogger.info("RestClient call to [GET] {}",url);
         WebResource.Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth);
-        if (type != null) {
-            builder = builder.type(type);
-        }
-        if (accept != null) {
-            builder = builder.accept(accept);
-        }
-        if (headers != null && !headers.isEmpty()) {
-            for (Map.Entry entry : headers.entrySet()) {
-                String key = entry.getKey().toString();
-                String value = entry.getValue().toString();
-                if (HttpHeaders.AUTHORIZATION.equals(key)) {
-                    continue;
-                }
-                builder.header(key, value);
-                itrLogger.info("[GET] Setting header ({}, {}) for call to {}", key, value, url);
-            }
-        }
+        //Handle type, accept header info before request
+        builder = preRequest(url, builder, "GET");
         return builder.get(String.class);
     }
 
@@ -142,32 +139,24 @@ public class RestClient {
         itrLogger.info("RestClient call to [PUT] {}",url);
         try{
             WebResource.Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth);
-            if (type != null) {
-                builder = builder.type(type);
-            }
-            if (accept != null) {
-                builder = builder.accept(accept);
-            }
-            if (headers != null) {
-                for (Map.Entry entry : headers.entrySet()) {
-                    String key = entry.getKey().toString();
-                    String value = entry.getValue().toString();
-                    if (HttpHeaders.AUTHORIZATION.equals(key)) {
-                        continue;
-                    }
-                    builder.header(key, value);
-                    itrLogger.info("[PUT] Setting header ({}, {}) for call to {}", key, value, url);
-                }
-            }
+            //Handle type, accept header info before request
+            builder = preRequest(url, builder, "PUT");
             return builder.put(requestEntity.getClass(), requestEntity).toString();
         }catch(UniformInterfaceException e){
-            LOGGER.error("RestClient: Error occurred for [PUT] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
-            LOGGER.error(e);
-            itrLogger.error("RestClient: Error occurred for [PUT] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+            LOGGER.warn("HTTP Response code is {}", e.getResponse().getStatus());
+//           Sometimes Jersey considers 204 an error because non-empty response content is expected:
+            if(e.getResponse().getStatus() == NO_CONTENT){
+                LOGGER.info("204 response found in UniformInterfaceException exception, ignore.");
+                return "HTTP Response:204";
+            }else{
+                LOGGER.error("RestClient: Error occurred for [PUT] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+                itrLogger.error("RestClient: Error occurred for [PUT] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+                LOGGER.error(e);
+            }
         }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
             LOGGER.error("RestClient: Error occurred for [PUT] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
-            LOGGER.error(e);
             itrLogger.error("RestClient: Error occurred for [PUT] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
+            LOGGER.error(e);
         }
         return null;
     }
@@ -182,11 +171,6 @@ public class RestClient {
             LOGGER.error("Unable to post to an empty URL for requestEntity: \"{}\", tenant: \"{}\"", requestEntity, tenant);
             return null;
         }
-        /*if (requestEntity == null || "".equals(requestEntity)) {
-            LOGGER.error("Unable to post an empty request entity");
-            return null;
-        }*/
-
         if (StringUtil.isEmpty(auth)) {
             LOGGER.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
             itrLogger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
@@ -199,23 +183,8 @@ public class RestClient {
         try{
 
             WebResource.Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth);
-            if (type != null) {
-                builder = builder.type(type);
-            }
-            if (accept != null) {
-                builder = builder.accept(accept);
-            }
-            if (headers != null) {
-                for (Map.Entry entry : headers.entrySet()) {
-                    String key = entry.getKey().toString();
-                    String value = entry.getValue().toString();
-                    if (HttpHeaders.AUTHORIZATION.equals(key)) {
-                        continue;
-                    }
-                    builder.header(key, value);
-                    itrLogger.info("[POST] Setting header ({}, {}) for call to {}", key, value, url);
-                }
-            }
+            //Handle type, accept header info before request
+            builder = preRequest(url, builder, "POST");
             if(requestEntity == null) {
                 builder.post();
                 LOGGER.info("RestClient is sending POST request without input, will return null...");
@@ -227,26 +196,28 @@ public class RestClient {
                 return builder.post(requestEntity.getClass(), requestEntity);
             }
         }catch(UniformInterfaceException e){
-            LOGGER.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
-            itrLogger.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
-            LOGGER.error(e);
+            LOGGER.warn("HTTP Response code is {}", e.getResponse().getStatus());
+            //           Sometimes Jersey considers 204 an error because non-empty response content is expected:
+            if(e.getResponse().getStatus() == NO_CONTENT){
+                LOGGER.info("204 response found in UniformInterfaceException exception, ignore.");
+                return "HTTP Response:204";
+            }else{
+                LOGGER.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+                itrLogger.error("Error occurred for [POST] action, URL is {}: status code of the HTTP response indicates a response that is not expected", url);
+                LOGGER.error(e);
+                throw e;
+            }
         }catch(ClientHandlerException e){//RestClient may timeout, so catch this runtime exception to make sure the response can return.
             LOGGER.error("Error occurred for [POST] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
             itrLogger.error("Error occurred for [POST] action, URL is {}: Signals a failure to process the HTTP request or HTTP response", url);
             LOGGER.error(e);
+            throw e;
         }
-
-        return null;
     }
 
     public void setHeader(String header, Object value) {
         if (headers == null) {
             headers = new HashMap<String, Object>();
-        }
-        // not allow invalid header or value
-        if (header == null || value == null) {
-            LOGGER.warn("Ignore to set null header or null value. Header: {}, value: {}", header, value);
-            return;
         }
         headers.put(header, value);
     }
@@ -257,6 +228,37 @@ public class RestClient {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    private WebResource.Builder preRequest(String url, WebResource.Builder builder, String method) {
+        if (type != null) {
+            builder = builder.type(type);
+        }
+        if (accept != null) {
+            builder = builder.accept(accept);
+        }
+        if (headers != null) {
+            for (Map.Entry entry : headers.entrySet()) {
+                Object key = entry.getKey();
+                Object value = entry.getValue();
+                if(key == null || value == null){
+                    if (HttpHeaders.AUTHORIZATION.equals(key)) {
+                        continue;
+                    }
+                    builder.header(key == null? null : key.toString(), value == null ? null : value.toString());
+                    LOGGER.warn("Null header name or header value found!");
+                    itrLogger.warn("Null header name or header value found!");
+                    itrLogger.warn("[{}] Setting header ({}, {}) for call to {}", method, key, value, url);
+                    continue;
+                }
+                if (HttpHeaders.AUTHORIZATION.equals(key.toString())) {
+                    continue;
+                }
+                builder.header(key.toString(), value.toString());
+                itrLogger.info("[{}] Setting header ({}, {}) for call to {}", method, key, value, url);
+            }
+        }
+        return builder;
     }
 
 }
