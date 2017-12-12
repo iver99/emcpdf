@@ -1210,7 +1210,7 @@ define('uifwk/@version@/js/util/df-util-impl',['knockout',
             };
 
                 self.getDatabaseStatus = function (successCallback, errorCallback) {
-                    if (window._dashboard && window._dashboard.dbDown) {
+                    if (window._dashboard && (window._dashboard.dbDown)!==undefined) {
                         successCallback(window._dashboard.dbDown);
                     } else {
                         if (!window._dashboard) {
