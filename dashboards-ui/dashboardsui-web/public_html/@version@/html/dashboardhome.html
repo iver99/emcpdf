@@ -22,12 +22,24 @@
             <!-- ko if: !isDashboardSet -->
             <label class="oj-label-inline" data-bind="attr: { 'for': filterById }, text: getNlsString('DBS_HOME_SELECT_FILTER_BY_LABEL')"></label>
             <select aria-controls="dtabhomesc" data-bind="attr: { 'id': filterById }, ojComponent: {component: 'ojSelect', minimumResultsForSearch: 20, value: filterBy, optionChange: $component.handleFilterByChanged, 
-                                                   rootAttributes: {style:'width: 20em; max-width:15em; margin-right: 30px; height: 32px; max-height: 32px;', class: 'dsb-filtercb'}}">
+                        rootAttributes: {style:'width: 20em; max-width:15em; margin-right: 30px; height: 32px; max-height: 32px;', class: 'dsb-filtercb'}}">
                 <option value="allnofilter" id="filterby_all" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_ALL')"></option>
                 <option value="favorites" id="filterby_favorites" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_FAVORITES')"></option>
                 <option value="me" id="filterby_me" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_ME')"></option>
                 <option value="oracle" id="filterby_oracle" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_ORACLE')"></option>
                 <option value="share" id="filterby_share" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_OTHERS')"></option>
+                <!-- ko if: showITAFilter() || showLAFilter() || showSECFilter() -->
+                <option disabled></option>
+                <!-- /ko -->
+                <!-- ko if: showITAFilter() -->
+                <option value="ita" id="filterby_ita" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_ITA')"></option>
+                <!-- /ko -->
+                <!-- ko if: showLAFilter() -->
+                <option value="la" id="filterby_la" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_LA')"></option>
+                <!-- /ko -->
+                <!-- ko if: showSECFilter() -->
+                <option value="sec" id="filterby_sec" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_SEC')"></option>
+                <!-- /ko -->
             </select>
             <!-- /ko -->
   
