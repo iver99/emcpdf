@@ -1,10 +1,10 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import mockit.*;
-import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.LogUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.loggingconfig.UpdatedLoggerLevel;
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;

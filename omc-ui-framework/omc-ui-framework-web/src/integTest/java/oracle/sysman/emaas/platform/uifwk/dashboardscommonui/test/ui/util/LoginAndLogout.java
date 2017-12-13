@@ -14,12 +14,12 @@ public class LoginAndLogout
 	@AfterMethod
 	public static void logoutMethod()
 	{
-		if (webd != null) {			
+		if (webd != null) {
 			LoginUtils.doLogout(webd);
 			try {
 				webd.shutdownBrowser(true);
 			}
-			catch (Exception e) {				
+			catch (Exception e) {
 				webd.getLogger().warning("Failed to shutdown browser: " + e.getMessage());
 			}
 		}
@@ -31,7 +31,7 @@ public class LoginAndLogout
 		try {
 			tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");
 		}
-		catch (Exception e) {			
+		catch (Exception e) {
 			tenantID = "emaastesttenant1";
 			webd.getLogger().warning("Failed to get tenantID: " + e.getMessage());
 		}
@@ -39,14 +39,14 @@ public class LoginAndLogout
 		try {
 			username = oracle.sysman.emsaas.login.utils.Utils.getProperty("SSO_USERNAME");
 		}
-		catch (Exception e) {			
+		catch (Exception e) {
 			username = "emcsadmin";
 			webd.getLogger().warning("Failed to get username: " + e.getMessage());
 		}
 		try {
 			password = oracle.sysman.emsaas.login.utils.Utils.getProperty("SSO_PASSWORD");
 		}
-		catch (Exception e) {			
+		catch (Exception e) {
 			password = "Welcome1!";
 			webd.getLogger().warning("Failed to get password: " + e.getMessage());
 		}
@@ -72,7 +72,7 @@ public class LoginAndLogout
 		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");
 		webd.getLogger().info("url is " + url + "   properties file is " + testPropertiesFile);
 		webd.getLogger().info("after::start to test in LoginAndOut");
-		
+
 		if (queryString != null && !queryString.equals("")) {
 			url = url + queryString;
 			webd.getLogger().info("New url with OMC global context appended is: " + url);
@@ -96,7 +96,26 @@ public class LoginAndLogout
 		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");
 		webd.getLogger().info("url is " + url + "   properties file is " + testPropertiesFile);
 		webd.getLogger().info("after::start to test in LoginAndOut");
-		
+
+		if (queryString != null && !queryString.equals("")) {
+			url = url + queryString;
+			webd.getLogger().info("New url with OMC global context appended is: " + url);
+		}
+		LoginUtils.doLogin(webd, "emcsadmin", "Welcome1!", "emaastesttenant1", url);
+	}
+
+	public void loginMessageBanner(String testName, String queryString)
+	{
+		webd = WebDriverUtils.initWebDriver(testName);
+		String url = null;
+		webd.getLogger().info("before::start to test in LoginAndOut");
+		url = oracle.sysman.emsaas.login.utils.Utils.getProperty("OHS_URL");
+		url = url + "/emsaasui/uifwk/test.html";
+
+		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");
+		webd.getLogger().info("url is " + url + "   properties file is " + testPropertiesFile);
+		webd.getLogger().info("after::start to test in LoginAndOut");
+
 		if (queryString != null && !queryString.equals("")) {
 			url = url + queryString;
 			webd.getLogger().info("New url with OMC global context appended is: " + url);

@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import com.sun.jersey.core.util.Base64;
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.*;
@@ -116,6 +117,9 @@ public class DashboardAPI extends APIBase
 		catch (DashboardException e) {
 			if(e instanceof DashboardSameNameException){
 				LOGGER.warn("Dashboard with the same name exists already!");
+				ErrorEntity error = new ErrorEntity(e);
+				String errorJson = getJsonUtil().toJson(error);
+				return Response.status(Status.OK).entity(errorJson).build();
 			}else{
 				LOGGER.error(e.getLocalizedMessage(), e);
 			}
@@ -227,6 +231,116 @@ public class DashboardAPI extends APIBase
 		LOGGER.info("Add new Widget into dashboard api tooks {}ms", (System.currentTimeMillis()-start));
 		return Response.ok(getJsonUtil().toJson(dbd)).build();
 
+	}
+
+	/* delete dashboard by patterns, i.e. delete all the dashboards that contain the given patern
+	* i.e.  given "ab", delete all dashboards whose names have "ab", i.e "ab", "abc", "7bab2",etc
+	* will not delete the system dashboards
+	* This is the fix for emcpdf 1542, but now PM suggest that we remove this functionality and comment the code first.
+	* */
+//	@DELETE
+//	@Path("/namePattern/{namePattern}")
+//	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+//	public Response deleteDashboardByNamePattern(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+//												 @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+//												 @PathParam("namePattern") String namePattern)
+//	{
+//		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/namePattern/{}", namePattern);
+//		DashboardManager manager = DashboardManager.getInstance();
+//		List<Dashboard> deletedDSB = new ArrayList<>();
+//		try {
+//			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+//				LOGGER.error("Error to call [DELETE] /v1/dashboards/namePattern/{}: database is down", namePattern);
+//				throw new DatabaseDependencyUnavailableException();
+//			}
+//			logkeyHeaders("deleteDashboardByNamePattern()", userTenant, tenantIdParam);
+//			Long tenantId = getTenantId(tenantIdParam);
+//			initializeUserContext(tenantIdParam, userTenant);
+//			List<Dashboard> dsb_list = manager.getOwnDashboardsByNamePattern(namePattern,tenantId);
+//			if(dsb_list.isEmpty()){
+//				LOGGER.info("No Dashboard is deleted.");
+//				throw new DashboardNotFoundException();
+//			}
+//			for(Dashboard dsb : dsb_list){
+//				BigInteger dashboardId = dsb.getDashboardId();
+//				manager.deleteDashboard(dashboardId, tenantId);
+//				deletedDSB.add(dsb);
+//				LOGGER.info("TenantID : {}, Owner : {} deletes the {} dashboard, which ID is {} dashboardId at {} successfully." ,tenantId, dsb.getOwner(), dsb.getName(), DateUtil.getGatewayTime());
+//			}
+//			return Response.ok(getJsonUtil().toJson(dsb_list)).build();
+//		}
+//		catch (DashboardNotFoundException e) {
+//			LOGGER.error(e);
+//			return buildErrorResponse(new ErrorEntity(e));
+//		}
+//		catch (DashboardException e) {
+//			LOGGER.error(e.getLocalizedMessage(), e);
+//			return Response.status(Status.BAD_REQUEST).entity(deletedDSB).build();
+//		}
+//		catch (BasicServiceMalfunctionException e) {
+//			LOGGER.error(e.getLocalizedMessage(), e);
+//			return Response.status(Status.BAD_REQUEST).entity(deletedDSB).build();
+//		}
+//		finally {
+//			LOGGER.info("{} are deleted", deletedDSB);
+//			clearUserContext();
+//		}
+//	}
+
+
+	/* delete dashboard by name and description precisely, i.e. delete the dashboard that has the exaclty the given name and the description
+	* i.e.  given "ab" and "1", delete dashboard whose name is "ab" while its description is "1"
+	* will not delete system dashboards
+	* */
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response deleteDashboardByNameAndDesc(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+												 @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+												 @DefaultValue("")@QueryParam("name") String name,
+												  @DefaultValue("")@QueryParam("desc") String desc)
+	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/");
+		DashboardManager manager = DashboardManager.getInstance();
+		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [DELETE] /v1/dashboards/ database is down");
+				throw new DatabaseDependencyUnavailableException();
+			}
+			logkeyHeaders("deleteDashboardByNameAndDesc()", userTenant, tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+			Dashboard dsb = manager.getDashboardByNameAndDescriptionAndOwner(name,desc,tenantId);
+			if(dsb == null){
+				throw new DashboardNotFoundException();
+			}
+			if (dsb != null && dsb.getIsSystem() != null && dsb.getIsSystem()) {
+				LOGGER.warn("Oracle's dashboard is not supported to be deleted.");
+				throw new DeleteSystemDashboardException();
+			}
+			BigInteger dashboardId = dsb.getDashboardId();
+			manager.deleteDashboard(dashboardId, tenantId);
+
+			return Response.ok(getJsonUtil().toJson(dsb)).build();
+		}
+		catch (DashboardNotFoundException e) {
+			LOGGER.error(e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DeleteSystemDashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
+		}
 	}
 
 	@DELETE
@@ -494,6 +608,47 @@ public class DashboardAPI extends APIBase
 		}
 	}
 
+
+	@GET
+	@Path("query")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public Response queryDashboardsByName(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+									   @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+									   @DefaultValue("") @QueryParam("name") String name)
+	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/query?name={}", name);
+		DashboardManager dm = DashboardManager.getInstance();
+		try {
+			if (!DependencyStatus.getInstance().isDatabaseUp())  {
+				LOGGER.error("Error to call [GET] /v1/dashboards/query?name={}: database is down", name);
+				throw new DatabaseDependencyUnavailableException();
+			}
+			logkeyHeaders("queryDashboardsByName()", userTenant, tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+			List<Dashboard> dbList = dm.getDashboardsByName(name,tenantId);
+			if(dbList == null)
+				throw new DashboardNotFoundException();
+			return Response.ok(getJsonUtil().toJson(dbList)).build();
+		}
+		catch(DashboardNotFoundException e){
+			//suppress error information in log file
+			LOGGER.warn("Specific dashboard not found for name {}", name);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (DashboardException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			LOGGER.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
+		}
+	}
+
 	@GET
 	@Path("{id: [1-9][0-9]*}")
 	//@Produces(MediaType.APPLICATION_JSON)
@@ -553,6 +708,79 @@ public class DashboardAPI extends APIBase
 			final DashboardManager dm = DashboardManager.getInstance();
 			StringBuilder sb=new StringBuilder();
 			ExecutorService pool = ParallelThreadPool.getThreadPool();
+
+
+			//retrieve favorite dashboard
+			Future<PaginatedDashboards> futureFavDashboard = pool.submit(new Callable<PaginatedDashboards>() {
+				@Override
+				public PaginatedDashboards call() throws Exception {
+					try{
+						long start = System.currentTimeMillis();
+						boolean FederationFeatureShowInUiPref = false;
+						LOGGER.info("Parallel request to get favorite dashboards...");
+						initializeUserContext(tenantIdParam, userTenant);
+						//first retrieve Preference data 'uifwk.hm.federation.show'
+						Long internalTenantId = getTenantId(tenantIdParam);
+						UserContext.setCurrentUser(curUser);
+						List<Preference> prefs = FeatureShowPreferences.getFeatureShowPreferences(internalTenantId);
+						if (prefs != null) {
+							for (Preference pref : prefs) {
+//								prefs.add(new PreferenceEntity(pref));
+								//check uifwk.hm.federation.show value
+								if("uifwk.hm.federation.show".equals(pref.getKey()) && "true".equalsIgnoreCase(pref.getValue())){
+									LOGGER.info("Preference entry 'uifwk.hm.federation.show' is found, value is {}", pref.getValue());
+									FederationFeatureShowInUiPref = true;
+								}
+							}
+						}
+						long endPrefs = System.currentTimeMillis();
+						LOGGER.info("Time to get features preferences: {}ms. Retrieved data is: {}", (endPrefs - start), prefs);
+						String filterString = "favorites";
+						//federation dashboards doesn't support favorite, so set federationMode=false
+						boolean federationMode = false;
+						DashboardManager manager = DashboardManager.getInstance();
+						DashboardsFilter filter = new DashboardsFilter();
+						filter.initializeFilters(filterString);
+						Long tenantId = getTenantId(tenantIdParam);
+						LOGGER.info("FederationFeatureShowInUiPref value is {}", FederationFeatureShowInUiPref);
+						PaginatedDashboards pd = manager.listDashboards(null, 0, 120, tenantId, true, "default", filter, federationMode, FederationFeatureShowInUiPref);
+						if (pd != null && pd.getDashboards() != null) {
+							for (Dashboard d : pd.getDashboards()) {
+								new DashboardAPI().updateDashboardAllHref(d, tenantIdParam);
+							}
+						}
+						LOGGER.info("Retrieved get favorite dashboard is {}", JsonUtil.buildNormalMapper().toJson(pd));
+
+						long end = System.currentTimeMillis();
+						LOGGER.info("Time to get favorite dashboard took: {}ms", (end - start));
+						return pd;
+					}catch(Exception e){
+						LOGGER.error("Error occurred when get favorite dashboard using parallel request!", e);
+						throw e;
+					}
+				}
+			});
+
+			//retrieve base vanity urls
+			Future<Map<String, String>> futureBaseVanityUrls = pool.submit(new Callable<Map<String, String>>() {
+				@Override
+				public Map<String, String> call() throws Exception {
+					try{
+						long start = System.currentTimeMillis();
+						LOGGER.info("Parallel request to get user grants...");
+						Map<String, String> baseVanityUrls = RegistryLookupUtil.getVanityBaseURLs(tenantIdParam);
+						LOGGER.info("Retrieved base Vanity Urls are {}", baseVanityUrls);
+						Map<String, String> copyBaseVanityUrls = new HashMap<>();
+						RegistryLookupAPI.handleBaseVanityUrls(tenantIdParam, baseVanityUrls, copyBaseVanityUrls);
+						long end = System.currentTimeMillis();
+						LOGGER.info("Time to get base vanity urls took: {}ms, result is {}", (end - start), copyBaseVanityUrls);
+						return copyBaseVanityUrls;
+					}catch(Exception e){
+						LOGGER.error("Error occurred when get base vanity urls using parallel request!", e);
+						throw e;
+					}
+				}
+			});
 
 			//retrieve user info
 			List<String> userInfo = null;
@@ -790,6 +1018,38 @@ public class DashboardAPI extends APIBase
 				LOGGER.error(e);
 			}
 
+			Map<String, String> baseVanityUrls = null;
+			try{
+				if(futureBaseVanityUrls != null){
+					baseVanityUrls = futureBaseVanityUrls.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					LOGGER.debug("baseVanityUrls {}", baseVanityUrls);
+				}
+			}catch (InterruptedException e) {
+				LOGGER.error(e);
+			} catch (ExecutionException e) {
+				LOGGER.error(e.getCause() == null ? e : e.getCause());
+			}catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureBaseVanityUrls.cancel(true);
+				LOGGER.error(e);
+			}
+
+			PaginatedDashboards pd = null;
+			try{
+				if(futureFavDashboard != null){
+					pd = futureFavDashboard.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					LOGGER.debug("Favorite dashboard is  {}", JsonUtil.buildNormalMapper().toJson(pd));
+				}
+			}catch (InterruptedException e) {
+				LOGGER.error(e);
+			} catch (ExecutionException e) {
+				LOGGER.error(e.getCause() == null ? e : e.getCause());
+			}catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureFavDashboard.cancel(true);
+				LOGGER.error(e);
+			}
+
 			sb.append("if(!window._uifwk){window._uifwk={};}if(!window._uifwk.cachedData){window._uifwk.cachedData={};}");
 			if (userInfo != null || userGrants != null) {
 				String userInfoRes = JsonUtil.buildNormalMapper().toJson(new UserInfoEntity(userInfo, userGrants));
@@ -838,6 +1098,18 @@ public class DashboardAPI extends APIBase
 			if (prefs != null) {
 				sb.append("window._uifwk.cachedData.preferences=");
 				sb.append(JsonUtil.buildNormalMapper().toJson(prefs));
+				sb.append(";");
+			}
+
+			if(baseVanityUrls != null){
+				sb.append("window._uifwk.cachedData.baseVanityUrls=");
+				sb.append(JsonUtil.buildNormalMapper().toJson(baseVanityUrls));
+				sb.append(";");
+			}
+
+			if(pd != null){
+				sb.append("window._uifwk.cachedData.favDashboards=");
+				sb.append(JsonUtil.buildNonNullMapper().toJson(pd));
 				sb.append(";");
 			}
 
@@ -1502,7 +1774,7 @@ public class DashboardAPI extends APIBase
 	/*
 	 * Updates the specified dashboard by generating all href fields
 	 */
-	private Dashboard updateDashboardAllHref(Dashboard dbd, String tenantName)
+	protected Dashboard updateDashboardAllHref(Dashboard dbd, String tenantName)
 	{
 		updateDashboardHref(dbd, tenantName);
 		updateDashboardScreenshotHref(dbd, tenantName);

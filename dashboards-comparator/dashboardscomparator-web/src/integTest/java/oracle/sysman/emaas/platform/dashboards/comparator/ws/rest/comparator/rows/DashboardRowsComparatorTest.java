@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -24,12 +25,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import mockit.Deencapsulation;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.comparator.webutils.util.RestClientProxy;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.AbstractComparator;
 import oracle.sysman.emaas.platform.dashboards.comparator.ws.rest.comparator.rows.entities.DashboardRowEntity;

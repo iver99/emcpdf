@@ -22,7 +22,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
-import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
@@ -58,24 +58,7 @@ public class RegistryLookupAPI extends APIBase
 			Map<String, String> baseVanityUrls = RegistryLookupUtil.getVanityBaseURLs(tenantIdParam);
 //			EMCPDF-4115 modify cache content under multi-thread env
 			Map<String, String> copyBaseVanityUrls = new HashMap<>();
-			if (baseVanityUrls != null) {
-				//Remove tenant name from url if it's inserted already
-				for (Map.Entry<String, String> entry : baseVanityUrls.entrySet()) {
-					String url = entry.getValue();//https://emaastesttenant1.apm.management.omclrg.oraclecorp.com
-					if (url != null && url.indexOf("://") != -1) {
-						String[] splittedUrl = url.split("://");
-						if (splittedUrl.length == 2 && splittedUrl[1].startsWith(tenantIdParam + ".")) {
-							StringBuilder sb = new StringBuilder();
-							sb.append(splittedUrl[0]);
-							sb.append("://");
-							sb.append(splittedUrl[1].substring(tenantIdParam.length() + 1));
-							url = sb.toString();
-						}
-
-					}
-					copyBaseVanityUrls.put(entry.getKey(), url);
-				}
-			}
+			handleBaseVanityUrls(tenantIdParam, baseVanityUrls, copyBaseVanityUrls);
 
 			if (!copyBaseVanityUrls.isEmpty()) {
 				return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(copyBaseVanityUrls)).build();
@@ -92,6 +75,27 @@ public class RegistryLookupAPI extends APIBase
 					"UNKNOWN_ERROR", e.getLocalizedMessage()));
 			return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
 		}
+	}
+
+	protected static void handleBaseVanityUrls(String tenantIdParam, Map<String, String> baseVanityUrls, Map<String, String> copyBaseVanityUrls) {
+		if (baseVanityUrls != null) {
+            //Remove tenant name from url if it's inserted already
+            for (Map.Entry<String, String> entry : baseVanityUrls.entrySet()) {
+                String url = entry.getValue();//https://emaastesttenant1.apm.management.omclrg.oraclecorp.com
+                if (url != null && url.indexOf("://") != -1) {
+                    String[] splittedUrl = url.split("://");
+                    if (splittedUrl.length == 2 && splittedUrl[1].startsWith(tenantIdParam + ".")) {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(splittedUrl[0]);
+                        sb.append("://");
+                        sb.append(splittedUrl[1].substring(tenantIdParam.length() + 1));
+                        url = sb.toString();
+                    }
+
+                }
+                copyBaseVanityUrls.put(entry.getKey(), url);
+            }
+        }
 	}
 
 	@Path("/lookup/endpoint")

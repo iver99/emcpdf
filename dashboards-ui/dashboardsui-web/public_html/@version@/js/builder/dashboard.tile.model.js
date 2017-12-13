@@ -42,7 +42,6 @@ define(['knockout',
 
             var self = this;
             $b.registerObject(self, 'DashboardTilesViewModel');
-            self.scrollbarWidth = uiutil.getScrollbarWidth();
             self.isUnderSet = ko.unwrap(dashboardInst.type) === "SET" ? true : false;
             self.isRunningInFederationMode = Builder.isRunningInFederationMode();
 
@@ -171,9 +170,12 @@ define(['knockout',
             };
 
             self.onBuilderResize = function(width, height, leftWidth, topHeight) {
-                widgetAreaWidth = Math.min(widgetAreaContainer.width(), $b.findEl(".tiles-col-container").width()-25);
+                var scrollbarWidth = uiutil.hasVerticalScrollBar('.tiles-col-container')?uiutil.getScrollbarWidth():0;
+                widgetAreaWidth = Math.min(widgetAreaContainer.width(), $b.findEl(".tiles-col-container").width()-10-scrollbarWidth);
                 window.DEV_MODE && console.debug('widget area width is ' + widgetAreaWidth);
-                self.show();
+                if(widgetAreaWidth>0){
+                    self.show();
+                }  
             };
 
             self.initTileKoRightBtnsResizeHdls = ko.observable(false);
@@ -416,6 +418,7 @@ define(['knockout',
                 }
                 var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd(), self.timeSelectorModel.viewTimePeriod()), self.targets, null,tChange, self.dashboard.enableTimeRange(), self.dashboard.enableEntityFilter());
                 Builder.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent);
+                $b.triggerBuilderResizeEvent('resize builder after tile change to reclaculate position of right panel');
             };
 
             self.refreshThisWidget = function(tile) {
@@ -528,6 +531,7 @@ define(['knockout',
                         $(this).css('cursor', 'default');
                         $('#globalBody').removeClass('none-user-select');       
                         self.tilesView.enableDraggable();                 
+                        $b.triggerBuilderResizeEvent('resize builder after tile change to reclaculate position of right panel');
                     });
                 }
             };

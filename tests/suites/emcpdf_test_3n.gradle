@@ -124,17 +124,6 @@ omcCloudSetup {
     environment "OMR_REPOS_VERSION", "PS3"
 }
 
-
-
-def testTenants_v3 = [:]
-testTenants_v3["df_omcse"]= [ "OMCSE" : [ "Standard"] ]
-testTenants_v3["df_omcee"]= [ "OMCEE" : [ "Enterprise"] ]
-testTenants_v3["df_omclog"]= [ "OMCLOG" : [ "Standard"] ]
-testTenants_v3["df_secse"]= [ "SECSE" : [ "Standard"] ]
-testTenants_v3["df_secsma"]= [ "SECSMA" : [ "Standard"] ]
-
-task onboardAllTenants(dependsOn:[omcOnboardTenants(testTenants_v3)]){
-}
 task suitePricingV4Tests(type: EMTest , overwrite: true,dependsOn:omcSetup){
 include "oracle/sysman/emaas/platform/dashboards/test/ui/util/OnboardV4Tenant.class"
 
@@ -161,8 +150,6 @@ useWebdriver = true
 useRestAssured = true
 }
 
-
-
 //Task added from "emcpdf_qa_test_3n"
 task QATest(type:EMTest,dependsOn:[omcSetup,suitePricingV4Tests]) {
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':'none') {
@@ -185,7 +172,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n','parallel':
 	}
 	test('name': 'DashboardRestAPITest_offboardTenant', 'preserve-order':'true'){
 	    classes([:]) {
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.offboard.offboardTenant')//this class file must be run at last
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.offboard.OffboardTenant')//this class file must be run at last
 	    }
 	}
 	}
@@ -214,6 +201,7 @@ task QATest1(type:EMTest,dependsOn:[omcSetup, onboardNewTenant]){
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_CompositeMenu.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_RegisterServiceMenu.class"
 	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/HamburgerMenu_ShowCurrentMenu.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestMessageBanner.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FixDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_FlexibleDate.class"
 	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestTimePicker_RecentUseOption.class"

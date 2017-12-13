@@ -10,6 +10,8 @@
 	    <Property name="startupShutdownPattern">[%d{DEFAULT}{UTC}] [%p] [%t] [EMAAS] [Dashboard-API] %m%n</Property>
         <Property name="interactionLog">dashboardsApiService_interaction.log</Property>
 	    <Property name="interactionPattern">[%d{DEFAULT}{UTC}] [%p] [%t] T[%X{tenantId}] [EMSAAS] [%X{serviceInvoked}] [%X{direction}] %m%n</Property>
+		<Property name="featureLog">dashboardsApiService_feature.log</Property>
+		<Property name="featureLogPattern">[%d{DEFAULT}{UTC}] [%p] [%t] [EMSAAS] [Dashboard-API] [%c{36}] T[%X{tenantId}] %m%n</Property>
     </Properties>
 	<Appenders>
 		<Routing name="MAIN_LOG">
@@ -83,7 +85,7 @@
     		<AppenderRef ref="STARTUP_SHUTDOWN_LOG"/>
     	</Async>
 		<RollingFile name="INTERACTION_LOG" 
-			   		 filename="${dir}/${interactionLog}" 
+			   		 filename="${dir}/${interactionLog}"
 					 filePattern="${dir}/${interactionLog}-%i.log">
 			<PatternLayout pattern="${interactionPattern}"/>
 			<Policies>
@@ -94,6 +96,19 @@
 		<Async name="ASYNC_INTERACTION_LOG">
     		<AppenderRef ref="INTERACTION_LOG"/>
     	</Async>
+		<!--feature log config-->
+		<RollingFile name="FEATURE_LOG"
+					 filename="${dir}/${featureLog}"
+					 filePattern="${dir}/${featureLog}-%i.log">
+			<PatternLayout pattern="${featureLogPattern}"/>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="50 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="2" />
+		</RollingFile>
+		<Async name="ASYNC_FEATURE_LOG">
+			<AppenderRef ref="FEATURE_LOG"/>
+		</Async>
 	</Appenders>
 	<Loggers>
 		<Logger name="oracle.sysman.emaas.platform.dashboards.interaction.log" level="INFO">
@@ -101,6 +116,9 @@
 		</Logger>
 		<Logger name="oracle.sysman.emaas.platform.dashboards.webutils" level="INFO">
     		<AppenderRef ref="ASYNC_STARTUP_SHUTDOWN_LOG"/>
+		</Logger>
+		<Logger name="oracle.sysman.emaas.platform.dashboards.feature.log" level="INFO">
+			<AppenderRef ref="ASYNC_FEATURE_LOG"/>
 		</Logger>
 		<Logger name="oracle.sysman.emaas.platform.dashboards" level="INFO"/>
 		<Logger name="oracle.sysman.emaas.platform" level="INFO"/>

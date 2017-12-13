@@ -1296,4 +1296,51 @@ public class DashBoardUtils
 		webdriver.waitForServer();
 		webdriver.getAlert().accept();
 	}
+
+	public static Boolean isDashboardShared(WebDriver driver)
+	{
+		driver.getLogger().info("DashboardUtils.isDashboardShared started");
+		driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSMENULOCATOR);
+		WaitUtil.waitForPageFullyLoaded(driver);
+
+		int index = getSelectedDashboardEl(driver);
+		driver.click("xpath=(" + DashBoardPageId_190.BUILDEROPTIONSMENUXPATH +")[" + index +"]");
+
+		driver.waitForElementPresent("css=" + DashBoardPageId_190.BUILDEROPTIONSEDITLOCATORCSS);
+		driver.click("css=" + DashBoardPageId_190.BUILDEROPTIONSEDITLOCATORCSS);
+
+		//click Right panel->Share settings
+		if (driver.isElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWEREDITSEARCHCOLLAPSEDCSS)) {
+			driver.waitForElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWEREDITSINGLEDBSHARECSS);
+			driver.click("css=" + DashBoardPageId_190.RIGHTDRAWEREDITSINGLEDBSHARECSS);
+		}
+		else if (driver.isElementPresent("css=" + DashBoardPageId_190.RIGHTDRAWEREDITSEARCHEXPANDCSS)) {
+			driver.getLogger().info("Share Settings has been expanded");
+			driver.takeScreenShot();
+			driver.savePageToFile();
+		}
+
+		boolean shareFlagElem = driver.isDisplayed("css=" + DashBoardPageId_190.RIGHTDRAWEREDITSINGLEDBTOSHARESELECTEDCSS);
+		if (shareFlagElem) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	private static int getSelectedDashboardEl(WebDriver driver)
+	{
+		int dashboardContainersCount = driver.getElementCount("xpath=" + DashBoardPageId_190.DASHBOARDSETCONTAINERXPATH);
+		for(int i=1; i<=dashboardContainersCount; i++) {
+			if(driver.isDisplayed("xpath=(" + DashBoardPageId_190.DASHBOARDSETCONTAINERXPATH +")[" + i +"]")) {
+				driver.getLogger().info(
+						"[DashboardBuilderUtil] triggered getSelectedDashboardEl and get the dashboard successfully!");
+				return i;
+			}
+		}
+
+		driver.getLogger().info("[DashboardBuilderUtil] triggered getSelectedDashboardEl and fail to find visible dashboard!");
+		return 0;
+	}
 }

@@ -6,8 +6,14 @@ define(['jquery'], function ($) {
         $outer.remove();
         return (100 - widthWithScroll);
     }
+    
+    function hasVerticalScrollBar(selector){    //judge whether a visible element has scroll bar
+        var elm = $(selector+':visible');
+        return (elm.css('overflow-y') === 'scroll' || elm.prop('scrollHeight') > elm.prop('clientHeight'));
+    }
 
     return {
-        getScrollbarWidth: getScrollbarWidth
+        getScrollbarWidth: getScrollbarWidth,
+        hasVerticalScrollBar: hasVerticalScrollBar
     };
 });

@@ -735,8 +735,14 @@ define(['knockout',
                         $(".dashboard-content-main:hidden").each(function (index, currentValue) {
                             $(currentValue).addClass("no-print");
                         });
+                        $(".head-bar-container:hidden").each(function (index, currentValue) {
+                            $(currentValue).addClass("no-print");
+                        });
                         window.print();
                         $(".dashboard-content-main").each(function (index, currentValue) {
+                            $(currentValue).removeClass("no-print");
+                        });
+                        $(".head-bar-container").each(function (index, currentValue) {
                             $(currentValue).removeClass("no-print");
                         });
                         break;

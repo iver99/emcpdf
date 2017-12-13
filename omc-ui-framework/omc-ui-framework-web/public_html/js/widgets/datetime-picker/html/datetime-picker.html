@@ -2,7 +2,7 @@
             <span class="oj-select-choice"  style="width: auto; display: inline-block; cursor: pointer;" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime">
                 <div  class="info-badge" style="position:absolute; height:16px;width:16px;vertical-align:top;margin:8px;background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -46px;" data-bind="style: {display: showBadge()?'inline':'none'},event: {mouseover: badgeMouseOverHandler, mouseout: badgeMouseOutHandler}"></div>
                 <div data-bind="ojComponent:{component: 'ojPopup',tail: 'simple'}" class="badge-popup-message" style="display: block;padding:0; max-width: 340px;">
-                    <div style="height:16px;width:16px;vertical-align:top;background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -46px;"></div>
+                    <div style="height:16px;width:16px;vertical-align:top;background: url('/emsaasui/uifwk/@version@/images/uifwkSprite.png') no-repeat 0px -46px; display: inline-block;"></div>
                     <div style="margin: 0 0 0 7px; padding: 0; display: inline-block;">
                         <span data-bind="text: badgeMsgTitle" class="badge-message-summary"></span><br>
                         <span class="badge-message-detail" data-bind="text: badgeTimeInfo"></span>
