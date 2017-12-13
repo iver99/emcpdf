@@ -39,8 +39,8 @@ task pre_upgrade (type: EMTest, dependsOn: omcCloudSetup){
         test('name': 'Pre_upg') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard')
+				'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestZDTSyncComparison')
             }
-
        }
    }
 
@@ -59,9 +59,9 @@ task post_upgrade (type: EMTest, dependsOn:[omcCloudUpgrade,onboardNewTenant]){
         test('name': 'post_upg') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DVdashboard.TestDashBoard')
-      
+				'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DVdashboard.TestZDTSyncComparison')
                  }
-        }         
+        }
         test('name': 'DashboardUITest', 'preserve-order':'true') {
             classes([:]) {
         'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard_SimpleCRUD')
