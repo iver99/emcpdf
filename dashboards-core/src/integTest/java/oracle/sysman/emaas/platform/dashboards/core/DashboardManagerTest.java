@@ -677,11 +677,11 @@ public class DashboardManagerTest extends BaseTest
 		dbd3 = dm.saveNewDashboard(dbd3, tenant1);
 		pd = dm.listDashboards(null, null, tenant1, false);
 		long allSize = pd.getTotalResults();
-		Assert.assertEquals(allSize, originSize + 2);
+		Assert.assertEquals(allSize, originSize + 3);
 		// query by key word, case sensitive
 		pd = dm.listDashboards("key", null, null, tenant1, false);
 		long caseSensitiveSize = pd.getTotalResults();
-		Assert.assertEquals(caseSensitiveSize, caseSensitiveOriginSize + 2);
+		Assert.assertEquals(caseSensitiveSize, caseSensitiveOriginSize + 3);
 
 		Dashboard dbd4 = new Dashboard();
 		dbd4.setName("KEY1" + System.currentTimeMillis());
@@ -767,7 +767,7 @@ public class DashboardManagerTest extends BaseTest
 		// query by key word, case in-sensitive
 		pd = dm.listDashboards("key", null, null, tenant1, true);
 		long icSize = pd.getTotalResults();
-		Assert.assertEquals(icSize, 4); // dbd6/dbd9/10/12/13 not in the returned list
+		Assert.assertEquals(icSize, 8); // dbd6/dbd9/10/12/13 not in the returned list
 		for (Dashboard dbd : pd.getDashboards()) {
 			if (dbd.getName().equals(dbd6.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned: owned by others");
@@ -789,16 +789,15 @@ public class DashboardManagerTest extends BaseTest
 
 		pd = dm.listDashboards(null, null, tenant1, true);
 		allSize = pd.getTotalResults();
-		Assert.assertEquals(allSize, originSize + 4);
+		Assert.assertEquals(allSize, originSize + 8);
 
 		// query by page size/offset. ===Need to consider that last accessed one comes first===
 		pd = dm.listDashboards("key", 0, 3, tenant1, true);
-		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd5.getDashboardId());
+		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd11.getDashboardId());
 		// check that tiles are retrieved successfully for single page dashboard
 		//		Assert.assertNotNull(pd.getDashboards().get(0).getTileList().get(0));
-//		Tile dbd11tile1 = pd.getDashboards().get(0).getTileList().get(0);
-//		Assert.assertEquals(dbd11.getTileList().get(0).getTileId(), dbd11tile1.getTileId());
-		Assert.assertNull(pd.getDashboards().get(0).getTileList());
+		Tile dbd11tile1 = pd.getDashboards().get(0).getTileList().get(0);
+		Assert.assertEquals(dbd11.getTileList().get(0).getTileId(), dbd11tile1.getTileId());
 		Assert.assertEquals(3, pd.getDashboards().size());
 		Assert.assertEquals(3, pd.getLimit().intValue());
 		Assert.assertEquals(3, pd.getCount());
