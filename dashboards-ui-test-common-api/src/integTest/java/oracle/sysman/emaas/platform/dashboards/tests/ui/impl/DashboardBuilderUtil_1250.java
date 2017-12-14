@@ -183,6 +183,7 @@ public class DashboardBuilderUtil_1250 extends DashboardBuilderUtil_1230
 		switchTextWidgetToEditMode(driver, index);	
 		toggleHTMLWidget(driver);
 		driver.waitForElementPresent("xpath=" + DashBoardPageId_190.HTMLSOURCECONTENT);
+		
 		driver.clear("xpath=" + DashBoardPageId_190.HTMLSOURCECONTENT);
 		driver.click("xpath=" + DashBoardPageId_190.HTMLSOURCECONTENT);
 		driver.sendKeys("xpath=" + DashBoardPageId_190.HTMLSOURCECONTENT, content);
@@ -196,6 +197,22 @@ public class DashboardBuilderUtil_1250 extends DashboardBuilderUtil_1230
 		editHTMLWidgetSourceContent(driver, 1, content);	
 	}
 	
-	
+	@Override
+	public void editTextWidgetAddContent(WebDriver driver, int index, String content)
+	{
+		driver.getLogger().info("editTextWidgetAddContent started");
+		//find current dashboard
+		switchTextWidgetToEditMode(driver, index);
+		
+		driver.evalJavascript("$('iframe')[0].id='iframe'");
+		driver.selectFrame("iframe");
+		
+		driver.clear("xpath="+"/html/body");
+		driver.click("xpath="+"/html/body");
+		driver.sendKeys("xpath="+"/html/body", content);
+		WaitUtil.waitForPageFullyLoaded(driver);
+		
+		driver.getLogger().info("editTextWidgetAddContent completed");
+	}
 	
 }
