@@ -216,6 +216,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_ZDT_COMPARE_RESULT = NAV_API_BASE + "zdt/compare/result";
 	
 	private static final String NAV_STATIC_OMCSTATUS = NAV_API_BASE + "omcstatus";
+	private static final String NAV_STATIC_DFSTATUS = NAV_API_BASE + "dfstatus";
 	private static final String NAV_WIDGET_NOTIFY = NAV_API_BASE + "widgetnotification";
 	private static final String NAV_SSF_LIFECYCLE = NAV_API_BASE + "ssflifecycle.ntf";
 	private static final String NAV_CACHE = NAV_API_BASE + "cache";
@@ -454,6 +455,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			}
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("static/dashboards.omcstatus").withHref(applicationUrlHttps + NAV_STATIC_OMCSTATUS).withOverrideTypes(overriedTypes));
+			}
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("static/dashboards.dfstatus").withHref(applicationUrlHttp + NAV_STATIC_DFSTATUS));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("static/dashboards.dfstatus").withHref(applicationUrlHttps + NAV_STATIC_DFSTATUS));
 			}
 			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("log/configuration").withHref(applicationUrlHttp + NAV_LOGGING_CONFIG));
