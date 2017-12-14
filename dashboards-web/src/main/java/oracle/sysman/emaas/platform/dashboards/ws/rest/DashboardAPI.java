@@ -870,10 +870,13 @@ public class DashboardAPI extends APIBase
 				}
 			});
 
+			//default db is not down
+            boolean dbDown = Boolean.FALSE;
 			Future<Dashboard> futureDashboard = null;
 			try {
 				if (!DependencyStatus.getInstance().isDatabaseUp()) {
 					LOGGER.error("Error to call [GET] /v1/dashboards/{}/combinedData: database is down", dashboardId);
+                    dbDown = Boolean.TRUE;
 					//throw new DatabaseDependencyUnavailableException(); // incase db is down, just log error and don't query dashboard data then
 				} else {
 					if (futureSubscried != null) {
@@ -1111,6 +1114,13 @@ public class DashboardAPI extends APIBase
 				sb.append("window._uifwk.cachedData.favDashboards=");
 				sb.append(JsonUtil.buildNonNullMapper().toJson(pd));
 				sb.append(";");
+			}
+
+			//Append db status
+			if(dbDown){
+				sb.append("if(!window._dashboard){window._dashboard={};}window._dashboard={\"dbDown\": true};");
+			}else{
+				sb.append("if(!window._dashboard){window._dashboard={};}window._dashboard={\"dbDown\": false};");
 			}
 
 			LOGGER.info("Retrieving combined data cost {}ms", (System.currentTimeMillis() - begin));

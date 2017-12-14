@@ -42,6 +42,7 @@ public class DashboardsApplication extends Application
 		hs.add(TenantSubscriptionsAPIv2.class);
 		hs.add(MetadataRefreshAPI.class);
 		hs.add(InternalToolAPI.class);
+		hs.add(DashboardStatusAPI.class);
 		return hs;
 	}
 }
