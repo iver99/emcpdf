@@ -1594,6 +1594,8 @@ define('uifwk/@version@/js/widgets/brandingbar/brandingbar-impl', [
                 if (self.isTopologyCompRegistered()) {
                     var refreshTopology = true;
                     var omcContext = cxtUtil.getOMCContext();
+                    // Upon single entity in GC, it should only use the first one to know what to display. The other GC filters are only to select.
+                    // Also, the topology API takes an array of meId, not a comma delimited meId string.
                     var entityMeIds = cxtUtil.getEntityMeIds() && cxtUtil.getEntityMeIds()[0] ? cxtUtil.getEntityMeIds()[0] : null;
                     var currentCompositeId = cxtUtil.getCompositeMeId() || entityMeIds;
                     console.log("************currentCompositeId" + currentCompositeId);
