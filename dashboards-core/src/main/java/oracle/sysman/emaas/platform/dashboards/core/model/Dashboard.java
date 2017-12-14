@@ -198,7 +198,7 @@ public class Dashboard
 	public static final Integer DASHBOARD_TYPE_CODE_SET = Integer.valueOf(2);
 
 	public static final EnableTimeRangeState DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = EnableTimeRangeState.TRUE;
-	public static final EnableEntityFilterState DASHBOARD_ENABLE_ENTITY_FILTER_DEFAULT = EnableEntityFilterState.TRUE;
+	public static final EnableEntityFilterState DASHBOARD_ENABLE_ENTITY_FILTER_DEFAULT = EnableEntityFilterState.GC;
 	public static final EnableDescriptionState DASHBOARD_ENABLE_DESCRIPTION_DEFAULT = EnableDescriptionState.FALSE;
 	public static final boolean DASHBOARD_ENABLE_REFRESH_DEFAULT = Boolean.FALSE;
 
