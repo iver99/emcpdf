@@ -14,6 +14,9 @@ public class DashBoardPageId_1240
 	public static final String FILTER_ME = "filterby_me";
 	public static final String FILTER_ORACLE = "filterby_oracle";
 	public static final String FILTER_OTHER = "filterby_share";
+	public static final String FILTER_ITA = "filterby_ita";
+	public static final String FILTER_LA = "filterby_la";
+	public static final String FILTER_SECURITY = "filterby_sec";
 
 	//sort by options
 	public static final String SORT_DEFAULT = "sortby_default";

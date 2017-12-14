@@ -364,7 +364,6 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 
 		//verify all the oob display
 		DashBoardUtils.laOobExist(webd);
-		DashBoardUtils.udeOobExist(webd);
 		DashBoardUtils.orchestrationOobExist(webd);
 		DashBoardUtils.securityOobExist(webd);
 
@@ -372,8 +371,8 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		DashBoardUtils.outDateOob(webd);
 
 		//verify below oob dashboards not displayed in the home page, due to EMCPDF-4327
-		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExist_v2v3(webd);
+		DashBoardUtils.apmOobExist(webd);
+		DashBoardUtils.itaOobExist(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -389,7 +388,6 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 
 		//verify all the oob display
 		DashBoardUtils.laOobExist(webd);
-		DashBoardUtils.udeOobExist(webd);
 		DashBoardUtils.orchestrationOobExist(webd);
 		DashBoardUtils.securityOobExist(webd);
 
@@ -397,8 +395,8 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		DashBoardUtils.outDateOob(webd);
 
 		//verify below oob dashboards not displayed in the home page, due to EMCPDF-4327
-		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExist_v2v3(webd);
+		DashBoardUtils.apmOobExist(webd);
+		DashBoardUtils.itaOobExist(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -462,7 +460,6 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 
 		//verify all the oob display
 		DashBoardUtils.laOobExist(webd);
-		DashBoardUtils.udeOobExist(webd);
 		DashBoardUtils.orchestrationOobExist(webd);
 		DashBoardUtils.securityOobExist(webd);
 
@@ -470,8 +467,8 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		DashBoardUtils.outDateOob(webd);
 
 		//verify below oob dashboards not displayed in the home page, due to EMCPDF-4327
-		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExist_v2v3(webd);
+		DashBoardUtils.apmOobExist(webd);
+		DashBoardUtils.itaOobExist(webd);
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -494,7 +491,6 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 
 		//verify all the oob display
 		DashBoardUtils.laOobExist(webd);
-		DashBoardUtils.udeOobExist(webd);
 		DashBoardUtils.orchestrationOobExist(webd);
 		DashBoardUtils.securityOobExist(webd);
 
@@ -502,8 +498,8 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		DashBoardUtils.outDateOob(webd);
 
 		//verify below oob dashboards not displayed in the home page, due to EMCPDF-4327
-		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExist_v2v3(webd);
+		DashBoardUtils.apmOobExist(webd);
+		DashBoardUtils.itaOobExist(webd);
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
