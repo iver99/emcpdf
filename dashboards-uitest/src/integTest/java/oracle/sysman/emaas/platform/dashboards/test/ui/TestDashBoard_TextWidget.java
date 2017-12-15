@@ -73,7 +73,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 		LoginAndLogout.logoutMethod();
 	}
 	
-//new 1	@Test(alwaysRun = true)
+	@Test(alwaysRun = true)
 	public void testTextWidget()
 	{
 		dbName_textWidget = "Dashboard_textWidget-" + DashBoardUtils.generateTimeStamp();
@@ -120,7 +120,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 
 	}
 	
-		//new 1 @Test(alwaysRun = true)
+		@Test(alwaysRun = true)
 		public void testTextWidget_Image()
 		{
 			dbName_textWidget_image = "Dashboard_textWidgetImage-" + DashBoardUtils.generateTimeStamp();
@@ -164,7 +164,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 			DashboardBuilderUtil.saveDashboard(webd);	
 		}
 
-	 	//new 1 @Test(alwaysRun = true)
+	 	@Test(alwaysRun = true)
 		public void testTextWidget_Link()
 		{
 			dbName_textWidget_link = "Dashboard_textWidgetURL-" + DashBoardUtils.generateTimeStamp();
@@ -253,7 +253,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 			DashboardBuilderUtil.saveDashboard(webd);				
 		}
 		
-		//new @Test(alwaysRun = true)
+		@Test(alwaysRun = true)
 		public void testTextWidget_multiLink()
 		{
 			dbName_textWidget_multiLink = "Dashboard_textWidgetMultiURL-" + DashBoardUtils.generateTimeStamp();
@@ -306,7 +306,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 			DashboardBuilderUtil.saveDashboard(webd);	
 		}
 		
-		//new 1 @Test(alwaysRun = true)
+		@Test(alwaysRun = true)
 		public void testTextWidget_order()
 		{
 			dbName_textWidget_order = "Dashboard_textWidgetOrder-" + DashBoardUtils.generateTimeStamp();
@@ -341,7 +341,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 			DashboardBuilderUtil.saveDashboard(webd);				
 		}
 		
-		//new @Test(alwaysRun = true)
+		@Test(alwaysRun = true)
 		public void testTextWidget_toolbar()
 		{		
 			dbName_textWidget_toolbar = "Dashboard_textWidgetToolbar-" + DashBoardUtils.generateTimeStamp();
