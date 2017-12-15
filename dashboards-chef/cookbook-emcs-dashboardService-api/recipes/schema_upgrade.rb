@@ -26,6 +26,26 @@ end
 
 include_recipe 'cookbook-emcs-lcm-rep-manager-service::lcmrepmgr_framework'
 
+# unbundle the SQL collection
+# to make sure the scripts used is the one matches up with the binary
+bash "unbundle_schema_zip" do
+  code lazy {<<-EOH
+    echo "`date` -- Start to unbundle schema zip" >> #{log_file}
+    echo "--------------------------------------" >> #{log_file}
+    cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}
+    tar xzf #{node["sql_bundle"]}#{node["SAAS_version"]}.tgz
+EOH
+}
+end
+
+cleanup_sql_file = "#{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/sql/1.23.0/emaas_df_delete_unsync_data.sql"
+# Remove compared but unsynchronized row data in ZDT table
+execute "clean_unsync_data" do
+    command lazy {"#{node["dbhome"]}/bin/sqlplus #{node["db_url"]} @#{cleanup_sql_file} >> #{log_file}"}
+    action :run
+    only_if { File.exists?(cleanup_sql_file) }
+end
+
 #Add checks which needs to be done before we call success
 ruby_block "Runtime checks - Post Upgrade" do
   block do

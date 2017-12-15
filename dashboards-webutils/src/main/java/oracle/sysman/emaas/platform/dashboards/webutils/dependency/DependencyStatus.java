@@ -12,8 +12,8 @@ package oracle.sysman.emaas.platform.dashboards.webutils.dependency;
 
 public class DependencyStatus
 {
-	private Boolean databaseUp;
-	private Boolean entityNamingUp;
+	private volatile Boolean databaseUp;
+	private volatile Boolean entityNamingUp;
 	
 	private static final DependencyStatus INSTANCE = new DependencyStatus();
 	
