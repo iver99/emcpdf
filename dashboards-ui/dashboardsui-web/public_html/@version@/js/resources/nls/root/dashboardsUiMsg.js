@@ -324,6 +324,7 @@ define({
       "LANDING_HOME_ITA_SERVER_RESOURCE": "Resource Analytics - Host",
       "LANDING_HOME_ITA_APPLICATION_PERFORMANCE": "Application Performance Analytics",
       "LANDING_HOME_ITA_AVAIL_ANALYTICS": "Availability Analytics",
+      "LANDING_HOME_ITA_XA_ANALYTICS": "Exadata Analytics",
 
       "LANDING_HOME_INFRA_MONITORING": "Infrastructure Monitoring",
       "LANDING_HOME_INFRA_MONITORING_DESC": "Monitor your entire IT infrastructure - on-premise or on the cloud - from one unified platform",
