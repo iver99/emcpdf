@@ -303,7 +303,11 @@ public class TestWelcomePage extends LoginAndLogout
 		WelcomeUtil.visitITA(webd, "default");
 
 		//verify the url of opened page
-		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/welcome.html");
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ita");
+		DashBoardUtils.itaOobExist(webd);
+		DashBoardUtils.outDateOob(webd);
+		DashBoardUtils.laOobNotExist(webd);
+		DashBoardUtils.apmOobNotExist(webd);
 		webd.getLogger().info("Test open ITA in welcome page finished!!!");
 	}
 

@@ -219,10 +219,7 @@ public class HamburgerMenu_BasicTest extends LoginAndLogout
 		WaitUtil.waitForPageFullyLoaded(webd);
 
 		//verify the url of opened page
-		CommonUIUtils.verifyURL_WithPara(webd, "uifwk/testHamburgerMenu.html");
-
-		//verify the current menu
-		Assert.assertTrue("IT Analytics".equals(BrandingBarUtil.getCurrentMenuHeader(webd).trim()));
+		CommonUIUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ita");
 	}
 
 	@Test(alwaysRun = true)
