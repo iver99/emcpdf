@@ -59,7 +59,7 @@ public class HamburgerMenu_RegisterServiceMenu extends LoginAndLogout
 
 		CommonUIUtils.verifyPageContent(webd, "IT Analytics", true);
 
-		verifyRegisterServiceMenu(BrandingBarUtil.ROOT_MENU_ITA, "Sample Admin");
+		verifyRegisterServiceMenu(BrandingBarUtil.ROOT_MENU_ITA, "IT Analytics Admin");
 	}
 
 	@Test
