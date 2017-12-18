@@ -8,6 +8,7 @@ import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId_190;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -79,6 +80,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 		
 		String dbDesc = "Add text widget into dashboard";
 		String content = "This is the dashboard which is used to test the new feature of adding text widget";
+		String sourcecontent="<p>This dashboar<span style='color:#FF0000'>d is int</span><span style='color:#FFA500'>ende</span><span style='color:#FFFF00'>d to pr</span><span style='color:#00FF00'>ovide a</span>n overview of WLS errors in SaaS - Fusion Apps.</p><p>By default th<span style='font-size:18px'>e time picker</span> to the right of this panel is set to one year and accor<strong>dingly all the char</strong>ts in this dashboards are displaying one year stats.<em> <strong>Such time spa</strong></em><strong>n</strong> can be manipulated using the timepicker and the charts will be adjusted automatically.<p><br/><br/><p>Use the links at the top of panel below to navigate to the details of a specific domain<p>'";
 		//String content_Hyperlink = "";
 		
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -94,18 +96,31 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 		
 		DashboardBuilderUtil.addTextWidgetToDashboard(webd);
 		
+		
+		
 		//Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, widgetName), "text widget isn't added into the dashboard successfully");
 		DashboardBuilderUtil.editTextWidgetAddContent(webd, 1, content);
+		webd.switchToMainWindow();
+		
 		
 		DashboardBuilderUtil.saveDashboard(webd);
 		
 		//Verify the content is added successfully
 		webd.getLogger().info("Verify the content is added successfully");
-				
-		Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTCONTENTCSS), content);
+		
+		
+		webd.evalJavascript("$('iframe')[0].id='iframe'");
+		webd.selectFrame("iframe");
+		
+		Assert.assertEquals(webd.getText("xpath="+"/html/body"), content);
+		webd.switchToMainWindow();
+		DashboardBuilderUtil.editHTMLWidgetSourceContent(webd,  sourcecontent);
+		webd.switchToMainWindow();
+		DashboardBuilderUtil.saveDashboard(webd);
+
 	}
 	
-	 @Test(alwaysRun = true)
+		@Test(alwaysRun = true)
 		public void testTextWidget_Image()
 		{
 			dbName_textWidget_image = "Dashboard_textWidgetImage-" + DashBoardUtils.generateTimeStamp();
@@ -132,11 +147,13 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 			DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
 			
 			DashboardBuilderUtil.addImageInTextWidget(webd, 1, url, alternativeText);
+			webd.switchToMainWindow();
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 			
 			DashboardBuilderUtil.addImageInTextWidget(webd, 1, url, null);
+			webd.switchToMainWindow();
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
-
+			
 			List<WebElement> images = webd.getWebDriver().findElements(By.cssSelector(DashBoardPageId.IMAGESCSS));	
 			
 			for (WebElement img : images)
@@ -170,35 +187,69 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 			
 			//Assert.assertTrue(DashboardBuilderUtil.verifyWidget(webd, widgetName), "text widget isn't added into the dashboard successfully");
 			DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTP);
+			webd.switchToMainWindow();
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 			//Verify the content is added successfully
-			webd.getLogger().info("Verify the url is added successfully");	
-			Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTCONTENTCSS), DashBoardPageId.PROTOCOLOPTION_HTTP + url);		
+			webd.getLogger().info("Verify the url is added successfully");
+			DashboardBuilderUtil.switchTextWidgetToEditMode(webd, 1);
 			
+			webd.evalJavascript("$('iframe')[0].id='iframe'");
+			webd.selectFrame("iframe");
+
+			Assert.assertEquals(webd.getText("xpath="+"/html/body"), DashBoardPageId.PROTOCOLOPTION_HTTP + url);		
+			webd.switchToMainWindow();
 			DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTPS);
+			webd.switchToMainWindow();
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 			//Verify the content is added successfully
-			webd.getLogger().info("Verify the url is added successfully");			
-			Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTCONTENTCSS), DashBoardPageId.PROTOCOLOPTION_HTTPS + url);				
 			
+			webd.getLogger().info("Verify the url is added successfully");
+			
+			
+			DashboardBuilderUtil.switchTextWidgetToEditMode(webd, 1);
+			
+			webd.evalJavascript("$('iframe')[0].id='iframe'");
+			webd.selectFrame("iframe");
+
+			Assert.assertEquals(webd.getText("xpath="+"/html/body"), DashBoardPageId.PROTOCOLOPTION_HTTPS + url);				
+			webd.switchToMainWindow();
 			DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_FTP);
+			webd.switchToMainWindow();
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 			//Verify the content is added successfully
 			webd.getLogger().info("Verify the url is added successfully");	
-			Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTCONTENTCSS), DashBoardPageId.PROTOCOLOPTION_FTP + url);		
+			DashboardBuilderUtil.switchTextWidgetToEditMode(webd, 1);
 			
+			webd.evalJavascript("$('iframe')[0].id='iframe'");
+			webd.selectFrame("iframe");
+
+			Assert.assertEquals(webd.getText("xpath="+"/html/body"), DashBoardPageId.PROTOCOLOPTION_FTP + url);		
+			webd.switchToMainWindow();
 			DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_NEWS);
+			webd.switchToMainWindow();
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 			//Verify the content is added successfully
 			webd.getLogger().info("Verify the url is added successfully");				
-			Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTCONTENTCSS), DashBoardPageId.PROTOCOLOPTION_NEWS + url);		
+			DashboardBuilderUtil.switchTextWidgetToEditMode(webd, 1);
 			
+			webd.evalJavascript("$('iframe')[0].id='iframe'");
+			webd.selectFrame("iframe");
+
+			Assert.assertEquals(webd.getText("xpath="+"/html/body"), DashBoardPageId.PROTOCOLOPTION_NEWS + url);		
+			webd.switchToMainWindow();
 			DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_OTHER);
+			webd.switchToMainWindow();
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
-			//Verify the content is added successfully
-			webd.getLogger().info("Verify the url is added successfully");		
-			Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTCONTENTCSS), DashBoardPageId.PROTOCOLOPTION_OTHER + url);		
 			
+			//Verify the content is added successfully
+			webd.getLogger().info("Verify the url is added successfully");
+			DashboardBuilderUtil.switchTextWidgetToEditMode(webd, 1);
+			
+			webd.evalJavascript("$('iframe')[0].id='iframe'");
+			webd.selectFrame("iframe");
+
+			Assert.assertEquals(webd.getText("xpath="+"/html/body"),DashBoardPageId.PROTOCOLOPTION_OTHER + url);		
+			webd.switchToMainWindow();
 			DashboardBuilderUtil.saveDashboard(webd);				
 		}
 		
@@ -224,25 +275,34 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 			DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
 			
 			DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTP);	
+			webd.switchToMainWindow();
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
-			
-			WebElement textContent = webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.TEXTCONTENTCSS));
-		
 			DashboardBuilderUtil.switchTextWidgetToEditMode(webd, 1);
+			
+			webd.evalJavascript("$('iframe')[0].id='iframe'");
+			webd.selectFrame("iframe");
+			WebElement textContent = webd.getWebDriver().findElement(By.xpath("/html/body"));
+		
 
 			webd.getWebDriver().switchTo().activeElement().sendKeys(Keys.ENTER);
 			webd.getWebDriver().switchTo().activeElement().sendKeys(Keys.ARROW_UP);
-			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
-
-			DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTPS);	
+			webd.switchToMainWindow();
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 			
+			DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTPS);	
+			
+			webd.switchToMainWindow();
+			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
+			DashboardBuilderUtil.switchTextWidgetToEditMode(webd, 1);
+			
+			webd.evalJavascript("$('iframe')[0].id='iframe'");
+			webd.selectFrame("iframe");
 			//Verify the content is added successfully
 			webd.getLogger().info("Verify the two urls are added successfully");	
-			Assert.assertEquals(webd.getText(DashBoardPageId.TEXTCONTENT1), DashBoardPageId.PROTOCOLOPTION_HTTPS + url);			
+			Assert.assertEquals(webd.getText("xpath="+"/html/body/a[1]"), DashBoardPageId.PROTOCOLOPTION_HTTPS + url);			
 						
-			Assert.assertEquals(webd.getText(DashBoardPageId.TEXTCONTENT2), DashBoardPageId.PROTOCOLOPTION_HTTP + url);		
-			
+			Assert.assertEquals(webd.getText("xpath="+"/html/body/a[2]"), DashBoardPageId.PROTOCOLOPTION_HTTP + url);		
+			webd.switchToMainWindow();
 			DashboardBuilderUtil.saveDashboard(webd);	
 		}
 		
@@ -270,7 +330,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 			DashboardBuilderUtil.addTextWidgetToDashboard(webd);	
 			
 			DashboardBuilderUtil.editTextWidgetAddContent(webd, 1, "This is a Text Widget");
-			
+			webd.switchToMainWindow();
 			//Verify the Text Widget is ordered in the first place
 			webd.getLogger().info("Verify the Text Widget is order in first place");	
 			List<WebElement> widgets = webd.getWebDriver().findElements(By.cssSelector(DashBoardPageId.TILESLISTCSS)); 
@@ -358,9 +418,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 			webd.getLogger().info("Verify the empty dashboard was saved");
 			DashboardBuilderUtil.verifyDashboard(webd, dbName_textWidget_empty, "", true);
 
-			//verify the text widget
-			webd.getLogger().info("Verify the text widget in the dashboard");
-			Assert.assertEquals(webd.getText("css=" + DashBoardPageId.TEXTWIDGETCONTENTCSS).trim(), "Start typing...");
+	
 		}
 
 	//@Test

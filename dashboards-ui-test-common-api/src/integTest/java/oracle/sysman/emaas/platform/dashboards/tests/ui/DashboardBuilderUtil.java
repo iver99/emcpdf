@@ -101,7 +101,61 @@ public class DashboardBuilderUtil
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		dbu.editTextWidgetAddContent(driver, index, content);
 	}
+	
+	public static void editHTMLWidgetAlign(WebDriver driver, int index, String align)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.editHTMLWidgetAlign(driver, index, align);
+	}
+	public static void editHTMLWidgetAlign(WebDriver driver,  String align)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.editHTMLWidgetAlign(driver, align);
+	}
 
+	public static void editHTMLWidgetFont(WebDriver driver, int index, String fontname)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.editHTMLWidgetFont(driver, index, fontname);
+	}
+	
+	public static void editHTMLWidgetFont(WebDriver driver, String fontname)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.editHTMLWidgetFont(driver, fontname);
+	}
+	
+	public static void editHTMLWidgetFontSize(WebDriver driver, int fontsize)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.editHTMLWidgetFontSize(driver,fontsize);
+	}
+	
+	public static void editHTMLWidgetFontBold(WebDriver driver, int index,Boolean bold)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.editHTMLWidgetFontBold(driver, index,bold);
+	}
+	
+	public static void editHTMLWidgetFontBold(WebDriver driver,Boolean bold)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.editHTMLWidgetFontBold(driver, bold);
+	}
+
+	public static void editHTMLWidgetFontIalic(WebDriver driver, int index,Boolean italic)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.editHTMLWidgetFontBold(driver, index,italic);
+	}
+	
+	public static void editHTMLWidgetFontItalic(WebDriver driver,Boolean bold)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.editHTMLWidgetFontItalic(driver, bold);
+	}
+	
+	
 	public static void addLinkInTextWidget(WebDriver driver, int index, String url, String option)
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
@@ -350,6 +404,12 @@ public class DashboardBuilderUtil
 		return dbu.toggleHome(driver);
 	}
 
+	public static Boolean toggleHome(WebDriver driver, int index)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		return dbu.toggleHome(driver);
+	}
+	
 	public static Boolean toggleHomeDashboardSet(WebDriver driver)
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
@@ -366,6 +426,17 @@ public class DashboardBuilderUtil
 	{
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		return dbu.toggleShareDashboardset(driver);
+	}
+	
+	public static void toggleHTMLWidget(WebDriver driver)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.toggleHTMLWidget(driver);
+	}
+	public static void toggleHTMLWidget(WebDriver driver,int index)
+	{
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.toggleHTMLWidget(driver,index);
 	}
 
 	public static boolean verifyDashboard(WebDriver driver, String dashboardName, String description, boolean showTimeSelector)
@@ -422,7 +493,19 @@ public class DashboardBuilderUtil
 		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
 		return dbu.hasWidgetLink(driver, widgetName, 0);
 	}
+	
+	public static void editHTMLWidgetSourceContent(WebDriver driver, int index,String content)
+	{		
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.editHTMLWidgetSourceContent(driver,index,content);
+	}
 
+	public static void editHTMLWidgetSourceContent(WebDriver driver, String content)
+	{		
+		IDashboardBuilderUtil dbu = new UtilLoader<IDashboardBuilderUtil>().loadUtil(driver, IDashboardBuilderUtil.class);
+		dbu.editHTMLWidgetSourceContent(driver,content);
+	}
+	
 	/**
 	 * @param driver
 	 * @param widgetName

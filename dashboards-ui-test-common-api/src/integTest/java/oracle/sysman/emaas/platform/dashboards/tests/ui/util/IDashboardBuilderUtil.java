@@ -58,6 +58,8 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public Boolean favoriteOption(WebDriver driver);
 
 	public Boolean favoriteOptionDashboardSet(WebDriver driver);
+	
+	public void toggleHTMLWidget(WebDriver driver);
 
 	public void gridView(WebDriver driver);
 
@@ -190,4 +192,70 @@ public interface IDashboardBuilderUtil extends IUiTestCommonAPI
 	public void clickLinkOnWidgetTitle(WebDriver driver, String widgetName, int index);
 	
 	public void clickLinkOnWidgetTitle(WebDriver driver, String widgetName);
+
+	/**
+	 * @param driver
+	 * @param index
+	 * @param align
+	 */
+	public void editHTMLWidgetAlign(WebDriver driver, int index, String align);
+	public void editHTMLWidgetAlign(WebDriver driver, String align);
+
+	/**
+	 * @param driver
+	 * @param index
+	 * @param fontname
+	 */
+	public void editHTMLWidgetFont(WebDriver driver, int index, String fontname);
+
+	/**
+	 * @param driver
+	 * @param fontname
+	 */
+	public void editHTMLWidgetFont(WebDriver driver, String fontname);
+
+	/**
+	 * @param driver
+	 * @param fontsize
+	 */
+	public void editHTMLWidgetFontSize(WebDriver driver, int fontsize);
+
+	/**
+	 * @param driver
+	 * @param index
+	 * @param fontsize
+	 */
+	public void editHTMLWidgetFontSize(WebDriver driver, int index, int fontsize);
+	
+	/**
+	 * @param driver
+	 * @param index
+	 * @param fontsize
+	 */
+	public void editHTMLWidgetFontBold(WebDriver driver, int index, Boolean bold);
+
+	/**
+	 * @param driver
+	 * @param bold
+	 */
+	public void editHTMLWidgetFontBold(WebDriver driver, Boolean bold);
+
+	/**
+	 * @param driver
+	 * @param bold
+	 */
+	public void editHTMLWidgetFontItalic(WebDriver driver, Boolean bold);
+	public void toggleHTMLWidget(WebDriver driver,int index);
+
+	/**
+	 * @param driver
+	 * @param index
+	 * @param content
+	 * @return
+	 */
+	public void editHTMLWidgetSourceContent(WebDriver driver, int index, String content);
+	public void editHTMLWidgetSourceContent(WebDriver driver, String content);
+
+
+	
 }
