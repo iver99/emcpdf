@@ -303,7 +303,11 @@ public class TestWelcomePage extends LoginAndLogout
 		WelcomeUtil.visitITA(webd, "default");
 
 		//verify the url of opened page
-		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/welcome.html");
+		DashBoardUtils.verifyURL_WithPara(webd, "emcpdfui/home.html?filter=ita");
+		DashBoardUtils.itaOobExist(webd);
+		DashBoardUtils.outDateOob(webd);
+		DashBoardUtils.laOobNotExist(webd);
+		DashBoardUtils.apmOobNotExist(webd);
 		webd.getLogger().info("Test open ITA in welcome page finished!!!");
 	}
 
@@ -388,5 +392,20 @@ public class TestWelcomePage extends LoginAndLogout
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "getStarted"));
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "videos"));
 		Assert.assertTrue(WelcomeUtil.isLearnMoreItemExisted(webd, "serviceOfferings"));
+	}
+
+	@Test(alwaysRun = true)
+	public void testOpenITA_ExadataAnalytics()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Exadata Analytics in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "exadataAnalytics");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcitas/xa-analytics-war/html/xa-resource-analytics-planner.html");
+
+		webd.getLogger().info("Test opening ITA: Exadata Analytics in welcome page finished!!!");
 	}
 }

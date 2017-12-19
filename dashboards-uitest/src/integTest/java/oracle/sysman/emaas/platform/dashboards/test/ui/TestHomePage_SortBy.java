@@ -173,9 +173,9 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.waitForDashboardPresent(webd, "Database Operations");
+		DashboardHomeUtil.waitForDashboardPresent(webd, "Performance Analytics: Database");
 		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
-		Assert.assertEquals(names.get(0), "Database Operations");
+		Assert.assertEquals(names.get(0), "Performance Analytics: Database");
 		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(0));
 	}
 
@@ -191,9 +191,9 @@ public class TestHomePage_SortBy extends LoginAndLogout
 
 		//verify the result
 		webd.getLogger().info("Verify the sort result");
-		DashboardHomeUtil.waitForDashboardPresent(webd, "Database Operations");
+		DashboardHomeUtil.waitForDashboardPresent(webd, "Performance Analytics: Database");
 		List<String> names = DashboardHomeUtil.listDashboardNames(webd);
-		Assert.assertEquals(names.get(names.size() - 1), "Database Operations");
+		Assert.assertEquals(names.get(names.size() - 1), "Performance Analytics: Database");
 		webd.getLogger().info("The first dashboard sorted by 'Creation Date Ascending' is " + names.get(names.size() - 1));
 	}
 

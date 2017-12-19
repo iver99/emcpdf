@@ -364,7 +364,6 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 
 		//verify all the oob display
 		DashBoardUtils.laOobExist(webd);
-		DashBoardUtils.udeOobExist(webd);
 		DashBoardUtils.orchestrationOobExist(webd);
 		DashBoardUtils.securityOobExist(webd);
 
@@ -372,8 +371,8 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		DashBoardUtils.outDateOob(webd);
 
 		//verify below oob dashboards not displayed in the home page, due to EMCPDF-4327
-		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExist_v2v3(webd);
+		DashBoardUtils.apmOobExist(webd);
+		DashBoardUtils.itaOobExist(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -389,7 +388,6 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 
 		//verify all the oob display
 		DashBoardUtils.laOobExist(webd);
-		DashBoardUtils.udeOobExist(webd);
 		DashBoardUtils.orchestrationOobExist(webd);
 		DashBoardUtils.securityOobExist(webd);
 
@@ -397,8 +395,8 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		DashBoardUtils.outDateOob(webd);
 
 		//verify below oob dashboards not displayed in the home page, due to EMCPDF-4327
-		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExist_v2v3(webd);
+		DashBoardUtils.apmOobExist(webd);
+		DashBoardUtils.itaOobExist(webd);
 	}
 
 	@Test(alwaysRun = true)
@@ -462,7 +460,6 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 
 		//verify all the oob display
 		DashBoardUtils.laOobExist(webd);
-		DashBoardUtils.udeOobExist(webd);
 		DashBoardUtils.orchestrationOobExist(webd);
 		DashBoardUtils.securityOobExist(webd);
 
@@ -470,8 +467,8 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		DashBoardUtils.outDateOob(webd);
 
 		//verify below oob dashboards not displayed in the home page, due to EMCPDF-4327
-		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExist_v2v3(webd);
+		DashBoardUtils.apmOobExist(webd);
+		DashBoardUtils.itaOobExist(webd);
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
@@ -494,7 +491,6 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 
 		//verify all the oob display
 		DashBoardUtils.laOobExist(webd);
-		DashBoardUtils.udeOobExist(webd);
 		DashBoardUtils.orchestrationOobExist(webd);
 		DashBoardUtils.securityOobExist(webd);
 
@@ -502,10 +498,25 @@ public class TestSuiteLicensing_V4 extends LoginAndLogout
 		DashBoardUtils.outDateOob(webd);
 
 		//verify below oob dashboards not displayed in the home page, due to EMCPDF-4327
-		DashBoardUtils.apmOobNotExist(webd);
-		DashBoardUtils.itaOobNotExist_v2v3(webd);
+		DashBoardUtils.apmOobExist(webd);
+		DashBoardUtils.itaOobExist(webd);
 
 		//reset cloud services checkbox
 		DashboardHomeUtil.resetFilterOptions(webd);
+	}
+
+	@Test(alwaysRun = true)
+	public void testOpenITA_ExadataAnalytics()
+	{
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start to test opening ITA: Exadata Analytics in welcome page...");
+
+		BrandingBarUtil.visitWelcome(webd);
+		WelcomeUtil.visitITA(webd, "exadataAnalytics");
+
+		//verify the url of opened page
+		DashBoardUtils.verifyURL(webd, "emcitas/xa-analytics-war/html/xa-resource-analytics-planner.html");
+
+		webd.getLogger().info("Test opening ITA: Exadata Analytics in welcome page finished!!!");
 	}
 }

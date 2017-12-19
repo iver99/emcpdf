@@ -525,6 +525,17 @@ a:hover {
     color: #333; 
 }
 
+// separator in dashboard home filter options. Similar to jet oj-menu-divider
+div[data-oj-containerid$='mainContentfiltercb'] li.oj-listbox-result-unselectable {
+    margin: 0.083rem;
+    height: 0;
+    font-size: 0;
+    line-height: 0;
+    border-width: 1px 0 0 0;
+    border-color: #c4ced7;
+    border-style: solid;
+}
+
 /*.dbs-main-large-width {
     width: 1545px;
 }*/
