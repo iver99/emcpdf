@@ -156,6 +156,11 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         };
 
     }
+    
+    function getUrlParam(name) {
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(window.location.search);
+        return results === null ? "" : results[1];
+    };
 
     function ViewModel(predata, parentElementId, defaultFilters, dashboardSetItem, isSet) {
 
@@ -195,6 +200,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         self.currentDashboardSetItem=dashboardSetItem;
         self.dashboardInTabs=ko.observable(false);
 
+        var filterSelection;
+        
         if (predata !== null)
         {
             self.filter = predata.getDashboardsFilter({'prefUtil' : self.prefUtil,
@@ -207,12 +214,18 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                     }
                 }
             });
+            
+            if(self.filter.filter) {
+                filterSelection = self.filter.filter;
+            }else {
+                filterSelection = "allnofilter";
+            }
         }
         else
         {
             self.filter = null;
-        }        
-        
+        }
+                                
         if (localStorage.deleteHomeDbd ==='true') {
             dfu.showMessage({
                 type: 'info',
@@ -237,16 +250,48 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
+        self.filterById = self.parentElementId+'filtercb';
+        self.filterBy = ko.observable(filterSelection);
+        
+        self.showITAFilter = ko.observable(false);
+        self.showLAFilter = ko.observable(false);
+        self.showSECFilter = ko.observable(false);
+        for(var i in self.subscription) {
+            if(self.subscription[i].id === "ITAnalytics") {
+                self.showITAFilter(true);
+            }
+            if(self.subscription[i].id === "LogAnalytics") {
+                self.showLAFilter(true);
+            }
+            if(self.subscription[i].id === "SecurityAnalytics") {
+                self.showSECFilter(true);
+            }
+        }
+        
         self.sortById = self.parentElementId+'sortcb';
         self.sortBy = ko.observable(['default']);
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel(parentElementId);
 		var zdtUtil = new zdtUtilModel();
-        self.zdtStatus = ko.observable(false);
+        self.zdtStatus = ko.observable(false); 
+        self.dataBaseDown = ko.observable(false); 
+        self.createBtnTitle = ko.observable(getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT'));
         zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
 //            self.zdtStatus(true);
             self.zdtStatus(isUnderPlannedDowntime);
         });
+        
+        dfu.getDatabaseStatus(function (databaseStatus) {
+            self.dataBaseDown(databaseStatus);
+            self.dataBaseDown() && self.createBtnTitle("");
+        });
+        
+        self.createBtnPopup = function () {
+            if ($('#cbtn').hasClass("oj-disabled")) {
+                var popup = $('#unableCreate');
+                popup.ojPopup('open', '#create-button-wrapper', {'at': 'center bottom', 'my': 'start top'});
+            }
+        };
 
         self.pageSize = ko.observable(120);
 
@@ -527,9 +572,20 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                         'contentType': 'application/json',
 
                         success: function(_model, _resp, _options) {
-                            $( "#cDsbDialog" ).css("cursor", "default");
-                            $( "#cDsbDialog" ).ojDialog( "close" );
-                            self.afterConfirmDashboardCreate(_model, _resp, _options);
+                            if(_resp.errorCode && _resp.errorCode === 10001){
+                                $( "#cDsbDialog" ).css("cursor", "default");
+                                var _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
+                                var _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
+                                _trackObj = new oj.InvalidComponentTracker();
+                                self.tracker(_trackObj);
+                                self.createMessages.push(new oj.Message(_m, _mdetail));
+                                _trackObj.showMessages();
+                                _trackObj.focusOnFirstInvalid();
+                            }else{
+                                $( "#cDsbDialog" ).css("cursor", "default");
+                                $( "#cDsbDialog" ).ojDialog( "close" );
+                                self.afterConfirmDashboardCreate(_model, _resp, _options);
+                            }
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             $( "#cDsbDialog" ).css("cursor", "default");
@@ -605,7 +661,35 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                 self.sortBy([_option]);
             }
         };
-
+        
+        self.handleFilterByChanged = function(context, valueParam) {
+            var _value = valueParam.value;
+            if(valueParam.option === "value") {
+                var filterByValue = _value[0];
+                if(filterByValue === "allnofilter") {
+                    self.filter.serviceFilter([]);
+                    self.filter.creatorFilter([]);
+                    self.filter.favoritesFilter([]);
+                }else if(filterByValue === "favorites") {
+                    self.filter.serviceFilter([]);
+                    self.filter.creatorFilter([]);
+                    self.filter.favoritesFilter(["favorites"]);
+                }else if($.inArray(filterByValue, ["ita", "la", "sec"])) {
+                    self.filter.serviceFilter([filterByValue]);
+                    self.filter.creatorFilter([]);
+                    self.filter.favoritesFilter([]);
+                }else {
+                    self.filter.serviceFilter([]);
+                    self.filter.creatorFilter([filterByValue]);
+                    self.filter.favoritesFilter([]);
+                }
+                if(!self.zdtStatus()){
+                    self.filter.saveFilter();
+                }
+                self.filter.handleFilterChange({filterType: 'serviceFilter', newValue: filterByValue});
+            }
+        };
+        
         self.handleSortByChanged = function (context, valueParam) {
             var _preValue = valueParam.previousValue, _value = valueParam.value, _ts = self.dashboardsTS();
             if ( valueParam.option === "value" )
@@ -786,12 +870,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         var self = this;
         self.preferences = undefined;
         self.sApplications = undefined;
-
-        var getUrlParam = function(name) {
-            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(window.location.search);
-            return results === null ? "" : results[1];
-        };
-
+        
         self.getDashboardsFilter = function (options) {
             var _options = options || {}, _filterPref = self.getDashboardsFilterPref(), _filterUrlParam=getUrlParam("filter");
             if (_filterUrlParam && _filterUrlParam.trim().length > 0)
@@ -802,6 +881,17 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
             else
             {
                 _options['saveFilterPref'] = true;
+                //Use saved filters if it is only 1 filter
+                var _serviceFilters = ["apm", "ocs"]; //Do not support service filter for APM and OCS
+                if(_filterPref) {
+                    if(_filterPref.split(",").length > 1) {
+                        _filterPref = null;
+                    }else if(_filterPref.split(",").length === 1) {
+                        if(_serviceFilters.indexOf(_filterPref) !== -1) {
+                            _filterPref = null;
+                        }
+                    }
+                }
             }
             if (_filterPref && _filterPref.trim().slice(0, 1) === '{')
             {

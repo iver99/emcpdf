@@ -798,7 +798,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     return ctxUtil.getTranslatedTimePeriod(tpId);
                 };
                 
-                self.badgeMsgTitle(msgUtil.formatMessage(nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE, self.getTranslatedTimePeriod(self.badgeTimePeriod())));
+                if(self.getParam(params.showBadge)){
+                    self.badgeMsgTitle(msgUtil.formatMessage(nls.DATETIME_PICKER_BADGE_MESSAGE_TITLE, self.getTranslatedTimePeriod(self.badgeTimePeriod())));
+                }
 
                 if(!ko.components.isRegistered("time-filter")) {
                     ko.components.register("time-filter", {

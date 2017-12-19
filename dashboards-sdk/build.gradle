@@ -36,7 +36,7 @@ dependencies {
     compile getProjectArtifact('registry-lookup-client')
     compile getProjectArtifact('security-client')
     compile getProjectArtifact('servlet-api')
-    
+    compile getProjectArtifact('jersey-json')
     testCompile getProjectArtifact('jmockit')
 }
 sourceSets {

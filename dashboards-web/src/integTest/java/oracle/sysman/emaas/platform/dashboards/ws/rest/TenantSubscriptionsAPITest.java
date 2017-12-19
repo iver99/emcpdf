@@ -6,9 +6,7 @@ import java.util.List;
 
 import mockit.*;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.resourcemgmt.response.Response;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
-import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.subappedition.TenantEditionEntity;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil.VersionedLink;
@@ -93,7 +91,7 @@ public class TenantSubscriptionsAPITest {
     }
 
     @Test
-    public void testGetSubscribedApplications4(@Mocked final ServiceEntity serviceEntity, @Mocked final TenantDetailEntity tenantDetailEntity, @Mocked final JsonUtil jsonUtil, @Mocked final RestClient restClient, @Mocked final VersionedLink link, @Mocked final RegistryLookupUtil registryLookupUtil) throws IOException {
+    public void testGetSubscribedApplications4(@Mocked final ServiceEntity serviceEntity, @Mocked final TenantDetailEntity tenantDetailEntity, @Mocked final RestClient restClient, @Mocked final VersionedLink link, @Mocked final RegistryLookupUtil registryLookupUtil) throws IOException {
         new MockUp<APIBase>() {
             @Mock
             public void initializeUserContext(String opcTenantId, String userTenant) throws CommonSecurityException {

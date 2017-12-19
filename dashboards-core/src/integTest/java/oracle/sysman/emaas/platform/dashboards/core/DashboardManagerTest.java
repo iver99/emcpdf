@@ -734,7 +734,6 @@ public class DashboardManagerTest extends BaseTest
 		dbd11.setIsSystem(true);
 		dbd11.setAppicationType(DashboardApplicationType.APM);
 		dbd11.setType(Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
-		dbd11.setType(Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
 		Tile tile1 = createTileForDashboard(dbd11);
 		tile1.setRow(0);
 		tile1.setColumn(0);
@@ -806,16 +805,17 @@ public class DashboardManagerTest extends BaseTest
 		Assert.assertEquals(allSize, pd.getTotalResults() + originSize);
 
 		// query by page size/offset
-		DashboardsFilter filter = new DashboardsFilter();
-		filter.setIncludedTypesFromString(Dashboard.DASHBOARD_TYPE_NORMAL + "," + Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
-		filter.setIncludedOwnersFromString("Oracle,Others");
-		pd = dm.listDashboards("key", 2, 2, tenant1, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
-		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd7.getDashboardId());
-		Assert.assertEquals(2, pd.getDashboards().size());
-		Assert.assertEquals(2, pd.getLimit().intValue());
-		Assert.assertEquals(2, pd.getCount());
-		Assert.assertEquals(2, pd.getOffset());
-		Assert.assertEquals(allSize, pd.getTotalResults() + originSize);
+		//After service filter is removed, we don't support multi filters any more
+//		DashboardsFilter filter = new DashboardsFilter();
+//		filter.setIncludedTypesFromString(Dashboard.DASHBOARD_TYPE_NORMAL + "," + Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
+//		filter.setIncludedOwnersFromString("Oracle,Others");
+//		pd = dm.listDashboards("key", 2, 2, tenant1, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
+//		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd7.getDashboardId());
+//		Assert.assertEquals(2, pd.getDashboards().size());
+//		Assert.assertEquals(2, pd.getLimit().intValue());
+//		Assert.assertEquals(2, pd.getCount());
+//		Assert.assertEquals(2, pd.getOffset());
+//		Assert.assertEquals(allSize, pd.getTotalResults() + originSize);
 
 		// query by page size/offset
 		pd = dm.listDashboards("key", Integer.MAX_VALUE, 2, tenant1, true);

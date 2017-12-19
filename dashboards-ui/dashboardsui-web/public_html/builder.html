@@ -699,8 +699,8 @@
                 <div class="right-panel-toggler no-print fit-size" style="max-width: 30px;" data-bind="
                         style: {
                                  right: rightPanelControl.showRightPanel() ?
-                                (323 + rightPanelControl.scrollbarWidth) + 'px' :
-                                rightPanelControl.scrollbarWidth+ 3 + 'px'
+                                (323 + rightPanelControl.scrollbarWidth()) + 'px' :
+                                rightPanelControl.scrollbarWidth()+ 3 + 'px'
                         }">
                     <!-- ko ifnot: rightPanelControl.dashboardEditDisabled -->
                     <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn rightpanel-wrench" style="display: block;" id="rightpanel-wrench"
@@ -746,7 +746,7 @@
 
                 <div class="dbd-left-panel no-print fit-size"
                         data-bind="stopDataBinding: isDashboardSet ? isOobDashboardset() : ($b.dashboard.systemDashboard&&$b.dashboard.systemDashboard()),css: {'dbd-left-panel-show' : rightPanelControl.showRightPanel(), 'dbd-left-panel-hide' : !rightPanelControl.showRightPanel()},
-                                   style: {right: rightPanelControl.scrollbarWidth + 'px'}">
+                                   style: {right: rightPanelControl.scrollbarWidth() + 'px'}">
                     <!-- ko if: rightPanelControl.initializeRightPanel() === true -->
                     <div class="dbd-right-panel-contents">
                         <!-- ko if: $data.isDashboardSet() && rightPanelControl.rightPanelIcon()=='pencil' && $data.rightPanelControl.editPanelContent()=='editset' -->

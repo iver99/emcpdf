@@ -565,7 +565,71 @@ public class DashboardManager
         return savedSearchResponse;
     }
 
+
+    public List<Dashboard> getDashboardsByName(String name, Long tenantId){
+		if(name == null || "".equals(name)){
+			LOGGER.debug("Dashboard not found because name \"{}\" is invalid", name);
+			return null;
+		}
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			List<EmsDashboard> edList = dsf.getEmsDashboardsByName(name);
+			if(edList == null)
+				throw new NoResultException();
+			List<Dashboard> result = new ArrayList<>();
+			for(EmsDashboard ed : edList){
+				result.add(Dashboard.valueOf(ed, null, true, true, true, true));
+			}
+			return result;
+		}
+		catch (NoResultException e) {
+			LOGGER.debug("Dashboard not found for name \"{}\" because NoResultException is caught", name);
+			LOGGER.info("context", e);
+			return null;
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
+//	public List<Dashboard> getOwnDashboardsByNamePattern(String namePattern, Long tenantId){
+//		if (namePattern == null || "".equals(namePattern)) {
+//			LOGGER.error("NamePattern {} is invalid", namePattern);
+//			return Collections.emptyList();
+//		}
+//		EntityManager em = null;
+//		try {
+//			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+//			em = dsf.getEntityManager();
+//			List<EmsDashboard> ed_list = dsf.getOwnEmsDashboardsByNamePattern(namePattern);
+//			List<Dashboard> dashboardList = new ArrayList<>();
+//			if(ed_list.isEmpty()){
+//				throw new NoResultException();
+//			}
+//			for(EmsDashboard ed:ed_list){
+//				dashboardList.add(Dashboard.valueOf(ed, null, true, true, true, true));
+//			}
+//			return dashboardList;
+//		}
+//		catch (NoResultException e) {
+//			LOGGER.error("Dashboard not found for namePattern \"{}\" because NoResultException is caught", namePattern);
+//			LOGGER.error("context", e);
+//			return Collections.emptyList();
+//		}
+//		finally {
+//			if (em != null) {
+//				em.close();
+//			}
+//		}
+//	}
+
+
 	/**
+	 * !Warning!: The name is no longer the primary key of the Dashboards, be very careful to use this api.
 	 * Returns dashboard instance specified by name for current user Please note that same user under single tenant can't have
 	 * more than one dashboards with same name, so this method return single dashboard instance
 	 */

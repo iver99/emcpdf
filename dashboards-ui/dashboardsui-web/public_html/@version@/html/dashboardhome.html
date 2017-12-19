@@ -1,8 +1,11 @@
     <!-- Home toolbar start -->
-    <div aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 5px" data-testapiversion="1.17.0">
-        <button style=" margin-right: 5px;" data-bind="visible: (isMobileDevice() !== true && isDashboardSet === true), attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, 
-                                         ojComponent: { component:'ojButton', rootAttributes: {'class': 'dbs-home-blue-button'}, label: getNlsString('DBS_HOME_CREATE_BTN_LABEL'),disabled: zdtStatus}"></button>
-        <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-3 oj-xl-6">
+    <div aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 10px" data-testapiversion="1.26.0">
+        <div id="create-button-wrapper" data-bind="event:{mouseover:createBtnPopup}" style="display:inline-block">
+            <button style=" margin-right: 5px;" id="cbtn" data-bind="visible: (isMobileDevice() !== true), attr: { 'title': createBtnTitle }, click: createDashboardClicked, 
+                                         ojComponent: { component:'ojButton', rootAttributes: {'class': 'dbs-home-blue-button'}, label: getNlsString('DBS_HOME_CREATE_BTN_LABEL'),disabled: zdtStatus()||dataBaseDown()}"></button>
+        </div>
+        <span role="separator" class="oj-toolbar-separator" style="margin-bottom: 4px;" data-bind="visible: (isMobileDevice() !== true) && isDashboardSet !== true"></span>
+        <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-3 oj-xl-3">
             <input class="dbs-sinput" id="dbs-sinput" type="text" name="searchInput"
                data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
                           ,dbsTypeAhead: {response: searchResponse, acceptInput: acceptInput, selfSearchStart: typeaheadSearchStart, busyElement: '#dhometab', busyClassName: 'busy', source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
@@ -17,37 +20,61 @@
             </button> 
         </span>
 
-        <span class="oj-md-float-end" style=" padding-right: 10px;">
+        <span class="oj-md-float-end" style=" padding-right: 15px;">
+            <!-- ko if: !isDashboardSet -->
+            <label class="oj-label-inline" data-bind="attr: { 'for': filterById }, text: getNlsString('DBS_HOME_SELECT_FILTER_BY_LABEL')"></label>
+            <select aria-controls="dtabhomesc" data-bind="attr: { 'id': filterById }, ojComponent: {component: 'ojSelect', minimumResultsForSearch: 20, value: filterBy, optionChange: $component.handleFilterByChanged, 
+                        rootAttributes: {style:'width: 20em; max-width:15em; margin-right: 30px; height: 32px; max-height: 32px;', class: 'dsb-filtercb'}}">
+                <option value="allnofilter" id="filterby_all" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_ALL')"></option>
+                <option value="favorites" id="filterby_favorites" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_FAVORITES')"></option>
+                <option value="me" id="filterby_me" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_ME')"></option>
+                <option value="oracle" id="filterby_oracle" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_ORACLE')"></option>
+                <option value="share" id="filterby_share" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_OTHERS')"></option>
+                <!-- ko if: showITAFilter() || showLAFilter() || showSECFilter() -->
+                <option disabled></option>
+                <!-- /ko -->
+                <!-- ko if: showITAFilter() -->
+                <option value="ita" id="filterby_ita" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_ITA')"></option>
+                <!-- /ko -->
+                <!-- ko if: showLAFilter() -->
+                <option value="la" id="filterby_la" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_LA')"></option>
+                <!-- /ko -->
+                <!-- ko if: showSECFilter() -->
+                <option value="sec" id="filterby_sec" data-bind="text: getNlsString('DBS_HOME_SELECT_FILTER_SEC')"></option>
+                <!-- /ko -->
+            </select>
+            <!-- /ko -->
+  
             <label class="oj-label-inline" data-bind="attr: { 'for': sortById }, text: getNlsString('DBS_HOME_SELECT_SORT_BY_LABEL')"></label>
             <select aria-controls="dtabhomesc" data-bind="attr: { 'id': sortById }, ojComponent: {component: 'ojSelect', minimumResultsForSearch: 20, value: sortBy, optionChange: $component.handleSortByChanged, 
                                                    rootAttributes: {style:'width: 15em; max-width:20em', class: 'dsb-sortcb'}}">
-            <option value="default" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_DEFAULT')"></option>
-            <option value="name_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_ASC')"></option>
-            <option value="name_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_DSC')"></option>
-            <option value="owner_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_OWNER_ASC')"></option>
-            <option value="owner_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_OWNER_DSC')"></option>
-            <option value="creation_date_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME_ASC')"></option>
-            <option value="creation_date_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME_DSC')"></option>
-            <option value="last_modification_date_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_MODIFIED_ASC')"></option>
-            <option value="last_modification_date_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_MODIFIED_DSC')"></option>
-            <option value="access_date_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE_ASC')"></option>
-            <option value="access_date_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE_DSC')"></option>
+            <option value="default" id="sortby_default" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_DEFAULT')"></option>
+            <option value="name_asc" id="sortby_nameasc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_ASC')"></option>
+            <option value="name_dsc" id="sortby_namedsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_DSC')"></option>
+            <option value="owner_asc" id="sortby_ownerasc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_OWNER_ASC')"></option>
+            <option value="owner_dsc" id="sortby_ownerdsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_OWNER_DSC')"></option>
+            <option value="creation_date_asc" id="sortby_creationasc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME_ASC')"></option>
+            <option value="creation_date_dsc" id="sortby_creationdsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME_DSC')"></option>
+            <option value="last_modification_date_asc" id="sortby_modasc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_MODIFIED_ASC')"></option>
+            <option value="last_modification_date_dsc" id="sortby_moddsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_MODIFIED_DSC')"></option>
+            <option value="access_date_asc" id="sortby_accessasc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE_ASC')"></option>
+            <option value="access_date_dsc" id="sortby_accessdsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE_DSC')"></option>
             </select>
 
             <!--button id="cbtn" class="dbs-home-button-create-new-dashboard"
                     data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button-->
-            <button name="exploreDataBtn" id="explore-data-btn" data-bind="visible:showExploreDataBtn,ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_EXPLORE_BTN_LABEL'), 
+<!--            <button name="exploreDataBtn" id="explore-data-btn" data-bind="visible:showExploreDataBtn,ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_EXPLORE_BTN_LABEL'), 
                                                                              menu: '#exploreDataMenu-'+sortById, rootAttributes: {'style': 'margin-left: 8px;'}}, 
                                                                attr: { 'title': getNlsString('DBS_HOME_EXPLORE_BTN_TT'),id:'explore-data-btn_'+[].toString.apply(window.crypto&&window.crypto.getRandomValues(new Uint32Array(1))||window.msCrypto&&window.msCrypto.getRandomValues(new Uint32Array(1))) }">
             </button>
             <ul style="display:none" name="exploreDataMenu"
                 data-bind="ojComponent: {component: 'ojMenu', select: exploreDataMenuItemSelect},attr:{id:'exploreDataMenu-'+sortById}">
-                <!-- ko foreach: exploreDataLinkList -->
+                 ko foreach: exploreDataLinkList 
                 <li>
                     <a href="#" data-bind="text:name,value:href"></a>
                 </li>
-                <!-- /ko -->
-            </ul>
+                 /ko 
+            </ul>-->
             <span role="separator" class=" oj-toolbar-separator" style="margin-bottom: 4px;"></span>
             <div class="viewbtnset" aria-label="Choose one view"
                  data-bind="ojComponent: {component: 'ojButtonset', checked: $component.isTilesView, optionChange: handleViewChanged}" >
@@ -59,6 +86,8 @@
                                     ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_VIEW_LIST_LABEL'), icons: {start: 'icon-listview-16 oj-fwk-icon dbs-icon-size-16'}}" />
             </div>
         </span>
+        
+        
     </div>
     <!-- Home toolbar end -->
     <!-- tiles panel start -->
@@ -128,6 +157,15 @@
             <!--button class="oj-button-half-chrome oj-sm-float-end" data-bind="ojComponent: {component:'ojButton', label: 'Close'}, click: $component.handleCloseDashboardPop"></button-->
         </div>
     </div>   
+</div>
+<div style="display:none;width:340px" id="unableCreate"
+     data-bind="ojComponent:{component: 'ojPopup',tail: 'simple',autoDismiss: 'focusLoss', initialFocus: 'none'}">
+    <div>
+        <div class ="fa-icon-font fa-icon-font-16 fa-triangle-warning" style="color:#F9C000;display: inline-block"></div>
+        <span style="font-weight: bold" data-bind="text:getNlsString('DBS_HOME_DBDOWN_UNABLE_CREATE_TITLE')"></span>
+    </div>
+    <br>
+    <span data-bind="text:getNlsString('DBS_HOME_DBDOWN_UNABLE_CREATE_MSG')"></span>
 </div>
 <!-- dashboard info popup end-->
 

@@ -70,7 +70,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void TestSortBy_createdBy_ListView()
+	public void testSortBy_createdBy_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with created by in list view");
@@ -161,7 +161,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 	public void testSortBy_creationDateAscending()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test sort by dashboards with creation date by ascendingt");
+		webd.getLogger().info("start to test sort by dashboards with creation date by ascending");
 
 		//switch to list view
 		webd.getLogger().info("Switch to List View");
@@ -374,7 +374,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void TestSortBy_LastModified_ListView()
+	public void testSortBy_LastModified_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with last modified in list view");
@@ -514,7 +514,7 @@ public class TestHomePage_SortBy extends LoginAndLogout
 	}
 
 	@Test(alwaysRun = true)
-	public void TestSortBy_Name_ListView()
+	public void testSortBy_Name_ListView()
 	{
 		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test sort by dashboards with name in list view");

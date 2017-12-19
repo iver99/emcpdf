@@ -42,8 +42,7 @@ var DashboardsFilter = function(filter, sApplications ,options)
     this.Init();
     this.setFilterOptions(options);
     this.initFilterSelection();
-    this.initServiceFilter();
-    this.initFilterListeners();
+//    this.initFilterListeners();
 };
 
 // Subclass from oj.PagingDataSource
@@ -54,46 +53,18 @@ DashboardsFilter.prototype.Init = function()
     DashboardsFilter.superclass.Init.call(this);
 };
 
-DashboardsFilter.prototype.initFilterListeners = function()
-{
-    var self = this;
-    self.serviceFilter.subscribe(function(newValue) {
-        if(!self.zdtStatus()){
-            self.saveFilter();
-        }
-        self.handleFilterChange({filterType: 'serviceFilter', newValue: newValue});
-    });
-    self.creatorFilter.subscribe(function(newValue) {
-        if(!self.zdtStatus()){
-            self.saveFilter();
-        }
-        self.handleFilterChange({filterType: 'serviceFilter', newValue: newValue});
-    });
-    self.favoritesFilter.subscribe(function(newValue) {
-        if(!self.zdtStatus()){
-            self.saveFilter();
-        }
-        self.handleFilterChange({filterType: 'serviceFilter', newValue: newValue});
-    });
-};
-
-DashboardsFilter.prototype.initServiceFilter = function()
-{
-    var self = this, _showServiceFilter = false;
-    if (self.sApplications && self.sApplications !== null)
-    {
-        $.each(self.sApplications, function(i, _item) {
-            self._setFilterItem('appType', _item, 'visible', true);
-        });
-    }
-    $.each(self.serviceFilterItems, function( i, _item ) {
-        if (_item['visible'] && _item['visible'] === true)
-        {
-            _showServiceFilter = true;
-        }
-    });
-    self.showServiceFilter(_showServiceFilter);
-};
+//DashboardsFilter.prototype.initFilterListeners = function()
+//{
+//    var self = this;
+//    self.creatorFilter.subscribe(function(newValue) {
+//        self.saveFilter();
+//        self.handleFilterChange({filterType: 'serviceFilter', newValue: newValue});
+//    });
+//    self.favoritesFilter.subscribe(function(newValue) {
+//        self.saveFilter();
+//        self.handleFilterChange({filterType: 'serviceFilter', newValue: newValue});
+//    });
+//};
 
 DashboardsFilter.prototype.initFilterSelection = function()
 {
@@ -169,17 +140,6 @@ DashboardsFilter.prototype.setFilterOptions = function(options)
         this.onFilterChange(this.options['filterChange']);
     }
     this.onFilterChange(function(event){ console.log("Filter change: "+event.filterType+" value: "+event.newValue);});
-};
-
-DashboardsFilter.prototype._setFilterItem = function(attrFind, attrFindValue, attrSet, attrSetValue)
-{
-    var self = this;
-    $.each(self.serviceFilterItems, function( i, _item ) {
-        if (_item[attrFind] && _item[attrFind] === attrFindValue.id)
-        {
-            _item[attrSet] = attrSetValue;
-        }
-    });
 };
 
 DashboardsFilter.prototype.toFilterString = function()

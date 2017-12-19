@@ -92,8 +92,8 @@ require(['ojs/ojcore',
     'knockout',
     'jquery',
     'ojs/ojjsontreedatasource',
-    'widgets/hamburger-menu/qa-hamburger-menu-impl','util/qa-ajax-util-impl'], 
-    function (oj, ojk, ko, $, ojtree, hamburgerMenuTest,ajaxUtilTest){   
+    'widgets/hamburger-menu/qa-hamburger-menu-impl','util/qa-ajax-util-impl','sdk/qa-context-util-impl'], 
+    function (oj, ojk, ko, $, ojtree, hamburgerMenuTest,ajaxUtilTest,contextUtilTest){   
         window.DEV_MODE ={ 
                    "tenant": "fake",
                    "user": "fake",                              
@@ -106,4 +106,5 @@ require(['ojs/ojcore',
         };
        hamburgerMenuTest.run();   
        ajaxUtilTest.run();
+       contextUtilTest.run();
 });

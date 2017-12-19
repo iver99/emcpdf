@@ -6,6 +6,41 @@
         This is where any of your application specific styles should be included
 */
 
+@font-face {
+  font-family: 'FaFont';
+  src: url("../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff2") format("woff2"), url("../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
+.fa-icon-font {
+  font-family: FaFont;
+  font-size: 1.34rem;
+  display: inline-block;
+  font-weight: normal;
+  speak: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  text-align: center;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: inherit !important; }
+
+.fa-icon-font-16 {
+  font-size: 16px !important; }
+
+.fa-icon-font-14 {
+  font-size: 14px !important; }
+
+.fa-icon-font-18 {
+  font-size: 18px !important; }
+
+.fa-triangle-warning:before {
+    content: "\f071";
+}
+
 .dbs-lock-icon-24:before{content:" ";background:url(../images/dfSprite.png) no-repeat 0px -320px;height:16px;padding-left:18px;}//qual_lock_16_full
 
 .dbs-search-icon:before {content:" ";background:url(../images/dfSprite.png) no-repeat 0px -208px;height:16px;padding-left:18px;}//func_search_16_ena
@@ -135,7 +170,7 @@
     width:  320px;
     height: 200px;
     display: inline-block;
-    margin: 5px;
+    margin: 8px;
     padding-top: 0px;
     padding-bottom: 1px;
     padding-left: 2px;
@@ -308,21 +343,21 @@ a:hover {
         margin-left: auto;
         margin-right: auto;
         float: none;
-        width: 550px;
-        min-width: 550px;
-        max-width: 550px;
+        //width: 550px;
+        //min-width: 550px;
+        //max-width: 550px;
     }
     .dbs-filter-panel-sm {
     width: 35%; }
-    .dbs-tiles-panel-sm {
-    width: 65%; }
+    //.dbs-tiles-panel-sm {
+    //width: 65%; }
 }
 
 @media print and (orientation: landscape), screen and (min-width: 890px) {
-    .dbs-filter-panel-md {
-    width: 20%; }
-    .dbs-tiles-panel-md {
-    width: 80%; }
+    //.dbs-filter-panel-md {
+    //width: 20%; }
+    //.dbs-tiles-panel-md {
+    //width: 80%; }
     .dbs-rbtns-panel-md {
         padding-right: 13px;
     }
@@ -330,16 +365,17 @@ a:hover {
     margin-left: auto;
     margin-right: auto;
     float: none;
-    width: 850px;
-    min-width: 850px;
-    max-width: 850px;}
+    //width: 850px;
+    //min-width: 850px;
+    //max-width: 850px;
+    }
 }
 
 @media print and (orientation: landscape), screen and (min-width: 1240px) {
-    .dbs-filter-panel-lg {
-    width: 16%; }
-    .dbs-tiles-panel-lg {
-    width: 84%; }
+    //.dbs-filter-panel-lg {
+    //width: 16%; }
+    //.dbs-tiles-panel-lg {
+    //width: 84%; }
     .dbs-rbtns-panel-lg {
         padding-right: 10px;
     }
@@ -347,16 +383,17 @@ a:hover {
     margin-left: auto;
     margin-right: auto;
     float: none;
-    width: 1203px;
-    min-width: 1203px;
-    max-width: 1203px;}
+    //width: 1203px;
+    //min-width: 1203px;
+    //max-width: 1203px;
+    }
 }
 
 @media print and (orientation: landscape), screen and (min-width: 1580px) {
     .dbs-filter-panel-xsl {
     width: 13%; }
-    .dbs-tiles-panel-xsl {
-    width: 87%; }
+    //.dbs-tiles-panel-xsl {
+    //width: 87%; }
     .dbs-rbtns-panel-xsl {
         padding-right: 10px;
     }
@@ -366,7 +403,8 @@ a:hover {
     float: none;
     //width: 1545px;
     //min-width: 1545px;
-    max-width: 1545px;}
+    //max-width: 1545px;
+    }
 }
 
 @media print and (orientation: landscape), screen and (min-width: 1940px) {
@@ -429,9 +467,9 @@ a:hover {
     margin-left: auto;
     margin-right: auto;
     float: none;
-    width: 1002px;
-    min-width: 1002px;
-    max-width: 1002px;
+    width: 1020px;
+    min-width: 1020px;
+    max-width: 1020px;
         .oj-xl-6 {
             -webkit-flex: 0 1 30%;
             flex: 0 1 30%;
@@ -487,6 +525,17 @@ a:hover {
     color: #333; 
 }
 
-.dbs-main-large-width {
-    width: 1545px;
+// separator in dashboard home filter options. Similar to jet oj-menu-divider
+div[data-oj-containerid$='mainContentfiltercb'] li.oj-listbox-result-unselectable {
+    margin: 0.083rem;
+    height: 0;
+    font-size: 0;
+    line-height: 0;
+    border-width: 1px 0 0 0;
+    border-color: #c4ced7;
+    border-style: solid;
 }
+
+/*.dbs-main-large-width {
+    width: 1545px;
+}*/

@@ -256,7 +256,10 @@ define('uifwk/@version@/js/widgets/widgetselector/widget-selector-popup-impl',[
                 // Widget box click handler
                 self.widgetBoxClicked = function(data, event) { 
                     self.needRefreshWidgetList(false);
-                    if (event.type === "keydown" && event.keyCode === 13 || event.type === "mousedown") {
+                    if (event.type === "keydown" && event.keyCode === 13 && $(event.currentTarget).hasClass('widget-selector-searchbox')) {
+                        //EMCPDF-5116 search box click
+                        self.searchWidgets();
+                    }else if (event.type === "keydown" && event.keyCode === 13 || event.type === "mousedown") {
                         $('#widget-selector').children().removeClass('oj-selected oj-focus oj-hover');
                         $('li[id^=created-by] > ul').children().removeClass('oj-selected oj-focus oj-hover');
                         $('#widget-selector').children().blur();

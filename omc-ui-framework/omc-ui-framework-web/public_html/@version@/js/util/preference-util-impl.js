@@ -36,10 +36,13 @@ function(ko, $, ajaxUtilModel)
     PreferenceUtility.prototype.getHMItemShowPreference = function(key, successCallback, errorCallback) {
         var self = this;
         if(key) {
-            if(window._uifwk && window._uifwk.cachedData && ko.unwrap(window._uifwk.cachedData.preferences)) {
-                var preferences = ko.unwrap(window._uifwk.cachedData.preferences);
+            // window._uifwk.cachedData.preferences is changed from ko object to normal js object, 
+            // and won't be a func any more. Don't need to use unnecessary ko.unwrap although it won't bring trouble
+            if(window._uifwk && window._uifwk.cachedData && window._uifwk.cachedData.preferences !== undefined) {
+                var preferences = window._uifwk.cachedData.preferences;
                 for(var i in preferences) {
                     if(preferences[i].key === key) {
+                        console.info("Getting getHMItemShowPreference from window._uifwk.cachedData.preferences. Value is: " + window._uifwk.cachedData.preferences);
                         successCallback(preferences[i].value);
                         return;
                     }
@@ -53,13 +56,27 @@ function(ko, $, ajaxUtilModel)
             if (!window._uifwk.cachedData) {
                 window._uifwk.cachedData = {};
             }
+            console.info("Getting preference by sending request. window._uifwk.cachedData.isFetchingPrefernce is " + window._uifwk.cachedData["isFetching"+key+"Preference"]);
             if (!window._uifwk.cachedData["isFetching"+key+"Preference"]) {
                 window._uifwk.cachedData["isFetching"+key+"Preference"] = true;
-                if (!window._uifwk.cachedData.preferences) {
-                    window._uifwk.cachedData.preferences = ko.observableArray();
+                if (!window.preferenceFromRequest) {
+                    console.info("initialize window.preferenceFromRequest to ko observable");
+                    window.preferenceFromRequest = ko.observable();
                 }
                 function doneCallback(data, textStatus, jqXHR) {
-                    window._uifwk.cachedData.preferences.push(data);
+                    if(window.preferenceFromRequest && $.isFunction(window.preferenceFromRequest)) {
+                        console.info("window.preferenceFromRequest is ko observable");
+                        window.preferenceFromRequest(data);
+                    }else {
+                        console.info("window.preferenceFromRequest is not ko observable");
+                        window.preferenceFromRequest = ko.observable(data);
+                    }
+                    if(window._uifwk.cachedData.preferences && $.isArray(window._uifwk.cachedData.preferences)) {
+                        window._uifwk.cachedData.preferences.push(data);
+                    }else {
+                        window._uifwk.cachedData.preferences = [data];
+                    }
+                    
                     window._uifwk.cachedData["isFetching"+key+"Preference"] = false;
                     successCallback(data.value, textStatus, jqXHR);
                 }
@@ -80,7 +97,8 @@ function(ko, $, ajaxUtilModel)
                     }
                 });
             } else {
-                window._uifwk.cachedData.preferences.subscribe(function (data) {
+                window.preferenceFromRequest.subscribe(function (data) {
+                    console.info("window.preferenceFromRequest is fetched from back end");
                     if (data) {
                         successCallback(data.value);
                     }

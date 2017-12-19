@@ -22,9 +22,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import oracle.sysman.emaas.platform.dashboards.core.PreferenceManager;
+import oracle.sysman.emaas.platform.emcpdf.util.JsonUtil;
+import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
+import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.EntityNamingDependencyUnavailableException;
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Preference;
 import oracle.sysman.emaas.platform.dashboards.core.util.*;
 import oracle.sysman.emaas.platform.dashboards.webutils.ParallelThreadPool;
@@ -36,6 +40,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.model.UserInfoEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.TenantSubscriptionsAPI.SubscribedAppsEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.preferences.FeatureShowPreferences;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
+import oracle.sysman.emaas.platform.emcpdf.registry.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.emcpdf.tenant.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.emcpdf.tenant.subscription2.TenantSubscriptionInfo;
 import org.apache.logging.log4j.LogManager;
@@ -53,12 +58,14 @@ public class ConfigurationAPI extends APIBase
 	private static class CombinedBrandingBarData {
 		public CombinedBrandingBarData(UserInfoEntity userInfo, RegistrationEntity registration,
 									   SubscribedAppsEntity subscribedApps,String subscribedApps2,
-									   List<PreferenceEntity> preferences) {
+									   List<PreferenceEntity> preferences,Map<String, String> baseVanityUrls,PaginatedDashboards pd) {
 			this.userInfo = userInfo;
 			this.registration = registration;
 			this.subscribedApps = subscribedApps;
             this.subscribedApps2 = subscribedApps2;
 			this.preferences = preferences;
+			this.baseVanityUrls = baseVanityUrls;
+			this.pd = pd;
 		}
 
 		private UserInfoEntity userInfo;
@@ -66,8 +73,27 @@ public class ConfigurationAPI extends APIBase
 		private String subscribedApps2;
         private SubscribedAppsEntity subscribedApps;
 		private List<PreferenceEntity> preferences;
+		private Map<String, String> baseVanityUrls;
+		private PaginatedDashboards pd;
 
-        public String getSubscribedApps2() {
+
+		public PaginatedDashboards getPd() {
+			return pd;
+		}
+
+		public void setPd(PaginatedDashboards pd) {
+			this.pd = pd;
+		}
+
+		public Map<String, String> getBaseVanityUrls() {
+			return baseVanityUrls;
+		}
+
+		public void setBaseVanityUrls(Map<String, String> baseVanityUrls) {
+			this.baseVanityUrls = baseVanityUrls;
+		}
+
+		public String getSubscribedApps2() {
             return subscribedApps2;
         }
 
@@ -107,7 +133,7 @@ public class ConfigurationAPI extends APIBase
 			this.preferences = preferences;
 		}
 
-		public String getBrandingbarInjectedJS() {
+		private String getBrandingbarInjectedJS() {
 			StringBuilder sb = new StringBuilder();
 			if (userInfo != null) {
 				sb.append("window._uifwk.cachedData.userInfo=");
@@ -138,6 +164,32 @@ public class ConfigurationAPI extends APIBase
 				sb.append(JsonUtil.buildNormalMapper().toJson(preferences));
 				sb.append(";");
 			}
+
+			if(baseVanityUrls != null){
+				sb.append("window._uifwk.cachedData.baseVanityUrls=");
+				sb.append(JsonUtil.buildNormalMapper().toJson(baseVanityUrls));
+				sb.append(";");
+			}
+
+			if(pd != null){
+				sb.append("window._uifwk.cachedData.favDashboards=");
+				sb.append(JsonUtil.buildNonNullMapper().toJson(pd));
+				sb.append(";");
+			}
+			//Append db status
+			//default db is not down
+			boolean dbDown = Boolean.FALSE;
+			if (!DependencyStatus.getInstance().isDatabaseUp()) {
+				_LOGGER.error("Error to call [GET] /v1/configurations/brandingbardata: database is down");
+				dbDown = Boolean.TRUE;
+				//throw new DatabaseDependencyUnavailableException(); // incase db is down, just log error and don't query dashboard data then
+			}
+			if(dbDown){
+				sb.append("if(!window._dashboard){window._dashboard={};}window._dashboard={\"dbDown\": true};");
+			}else{
+				sb.append("if(!window._dashboard){window._dashboard={};}window._dashboard={\"dbDown\": false};");
+			}
+
 			return sb.toString();
 		}
 	}
@@ -209,7 +261,7 @@ public class ConfigurationAPI extends APIBase
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCombinedBrandingBarData(final @HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-												 @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+												 @HeaderParam(value = "X-REMOTE-USER") final String userTenant, @HeaderParam(value = "Referer") String referer,
 												 @HeaderParam(value = "SESSION_EXP") String sessionExpiryTime)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/configurations/brandingbardata");
@@ -225,10 +277,33 @@ public class ConfigurationAPI extends APIBase
             Future<String> futureUserGrants =null;
             Future<List<String>> futureSubscribedApps =null;
 			Future<List<Preference>> featurePreferences = null;
+			Future<Map<String, String>> futureBaseVanityUrls =null;
+			Future<PaginatedDashboards> futureFavDashboard =null;
             ExecutorService pool = ParallelThreadPool.getThreadPool();
+			final long TIMEOUT=30000;
 
             final String curTenant = TenantContext.getCurrentTenant();
             final String curUser = UserContext.getCurrentUser();
+
+			featurePreferences = pool.submit(new Callable<List<Preference>>() {
+				@Override
+				public List<Preference> call() throws Exception {
+					try {
+						_LOGGER.info("Parallel request to get preference settings for features...");
+						long startPrefs = System.currentTimeMillis();
+						Long internalTenantId = ConfigurationAPI.this.getTenantId(tenantIdParam);
+						UserContext.setCurrentUser(curUser);
+						List<Preference> prefs = FeatureShowPreferences.getFeatureShowPreferences(internalTenantId);
+						long endPrefs = System.currentTimeMillis();
+						_LOGGER.info("Time to get features preferences: {}ms. Retrieved data is: {}", (endPrefs - startPrefs), prefs);
+						return prefs;
+					} catch (Exception e) {
+						_LOGGER.error("Error occurred when retrieving feature preferences settings using parallel request!", e);
+						throw e;
+					}
+				}
+			});
+
             futureUserRoles = pool.submit(new Callable<List<String>>() {
                 @Override
                 public List<String> call() throws Exception {
@@ -263,7 +338,28 @@ public class ConfigurationAPI extends APIBase
                     }
                 }
             });
-            
+
+            //retrieve base vanity urls
+			futureBaseVanityUrls = pool.submit(new Callable<Map<String, String>>() {
+				@Override
+				public Map<String, String> call() throws Exception {
+					try{
+						long start = System.currentTimeMillis();
+						_LOGGER.info("Parallel request to get user grants...");
+						Map<String, String> baseVanityUrls = RegistryLookupUtil.getVanityBaseURLs(tenantIdParam);
+						_LOGGER.info("Retrieved base Vanity Urls are {}", baseVanityUrls);
+						Map<String, String> copyBaseVanityUrls = new HashMap<>();
+						RegistryLookupAPI.handleBaseVanityUrls(tenantIdParam, baseVanityUrls, copyBaseVanityUrls);
+						long end = System.currentTimeMillis();
+						_LOGGER.info("Time to get base vanity urls took: {}ms, result is {}", (end - start), copyBaseVanityUrls);
+						return copyBaseVanityUrls;
+					}catch(Exception e){
+						_LOGGER.error("Error occurred when get base vanity urls using parallel request!", e);
+						throw e;
+					}
+				}
+			});
+
             //retrieve subscribapp api data
 			final TenantSubscriptionInfo tenantSubscriptionInfo= new TenantSubscriptionInfo();
             futureSubscribedApps = pool.submit(new Callable<List<String>>() {
@@ -284,26 +380,72 @@ public class ConfigurationAPI extends APIBase
                 }
             });
 
-			featurePreferences = pool.submit(new Callable<List<Preference>>() {
+			List<PreferenceEntity> prefs = new ArrayList<PreferenceEntity>();
+			// by Default FederationFeatureShowInUiPref is false.
+			boolean FederationFeatureShowInUiPref = false;
+			try {
+				if(featurePreferences!=null){
+					List<Preference> prefList = featurePreferences.get(TIMEOUT, TimeUnit.MILLISECONDS);
+
+					_LOGGER.debug("Preference settings data is {}", prefList);
+					if (prefList != null) {
+						for (Preference pref : prefList) {
+							prefs.add(new PreferenceEntity(pref));
+							//check uifwk.hm.federation.show value
+							if(Preference.PREF_KEY_HM_FEDERATION_SHOW.equals(pref.getKey()) && "true".equalsIgnoreCase(pref.getValue())){
+								_LOGGER.info("Preference entry 'uifwk.hm.federation.show' is found, value is {}", pref.getValue());
+								FederationFeatureShowInUiPref = true;
+							}
+						}
+					}
+
+				}
+			} catch (InterruptedException e) {
+				_LOGGER.error(e);
+			} catch (ExecutionException e) {
+				_LOGGER.error(e.getCause() == null ? e : e.getCause());
+			}catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				featurePreferences.cancel(true);
+				_LOGGER.error(e);
+			}
+
+			final boolean boolFederationFeatureShowInUi = FederationFeatureShowInUiPref;
+			_LOGGER.info("boolFederationFeatureShowInUi value is {}", boolFederationFeatureShowInUi);
+			//retrieve favorite dashboard
+			futureFavDashboard = pool.submit(new Callable<PaginatedDashboards>() {
 				@Override
-				public List<Preference> call() throws Exception {
-					try {
-						_LOGGER.info("Parallel request to get preference settings for features...");
-						long startPrefs = System.currentTimeMillis();
-						Long internalTenantId = ConfigurationAPI.this.getTenantId(tenantIdParam);
-						UserContext.setCurrentUser(curUser);
-						List<Preference> prefs = FeatureShowPreferences.getFeatureShowPreferences(internalTenantId);
-						long endPrefs = System.currentTimeMillis();
-						_LOGGER.info("Time to get features preferences: {}ms. Retrieved data is: {}", (endPrefs - startPrefs), prefs);
-						return prefs;
-					} catch (Exception e) {
-						_LOGGER.error("Error occurred when retrieving feature preferences settings using parallel request!", e);
+				public PaginatedDashboards call() throws Exception {
+					try{
+						long start = System.currentTimeMillis();
+						_LOGGER.info("Parallel request to get favorite dashboards...");
+						initializeUserContext(tenantIdParam, userTenant);
+						String filterString = "favorites";
+						//federation dashboards doesn't support favorite, so set federationMode=false
+						boolean federationMode = false;
+						DashboardManager manager = DashboardManager.getInstance();
+						DashboardsFilter filter = new DashboardsFilter();
+						filter.initializeFilters(filterString);
+						Long tenantId = getTenantId(tenantIdParam);
+						PaginatedDashboards pd = manager.listDashboards(null, 0, 120, tenantId, true, "default", filter, federationMode, boolFederationFeatureShowInUi);
+						if (pd != null && pd.getDashboards() != null) {
+							for (Dashboard d : pd.getDashboards()) {
+								new DashboardAPI().updateDashboardAllHref(d, tenantIdParam);
+							}
+						}
+						_LOGGER.info("Retrieved get favorite dashboard is {}", JsonUtil.buildNormalMapper().toJson(pd));
+
+						long end = System.currentTimeMillis();
+						_LOGGER.info("Time to get favorite dashboard took: {}ms", (end - start));
+						return pd;
+					}catch(Exception e){
+						_LOGGER.error("Error occurred when get favorite dashboard using parallel request!", e);
 						throw e;
 					}
 				}
 			});
 
-            final long TIMEOUT=30000;
+
             //get subscribed apps data
             List<String> subApps = null;
             try {
@@ -355,30 +497,42 @@ public class ConfigurationAPI extends APIBase
                 _LOGGER.error(e);
             }
 
-			List<PreferenceEntity> prefs = new ArrayList<PreferenceEntity>();
-			try {
-				if(featurePreferences!=null){
-					List<Preference> prefList = featurePreferences.get(TIMEOUT, TimeUnit.MILLISECONDS);
-					if (prefList != null) {
-						for (Preference pref : prefList) {
-							prefs.add(new PreferenceEntity(pref));
-						}
-					}
-					_LOGGER.debug("Preference settings data is {}", prefList);
+			Map<String, String> baseVanityUrls = null;
+            try{
+            	if(futureBaseVanityUrls != null){
+					baseVanityUrls = futureBaseVanityUrls.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					_LOGGER.debug("baseVanityUrls {}", baseVanityUrls);
 				}
-			} catch (InterruptedException e) {
+			}catch (InterruptedException e) {
 				_LOGGER.error(e);
 			} catch (ExecutionException e) {
 				_LOGGER.error(e.getCause() == null ? e : e.getCause());
 			}catch(TimeoutException e){
 				//if timeout, and the task is still running, attempt to stop the task
-				featurePreferences.cancel(true);
+				futureBaseVanityUrls.cancel(true);
 				_LOGGER.error(e);
 			}
 
+			PaginatedDashboards pd = null;
+			try{
+				if(futureFavDashboard != null){
+					pd = futureFavDashboard.get(TIMEOUT, TimeUnit.MILLISECONDS);
+					_LOGGER.debug("Favorite dashboard is  {}", JsonUtil.buildNormalMapper().toJson(pd));
+				}
+			}catch (InterruptedException e) {
+				_LOGGER.error(e);
+			} catch (ExecutionException e) {
+				_LOGGER.error(e.getCause() == null ? e : e.getCause());
+			}catch(TimeoutException e){
+				//if timeout, and the task is still running, attempt to stop the task
+				futureFavDashboard.cancel(true);
+				_LOGGER.error(e);
+			}
+
+
 			SubscribedAppsEntity sae = subApps == null ? null : new SubscribedAppsEntity(subApps);
 			RegistrationEntity re = new RegistrationEntity(sessionExpiryTime, userRoles);
-			CombinedBrandingBarData cbbd = new CombinedBrandingBarData(new UserInfoEntity(userRoles, userGrants), re, sae,subApps2, prefs);
+			CombinedBrandingBarData cbbd = new CombinedBrandingBarData(new UserInfoEntity(userRoles, userGrants), re, sae,subApps2, prefs, baseVanityUrls, pd);
 			String brandingBarData = cbbd.getBrandingbarInjectedJS();
             long end = System.currentTimeMillis();
 			_LOGGER.info("Response for [GET] /v1/configurations/brandingbardata is \"{}\". It takes {}ms for this API", brandingBarData, (end - start));

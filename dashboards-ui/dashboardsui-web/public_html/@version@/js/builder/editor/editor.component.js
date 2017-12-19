@@ -411,7 +411,7 @@ define(['knockout',
                             if(subscribedApps.applications) {
                                 if(dfu.isV1ServiceTypes(subscribedApps.applications)) {
                                     var userTenantUtil = new userTenantUtilModel();
-                                    var itaAdmin = userTenantUtil.userHasRole("IT Analytics Administrator") || userTenantUtil.userHasRole("IT Analytics User");
+                                    var itaAdmin = userTenantUtil.userHasGrants("USE_TARGET_ANALYTICS");
                                     if (!itaAdmin) {
                                         tile.isOpenInExplorerShown(false);
                                     }
