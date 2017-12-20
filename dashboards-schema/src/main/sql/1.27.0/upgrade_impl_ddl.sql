@@ -42,5 +42,6 @@ WHEN OTHERS THEN
 END;
 /
 
+@&EMSAAS_SQL_ROOT/1.27.0/emaas_dashboard_tile_title_length.sql
 
 
