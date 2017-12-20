@@ -22,7 +22,7 @@ BEGIN
 	SELECT data_default into v_default FROM user_tab_columns WHERE table_name='EMS_DASHBOARD' AND column_name='ENABLE_ENTITY_FILTER';
 	if v_default!='(2)' THEN
 		EXECUTE IMMEDIATE 'alter table ems_dashboard modify (ENABLE_ENTITY_FILTER NUMBER(2,0) DEFAULT(2))';
-		DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.ENABLE_ENTITY_FILTER is change default value to 2!');
+		DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.ENABLE_ENTITY_FILTER default value is changed to 2!');
 	ELSE
 		DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.ENABLE_ENTITY_FILTER default value is alreay set to 2, no need to update!');
 	END IF;
