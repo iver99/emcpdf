@@ -59,7 +59,7 @@ public class HamburgerMenu_RegisterServiceMenu extends LoginAndLogout
 
 		CommonUIUtils.verifyPageContent(webd, "IT Analytics", true);
 
-		verifyRegisterServiceMenu(BrandingBarUtil.ROOT_MENU_ITA, "Sample Admin");
+		verifyRegisterServiceMenu(BrandingBarUtil.ROOT_MENU_ITA, "IT Analytics Admin");
 	}
 
 	@Test
@@ -167,10 +167,20 @@ public class HamburgerMenu_RegisterServiceMenu extends LoginAndLogout
 		BrandingBarUtil.expandSubMenu(webd, BrandingBarUtil.ROOT_MENU_ADMIN);
 
 		webd.getLogger().info("Check the menu items in Administration menu");
-		Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, servieAdminMenu));
-		Assert.assertTrue(BrandingBarUtil.isMenuItemEnabled(webd, servieAdminMenu));
+		if(BrandingBarUtil.isMenuItemExisted(webd, servieAdminMenu)) {
+			Assert.assertTrue(BrandingBarUtil.isMenuItemEnabled(webd, servieAdminMenu));
+			BrandingBarUtil.expandSubMenu(webd, servieAdminMenu);
+		}
+		else
+		{
+			if ("IT Analytics Admin".equals(servieAdminMenu))
+			{
+				Assert.assertTrue(BrandingBarUtil.isMenuItemExisted(webd, "Sample Admin"));
+				Assert.assertTrue(BrandingBarUtil.isMenuItemEnabled(webd, "Sample Admin"));
 
-		BrandingBarUtil.expandSubMenu(webd, servieAdminMenu);
+				BrandingBarUtil.expandSubMenu(webd, "Sample Admin");
+			}
+		}
 
 		//check the menu
 		webd.getLogger().info("Check the menu items in '" + servieAdminMenu + "' menu");
