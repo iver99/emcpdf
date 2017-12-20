@@ -449,6 +449,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
 		
 		DashboardBuilderUtil.addLinkInTextWidget(webd, 1, url, DashBoardPageId.PROTOCOLOPTION_HTTPS);	
+		webd.switchToMainWindow();
 		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 		
 		DashboardBuilderUtil.saveDashboard(webd);	
@@ -492,6 +493,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 		DashboardBuilderUtil.addTextWidgetToDashboard(webd);				
 		
 		DashboardBuilderUtil.addImageInTextWidget(webd, 1, url, alternativeText);
+		webd.switchToWindow();
 		webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);	
 		
 		DashboardBuilderUtil.saveDashboard(webd);	
