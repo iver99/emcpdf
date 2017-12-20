@@ -374,6 +374,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 			webd.click("css=" + DashBoardPageId.DASHBOARDTITLEBARCSS);
 			
 			DashboardBuilderUtil.editTextWidgetAddContent(webd, 1, "This is a Text Widget");
+			webd.switchToMainWindow();
 			
 			DashboardBuilderUtil.saveDashboard(webd);
 		}
