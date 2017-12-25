@@ -15,6 +15,8 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardBuilderUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.DashboardHomeUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.TimeSelectorUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ITimeSelectorUtil;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.WaitUtil;
 
 import org.testng.Assert;
@@ -34,6 +36,10 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 	private String dbName_indbSet = "";
 	private String dbName_ShareStatus = "";
 	private String dbSetName_ShareStatus = "";
+	private String dbSetName_TimeRange = "";
+
+	private String dbName_TimeRange1 = "";
+	private String dbName_TimeRange2 = "";
 
 	private static String OOBAddToSet = "Database Operations";
 	private static String OOBSetName = "Exadata Health";
@@ -76,6 +82,50 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		//verify the dashboardset
 		webd.getLogger().info("Verify if the dashboard existed in builder page");
 		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_ShareStatus, "", true), "Dashboard NOT found!");
+
+		//back to home page
+		webd.getLogger().info("Back to home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		dbName_TimeRange1 = "Test Time Range in Set 1 - " + DashBoardUtils.generateTimeStamp();
+		//create test dashboard
+		webd.getLogger().info("Create a new dashboard for test change timeRange of dashboard in Dashboard set");
+		DashboardHomeUtil.createDashboard(webd, dbName_TimeRange1, "", DashboardHomeUtil.DASHBOARD);
+
+		//verify the dashboardset
+		webd.getLogger().info("Verify if the dashboard existed in builder page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_TimeRange1, "", true), "Dashboard NOT found!");
+
+		//back to home page
+		webd.getLogger().info("Back to home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		dbName_TimeRange2 = "Test Time Range in Set 2 - " + DashBoardUtils.generateTimeStamp();
+		//create test dashboard
+		webd.getLogger().info("Create a new dashboard for test change timeRange of dashboard in Dashboard set");
+		DashboardHomeUtil.createDashboard(webd, dbName_TimeRange2, "", DashboardHomeUtil.DASHBOARD);
+
+		//verify the dashboardset
+		webd.getLogger().info("Verify if the dashboard existed in builder page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboard(webd, dbName_TimeRange2, "", true), "Dashboard NOT found!");
+
+		//back to home page
+		webd.getLogger().info("Back to home page");
+		BrandingBarUtil.visitDashboardHome(webd);
+
+		dbSetName_TimeRange = "Test Time Range Set - " + DashBoardUtils.generateTimeStamp();
+		//create dashboardset
+		webd.getLogger().info("Create a new dashboard set");
+		DashboardHomeUtil.createDashboard(webd, dbSetName_TimeRange, "", DashboardHomeUtil.DASHBOARDSET);
+
+		//verify the dashboardset
+		webd.getLogger().info("Verify if the dashboard set existed in builder page");
+		Assert.assertTrue(DashboardBuilderUtil.verifyDashboardSet(webd, dbSetName_TimeRange), "Dashboard set NOT found!");
+
+		//add dashboard to the set
+		webd.getLogger().info("Add dashboard into set");
+		DashboardBuilderUtil.addNewDashboardToSet(webd, dbName_TimeRange1);
+		DashboardBuilderUtil.addNewDashboardToSet(webd, dbName_TimeRange2);
 
 		LoginAndLogout.logoutMethod();
 	}
@@ -568,5 +618,55 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		//verify the dashboard is shared
 		webd.getLogger().info("Verify the dashboard '" + dbName_ShareStatus + "' is shared");
 		Assert.assertTrue(DashBoardUtils.isDashboardShared(webd), "The dashboard has not been shared");
+	}
+
+	@Test(alwaysRun = true)
+	public void testChangeDashboardTimeRange()
+	{
+		//init the test
+		initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("Start the test case: testChangeDashboardTimeRange");
+
+		//reset the home page
+		webd.getLogger().info("Reset all filter options in the home page");
+		DashboardHomeUtil.resetFilterOptions(webd);
+
+		//switch to grid view
+		webd.getLogger().info("Switch to the grid view");
+		DashboardHomeUtil.gridView(webd);
+
+		//open the dashboard set
+		webd.getLogger().info("Open the dashboard set");
+		DashboardHomeUtil.selectDashboard(webd, dbSetName_TimeRange);
+
+		//select the dashboard
+		webd.getLogger().info("Select the dashboard : <" + dbName_TimeRange1 + ">");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, dbName_TimeRange1);
+
+		//get the default time range in dashboard
+		webd.getLogger().info("Get the default time rang of dashboard : <" + dbName_TimeRange1 + ">");
+		String timeRange_1 = TimeSelectorUtil.getTimeRangeLabel(webd);
+		//configure the time range
+		webd.getLogger().info("Set the Time Range of dashboard  : <" + dbName_TimeRange1 + ">");
+		TimeSelectorUtil.setTimeRange(webd, ITimeSelectorUtil.TimeRange.Last24Hours);
+		String timeRangeNew_1 = TimeSelectorUtil.getTimeRangeLabel(webd);
+
+		//select the dashboard
+		webd.getLogger().info("Select the dashboard : <" + dbName_TimeRange2 + ">");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, dbName_TimeRange2);
+
+		//get the default time range in dashboard
+		webd.getLogger().info("Get the default time rang of dashboard : <" + dbName_TimeRange2 + ">");
+		String timeRange_2 = TimeSelectorUtil.getTimeRangeLabel(webd);
+		Assert.assertNotEquals(timeRangeNew_1, timeRange_2);
+		//configure the time range
+		webd.getLogger().info("Set the Time Range of dashboard  : <" + dbName_TimeRange1 + ">");
+		TimeSelectorUtil.setTimeRange(webd, ITimeSelectorUtil.TimeRange.Last6Hours);
+		String timeRangeNew_2 = TimeSelectorUtil.getTimeRangeLabel(webd);
+
+		//select the dashboard
+		webd.getLogger().info("Select the dashboard : <" + dbName_TimeRange1 + ">");
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, dbName_TimeRange1);
+		Assert.assertEquals(timeRangeNew_1, TimeSelectorUtil.getTimeRangeLabel(webd));
 	}
 }
