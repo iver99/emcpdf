@@ -556,7 +556,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                             "name": self.createDashboardModel.name(),
                             "showInHome":self.createDashboardModel.underSet ? false : true,
                             "description": self.createDashboardModel.description(),
-                            "enableTimeRange": self.createDashboardModel.isEnableTimeRange() ? "TRUE" : "FALSE",
+                            "enableTimeRange": "GC",
                             "enableRefresh": self.createDashboardModel.isEnableTimeRange(),
                             "federationSupported": "NON_FEDERATION_ONLY"};
             if (!_addeddb['name'] || _addeddb['name'] === "" || _addeddb['name'].length > 64)

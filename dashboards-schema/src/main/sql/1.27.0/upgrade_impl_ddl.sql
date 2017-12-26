@@ -18,6 +18,7 @@ Rem
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
 @&EMSAAS_SQL_ROOT/1.27.0/emaas_dashboard_entity_filter_default.sql
+@&EMSAAS_SQL_ROOT/1.27.0/emaas_dashboard_time_filter_default.sql
 @&EMSAAS_SQL_ROOT/1.27.0/emaas_dashboard_tile_title_length.sql
 
 
