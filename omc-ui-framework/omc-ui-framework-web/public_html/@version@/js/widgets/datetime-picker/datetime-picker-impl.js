@@ -809,10 +809,6 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                     });
                 }
 
-                if (params.callbackAfterApply && typeof params.callbackAfterApply === "function") {
-                    self.callbackAfterApply = params.callbackAfterApply;
-                }
-
                 if(params.callbackAfterCancel && typeof params.callbackAfterCancel === "function") {
                     self.callbackAfterCancel = params.callbackAfterCancel;
                 }
@@ -2145,7 +2141,7 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                         }
                     }
 
-                    if (self.callbackAfterApply) {
+                    if (params.callbackAfterApply && typeof params.callbackAfterApply === "function") {
                         setTimeout(function () {
                                 console.log("Returned values from date/time picker are: ");
                                 console.log("start: "+new Date(start));
@@ -2158,9 +2154,9 @@ define('uifwk/@version@/js/widgets/datetime-picker/datetime-picker-impl',["knock
                                 console.log("time filter: "+JSON.stringify(self.timeFilter()));
                                 console.log("flexible relative time value: "+flexRelTimeVal+", option: "+flexRelTimeOpt);
                                 if(flexRelTimePeriodId) {
-                                    self.callbackAfterApply(newDateWithMilliseconds(start), newDateWithMilliseconds(end), flexRelTimePeriodId, self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
+                                    params.callbackAfterApply(newDateWithMilliseconds(start), newDateWithMilliseconds(end), flexRelTimePeriodId, self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
                                 }else {
-                                    self.callbackAfterApply(newDateWithMilliseconds(start), newDateWithMilliseconds(end), timePeriod, self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
+                                    params.callbackAfterApply(newDateWithMilliseconds(start), newDateWithMilliseconds(end), timePeriod, self.timeFilter(), flexRelTimeVal, flexRelTimeOpt);
                                 }
                         },0);
                     }
