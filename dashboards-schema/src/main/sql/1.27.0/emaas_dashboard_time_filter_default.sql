@@ -2,10 +2,10 @@ Rem Copyright (c) 2013, 2014, 2015, 2016, 2017 Oracle and/or its affiliates.
 Rem All rights reserved.
 Rem
 Rem    NAME
-Rem      emaas_dashboard_entity_filter_default.sql
+Rem      emaas_dashboard_time_filter_default.sql
 Rem
 Rem    DESCRIPTION
-Rem      update default vale of enable_entity_filter from 1 to 2
+Rem      update default vale of enable_time_range from 1 to 2
 Rem    NOTES
 Rem      None
 Rem
