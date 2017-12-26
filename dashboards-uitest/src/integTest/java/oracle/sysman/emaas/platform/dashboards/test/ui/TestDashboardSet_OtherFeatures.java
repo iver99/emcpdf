@@ -657,16 +657,17 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 
 		//get the default time range in dashboard
 		webd.getLogger().info("Get the default time rang of dashboard : <" + dbName_TimeRange2 + ">");
-		String timeRange_2 = TimeSelectorUtil.getTimeRangeLabel(webd);
+		String timeRange_2 = TimeSelectorUtil.getTimeRangeLabel(webd,2);
 		Assert.assertNotEquals(timeRangeNew_1, timeRange_2);
 		//configure the time range
 		webd.getLogger().info("Set the Time Range of dashboard  : <" + dbName_TimeRange1 + ">");
-		TimeSelectorUtil.setTimeRange(webd, ITimeSelectorUtil.TimeRange.Last6Hours);
-		String timeRangeNew_2 = TimeSelectorUtil.getTimeRangeLabel(webd);
+		TimeSelectorUtil.setTimeRange(webd,2,ITimeSelectorUtil.TimeRange.Last6Hours);
+		String timeRangeNew_2 = TimeSelectorUtil.getTimeRangeLabel(webd,2);
 
 		//select the dashboard
 		webd.getLogger().info("Select the dashboard : <" + dbName_TimeRange1 + ">");
 		DashboardBuilderUtil.selectDashboardInsideSet(webd, dbName_TimeRange1);
 		Assert.assertEquals(timeRangeNew_1, TimeSelectorUtil.getTimeRangeLabel(webd));
+		Assert.assertNotEquals(timeRangeNew_1,timeRangeNew_2);
 	}
 }
