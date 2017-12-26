@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-testapiversion="1.15.0" lang="en-US">
+<html data-testapiversion="1.26.0" lang="en-US">
     <head>
         <title data-bind="text: landingHomeTitle"></title>
         <meta charset="UTF-8">
@@ -92,7 +92,7 @@
                         <!-- ko if: showITA -->
                         <li class="box-list-li box-list-a">
                             <!--<a data-bind="attr: {href: 'javascript: this.click()'}, click: openITAnalytics">-->
-                            <div id="ITA_wrapper" tabindex="0" aria-label="IT Analytics" data-bind="event: {click: openITAnalytics, keypress: openITAnalytics}">
+                            <div id="ITA_wrapper" tabindex="0" aria-label="IT Analytics" data-bind="event: {click: openITAnalytics, keypress: openITAnalytics}" style="cursor: pointer;">
                                 <div class="service-box-wrapper">
                                     <div class="landing-home-box-img ITA-box">
                                         <div class="landing-home-box-img-inner-container">
@@ -112,6 +112,7 @@
                                             <option value="svr_resource" id="ITA_svr_resource" data-bind="text: ITA_Server_Resource"></option>
 					    <option value="app_perf" id="ITA_app_perf" data-bind="text: ITA_Application_Performance"></option>
  					    <option value="avail-analytics" id="ITA_avail_analytics" data-bind="text: ITA_Avail_Analytics"></option>
+                                            <option value="xa-analytics" id="ITA_xa_analytics" data-bind="text: ITA_XA_Analytics"></option>
                                             <!-- ko foreach: exploreDataInITA -->                                            
                                             <option data-bind="attr: {id: id}, value: name, text: name"></option>
                                             <!-- /ko -->

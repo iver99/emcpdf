@@ -252,16 +252,46 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
         self.selectedDashboard = ko.observable(null);
         self.filterById = self.parentElementId+'filtercb';
         self.filterBy = ko.observable(filterSelection);
+        
+        self.showITAFilter = ko.observable(false);
+        self.showLAFilter = ko.observable(false);
+        self.showSECFilter = ko.observable(false);
+        for(var i in self.subscription) {
+            if(self.subscription[i].id === "ITAnalytics") {
+                self.showITAFilter(true);
+            }
+            if(self.subscription[i].id === "LogAnalytics") {
+                self.showLAFilter(true);
+            }
+            if(self.subscription[i].id === "SecurityAnalytics") {
+                self.showSECFilter(true);
+            }
+        }
+        
         self.sortById = self.parentElementId+'sortcb';
         self.sortBy = ko.observable(['default']);
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel(parentElementId);
 		var zdtUtil = new zdtUtilModel();
-        self.zdtStatus = ko.observable(false);
+        self.zdtStatus = ko.observable(false); 
+        self.dataBaseDown = ko.observable(false); 
+        self.createBtnTitle = ko.observable(getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT'));
         zdtUtil.detectPlannedDowntime(function (isUnderPlannedDowntime) {
 //            self.zdtStatus(true);
             self.zdtStatus(isUnderPlannedDowntime);
         });
+        
+        dfu.getDatabaseStatus(function (databaseStatus) {
+            self.dataBaseDown(databaseStatus);
+            self.dataBaseDown() && self.createBtnTitle("");
+        });
+        
+        self.createBtnPopup = function () {
+            if ($('#cbtn').hasClass("oj-disabled")) {
+                var popup = $('#unableCreate');
+                popup.ojPopup('open', '#create-button-wrapper', {'at': 'center bottom', 'my': 'start top'});
+            }
+        };
 
         self.pageSize = ko.observable(120);
 
@@ -637,12 +667,19 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
             if(valueParam.option === "value") {
                 var filterByValue = _value[0];
                 if(filterByValue === "allnofilter") {
+                    self.filter.serviceFilter([]);
                     self.filter.creatorFilter([]);
                     self.filter.favoritesFilter([]);
                 }else if(filterByValue === "favorites") {
+                    self.filter.serviceFilter([]);
                     self.filter.creatorFilter([]);
                     self.filter.favoritesFilter(["favorites"]);
+                }else if($.inArray(filterByValue, ["ita", "la", "sec"])) {
+                    self.filter.serviceFilter([filterByValue]);
+                    self.filter.creatorFilter([]);
+                    self.filter.favoritesFilter([]);
                 }else {
+                    self.filter.serviceFilter([]);
                     self.filter.creatorFilter([filterByValue]);
                     self.filter.favoritesFilter([]);
                 }
@@ -652,7 +689,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
                 self.filter.handleFilterChange({filterType: 'serviceFilter', newValue: filterByValue});
             }
         };
-
+        
         self.handleSortByChanged = function (context, valueParam) {
             var _preValue = valueParam.previousValue, _value = valueParam.value, _ts = self.dashboardsTS();
             if ( valueParam.option === "value" )
@@ -845,7 +882,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu, zdtUtilModel, cxtModel)
             {
                 _options['saveFilterPref'] = true;
                 //Use saved filters if it is only 1 filter
-                var _serviceFilters = ["apm", "la", "ita", "ocs", "sec"];
+                var _serviceFilters = ["apm", "ocs"]; //Do not support service filter for APM and OCS
                 if(_filterPref) {
                     if(_filterPref.split(",").length > 1) {
                         _filterPref = null;

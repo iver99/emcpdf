@@ -821,7 +821,7 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 		driver.getLogger().info("DashboardBuilderUtil.selectDashboardInsideSet started for name=\"" + dashboardName + "\"");
 		Validator.notEmptyString("dashboardName", dashboardName);
 
-		driver.waitForElementVisible("css=" + DashBoardPageId_190.DASHBOARDSETNAVSCONTAINERCSS);
+		driver.waitForElementVisible("css=" + DashBoardPageId_190.DASHBOARDSETNAMECSS);
 		WaitUtil.waitForPageFullyLoaded(driver);
 		
 		int navCount = driver.getElementCount("xpath=" + DashBoardPageId_190.DASHBOARDSETNAVSXPATH);
@@ -829,11 +829,13 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 			throw new NoSuchElementException(
 					"DashboardBuilderUtil.selectDashboardInsideSet: the dashboard navigators is not found");
 		}
-		
+
 		String dsbNameInSet = null;
+		boolean isExisted = false;
 		for (int i=1; i<=navCount; i++) {
 			dsbNameInSet = driver.getAttribute("xpath=(" + DashBoardPageId_190.DASHBOARDSETNAVSXPATH + ")[" + i + "]@data-dashboard-name-in-set").trim();
 			if (dsbNameInSet != null && dsbNameInSet.equals(dashboardName)) {
+				isExisted = true;
 				driver.getLogger().info("DashboardBuilderUtil.selectDashboardInsideSet has found the corresponding name");
 				while (!driver.isDisplayed("xpath=(" + DashBoardPageId_190.DASHBOARDSETNAVSXPATH + ")[" + i + "]")) {
 					if (driver.isDisplayed("css=" + DASHBOARD_IN_SET_END_ICON_CSS)) {
@@ -844,14 +846,23 @@ public class DashboardBuilderUtil_190 extends DashboardBuilderUtil_175
 					}
 					else {
 						throw new NoSuchElementException(
-								"DashboardBuilderUtil.selectDashboardInsideSet: the '<' or '>' icon are not found");
+								"DashboardBuilderUtil.selectDashboardInsideSet: Tab: <"+ dashboardName +"> is NOT showing and there is NO  '<' or '>' icon to show any hidden tab");
 					}
 				}
 				driver.click("xpath=(" + DashBoardPageId_190.DASHBOARDSETNAVSXPATH + ")[" + i + "]");
 				break;
 			}
 		}
-		driver.getLogger().info("DashboardBuilderUtil.selectDashboardInsideSet completed");
+
+		if(isExisted)
+		{
+			driver.getLogger().info("DashboardBuilderUtil.selectDashboardInsideSet completed");
+		}
+		else
+		{
+			throw new NoSuchElementException(
+					"DashboardBuilderUtil.selectDashboardInsideSet: Tab: <"+ dashboardName +"> is NOT found in dashboard set, please give correct dashboard name");
+		}
 	}
 
 	@Override

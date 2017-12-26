@@ -168,6 +168,10 @@ define(['knockout',
             self.getSubscribedAppsWithoutEdition = function(successCallback, errorCallback) {
                 dfu.getSubscribedAppsWithoutEdition(successCallback, errorCallback);
             };
+            
+            self.getDatabaseStatus = function(successCallback, errorCallback) {
+                dfu.getDatabaseStatus(successCallback, errorCallback);
+            };
 
             /**
              * Discover available quick links

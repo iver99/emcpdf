@@ -164,8 +164,13 @@ public class DashboardServiceFacade
 			parameters.append("'"+ name + "'");
 		}
 
+		/**
+		 * 2 case:
+		 * 1. sys dashboard
+		 * 2. non-sys dashboard, current user's dashboard, or shared dashboard under same tenant.
+		 */
 		String sql = "select dashboard_id from ems_dashboard t where t.name in (" + parameters.toString() + ")"
-		+ " and ( t.tenant_id = ? or t.tenant_id =" + NON_TENANT_ID +  " ) and (t.owner = ? or t.share_public = 1) and t.deleted = 0";
+				+ " and (t.is_system =1 or (t.is_system =0 and t.tenant_id =? and (t.owner =? or t.share_public = 1))) and t.deleted = 0";
 		Query query = em.createNativeQuery(sql);
 		String currentUser = UserContext.getCurrentUser();
 		LOGGER.info("Current user for exporting dashboard is {}", currentUser);
