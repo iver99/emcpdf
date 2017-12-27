@@ -127,6 +127,8 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		DashboardBuilderUtil.addNewDashboardToSet(webd, dbName_TimeRange1);
 		DashboardBuilderUtil.addNewDashboardToSet(webd, dbName_TimeRange2);
 
+		DashboardBuilderUtil.selectDashboardInsideSet(webd, dbName_TimeRange1);
+
 		LoginAndLogout.logoutMethod();
 	}
 
