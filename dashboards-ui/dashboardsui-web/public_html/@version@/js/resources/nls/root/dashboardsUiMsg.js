@@ -57,6 +57,9 @@ define({
       "DBS_HOME_SELECT_FILTER_ME": "Me",
       "DBS_HOME_SELECT_FILTER_ORACLE": "Oracle",
       "DBS_HOME_SELECT_FILTER_OTHERS": "Others",
+      "DBS_HOME_SELECT_FILTER_ITA": "IT Analytics",
+      "DBS_HOME_SELECT_FILTER_LA": "Log Analytics",
+      "DBS_HOME_SELECT_FILTER_SEC": "Security Analytics",
       "DBS_HOME_SELECT_SORT_BY_LABEL": "Sort by",
       "DBS_HOME_SELECT_SORT_ACCESS_DATE_ASC": "Last Accessed Ascending",
       "DBS_HOME_SELECT_SORT_ACCESS_DATE_DSC": "Last Accessed Descending",
@@ -321,6 +324,7 @@ define({
       "LANDING_HOME_ITA_SERVER_RESOURCE": "Resource Analytics - Host",
       "LANDING_HOME_ITA_APPLICATION_PERFORMANCE": "Application Performance Analytics",
       "LANDING_HOME_ITA_AVAIL_ANALYTICS": "Availability Analytics",
+      "LANDING_HOME_ITA_XA_ANALYTICS": "Exadata Analytics",
 
       "LANDING_HOME_INFRA_MONITORING": "Infrastructure Monitoring",
       "LANDING_HOME_INFRA_MONITORING_DESC": "Monitor your entire IT infrastructure - on-premise or on the cloud - from one unified platform",

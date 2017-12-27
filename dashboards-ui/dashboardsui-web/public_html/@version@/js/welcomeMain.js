@@ -188,6 +188,7 @@ require(['ojs/ojcore',
                 self.ITA_Server_Resource = getNlsString("LANDING_HOME_ITA_SERVER_RESOURCE");
                 self.ITA_Application_Performance = getNlsString("LANDING_HOME_ITA_APPLICATION_PERFORMANCE");
                 self.ITA_Avail_Analytics = getNlsString("LANDING_HOME_ITA_AVAIL_ANALYTICS");
+                self.ITA_XA_Analytics = getNlsString("LANDING_HOME_ITA_XA_ANALYTICS"); 
 
                 self.infraMonitoring = getNlsString("LANDING_HOME_INFRA_MONITORING");
                 self.infraMonitoringDesc = getNlsString("LANDING_HOME_INFRA_MONITORING_DESC");
@@ -389,6 +390,7 @@ require(['ojs/ojcore',
                         "mw_resource": "verticalApplication.mw-resource",
                         "svr_resource": "verticalApplication.svr-resource",
                         "avail-analytics": "verticalApplication.avail-analytics",
+                        "xa-analytics": "verticalApplication.xa-analytics",
                         "app_perf": "verticalApplication.app-perf-analytics"
                     };
                     var ITA_OPTION_NAME_MAP = {
@@ -398,6 +400,7 @@ require(['ojs/ojcore',
                         "mw_resource": self.ITA_Middleware_Resource,
                         "svr_resource": self.ITA_Server_Resource,
                         "avail-analytics": self.ITA_Avail_Analytics,
+                        "xa-analytics": self.ITA_XA_Analytics,
                         "app_perf": self.ITA_Application_Performance
                     };
                     if(!self.landingHomeUrls) {

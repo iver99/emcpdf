@@ -20,6 +20,14 @@ var DashboardsFilter = function(filter, sApplications ,options)
     this.filter = filter;
     this.sApplications = sApplications;
 
+    self.serviceFilterItems = [
+        {label: getNlsString('DBS_HOME_FILTER_SERVICE_APM_ABBR'), value: 'apm', id:'apmopt', appType:'APM', visible: false},
+        {label: getNlsString('DBS_HOME_FILTER_SERVICE_ITA'), value: 'ita', id:'itaopt', appType:'ITAnalytics', visible: false},
+        {label: getNlsString('DBS_HOME_FILTER_SERVICE_LA'), value: 'la', id:'laopt', appType:'LogAnalytics', visible: false},
+        {label: getNlsString('DBS_HOME_FILTER_SERVICE_OCS'), value: 'ocs', id:'ocsopt', appType:'Orchestration', visible: false},
+        {label: getNlsString('DBS_HOME_FILTER_SERVICE_SEC'), value: 'sec', id:'secopt', appType:'SecurityAnalytics', visible: false}
+    ];
+    self.serviceFilter = ko.observableArray();
     self.showServiceFilter = ko.observable(false);
     self.creatorFilterItems = [
         {label: getNlsString('DBS_HOME_FILTER_CREATOR_ORACLE'), value: 'oracle', id:'oracleopt'},
@@ -75,6 +83,12 @@ DashboardsFilter.prototype._addFilterSelection = function(selection)
     var self = this;
     if (selection && selection.trim().length > 0)
     {
+        $.each(self.serviceFilterItems, function( i, _item ) {
+            if (_item['value'] && _item['value'] === selection)
+            {
+                self.serviceFilter.push(selection);
+            }
+        });
         $.each(self.creatorFilterItems, function( i, _item ) {
             if (_item['value'] && _item['value'] === selection)
             {
@@ -131,7 +145,7 @@ DashboardsFilter.prototype.setFilterOptions = function(options)
 DashboardsFilter.prototype.toFilterString = function()
 {
     var self = this, _fjoin = [];
-    _fjoin = _fjoin.concat(self.creatorFilter(), self.favoritesFilter());
+    _fjoin = _fjoin.concat(self.serviceFilter(), self.creatorFilter(), self.favoritesFilter());
 
     return _fjoin.length > 0 ? _fjoin.join(',') : undefined;
 };

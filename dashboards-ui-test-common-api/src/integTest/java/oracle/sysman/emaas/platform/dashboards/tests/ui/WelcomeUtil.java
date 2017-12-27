@@ -168,7 +168,7 @@ public class WelcomeUtil
 	 * @param selection
 	 * 		default | performanceAnalyticsDatabase | performanceAnalyticsApplicationServer | 		
 	 * 		resourceAnalyticsDatabase | resourceAnalyticsMiddleware | resourceAnalyticsHost | 
-	 *  	applicationPerformanceAnalytic | availabilityAnalytics | dataExplorer
+	 *  	applicationPerformanceAnalytic | availabilityAnalytics | dataExplorer | exadataAnalytics
 	 * @
 	 */
 	public static void visitITA(WebDriver driver, String selection) 
