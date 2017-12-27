@@ -661,7 +661,7 @@ public class TestDashboardSet_OtherFeatures extends LoginAndLogout
 		Assert.assertNotEquals(timeRangeNew_1, timeRange_2);
 		//configure the time range
 		webd.getLogger().info("Set the Time Range of dashboard  : <" + dbName_TimeRange1 + ">");
-		TimeSelectorUtil.setTimeRange(webd,2,ITimeSelectorUtil.TimeRange.Last6Hours);
+		TimeSelectorUtil.setTimeRange(webd,2,ITimeSelectorUtil.TimeRange.Last8Hours);
 		String timeRangeNew_2 = TimeSelectorUtil.getTimeRangeLabel(webd,2);
 
 		//select the dashboard
