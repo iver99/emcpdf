@@ -269,6 +269,7 @@ public class DashboardImportExport {
 			Assert.assertEquals(res7.jsonPath().get("name"), "non_oob_dashboard_non_oob_tile");
 		}
 		catch (Exception e) {
+			RestAssured.basePath = "/emcpdf/api/v1";
 			Assert.fail(e.getLocalizedMessage());
 			LOGGER.info("context",e);
 		}
