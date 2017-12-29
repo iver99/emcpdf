@@ -800,6 +800,7 @@ define(['knockout',
                         //Set both of respectOMCApplicationContext and respectOMCEntityContext to true
                         ctxUtil.respectOMCApplicationContext(true);
                         ctxUtil.respectOMCEntityContext(true);
+                        ctxUtil.respectOMCEntityFilterContext(true);
                         var IsGCEntityContextExisted = ((omcContext.composite && omcContext.composite.compositeMEID) || (omcContext.entity && omcContext.entity.entityMEIDs)) ? true : false;
                         //Use dashboard saved entity context if there's no entity context in URL
                         if(!IsGCEntityContextExisted) {
@@ -835,6 +836,7 @@ define(['knockout',
                         //Set both of respectOMCApplicationContext and respectOMCEntityContext to false
                         ctxUtil.respectOMCApplicationContext(false);
                         ctxUtil.respectOMCEntityContext(false);
+                        ctxUtil.respectOMCEntityFilterContext(false);
                         if(model.userTsel && model.userExtendedOptions && !$.isEmptyObject(model.userExtendedOptions.tsel)) {
                             entityContext = model.userExtendedOptions.tsel.entityContext;
                         }else if(model.dashboardExtendedOptions && !$.isEmptyObject(model.dashboardExtendedOptions.tsel)) {
@@ -858,6 +860,7 @@ define(['knockout',
                         //Set both of respectOMCApplicationContext and respectOMCEntityContext to false
                         ctxUtil.respectOMCApplicationContext(false);
                         ctxUtil.respectOMCEntityContext(false);
+                        ctxUtil.respectOMCEntityFilterContext(false);
                         entityContext = null;
                         //set non-global entity conctext to null
                         ctxUtil.setCompositeMeId(null);
