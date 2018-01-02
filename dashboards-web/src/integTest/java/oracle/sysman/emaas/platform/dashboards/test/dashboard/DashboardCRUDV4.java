@@ -42,6 +42,10 @@ public class DashboardCRUDV4
 	static String tenantid;
 	static String tenantid_2;
 	static String remoteuser;
+	
+	String dashboardId1 = "";
+	String dashboardId2 = "";
+	String dashboardId3 = "";
 
 	private static final Logger LOGGER = LogManager.getLogger(DashboardCRUD.class);
 
@@ -1897,7 +1901,9 @@ public class DashboardCRUDV4
 	}
 	
 	@Test
-	public void dashboardRetrieveByName(){
+	public void dashboardRetrieveByName()
+	{
+		try{
 		
 		String jsonString1 = "{\"type\":\"NORMAL\",\"name\":\"custom_dashboard\",\"showInHome\":true,\"description\":\"This is the first dashboard of same name dashboards\",\"enableTimeRange\":\"TRUE\",\"enableRefresh\":true,\"federationSupported\":\"NON_FEDERATION_ONLY\"}";
 		Response res1 = RestAssured
@@ -1908,7 +1914,7 @@ public class DashboardCRUDV4
 				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 						"Authorization", authToken).body(jsonString1).when().post("/dashboards");
 		Assert.assertTrue(res1.getStatusCode() == 201);
-		String dashboardId1 = res1.jsonPath().getString("id");
+		dashboardId1 = res1.jsonPath().getString("id");
 		
 		String jsonString2 = "{\"type\":\"NORMAL\",\"name\":\"custom_dashboard\",\"showInHome\":true,\"description\":\"This is the second dashboard of same name dashboards\",\"enableTimeRange\":\"TRUE\",\"enableRefresh\":true,\"federationSupported\":\"NON_FEDERATION_ONLY\"}";
 		Response res2 = RestAssured
@@ -1920,7 +1926,7 @@ public class DashboardCRUDV4
 						"Authorization", authToken).body(jsonString2).when().post("/dashboards");
 
 		Assert.assertEquals(res2.getStatusCode(), 201);
-		String dashboardId2 = res2.jsonPath().getString("id");
+		dashboardId2 = res2.jsonPath().getString("id");
 
 		String jsonString3 = "{\"type\":\"SET\",\"name\":\"custom_dashboard\",\"showInHome\":true,\"description\":\"This is the dashboard set of same name dashboards\",\"enableTimeRange\":\"TRUE\",\"enableRefresh\":true,\"federationSupported\":\"NON_FEDERATION_ONLY\"}";
 		Response res3 = RestAssured
@@ -1932,7 +1938,7 @@ public class DashboardCRUDV4
 						"Authorization", authToken).body(jsonString3).when().post("/dashboards");
 
 		Assert.assertEquals(res3.getStatusCode(), 201);
-		String dashboardId3 = res3.jsonPath().getString("id");
+		dashboardId3 = res3.jsonPath().getString("id");
 		
 		//Begin to test the retrieve dashboards by dashboard name api
 		String dashboardName = "custom_dashboard";
@@ -1952,22 +1958,14 @@ public class DashboardCRUDV4
 		
 		String bodyAsString = dbListRes.getBody().asString();
 		Assert.assertEquals(bodyAsString.contains("NORMAL"), true);
-		Assert.assertEquals(bodyAsString.contains("SET"), true);
+		Assert.assertEquals(bodyAsString.contains("SET"), true);	
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
+		}
 		
-		//Begin to test the retrieve dashboards by dashboard name api, but with an not existed dashboard
-		String dashboardName1 = "custom_dashboard_notExisted";
-		Response dbListRes1 = RestAssured
-				.given()
-				.contentType(ContentType.JSON)
-				.log()
-				.everything()
-				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-						"Authorization", authToken).when().get("/dashboards/query?name=" + dashboardName1);
-
-		Assert.assertEquals(dbListRes1.getStatusCode(), 404);
-		Assert.assertEquals(dbListRes1.jsonPath().get("errorCode"), 20001);
-		Assert.assertEquals(dbListRes1.jsonPath().get("errorMessage"), "Specified dashboard is not found");
-		
+		finally{
 		//Begin to delete the data
 		Response deletionResponse1 = RestAssured
 				.given()
@@ -1998,6 +1996,31 @@ public class DashboardCRUDV4
 						"Authorization", authToken).when().delete("/dashboards/" + dashboardId3);
 
 		Assert.assertTrue(deletionResponse3.getStatusCode() == 204);
+		
+		}
+	}
+	
+	@Test
+	public void dashboardRetrieveByName_Negative()
+	{
+		try{		
+		//Begin to test the retrieve dashboards by dashboard name api, but with an not existed dashboard
+		String dashboardName1 = "custom_dashboard_notExisted";
+		Response dbListRes1 = RestAssured
+				.given()
+				.contentType(ContentType.JSON)
+				.log()
+				.everything()
+				.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+						"Authorization", authToken).when().get("/dashboards/query?name=" + dashboardName1);
 
+		Assert.assertEquals(dbListRes1.getStatusCode(), 404);
+		Assert.assertEquals(dbListRes1.jsonPath().get("errorCode"), 20001);
+		Assert.assertEquals(dbListRes1.jsonPath().get("errorMessage"), "Specified dashboard is not found");		
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+			LOGGER.info("context",e);
+		}			
 	}
 }
