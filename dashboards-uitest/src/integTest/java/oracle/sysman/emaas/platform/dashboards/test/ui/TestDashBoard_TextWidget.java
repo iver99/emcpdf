@@ -108,7 +108,7 @@ public class TestDashBoard_TextWidget extends LoginAndLogout
 		//Verify the content is added successfully
 		webd.getLogger().info("Verify the content is added successfully");
 		
-		
+		DashboardBuilderUtil.switchTextWidgetToEditMode(webd, 1);
 		webd.evalJavascript("$('iframe')[0].id='iframe'");
 		webd.selectFrame("iframe");
 		

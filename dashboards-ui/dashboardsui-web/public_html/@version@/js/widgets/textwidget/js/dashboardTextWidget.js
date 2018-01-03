@@ -112,7 +112,9 @@ define(["require", "knockout", "jquery", "ojs/ojcore", "DOMPurify", "ojs/ojtabs"
                     }, 0);
                 };
                 
-                self.showRenderedMode = function() {                   
+                self.showRenderedMode = function() {
+                    //remove image/link dialogs. They will be re-created when entering edit mode next time
+                    $(".cke_editor_textEditor_" + self.textWidgetId + "_dialog").remove();
                     self.isEditing(false);
                     //When setting isEditing to false, editor in html will be removed
                     //Next time when entering editing mode, need to initiaize ckeditor self.loadTextEditor
