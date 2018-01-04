@@ -140,7 +140,7 @@ define(['knockout',
                     Builder.eagerLoadDahshboardSingleTileAtPageLoad(dfu, ko, newTile);                    
                     if (newTile){
                        self.editor.tiles.push(newTile);
-                       if(newTile.type() === "TEXT_WIDGET") {
+                       if(newTile.type() === "TEXT_WIDGET" || newTile.type() === 'HTML_WIDGET') {
                             self.editor.draggingTile = newTile;
                             self.editor.moveTileTo(new Builder.Cell(0, 0), newTile);
                        }
@@ -295,7 +295,7 @@ define(['knockout',
                         self.notifyTileChange(tile, new Builder.TileChange("POST_SHORTER"));
                         break;
                     case "edit":
-                        if(ko.unwrap(tile.type) === "TEXT_WIDGET") {
+                        if(ko.unwrap(tile.type) === "TEXT_WIDGET" || ko.unwrap(tile.type) === 'HTML_WIDGET') {
                             self.notifyTileChange(tile, new Builder.TileChange("POST_EDIT"));
                         }else {
                             self.editor.editTile(tile);

@@ -1,0 +1,53 @@
+<html data-testapiversion="1.17.0" lang="en-US">
+    <head>
+        <title data-bind="text: testDashboardTestTitle"></title>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/png" href="/emsaasui/uifwk/images/o_logo.png" />
+        <!-- This is the main css file for the default Alta theme -->
+        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v2.0.2/alta/oj-alta-min.css" type="text/css"/>
+
+        <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
+        <script type="text/javascript">
+            ////ADDITIONALDATA////
+        </script>
+        <!-- RequireJS bootstrap file -->
+        <script data-main="@version@/js/testDashboardMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
+    </head>
+    <body>
+        <div class="loadingIndicator" id="loading" data-bind="text:getNlsString('DBS_HOME_LOADING')"></div>
+        <div id="globalBody" style="display: none" class="oj-web-applayout-offcanvas-wrapper oj-offcanvas-outer-wrapper"> 
+            <div id="offcanvasInnerContainer" class="oj-offcanvas-inner-wrapper oj-flex oj-flex-items-pad">
+                <div id="uifwkLayoutHbgmenuPlaceHolder"></div>
+                <div id="uifwkLayoutMainContainer" class="oj-web-applayout-scrollable">
+                    <!-- main content -->
+                    <div id="mainContent" role="main">
+                        <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
+                            Template is located in /templates/demoAppHeaderTemplate.html
+                        -->
+                        <div style="position: relative;">
+                            <!-- ko stopBinding -->
+                            <header id="headerWrapper" role="banner">
+                                <div data-bind="component: {
+                            name: 'df-oracle-branding-bar',
+                            params: brandingbarParams
+                        }">
+                                </div>
+                            </header>
+                             <!--/ko--> 
+                            <!-- ko stopBinding -->
+                            <div id='test-html-widget-container' class="main-content-area main-content-area-sm main-content-area-md main-content-area-lg main-content-area-xsl main-content-area-xl oj-flex">
+                                <div id='test-html-widget-container1' class='oj-panel oj-margin demo-panel-customizations' data-bind="component:{name: 'EMCPDF_HTMLWIDGET_V1', params: {source: htmlWdgtTestSrc1 }}" style="display: inline-block; width: 300px; height: 400px;"></div>
+                                <div id='test-html-widget-container2' class='oj-panel oj-margin demo-panel-customizations' data-bind="component:{name: 'EMCPDF_HTMLWIDGET_V1', params: {source: htmlWdgtTestSrc2 }}" style="display: inline-block; width: 300px; height: 200px;"></div>
+                                <div id='test-html-widget-container3' class='oj-panel oj-margin demo-panel-customizations' data-bind="component:{name: 'EMCPDF_HTMLWIDGET_V1', params: {source: htmlWdgtTestSrc3}}" style="display: inline-block; width: 300px; height: 200px;"></div>
+                                <div id='test-html-widget-container4' class='oj-panel oj-margin demo-panel-customizations' data-bind="component:{name: 'EMCPDF_HTMLWIDGET_V1', params: {source: htmlWdgtTestSrc3, openLinkInNewTabAlways: true }}" style="display: inline-block; width: 300px; height: 200px;"></div>
+                            </div>
+                            <!-- /ko -->
+                        </div>
+                    </div>
+                </div>            
+            </div>
+        </div>
+    </body>
+</html>

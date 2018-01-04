@@ -435,6 +435,15 @@ public class DashBoardPageId_190
 	//Add button for widgetSelector
 	public static final String WIDGETSELECTOR_ADDBUTTONID = "add-widget-button";
 
+	public static final String HTMLVISUALXPATH="//span[contains(@class, 'oj-tabs-title') and text() = 'Visual']";
+	public static final String HTMLSOURCEXPATH="//span[contains(@class, 'oj-tabs-title') and text() = 'Source']";
+	public static final String ALIGNLEFTCSS=".cke_button__justifyleft";
+	public static final String ALIGNCENTRALCSS=".cke_button__justifycenter_icon";
+	public static final String ALIGNRIGHTCSS=".cke_button__justifyright_icon";
+	public static final String HTMLFONTARROW="//*[contains(@class, 'cke_combo_button') and contains(@title,'Font Name')]";
+	public static final String HTMLFONTSIZEARROW="//*[contains(@class, 'cke_combo_button') and contains(@title,'Font Size')]";
+	public static final String HTMLBOLDCSS=".cke_button__bold_icon";
+	public static final String HTMLSOURCECONTENT="//*[contains(@id, 'htmlEditor_')]";
 	/*
 	 *
 	 *The following variable define the all elements id of Dashboard page, including the home page, create page

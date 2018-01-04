@@ -54,6 +54,7 @@ public class CommonFunctionalException extends DashboardException
 	public static final String TEXT_WIDGET_CONTENT_TOO_LONG_ERROR = "TEXT_WIDGET_CONTENT_TOO_LONG_ERROR";
 	public static final String TEXT_WIDGET_INVALID_LINK_TEXT_ERROR = "TEXT_WIDGET_INVALID_LINK_TEXT_ERROR";
 	public static final String TEXT_WIDGET_INVALID_LINK_URL_ERROR = "TEXT_WIDGET_INVALID_LINK_URL_ERROR";
+	public static final String HTML_WIDGET_CONTENT_TOO_LONG_ERROR = "HTML_WIDGET_CONTENT_TOO_LONG_ERROR";
 
 	// i18n messages for federated dashboards
 	public static final String DASHBOARD_INVALID_MODE_SUPPORT_ERROR = "DASHBOARD_INVALID_MODE_SUPPORT_ERROR";

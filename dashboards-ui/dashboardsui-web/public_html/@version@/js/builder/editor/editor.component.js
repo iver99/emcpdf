@@ -212,11 +212,11 @@ define(['knockout',
             });
             
             tile.dbdRemoveIcon = ko.computed(function() {
-                return tile.type() === "TEXT_WIDGET" ? "dbd-icon-delete" : "dbd-icon-remove"
+                return (tile.type() === "TEXT_WIDGET" || tile.type() === 'HTML_WIDGET') ? "dbd-icon-delete" : "dbd-icon-remove"
             });
             
             tile.dbsBuilderTileRemove = function() {
-                if(tile.type() === "TEXT_WIDGET") {
+                if(tile.type() === "TEXT_WIDGET" || tile.type() === 'HTML_WIDGET') {
                     return getNlsString('DBS_BUILDER_TILE_DELETE');
                 }else {
                     return getNlsString('DBS_BUILDER_TILE_REMOVE');

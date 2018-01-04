@@ -33,8 +33,10 @@ public class Tile
 
 	public static final Integer TILE_TYPE_CODE_DEFAULT = 0;
 	public static final Integer TILE_TYPE_CODE_TEXT_WIDGET = 1;
+	public static final Integer TILE_TYPE_CODE_HTML_WIDGET = 2;
 	public static final String TILE_TYPE_DEFAULT = "DEFAULT";
 	public static final String TILE_TYPE_TEXT_WIDGET = "TEXT_WIDGET";
+	public static final String TILE_TYPE_HTML_WIDGET = "HTML_WIDGET";
 
 	public static final int WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
 
@@ -63,6 +65,22 @@ public class Tile
 	private static final Integer TEXT_WIDGET_MAX_CONTENT_LEN = TILE_PARAM_STR_VALUE_MAX_LEN;
 	private static final Integer TEXT_WIDGET_MAX_LINK_TEXT_LEN = TILE_PARAM_STR_VALUE_MAX_LEN;
 	private static final Integer TEXT_WIDGET_MAX_LINK_URL_LEN = TILE_PARAM_STR_VALUE_MAX_LEN;
+
+	// specific for HTML widget
+	private static final Integer HTML_WIDGET_WIDTH = 8;
+	private static final String HTML_WIDGET_NAME = "DF_BUILTIN_HTML";
+	private static final String HTML_WIDGET_TITLE = "BUILT_IN_HTML";
+	private static final String HTML_WIDGET_DESCRIPTION = HTML_WIDGET_NAME;
+	private static final String HTML_WIDGET_OWNER = "ORACLE";
+	private static final String HTML_WIDGET_KOC_NAME = "DF_V1_WIDGET_HTML";
+	private static final String HTML_WIDGET_VIEWMODEL = "../emcsDependencies/widgets/htmlwidget/js/htmlwidget";
+	private static final String HTML_WIDGET_TEMPLATE = "../emcsDependencies/widgets/htmlwidget/htmlwidget.html";
+	public static final String HTML_WIDGET_PARAM_NAME_CONTENT = "DF_BUILTIN_WIDGET_HTML_CONTENT";
+
+	private static final Integer HTML_TILE_PARAM_STR_VALUE_MAX_LEN = 4000;
+	private static final Integer HTML_WIDGET_MAX_CONTENT_LEN = HTML_TILE_PARAM_STR_VALUE_MAX_LEN;
+	private static final Integer HTML_WIDGET_MAX_LINK_TEXT_LEN = HTML_TILE_PARAM_STR_VALUE_MAX_LEN;
+	private static final Integer HTML_WIDGET_MAX_LINK_URL_LEN = HTML_TILE_PARAM_STR_VALUE_MAX_LEN;
 
 	public static Tile valueOf(EmsDashboardTile edt, boolean loadTileParams)
 	{
@@ -126,6 +144,12 @@ public class Tile
 				for (EmsDashboardTileParams edtp : edtpList) {
 					TileParam tp = TileParam.valueOf(edtp);
 					tp.setTile(tile);
+					if (Tile.TILE_TYPE_CODE_HTML_WIDGET.equals(edt.getType())
+							&& tp.getName().equals(Tile.HTML_WIDGET_PARAM_NAME_CONTENT)
+							&& TileParam.PARAM_TYPE_STRING.equals(tp.getType())) {
+						tile.setContent(tp.getStringValue());
+						continue;
+					}
 					if (Tile.TILE_TYPE_CODE_TEXT_WIDGET.equals(edt.getType())
 							&& tp.getName().equals(Tile.TEXT_WIDGET_PARAM_NAME_CONTENT)
 							&& TileParam.PARAM_TYPE_STRING.equals(tp.getType())) {
@@ -363,6 +387,9 @@ public class Tile
 	{
 		if (TILE_TYPE_TEXT_WIDGET.equals(type)) {
 			return getTextTilePersistenceEntity(to);
+		}
+		else if (TILE_TYPE_HTML_WIDGET.equals(type)) {
+			return getHTMLTilePersistenceEntity(to);
 		}
 		else {
 			return getDefaultTilePersistenceEntity(to);
@@ -938,6 +965,67 @@ public class Tile
 		return to;
 	}
 
+	private EmsDashboardTile getHTMLTilePersistenceEntity(EmsDashboardTile to) throws DashboardException
+	{
+		if (row == null) {
+			row = TILE_DEFAULT_ROW;
+		}
+		//column = 0;
+		//width = 8;
+		//height = 1;
+		Integer tileType = DataFormatUtils.tileTypeString2Integer(type);
+		Integer fedSupported = FederationSupportedType.FEDERATION_AND_NON_FEDERATION.getValue();
+		// html tile does not support time control
+		Integer supportTimeControl = 0;
+		// whatever the input title is, html tile use the default title
+		title = HTML_WIDGET_TITLE;
+		if (to == null) { // newly created tile
+			to = new EmsDashboardTile(creationDate, null, tileType, row, column, height, 0, lastModificationDate, lastModifiedBy,
+					owner, providerAssetRoot, providerName, providerVersion, tileId, title, widgetCreationTime, widgetDescription,
+					widgetGroupName, widgetHistogram, widgetIcon, widgetKocName, widgetName, widgetOwner, widgetSource,
+					widgetTemplate, widgetUniqueId, widgetViewmode, supportTimeControl, width, widgetLinkedDashboard,
+					// html tile actually doesn't exist any more
+					0, widgetDeletionDate, fedSupported);
+			if (parameters != null) {
+				for (TileParam param : parameters) {
+					EmsDashboardTileParams edtp = param.getPersistentEntity(to, null);
+					to.addEmsDashboardTileParams(edtp);
+				}
+			}
+		}
+		else {
+			to.setRow(row);
+			to.setColumn(column);
+			to.setHeight(getHeight());
+			to.setIsMaximized(0);
+			to.setProviderAssetRoot(providerAssetRoot);
+			to.setProviderName(providerName);
+			to.setProviderVersion(providerVersion);
+			to.setTitle(title);
+			if (to.getType() != null && tileType != null && !tileType.equals(to.getType())) {
+				throw new CommonResourceException(
+						MessageUtils.getDefaultBundleString(CommonResourceException.NOT_SUPPORT_UPDATE_TYPE_FIELD));
+			}
+			//			to.setWidgetCreationTime(widgetCreationTime);
+			to.setWidgetDescription(widgetDescription);
+			to.setWidgetGroupName(widgetGroupName);
+			to.setWidgetHistogram(widgetHistogram);
+			to.setWidgetIcon(widgetIcon);
+			to.setWidgetKocName(widgetKocName);
+			to.setWidgetName(widgetName);
+			to.setWidgetOwner(widgetOwner);
+			to.setWidgetSource(widgetSource);
+			to.setWidgetTemplate(widgetTemplate);
+			to.setWidgetUniqueId(widgetUniqueId);
+			to.setWidgetViewmode(widgetViewmode);
+			to.setWidgetSupportTimeControl(supportTimeControl);
+			to.setWidth(width);
+			updateEmsDashboardTileParams(parameters, to);
+		}
+		updateSpecificType(to);
+		return to;
+	}
+
 	private void updateEmsDashboardTileParams(List<TileParam> paramList, EmsDashboardTile tile) throws CommonFunctionalException
 	{
 		Map<TileParam, EmsDashboardTileParams> rows = new HashMap<TileParam, EmsDashboardTileParams>();
@@ -1009,6 +1097,16 @@ public class Tile
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.TEXT_WIDGET_CONTENT_TOO_LONG_ERROR));
 			}
 			EmsDashboardTileParams edtp = new EmsDashboardTileParams(1, Tile.TEXT_WIDGET_PARAM_NAME_CONTENT,
+					TileParam.PARAM_TYPE_CODE_STRING, null, encodedContent, null, to);
+			to.addEmsDashboardTileParams(edtp);
+		} else if (Tile.TILE_TYPE_HTML_WIDGET.equals(getType())) {
+			to.setWidgetCreationTime(String.valueOf(DateUtil.getGatewayTime()));
+			String encodedContent = StringEscapeUtils.escapeHtml4(getContent());
+			if (encodedContent != null && encodedContent.length() > HTML_WIDGET_MAX_CONTENT_LEN) {
+				throw new CommonFunctionalException(DashboardErrorConstants.DASHBOARD_HTML_WIDGET_CONTENT_TOO_LONG_ERROR_CODE,
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.HTML_WIDGET_CONTENT_TOO_LONG_ERROR));
+			}
+			EmsDashboardTileParams edtp = new EmsDashboardTileParams(1, Tile.HTML_WIDGET_PARAM_NAME_CONTENT,
 					TileParam.PARAM_TYPE_CODE_STRING, null, encodedContent, null, to);
 			to.addEmsDashboardTileParams(edtp);
 		}

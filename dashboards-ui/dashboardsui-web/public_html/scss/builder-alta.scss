@@ -147,7 +147,7 @@ body, html {
         }
         
         .dashboardTextBtn{
-            .dbd-toolbar-icon-text{
+            .dbd-toolbar-icon-text,.dbd-toolbar-icon-html-widget{
                 height: 30px;
                 &:before{
                     height: 30px;
@@ -323,6 +323,10 @@ body, html {
 
 .dbd-toolbar-icon-text:before {
   content: "\f031";
+}
+
+.dbd-toolbar-icon-html-widget:before {
+  content: "\f1dc";
 }
 
 .dbd-toolbar-icon-edit:before,.fa-pencil-df:before {
@@ -1742,15 +1746,12 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 
 .textWidgetWrapper {
-    width: -moz-calc(100% - 20px);
-    width: -webkit-calc(100% - 20px);
-    width: -o-calc(100% - 20px);
-    width: calc(100% - 20px);
+    width: 100%;
     height: -moz-calc(100% - 20px);
     height: -webkit-calc(100% - 20px);
     height: -o-calc(100% - 20px);
     height: calc(100% - 20px);
-    margin: 0px 10px;
+    margin: 0px;
 }
 
 //set image max-width to 100% so that image smaller than tile show its original size, image lager than tile show 100% width
@@ -1765,6 +1766,10 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 
 #uifwkLayoutMainContainer{
     overflow: hidden !important;
+}
+
+div[id^='cke_textEditor'], .cke_inner {
+    height: 100% !important;
 }
 
 //hack ckeditor dialog default css style to oj style

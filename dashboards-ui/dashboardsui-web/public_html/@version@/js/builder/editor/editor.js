@@ -721,7 +721,10 @@ define(['knockout',
                 widget.height = widget.WIDGET_DEFAULT_HEIGHT ? widget.WIDGET_DEFAULT_HEIGHT: height;
                 widget.column = null;
                 widget.row = null;
-                if(widget.type !== "TEXT_WIDGET") {
+                if(koc_name === 'EMCPDF_HTMLWIDGET_V1'){
+                    widget.type = 'HTML_WIDGET';
+                }
+                if(widget.type !== "TEXT_WIDGET" && widget.type !== 'HTML_WIDGET') {
                     widget.type = "DEFAULT";
                 }
                     if (widget_source===null || widget_source===undefined){
